@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
+﻿using SFA.DAS.Admin.Aan.Domain.Constants;
+using SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 
@@ -15,9 +16,12 @@ public class CalendarEventViewModel
 
     public DateTime Start { get; set; }
     public string Title { get; set; } = null!;
-    public string EventFormat { get; set; } = null!;
+    public EventFormat EventFormat { get; set; }
 
     public bool IsActive { get; set; }
+
+    public string Status => IsActive ? EventStatus.Published : EventStatus.Cancelled;
+
     public int NumberOfAttendees { get; set; }
 
 
@@ -31,6 +35,5 @@ public class CalendarEventViewModel
             EventFormat = source.EventFormat,
             IsActive = source.IsActive,
             NumberOfAttendees = source.NumberOfAttendees,
-
         };
 }

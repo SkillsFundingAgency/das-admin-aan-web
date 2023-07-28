@@ -1,34 +1,104 @@
-﻿@foreach (var calendarEvent in Model.CalendarEvents)
+﻿@using SFA.DAS.Admin.Aan.Domain.Extensions
+@model SFA.DAS.Admin.Aan.Web.Models.NetworkEvents.NetworkEventsViewModel
+<ol class="das-search-results__list">
+@foreach (var calendarEvent in Model.CalendarEvents)
 {
     <li class="das-search-results__list-item">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-three-quarters das-!-float-right">
+                <strong class="govuk-tag app-tag--@calendarEvent.Status govuk-!-margin-bottom-2">
+                    @calendarEvent.Status
+                </strong>
                 <h2 class="govuk-heading-m das-search-results__heading">
-                    <a class="das-search-results__link">
-                        @calendarEvent.Title
-                    </a>
+                    @calendarEvent.Title
                 </h2>
-                <p class="govuk-body das-search-results__body">xx</p>
                 <dl class="das-definition-list das-definition-list--inline">
                     <dt class="das-definition-list__title">Event type</dt>
                     <dd class="das-definition-list__definition">@calendarEvent.CalendarName</dd>
-                    <dt class="das-definition-list__title">Date</dt>
-                    @* <dd class="das-definition-list__definition">@calendarEvent.Start.UtcToLocalTime().Date.ToString("d MMMM yyyy")</dd> *@
-                    @* <dt class="das-definition-list__title">Time</dt> *@
-                    @* <dd class="das-definition-list__definition">@calendarEvent.Start.UtcToLocalTime().ToString("h:mmtt").ToLower() - @calendarEvent.End.UtcToLocalTime().ToString("h:mmtt").ToLower()</dd> *@
-                    @* <dt class="das-definition-list__title">Where</dt> *@
-
-
+                    <dt class="das-search-title">@calendarEvent.NumberOfAttendees</dt>
+                    <dd class="das-definition-list__definition">Signed up</dd>
                 </dl>
+                <div class="govuk-button-group govuk-!-margin-bottom-0">
+                    @if(calendarEvent.IsActive)
+                    {
+                        <a href="#" class="govuk-link">Make changes</a>
+                        <a href="#" class="govuk-link">Cancel event</a>
+                    }
+                    else
+                    {
+                        <a href="#" class="govuk-link">View details</a>
+                    }
+                </div>
             </div>
             <div class="govuk-grid-column-one-quarter">
                 <div class="govuk-body app-date">
-                    <span class="app-date__day">@calendarEvent.Start.Date.Day.ToString("0")</span>
-                    <span class="app-date__month">@calendarEvent.Start.Date.ToString("MMM")</span>
+                    <span class="app-date__day">@calendarEvent.Start.Day</span>
+                    <span class="app-date__month">@calendarEvent.Start.ToString("MMM")</span>
                 </div>
-                <strong class="govuk-tag app-tag app-tag--@calendarEvent.EventFormat.ToString()">@calendarEvent.EventFormat.GetDescription()</strong>
+                <strong class="govuk-tag app-tag app-tag--@calendarEvent.EventFormat">@calendarEvent.EventFormat.GetDescription()</strong>
             </div>
         </div>
     </li>
+
+    @* <li class="das-search-results__list-item"> *@
+    @*     <div class="govuk-grid-row"> *@
+    @*         <div class="govuk-grid-column-three-quarters das-!-float-right"> *@
+    @*             <strong class="govuk-tag govuk-tag--grey govuk-!-margin-bottom-2"> *@
+    @*                 Cancelled *@
+    @*             </strong> *@
+    @*             <h2 class="govuk-heading-m das-search-results__heading"> *@
+    @*                 North west regional network update event *@
+    @*             </h2> *@
+    @*             <dl class="das-definition-list das-definition-list--inline"> *@
+    @*                 <dt class="das-definition-list__title">Event type</dt> *@
+    @*                 <dd class="das-definition-list__definition">Event type here</dd> *@
+    @*                 <dt class="das-definition-list__title">123</dt> *@
+    @*                 <dd class="das-definition-list__definition">Signed up</dd> *@
+    @*             </dl> *@
+    @*             <div class="govuk-button-group govuk-!-margin-bottom-0"> *@
+    @*                 <a href="#" class="govuk-link">Make changes</a> *@
+    @*                 <a href="#" class="govuk-link">Cancel event</a> *@
+    @*             </div> *@
+    @*         </div> *@
+    @*         <div class="govuk-grid-column-one-quarter"> *@
+    @*             <div class="govuk-body app-date"> *@
+    @*                 <span class="app-date__day">28</span> *@
+    @*                 <span class="app-date__month">Jul</span> *@
+    @*             </div> *@
+    @*             <strong class="govuk-tag app-tag app-tag--InPerson">In person</strong> *@
+    @*         </div> *@
+    @*     </div> *@
+    @* </li> *@
+    @* *@
+    @* <li class="das-search-results__list-item"> *@
+    @*     <div class="govuk-grid-row"> *@
+    @*         <div class="govuk-grid-column-three-quarters das-!-float-right"> *@
+    @*             <strong class="govuk-tag govuk-tag--grey govuk-!-margin-bottom-2"> *@
+    @*                 Cancelled *@
+    @*             </strong> *@
+    @*             <h2 class="govuk-heading-m das-search-results__heading"> *@
+    @*                 North west regional network update event *@
+    @*             </h2> *@
+    @*             <dl class="das-definition-list das-definition-list--inline"> *@
+    @*                 <dt class="das-definition-list__title">Event type</dt> *@
+    @*                 <dd class="das-definition-list__definition">Event type here</dd> *@
+    @*                 <dt class="das-definition-list__title">123</dt> *@
+    @*                 <dd class="das-definition-list__definition">Signed up</dd> *@
+    @*             </dl> *@
+    @*             <div class="govuk-button-group govuk-!-margin-bottom-0"> *@
+    @*                 <a href="#" class="govuk-link">View details</a> *@
+    @*             </div> *@
+    @*         </div> *@
+    @*         <div class="govuk-grid-column-one-quarter"> *@
+    @*             <div class="govuk-body app-date"> *@
+    @*                 <span class="app-date__day">28</span> *@
+    @*                 <span class="app-date__month">Jul</span> *@
+    @*             </div> *@
+    @*             <strong class="govuk-tag app-tag app-tag--Online">Online</strong> *@
+    @*         </div> *@
+    @*     </div> *@
+    @* </li> *@
+
 }
+
 </ol>

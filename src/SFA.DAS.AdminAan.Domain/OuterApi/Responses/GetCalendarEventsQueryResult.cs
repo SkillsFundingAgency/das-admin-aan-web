@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
+﻿using SFA.DAS.Admin.Aan.Domain.Constants;
+
+namespace SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
 public class GetCalendarEventsQueryResult
 {
     public int Page { get; set; }
@@ -15,7 +17,7 @@ public class CalendarEventSummary
     public bool IsActive { get; set; }
     public string Title { get; set; } = null!;
     public string CalendarName { get; set; } = null!;
-    public string EventFormat { get; set; } = null!;
+    public EventFormat EventFormat { get; set; }
     public DateTime Start { get; set; }
     public int NumberOfAttendees { get; set; }
 }

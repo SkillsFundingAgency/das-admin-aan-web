@@ -400,3 +400,21 @@ a.das-show-hide__button[aria-expanded="false"]:after {
     transform: rotate(135deg);
     top: 10px
 }
+
+.app-tag--Hybrid {background-color: #85994b;}
+
+.app-tag--InPerson {background-color: #6f72af;}
+
+.app-tag--Online {background-color: #912b88;}
+
+.app-tag--Published {color: #005a30;background: #cce2d8;}
+
+.app-tag--Cancelled {color: #383f43;background: #eeefef;}
+
+.das-search-title {
+    clear: both;
+    float: left;
+    margin-right: 7px;
+    font-weight: 700;
+    flex-basis: 35%;
+}
