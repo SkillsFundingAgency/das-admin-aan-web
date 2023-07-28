@@ -66,12 +66,6 @@
         "utcValue": {
             "type": "string",
             "defaultValue": "[utcNow()]"
-        },
-        "cdnUrl": {
-            "type": "string"
-        },
-        "stubAuth": {
-            "type": "string"
         }
     },
     "variables": {
@@ -199,14 +193,6 @@
                                 {
                                     "name": "LoggingRedisKey",
                                     "value": "[parameters('loggingRedisKey')]"
-                                },
-                                {
-                                    "name": "Cdn:Url",
-                                    "value": "[parameters('cdnUrl')]"
-                                },
-                                {
-                                    "name": "StubAuth",
-                                    "value": "[parameters('stubAuth')]"
                                 }
                             ]
                         }
