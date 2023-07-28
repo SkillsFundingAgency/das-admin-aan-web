@@ -1,0 +1,33 @@
+﻿@* @model SFA.DAS.Admin.Aan.Web.Models.NetworkEvents.NetworkEventsViewModel *@
+@{
+    ViewData["Title"] = "Search Network Events";
+
+    // var totalCountDescription = $"{Model.TotalCount} results";
+    // if (Model.TotalCount == 1)
+    // {
+    //     totalCountDescription = "1 result";
+    // }
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-5">Manage events</h1>
+        <p> Create a new network even or search to update, manage or publish existing network events you have created. You can archive or delete network events that are no longer taking place.</p>
+  
+        <button type="submit" class="govuk-button" id="create-event">Create event</button>
+    </div>
+</div>
+@*<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+    </div>
+</div>*@
+<div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m">122 results</h2>
+    <p class="govuk-body govuk-!-margin-bottom-6  govuk-visually-hidden">
+        Sorted by:
+        <span class="govuk-!-font-weight-bold">Name</span>
+    </p>
+    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-3 ">
+    <div class="das-search-results">
+      @* WORK GOES HERE*@
+    </div>
+</div>

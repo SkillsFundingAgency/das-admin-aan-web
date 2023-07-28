@@ -1,0 +1,34 @@
+﻿@foreach (var calendarEvent in Model.CalendarEvents)
+{
+    <li class="das-search-results__list-item">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-three-quarters das-!-float-right">
+                <h2 class="govuk-heading-m das-search-results__heading">
+                    <a class="das-search-results__link">
+                        @calendarEvent.Title
+                    </a>
+                </h2>
+                <p class="govuk-body das-search-results__body">xx</p>
+                <dl class="das-definition-list das-definition-list--inline">
+                    <dt class="das-definition-list__title">Event type</dt>
+                    <dd class="das-definition-list__definition">@calendarEvent.CalendarName</dd>
+                    <dt class="das-definition-list__title">Date</dt>
+                    @* <dd class="das-definition-list__definition">@calendarEvent.Start.UtcToLocalTime().Date.ToString("d MMMM yyyy")</dd> *@
+                    @* <dt class="das-definition-list__title">Time</dt> *@
+                    @* <dd class="das-definition-list__definition">@calendarEvent.Start.UtcToLocalTime().ToString("h:mmtt").ToLower() - @calendarEvent.End.UtcToLocalTime().ToString("h:mmtt").ToLower()</dd> *@
+                    @* <dt class="das-definition-list__title">Where</dt> *@
+
+
+                </dl>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+                <div class="govuk-body app-date">
+                    <span class="app-date__day">@calendarEvent.Start.Date.Day.ToString("0")</span>
+                    <span class="app-date__month">@calendarEvent.Start.Date.ToString("MMM")</span>
+                </div>
+                <strong class="govuk-tag app-tag app-tag--@calendarEvent.EventFormat.ToString()">@calendarEvent.EventFormat.GetDescription()</strong>
+            </div>
+        </div>
+    </li>
+}
+</ol>

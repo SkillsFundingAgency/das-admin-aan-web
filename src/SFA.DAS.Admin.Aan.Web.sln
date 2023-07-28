@@ -7,11 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Admin.Aan.Web", "SF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E78EF7FB-2623-4ADD-948F-9FA9F78CEAE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Admin.Aan.Web.UnitTests", "SFA.DAS.Admin.Aan.Web.UnitTests\SFA.DAS.Admin.Aan.Web.UnitTests.csproj", "{192372CB-B092-416E-9F5E-8978966E3641}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Admin.Aan.Web.UnitTests", "SFA.DAS.Admin.Aan.Web.UnitTests\SFA.DAS.Admin.Aan.Web.UnitTests.csproj", "{192372CB-B092-416E-9F5E-8978966E3641}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Admin.Aan.Application", "SFA.DAS.Admin.Aan.Application\SFA.DAS.Admin.Aan.Application.csproj", "{3DF9FAE0-EF9B-4D62-AA32-ACD7B9948B34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Admin.Aan.Application", "SFA.DAS.Admin.Aan.Application\SFA.DAS.Admin.Aan.Application.csproj", "{3DF9FAE0-EF9B-4D62-AA32-ACD7B9948B34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Admin.Aan.Application.UnitTests", "SFA.DAS.Admin.Aan.Application.UnitTests\SFA.DAS.Admin.Aan.Application.UnitTests.csproj", "{110303ED-412B-4EDA-A937-C0035393EA5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Admin.Aan.Application.UnitTests", "SFA.DAS.Admin.Aan.Application.UnitTests\SFA.DAS.Admin.Aan.Application.UnitTests.csproj", "{110303ED-412B-4EDA-A937-C0035393EA5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Admin.Aan.Domain", "SFA.DAS.AdminAan.Domain\SFA.DAS.Admin.Aan.Domain.csproj", "{3672DF12-06BA-46AF-8E35-563688255C4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{110303ED-412B-4EDA-A937-C0035393EA5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{110303ED-412B-4EDA-A937-C0035393EA5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{110303ED-412B-4EDA-A937-C0035393EA5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3672DF12-06BA-46AF-8E35-563688255C4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3672DF12-06BA-46AF-8E35-563688255C4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3672DF12-06BA-46AF-8E35-563688255C4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3672DF12-06BA-46AF-8E35-563688255C4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
