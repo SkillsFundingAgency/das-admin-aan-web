@@ -15,15 +15,12 @@ builder.Services
     .AddHttpContextAccessor()
     .AddSession(rootConfiguration)
     .AddServiceRegistrations(rootConfiguration)
-    .AddValidatorsFromAssembly(typeof(Program).Assembly);
-
-builder.Services.AddHealthChecks();
-
-// Add services to the container.
-builder.Services
+    .AddValidatorsFromAssembly(typeof(Program).Assembly)
     .Configure<RouteOptions>(o => o.LowercaseUrls = true)
     .AddControllersWithViews(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
     .AddSessionStateTempDataProvider();
+
+builder.Services.AddHealthChecks();
 
 #if DEBUG
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
@@ -32,19 +29,25 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
+app
+    .UseHttpsRedirection()
+    .UseStaticFiles()
+    .UseCookiePolicy()
+    .UseRouting()
+    .UseAuthentication()
+    .UseAuthorization()
+    .UseHealthChecks("/health");
 
 app.MapControllerRoute(
     name: "default",
