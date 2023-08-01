@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -6,7 +7,7 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers;
 
-//[Authorize] //MFCMFC
+[Authorize]
 [Route("network-events")]
 public class NetworkEventsController : Controller
 {
