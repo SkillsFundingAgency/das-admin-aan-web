@@ -35,12 +35,6 @@
         "sharedKeyVaultName": {
             "type": "string"
         },
-        "sharedApimResourceGroup": {
-            "type": "string"
-        },
-        "sharedApimName": {
-            "type": "string"
-        },
         "customHostName": {
             "type": "string"
         },
