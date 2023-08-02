@@ -27,13 +27,17 @@ public class NetworkEventsController : Controller
         //var memberId = User.GetAanMemberId();
         //memberId = new Guid("81C0D92A-F20C-4B0B-B8BF-411B563FB3E5");
         var memberId = new Guid("ac3709c1-aabf-4ea9-b97f-88ccfae4a34e");
+        var filterUrl = FilterBuilder.BuildFullQueryString(request, Url);
         var calendarEventsTask = _outerApiClient.GetCalendarEvents(memberId, QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
         List<Task> tasks = new() { calendarEventsTask };
         await Task.WhenAll(tasks);
 
         var model = InitialiseViewModel(calendarEventsTask.Result);
 
-        model.PaginationViewModel = SetupPagination(calendarEventsTask.Result, Url.RouteUrl(RouteNames.NetworkEvents)!);
+        model.PaginationViewModel = SetupPagination(calendarEventsTask.Result, filterUrl!);
+        var filterChoices = PopulateFilterChoices(request);
+        model.FilterChoices = filterChoices;
+        model.SelectedFilters = FilterBuilder.Build(request, Url);
 
         return View(model);
     }
@@ -60,5 +64,12 @@ public class NetworkEventsController : Controller
         return pagination;
 
     }
+
+    private static EventFilterChoices PopulateFilterChoices(GetNetworkEventsRequest request)
+        => new()
+        {
+            FromDate = request.FromDate,
+            ToDate = request.ToDate
+        };
 }
 
