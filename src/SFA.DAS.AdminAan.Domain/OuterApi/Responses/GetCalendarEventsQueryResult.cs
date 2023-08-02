@@ -8,7 +8,6 @@ public class GetCalendarEventsQueryResult
     public int TotalPages { get; set; }
     public int TotalCount { get; set; }
     public IEnumerable<CalendarEventSummary> CalendarEvents { get; set; } = Enumerable.Empty<CalendarEventSummary>();
-
 }
 
 public class CalendarEventSummary
