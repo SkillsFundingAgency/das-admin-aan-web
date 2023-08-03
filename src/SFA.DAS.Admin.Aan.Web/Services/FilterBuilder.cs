@@ -8,20 +8,23 @@ namespace SFA.DAS.Admin.Aan.Web.Services;
 
 public static class FilterBuilder
 {
-    public static List<SelectedFilter> Build(GetNetworkEventsRequest request, IUrlHelper urlHelper)
+    public static List<SelectedFilter> Build(GetNetworkEventsRequest request, IUrlHelper urlHelper, IEnumerable<ChecklistLookup> eventStatusLookups)
     {
         var filters = new List<SelectedFilter>();
         var fullQueryParameters = BuildQueryParameters(request);
 
         if (request.FromDate.HasValue)
         {
-            filters.AddFilterItems(urlHelper, fullQueryParameters, new[] { request.FromDate.Value.ToScreenString() }, "From date", "fromDate");
+            filters.AddFilterItems(urlHelper, fullQueryParameters, new[] { request.FromDate.Value.ToScreenString() }, "From date", "fromDate", Enumerable.Empty<ChecklistLookup>());
         }
 
         if (request.ToDate.HasValue)
         {
-            filters.AddFilterItems(urlHelper, fullQueryParameters, new[] { request.ToDate.Value.ToScreenString() }, "To date", "toDate");
+            filters.AddFilterItems(urlHelper, fullQueryParameters, new[] { request.ToDate.Value.ToScreenString() }, "To date", "toDate", Enumerable.Empty<ChecklistLookup>());
         }
+
+        filters.AddFilterItems(urlHelper, fullQueryParameters, request.IsActive.Select(e => e.ToString()), "Event status", "isActive", eventStatusLookups);
+
 
         return filters;
     }
@@ -32,7 +35,7 @@ public static class FilterBuilder
         return BuildQueryString(url, fullQueryParameters, "none")!;
     }
 
-    private static void AddFilterItems(this ICollection<SelectedFilter> filters, IUrlHelper url, List<string> fullQueryParameters, IEnumerable<string> selectedValues, string fieldName, string parameterName)
+    private static void AddFilterItems(this ICollection<SelectedFilter> filters, IUrlHelper url, List<string> fullQueryParameters, IEnumerable<string> selectedValues, string fieldName, string parameterName, IEnumerable<ChecklistLookup> lookups)
     {
         if (!selectedValues.Any()) return;
 
@@ -66,6 +69,8 @@ public static class FilterBuilder
         {
             queryParameters.Add(BuildDateQueryParameter("toDate", request.ToDate.GetValueOrDefault()));
         }
+
+        queryParameters.AddRange(request.IsActive.Select(isActive => "isActive=" + isActive));
 
         return queryParameters;
     }

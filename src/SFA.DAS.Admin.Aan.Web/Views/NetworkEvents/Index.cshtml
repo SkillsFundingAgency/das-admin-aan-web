@@ -30,6 +30,8 @@
                      <form asp-route="@RouteNames.NetworkEvents" method="GET">
                          <button type="submit" class="govuk-button" id="filters-submit">Apply filters</button>
                          <partial name="_FilterEventDates" Model="Model.FilterChoices" />
+                        <partial name="_FilterDetails" Model="Model.FilterChoices.EventStatusChecklistDetails" />
+
                          <button type="submit" class="govuk-button" id="filters-submit-second">Apply filters</button>
                      </form>
                  </div>

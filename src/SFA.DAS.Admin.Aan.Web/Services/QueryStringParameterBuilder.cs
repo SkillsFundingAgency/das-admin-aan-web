@@ -10,6 +10,11 @@ public class QueryStringParameterBuilder
         var parameters = new Dictionary<string, string[]>();
         if (request.FromDate != null) parameters.Add("fromDate", new string[] { request.FromDate.Value.ToApiString() });
         if (request.ToDate != null) parameters.Add("toDate", new string[] { request.ToDate.Value.ToApiString() });
+        if (request.IsActive.Count == 1)
+        {
+            parameters.Add("isActive", request.IsActive.Select(isActive => isActive.ToString()).ToArray());
+        }
+
         if (request.Page != null) parameters.Add("page", new[] { request.Page?.ToString() }!);
         if (request.PageSize != null) parameters.Add("pageSize", new[] { request.PageSize?.ToString() }!);
         return parameters;

@@ -28,7 +28,7 @@ public class FilterBuilderTests
         };
 
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object);
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>());
         actual.Count.Should().Be(0);
     }
 
@@ -46,7 +46,7 @@ public class FilterBuilderTests
             FromDate = fromDate
         };
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object);
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>());
         actual.Count.Should().Be(expectedNumberOfFilters);
         if (expectedNumberOfFilters > 0)
         {
@@ -76,7 +76,7 @@ public class FilterBuilderTests
             ToDate = toDate
         };
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object);
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>());
 
         actual.Count.Should().Be(expectedNumberOfFilters);
         if (expectedNumberOfFilters > 0)
@@ -108,7 +108,7 @@ public class FilterBuilderTests
             ToDate = toDate
         };
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object);
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>());
 
         actual.Count.Should().Be(2);
 
@@ -137,4 +137,43 @@ public class FilterBuilderTests
             secondItem.Filters.First().Value.Should().Be(toDate?.ToString("dd/MM/yyyy"));
         }
     }
+
+    [TestCase(null, "", 0)]
+    [TestCase(true, "Event status", 1)]
+    [TestCase(false, "Event status", 1)]
+    public void BuildEventSearchFiltersForEventStatus(bool? eventStatus, string fieldName1, int expectedNumberOfFilters)
+    {
+        var mockUrlHelper = new Mock<IUrlHelper>();
+        mockUrlHelper
+            .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
+            .Returns(LocationUrl);
+
+        var request = new GetNetworkEventsRequest();
+        if (eventStatus.HasValue)
+        {
+            request.IsActive = new List<bool> { eventStatus.Value };
+        }
+
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, ChecklistLookupEventStatus());
+        actual.Count.Should().Be(expectedNumberOfFilters);
+        if (expectedNumberOfFilters > 0)
+        {
+            var firstItem = actual.First();
+            firstItem.FieldName.Should().Be(fieldName1);
+            firstItem.FieldOrder.Should().Be(1);
+            firstItem.Filters.First().ClearFilterLink.Should().Be(LocationUrl);
+            firstItem.Filters.First().Order.Should().Be(1);
+            if (fieldName1 != "")
+            {
+                firstItem.Filters.First().Value.Should().Be(eventStatus.ToString());
+            }
+        }
+    }
+
+    private static List<ChecklistLookup> ChecklistLookupEventStatus() =>
+        new()
+        {
+            new ChecklistLookup("Published", true.ToString()),
+            new ChecklistLookup("Cancelled", false.ToString())
+        };
 }

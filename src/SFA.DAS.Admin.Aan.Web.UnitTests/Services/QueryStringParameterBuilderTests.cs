@@ -73,6 +73,29 @@ public class QueryStringParameterBuilderTests
     }
 
     [TestCase(null)]
+    [TestCase(true)]
+    [TestCase(false)]
+    public void Builder_ConstructParameters_EventStatus(bool? isActive)
+    {
+        var request = new GetNetworkEventsRequest();
+        if (isActive.HasValue)
+        {
+            request.IsActive = new List<bool> { isActive.Value };
+        }
+
+        var parameters = QueryStringParameterBuilder.BuildQueryStringParameters(request);
+        parameters.TryGetValue("isActive", out var eventStatusResult);
+        if (isActive.HasValue)
+        {
+            eventStatusResult![0].Should().Be(isActive.ToString());
+        }
+        else
+        {
+            eventStatusResult.Should().BeNull();
+        }
+    }
+
+    [TestCase(null)]
     [TestCase(3)]
     public void Builder_ConstructParameters_ToPage(int? page)
     {

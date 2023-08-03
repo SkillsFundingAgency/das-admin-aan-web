@@ -37,7 +37,7 @@ public class NetworkEventsController : Controller
         model.PaginationViewModel = SetupPagination(calendarEventsTask.Result, filterUrl!);
         var filterChoices = PopulateFilterChoices(request);
         model.FilterChoices = filterChoices;
-        model.SelectedFilters = FilterBuilder.Build(request, Url);
+        model.SelectedFilters = FilterBuilder.Build(request, Url, filterChoices.EventStatusChecklistDetails.Lookups);
 
         return View(model);
     }
@@ -59,17 +59,24 @@ public class NetworkEventsController : Controller
 
     private static PaginationViewModel SetupPagination(GetCalendarEventsQueryResult result, string filterUrl)
     {
-        var pagination = new PaginationViewModel(result.Page, result.PageSize, result.TotalPages, filterUrl);
-
-        return pagination;
-
+        return new PaginationViewModel(result.Page, result.PageSize, result.TotalPages, filterUrl);
     }
 
     private static EventFilterChoices PopulateFilterChoices(GetNetworkEventsRequest request)
         => new()
         {
             FromDate = request.FromDate,
-            ToDate = request.ToDate
+            ToDate = request.ToDate,
+            EventStatusChecklistDetails = new ChecklistDetails
+            {
+                Title = "Event status",
+                QueryStringParameterName = "isActive",
+                Lookups = new ChecklistLookup[]
+                {
+                    new("Published", true.ToString(), request.IsActive.Exists(x => x == true)),
+                    new("Cancelled", false.ToString(), request.IsActive.Exists(x => x == false)),
+                }
+            }
         };
 }
 

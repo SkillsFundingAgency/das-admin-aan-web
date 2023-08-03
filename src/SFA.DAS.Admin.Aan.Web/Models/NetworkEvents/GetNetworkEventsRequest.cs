@@ -11,6 +11,9 @@ public class GetNetworkEventsRequest
     public DateTime? ToDate { get; set; }
 
     [FromQuery]
+    public List<bool> IsActive { get; set; } = new List<bool>();
+
+    [FromQuery]
     public int? Page { get; set; }
 
     [FromQuery]
