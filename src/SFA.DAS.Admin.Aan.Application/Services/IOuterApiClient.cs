@@ -11,7 +11,7 @@ public interface IOuterApiClient
     Task<GetRegionsResult> GetRegions(CancellationToken cancellationToken);
 
     [Get("/calendars")]
-    Task<List<Calendar>> GetCalendars();
+    Task<List<Calendar>> GetCalendars(CancellationToken cancellationToken);
 
     [Get("calendarEvents")]
     Task<GetCalendarEventsQueryResult> GetCalendarEvents([Header(Domain.Constants.RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [QueryMap] IDictionary<string, string[]> parameters, CancellationToken cancellationToken);

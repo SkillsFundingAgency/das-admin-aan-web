@@ -30,7 +30,9 @@ public class NetworkEventsController : Controller
         var memberId = new Guid("ac3709c1-aabf-4ea9-b97f-88ccfae4a34e");
         var filterUrl = FilterBuilder.BuildFullQueryString(request, Url);
         var calendarEventsTask = _outerApiClient.GetCalendarEvents(memberId, QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
-        var calendarTask = _outerApiClient.GetCalendars();
+        var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
+
+
         List<Task> tasks = new() { calendarEventsTask, calendarTask };
         await Task.WhenAll(tasks);
 
