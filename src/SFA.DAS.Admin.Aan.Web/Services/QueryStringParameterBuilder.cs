@@ -14,7 +14,7 @@ public class QueryStringParameterBuilder
         {
             parameters.Add("isActive", request.IsActive.Select(isActive => isActive.ToString()).ToArray());
         }
-
+        parameters.Add("calendarId", request.CalendarId.Select(cal => cal.ToString()).ToArray());
         if (request.Page != null) parameters.Add("page", new[] { request.Page?.ToString() }!);
         if (request.PageSize != null) parameters.Add("pageSize", new[] { request.PageSize?.ToString() }!);
         return parameters;

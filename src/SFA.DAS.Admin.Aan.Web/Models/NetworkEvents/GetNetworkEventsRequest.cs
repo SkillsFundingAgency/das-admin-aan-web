@@ -14,6 +14,9 @@ public class GetNetworkEventsRequest
     public List<bool> IsActive { get; set; } = new List<bool>();
 
     [FromQuery]
+    public List<int> CalendarId { get; set; } = new List<int>();
+
+    [FromQuery]
     public int? Page { get; set; }
 
     [FromQuery]

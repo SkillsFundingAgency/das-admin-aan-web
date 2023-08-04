@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -29,15 +30,18 @@ public class NetworkEventsController : Controller
         var memberId = new Guid("ac3709c1-aabf-4ea9-b97f-88ccfae4a34e");
         var filterUrl = FilterBuilder.BuildFullQueryString(request, Url);
         var calendarEventsTask = _outerApiClient.GetCalendarEvents(memberId, QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
-        List<Task> tasks = new() { calendarEventsTask };
+        var calendarTask = _outerApiClient.GetCalendars();
+        List<Task> tasks = new() { calendarEventsTask, calendarTask };
         await Task.WhenAll(tasks);
+
+        var calendars = calendarTask.Result;
 
         var model = InitialiseViewModel(calendarEventsTask.Result);
 
         model.PaginationViewModel = SetupPagination(calendarEventsTask.Result, filterUrl!);
-        var filterChoices = PopulateFilterChoices(request);
+        var filterChoices = PopulateFilterChoices(request, calendars);
         model.FilterChoices = filterChoices;
-        model.SelectedFilters = FilterBuilder.Build(request, Url, filterChoices.EventStatusChecklistDetails.Lookups);
+        model.SelectedFilters = FilterBuilder.Build(request, Url, filterChoices.EventStatusChecklistDetails.Lookups, filterChoices.EventTypeChecklistDetails.Lookups);
 
         return View(model);
     }
@@ -62,7 +66,7 @@ public class NetworkEventsController : Controller
         return new PaginationViewModel(result.Page, result.PageSize, result.TotalPages, filterUrl);
     }
 
-    private static EventFilterChoices PopulateFilterChoices(GetNetworkEventsRequest request)
+    private static EventFilterChoices PopulateFilterChoices(GetNetworkEventsRequest request, IEnumerable<Calendar> calendars)
         => new()
         {
             FromDate = request.FromDate,
@@ -76,6 +80,12 @@ public class NetworkEventsController : Controller
                     new("Published", true.ToString(), request.IsActive.Exists(x => x == true)),
                     new("Cancelled", false.ToString(), request.IsActive.Exists(x => x == false)),
                 }
+            },
+            EventTypeChecklistDetails = new ChecklistDetails
+            {
+                Title = "Event type",
+                QueryStringParameterName = "calendarId",
+                Lookups = calendars.OrderBy(x => x.Ordering).Select(cal => new ChecklistLookup(cal.CalendarName, cal.Id.ToString(), request.CalendarId.Exists(x => x == cal.Id))).ToList(),
             }
         };
 }

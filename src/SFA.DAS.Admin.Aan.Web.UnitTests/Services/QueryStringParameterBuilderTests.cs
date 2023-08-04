@@ -9,15 +9,21 @@ public class QueryStringParameterBuilderTests
 {
 
     [Test, AutoData]
-    public void Builder_PopulatesDictionaryBuiltFromModel(DateTime? fromDate, DateTime? toDate, int? page, int? pageSize)
+    public void Builder_PopulatesDictionaryBuiltFromModel(DateTime? fromDate, DateTime? toDate, bool? isActive, List<int> calendarIds, int? page, int? pageSize)
     {
         var request = new GetNetworkEventsRequest
         {
             FromDate = fromDate,
             ToDate = toDate,
+            CalendarId = calendarIds,
             Page = page,
             PageSize = pageSize
         };
+
+        if (isActive.HasValue)
+        {
+            request.IsActive = new List<bool> { isActive.Value };
+        }
 
         var parameters = QueryStringParameterBuilder.BuildQueryStringParameters(request);
 
@@ -26,6 +32,17 @@ public class QueryStringParameterBuilderTests
 
         parameters.TryGetValue("toDate", out var toDateResult);
         toDateResult![0].Should().Be(toDate?.ToString("yyyy-MM-dd"));
+
+        if (isActive.HasValue)
+        {
+            parameters.TryGetValue("isActive", out var isActiveResult);
+            isActiveResult!.Length.Should().Be(1);
+            isActive.Value.ToString().Should().Be(isActiveResult.First().ToString());
+
+        }
+        parameters.TryGetValue("calendarId", out var calendarIdsResult);
+        calendarIdsResult!.Length.Should().Be(calendarIds.Count);
+        calendarIds.Select(x => x.ToString()).Should().BeEquivalentTo(calendarIdsResult.ToList());
 
         parameters.TryGetValue("page", out string[]? pageResult);
         pageResult![0].Should().Be(page?.ToString());
@@ -43,7 +60,7 @@ public class QueryStringParameterBuilderTests
             FromDate = fromDate
         });
         parameters.TryGetValue("fromDate", out var fromDateResult);
-        if (fromDate != null)
+        if (fromDate.HasValue)
         {
             fromDateResult![0].Should().Be(fromDate?.ToString("yyyy-MM-dd"));
         }
@@ -62,7 +79,7 @@ public class QueryStringParameterBuilderTests
             ToDate = toDate
         });
         parameters.TryGetValue("toDate", out var toDateResult);
-        if (toDate != null)
+        if (toDate.HasValue)
         {
             toDateResult![0].Should().Be(toDate?.ToString("yyyy-MM-dd"));
         }
@@ -95,9 +112,30 @@ public class QueryStringParameterBuilderTests
         }
     }
 
-    [TestCase(null)]
-    [TestCase(3)]
-    public void Builder_ConstructParameters_ToPage(int? page)
+    [Test]
+    public void Builder_ConstructParameters_ToCalendarId([ValueSource(nameof(NullableIntRange))] int? calendarId)
+    {
+        var request = new GetNetworkEventsRequest();
+        if (calendarId.HasValue)
+        {
+            request.CalendarId = new List<int> { calendarId.Value };
+        }
+
+        var parameters = QueryStringParameterBuilder.BuildQueryStringParameters(request);
+
+        parameters.TryGetValue("calendarId", out var calendarIdResult);
+        if (calendarId.HasValue)
+        {
+            calendarIdResult![0].Should().Be(calendarId?.ToString());
+        }
+        else
+        {
+            calendarIdResult.Should().BeEmpty();
+        }
+    }
+
+    [Test]
+    public void Builder_ConstructParameters_ToPage([ValueSource(nameof(NullableIntRange))] int? page)
     {
         var parameters = QueryStringParameterBuilder.BuildQueryStringParameters(new GetNetworkEventsRequest
         {
@@ -105,7 +143,7 @@ public class QueryStringParameterBuilderTests
         });
 
         parameters.TryGetValue("page", out var pageResult);
-        if (pageResult != null)
+        if (page.HasValue)
         {
             pageResult![0].Should().Be(page?.ToString());
         }
@@ -115,9 +153,8 @@ public class QueryStringParameterBuilderTests
         }
     }
 
-    [TestCase(null)]
-    [TestCase(6)]
-    public void Builder_ConstructParameters_ToPageSize(int? pageSize)
+    [Test]
+    public void Builder_ConstructParameters_ToPageSize([ValueSource(nameof(NullableIntRange))] int? pageSize)
     {
         var parameters = QueryStringParameterBuilder.BuildQueryStringParameters(new GetNetworkEventsRequest
         {
@@ -125,7 +162,7 @@ public class QueryStringParameterBuilderTests
         });
 
         parameters.TryGetValue("pageSize", out var pageSizeResult);
-        if (pageSizeResult != null)
+        if (pageSize.HasValue)
         {
             pageSizeResult![0].Should().Be(pageSize?.ToString());
         }
@@ -145,4 +182,6 @@ public class QueryStringParameterBuilderTests
         parameters.ContainsKey("page").Should().BeFalse();
         parameters.ContainsKey("pageSize").Should().BeFalse();
     }
+
+    private static readonly int?[] NullableIntRange = { null, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 }
