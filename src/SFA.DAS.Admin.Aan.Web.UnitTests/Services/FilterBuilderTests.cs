@@ -28,7 +28,7 @@ public class FilterBuilderTests
         };
 
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
         actual.Count.Should().Be(0);
     }
 
@@ -46,7 +46,7 @@ public class FilterBuilderTests
             FromDate = fromDate
         };
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
         actual.Count.Should().Be(expectedNumberOfFilters);
         if (expectedNumberOfFilters > 0)
         {
@@ -76,7 +76,7 @@ public class FilterBuilderTests
             ToDate = toDate
         };
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
 
         actual.Count.Should().Be(expectedNumberOfFilters);
         if (expectedNumberOfFilters > 0)
@@ -108,7 +108,7 @@ public class FilterBuilderTests
             ToDate = toDate
         };
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
 
         actual.Count.Should().Be(2);
 
@@ -154,7 +154,7 @@ public class FilterBuilderTests
             request.IsActive = new List<bool> { eventStatus.Value };
         }
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, ChecklistLookupEventStatus(), new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, ChecklistLookupEventStatus(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
         actual.Count.Should().Be(expectedNumberOfFilters);
         if (expectedNumberOfFilters > 0)
         {
@@ -197,7 +197,7 @@ public class FilterBuilderTests
             .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
             .Returns(LocationUrl);
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), eventTypesLookup);
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), eventTypesLookup, new List<ChecklistLookup>());
 
         if (expectedNumberOfFilters == 0)
         {
@@ -246,7 +246,7 @@ public class FilterBuilderTests
             .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
             .Returns(LocationUrl);
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), eventTypesLookup);
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), eventTypesLookup, new List<ChecklistLookup>());
 
         var firstItem = actual.First();
         firstItem.Filters.Count.Should().Be(2);
@@ -294,7 +294,7 @@ public class FilterBuilderTests
             .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
             .Returns(LocationUrl);
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), eventTypesLookup);
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), eventTypesLookup, new List<ChecklistLookup>());
 
         var firstItem = actual.First();
         firstItem.Filters.Count.Should().Be(3);
@@ -316,6 +316,178 @@ public class FilterBuilderTests
         filterThird.Order.Should().Be(3);
         filterThird.Value.Should().Be(parameterName);
     }
+
+
+    [TestCase(null, "", 0)]
+    [TestCase(1, "Region", 1)]
+    [TestCase(2, "Region", 1)]
+    [TestCase(3, "Region", 1)]
+    public void BuildEventSearchFiltersForSingleRegions(int? regionId1, string fieldName, int expectedNumberOfFilters)
+    {
+        var parameterName = "regionId";
+        var request = new GetNetworkEventsRequest { RegionId = new List<int>() };
+        var regionLookups = new List<ChecklistLookup>();
+
+        var eventFilters = new GetNetworkEventsRequest
+        {
+            RegionId = new List<int>()
+        };
+
+        if (regionId1 != null)
+        {
+            var lookup = new ChecklistLookup(parameterName, regionId1.Value.ToString(), true);
+
+            regionLookups.Add(lookup);
+
+            eventFilters.RegionId.Add(regionId1.Value);
+            request.RegionId.Add(regionId1.Value);
+        }
+
+        var mockUrlHelper = new Mock<IUrlHelper>();
+        mockUrlHelper
+            .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
+            .Returns(LocationUrl);
+
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), regionLookups);
+
+        if (expectedNumberOfFilters == 0)
+        {
+            actual.Count.Should().Be(0);
+            return;
+        }
+
+        var firstItem = actual.First();
+        firstItem.Filters.Count.Should().Be(expectedNumberOfFilters);
+        firstItem.FieldName.Should().Be(fieldName);
+        firstItem.FieldOrder.Should().Be(1);
+
+        var filter = firstItem.Filters.First();
+        filter.ClearFilterLink.Should().Be(LocationUrl);
+        filter.Order.Should().Be(1);
+        filter.Value.Should().Be(parameterName);
+    }
+
+    [TestCase(1, 2, "?regionId=2", "?regionId=1")]
+    [TestCase(1, 3, "?regionId=3", "?regionId=1")]
+    [TestCase(2, 3, "?regionId=3", "?regionId=2")]
+    public void BuildEventSearchFiltersForTwoRegions(int regionId1, int regionId2,
+       string expectedFirst, string expectedSecond)
+    {
+        var parameterName = "regionId";
+        var request
+            = new GetNetworkEventsRequest { RegionId = new List<int>() };
+        var regionLookups = new List<ChecklistLookup>();
+
+        var eventFilters = new GetNetworkEventsRequest
+        {
+            RegionId = new List<int>()
+        };
+
+        var lookup = new ChecklistLookup(parameterName, regionId1.ToString())
+        {
+            Checked = "Checked"
+        };
+
+        regionLookups.Add(lookup);
+
+        request.RegionId.Add(regionId1);
+        request.RegionId.Add(regionId2);
+        eventFilters.RegionId.Add(regionId1);
+        eventFilters.RegionId.Add(regionId2);
+
+        regionLookups.Add(new ChecklistLookup(parameterName, regionId2.ToString()));
+
+        var mockUrlHelper = new Mock<IUrlHelper>();
+        mockUrlHelper
+            .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
+            .Returns(LocationUrl);
+
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), regionLookups);
+
+        var firstItem = actual.First();
+        firstItem.Filters.Count.Should().Be(2);
+        firstItem.FieldName.Should().Be("Region");
+        firstItem.FieldOrder.Should().Be(1);
+
+        var filter = firstItem.Filters.First();
+        filter.ClearFilterLink.Should().Be(LocationUrl + expectedFirst);
+        filter.Order.Should().Be(1);
+        filter.Value.Should().Be(parameterName);
+
+        var filterSecond = firstItem.Filters.Skip(1).First();
+        filterSecond.ClearFilterLink.Should().Be(LocationUrl + expectedSecond);
+        filterSecond.Order.Should().Be(2);
+        filterSecond.Value.Should().Be(parameterName);
+    }
+
+    [TestCase("?regionId=2&regionId=3", "?regionId=1&regionId=3", "?regionId=1&regionId=2", 3, "checked")]
+    [TestCase("?regionId=3", "?regionId=2", "", 2, "")]
+    public void BuildEventSearchFiltersForThreeRegionsCheckedAndUnchecked(
+       string expectedFirst, string expectedSecond, string expectedThird, int expectedNumberOfFilters, string regionId1Checked)
+    {
+        var parameterName = "regionId";
+        var request = new GetNetworkEventsRequest { RegionId = new List<int>() };
+        var regionLookups = new List<ChecklistLookup>();
+
+        var eventFilters = new GetNetworkEventsRequest
+        {
+            RegionId = new List<int>()
+        };
+
+
+        var lookup = new ChecklistLookup(parameterName, 1.ToString())
+        {
+            Checked = regionId1Checked
+        };
+
+        regionLookups.Add(lookup);
+
+        eventFilters.RegionId.Add(1);
+
+        if (regionId1Checked == "checked")
+        {
+            request.RegionId.Add(1);
+        }
+
+        regionLookups.Add(new ChecklistLookup(parameterName, 2.ToString()));
+        eventFilters.RegionId.Add(2);
+        request.RegionId.Add(2);
+
+        regionLookups.Add(new ChecklistLookup(parameterName, 3.ToString()));
+        eventFilters.RegionId.Add(3);
+        request.RegionId.Add(3);
+
+        var mockUrlHelper = new Mock<IUrlHelper>();
+        mockUrlHelper
+            .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
+            .Returns(LocationUrl);
+
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), regionLookups);
+
+        var firstItem = actual.First();
+        firstItem.Filters.Count.Should().Be(expectedNumberOfFilters);
+        firstItem.FieldName.Should().Be("Region");
+        firstItem.FieldOrder.Should().Be(1);
+
+        var filter = firstItem.Filters.First();
+        filter.ClearFilterLink.Should().Be(LocationUrl + expectedFirst);
+        filter.Order.Should().Be(1);
+        filter.Value.Should().Be(parameterName);
+
+        var filterSecond = firstItem.Filters.Skip(1).First();
+        filterSecond.ClearFilterLink.Should().Be(LocationUrl + expectedSecond);
+        filterSecond.Order.Should().Be(2);
+        filterSecond.Value.Should().Be(parameterName);
+
+        if (firstItem.Filters.Count > 2)
+        {
+            var filterThird = firstItem.Filters.Skip(2).First();
+            filterThird.ClearFilterLink.Should().Be(LocationUrl + expectedThird);
+            filterThird.Order.Should().Be(3);
+            filterThird.Value.Should().Be(parameterName);
+        }
+    }
+
 
     private static List<ChecklistLookup> ChecklistLookupEventStatus() =>
         new()

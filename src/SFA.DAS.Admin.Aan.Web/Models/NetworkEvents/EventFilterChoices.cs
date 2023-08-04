@@ -6,5 +6,5 @@ public class EventFilterChoices
     public DateTime? ToDate { get; set; }
     public ChecklistDetails EventStatusChecklistDetails { get; set; } = new ChecklistDetails();
     public ChecklistDetails EventTypeChecklistDetails { get; set; } = new ChecklistDetails();
-
+    public ChecklistDetails RegionChecklistDetails { get; set; } = new ChecklistDetails();
 }

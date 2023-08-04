@@ -135,6 +135,28 @@ public class QueryStringParameterBuilderTests
     }
 
     [Test]
+    public void Builder_ConstructParameters_ToRegionId([ValueSource(nameof(NullableIntRange))] int? regionId)
+    {
+        var request = new GetNetworkEventsRequest();
+        if (regionId.HasValue)
+        {
+            request.RegionId = new List<int> { regionId.Value };
+        }
+
+        var parameters = QueryStringParameterBuilder.BuildQueryStringParameters(request);
+
+        parameters.TryGetValue("regionId", out var regionIdResult);
+        if (regionId.HasValue)
+        {
+            regionIdResult![0].Should().Be(regionId?.ToString());
+        }
+        else
+        {
+            regionIdResult.Should().BeEmpty();
+        }
+    }
+
+    [Test]
     public void Builder_ConstructParameters_ToPage([ValueSource(nameof(NullableIntRange))] int? page)
     {
         var parameters = QueryStringParameterBuilder.BuildQueryStringParameters(new GetNetworkEventsRequest

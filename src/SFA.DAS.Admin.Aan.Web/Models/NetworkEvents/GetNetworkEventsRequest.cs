@@ -17,6 +17,9 @@ public class GetNetworkEventsRequest
     public List<int> CalendarId { get; set; } = new List<int>();
 
     [FromQuery]
+    public List<int> RegionId { get; set; } = new List<int>();
+
+    [FromQuery]
     public int? Page { get; set; }
 
     [FromQuery]

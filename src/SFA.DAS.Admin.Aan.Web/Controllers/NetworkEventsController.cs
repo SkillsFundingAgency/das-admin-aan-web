@@ -7,6 +7,7 @@ using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 using SFA.DAS.Admin.Aan.Web.Services;
+using Region = SFA.DAS.Admin.Aan.Application.OuterApi.Regions.Region;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers;
 
@@ -31,19 +32,21 @@ public class NetworkEventsController : Controller
         var filterUrl = FilterBuilder.BuildFullQueryString(request, Url);
         var calendarEventsTask = _outerApiClient.GetCalendarEvents(memberId, QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
+        var regionTask = _outerApiClient.GetRegions(cancellationToken);
 
+        List<Task> tasks = new() { calendarEventsTask, calendarTask, regionTask };
 
-        List<Task> tasks = new() { calendarEventsTask, calendarTask };
         await Task.WhenAll(tasks);
 
         var calendars = calendarTask.Result;
+        var regions = regionTask.Result.Regions;
 
         var model = InitialiseViewModel(calendarEventsTask.Result);
 
         model.PaginationViewModel = SetupPagination(calendarEventsTask.Result, filterUrl!);
-        var filterChoices = PopulateFilterChoices(request, calendars);
+        var filterChoices = PopulateFilterChoices(request, calendars, regions);
         model.FilterChoices = filterChoices;
-        model.SelectedFilters = FilterBuilder.Build(request, Url, filterChoices.EventStatusChecklistDetails.Lookups, filterChoices.EventTypeChecklistDetails.Lookups);
+        model.SelectedFilters = FilterBuilder.Build(request, Url, filterChoices.EventStatusChecklistDetails.Lookups, filterChoices.EventTypeChecklistDetails.Lookups, filterChoices.RegionChecklistDetails.Lookups);
 
         return View(model);
     }
@@ -68,7 +71,7 @@ public class NetworkEventsController : Controller
         return new PaginationViewModel(result.Page, result.PageSize, result.TotalPages, filterUrl);
     }
 
-    private static EventFilterChoices PopulateFilterChoices(GetNetworkEventsRequest request, IEnumerable<Calendar> calendars)
+    private static EventFilterChoices PopulateFilterChoices(GetNetworkEventsRequest request, IEnumerable<Calendar> calendars, IEnumerable<Region> regions)
         => new()
         {
             FromDate = request.FromDate,
@@ -88,6 +91,12 @@ public class NetworkEventsController : Controller
                 Title = "Event type",
                 QueryStringParameterName = "calendarId",
                 Lookups = calendars.OrderBy(x => x.Ordering).Select(cal => new ChecklistLookup(cal.CalendarName, cal.Id.ToString(), request.CalendarId.Exists(x => x == cal.Id))).ToList(),
+            },
+            RegionChecklistDetails = new ChecklistDetails
+            {
+                Title = "Regions",
+                QueryStringParameterName = "regionId",
+                Lookups = regions.OrderBy(x => x.Ordering).Select(region => new ChecklistLookup(region.Area, region.Id.ToString(), request.RegionId.Exists(x => x == region.Id))).ToList()
             }
         };
 }

@@ -8,7 +8,7 @@ namespace SFA.DAS.Admin.Aan.Web.Services;
 
 public static class FilterBuilder
 {
-    public static List<SelectedFilter> Build(GetNetworkEventsRequest request, IUrlHelper urlHelper, IEnumerable<ChecklistLookup> eventStatusLookups, IEnumerable<ChecklistLookup> eventTypeLookups)
+    public static List<SelectedFilter> Build(GetNetworkEventsRequest request, IUrlHelper urlHelper, IEnumerable<ChecklistLookup> eventStatusLookups, IEnumerable<ChecklistLookup> eventTypeLookups, IEnumerable<ChecklistLookup> regionLookups)
     {
         var filters = new List<SelectedFilter>();
         var fullQueryParameters = BuildQueryParameters(request);
@@ -25,6 +25,7 @@ public static class FilterBuilder
 
         filters.AddFilterItems(urlHelper, fullQueryParameters, request.IsActive.Select(e => e.ToString()), "Event status", "isActive", eventStatusLookups);
         filters.AddFilterItems(urlHelper, fullQueryParameters, request.CalendarId.Select(e => e.ToString()), "Event type", "calendarId", eventTypeLookups);
+        filters.AddFilterItems(urlHelper, fullQueryParameters, request.RegionId.Select(e => e.ToString()), "Region", "regionId", regionLookups);
         return filters;
     }
 
@@ -72,6 +73,7 @@ public static class FilterBuilder
 
         queryParameters.AddRange(request.IsActive.Select(isActive => "isActive=" + isActive));
         queryParameters.AddRange(request.CalendarId.Select(eventType => "calendarId=" + eventType));
+        queryParameters.AddRange(request.RegionId.Select(region => "regionId=" + region));
 
         return queryParameters;
     }
