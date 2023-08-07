@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
+using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
@@ -26,9 +27,9 @@ public class NetworkEventsController : Controller
     [Route("", Name = RouteNames.NetworkEvents)]
     public async Task<IActionResult> Index(GetNetworkEventsRequest request, CancellationToken cancellationToken)
     {
-        //var memberId = User.GetAanMemberId();
+        var memberId = User.GetAanMemberId();
         //memberId = new Guid("81C0D92A-F20C-4B0B-B8BF-411B563FB3E5");
-        var memberId = new Guid("ac3709c1-aabf-4ea9-b97f-88ccfae4a34e");
+        memberId = new Guid("ac3709c1-aabf-4ea9-b97f-88ccfae4a34e");
         var filterUrl = FilterBuilder.BuildFullQueryString(request, Url);
         var calendarEventsTask = _outerApiClient.GetCalendarEvents(memberId, QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
@@ -82,8 +83,8 @@ public class NetworkEventsController : Controller
                 QueryStringParameterName = "isActive",
                 Lookups = new ChecklistLookup[]
                 {
-                    new("Published", true.ToString(), request.IsActive.Exists(x => x == true)),
-                    new("Cancelled", false.ToString(), request.IsActive.Exists(x => x == false)),
+                    new("Published", true.ToString(), request.IsActive.Exists(x => x)),
+                    new("Cancelled", false.ToString(), request.IsActive.Exists(x => x==false))
                 }
             },
             EventTypeChecklistDetails = new ChecklistDetails

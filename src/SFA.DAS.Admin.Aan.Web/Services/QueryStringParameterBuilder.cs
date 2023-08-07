@@ -3,7 +3,7 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 
 namespace SFA.DAS.Admin.Aan.Web.Services;
 
-public class QueryStringParameterBuilder
+public static class QueryStringParameterBuilder
 {
     public static Dictionary<string, string[]> BuildQueryStringParameters(GetNetworkEventsRequest request)
     {
