@@ -8,10 +8,10 @@ public class PaginationViewModelTests
     public const string BaseUrl = @"http://baseUrl";
 
     [TestCase("https://baseUrl.com", "https://baseUrl.com?page=2&pageSize=5")]
+    [TestCase("https://baseUrl.com?x=1", "https://baseUrl.com?x=1&page=2&pageSize=5")]
     public void CorrectlyAppendsToTheBaseUrl(string baseUrl, string expectedUrl)
     {
         PaginationViewModel sut = new(1, 5, 2, baseUrl);
-
         sut.LinkItems.Last().Url.Should().Be(expectedUrl);
     }
 
@@ -69,8 +69,6 @@ public class PaginationViewModelTests
         {
             sut.LinkItems[^2].Text.Should().Be(lastPageExpected.ToString());
         }
-
-
 
         foreach (var text in linkItems)
         {

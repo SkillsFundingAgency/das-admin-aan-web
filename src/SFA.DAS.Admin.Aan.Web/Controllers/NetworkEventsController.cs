@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.Services;
+using SFA.DAS.Admin.Aan.Domain.Constants;
 using SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -83,8 +84,8 @@ public class NetworkEventsController : Controller
                 QueryStringParameterName = "isActive",
                 Lookups = new ChecklistLookup[]
                 {
-                    new("Published", true.ToString(), request.IsActive.Exists(x => x)),
-                    new("Cancelled", false.ToString(), request.IsActive.Exists(x => x==false))
+                    new(EventStatus.Published, true.ToString(), request.IsActive.Exists(x => x)),
+                    new(EventStatus.Cancelled, false.ToString(), request.IsActive.Exists(x => !x))
                 }
             },
             EventTypeChecklistDetails = new ChecklistDetails

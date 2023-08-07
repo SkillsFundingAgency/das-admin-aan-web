@@ -16,8 +16,8 @@ public static class QueryStringParameterBuilder
         }
         parameters.Add("calendarId", request.CalendarId.Select(cal => cal.ToString()).ToArray());
         parameters.Add("regionId", request.RegionId.Select(region => region.ToString()).ToArray());
-        if (request.Page != null) parameters.Add("page", new[] { request.Page?.ToString() }!);
-        if (request.PageSize != null) parameters.Add("pageSize", new[] { request.PageSize?.ToString() }!);
+        if (request.Page.HasValue) parameters.Add("page", new[] { request.Page.Value.ToString() }!);
+        if (request.PageSize.HasValue) parameters.Add("pageSize", new[] { request.PageSize.Value.ToString() }!);
         return parameters;
     }
 }

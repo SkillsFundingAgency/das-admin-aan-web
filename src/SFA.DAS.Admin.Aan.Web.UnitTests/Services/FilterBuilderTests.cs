@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Moq;
+using SFA.DAS.Admin.Aan.Domain.Constants;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 using SFA.DAS.Admin.Aan.Web.Services;
 
@@ -492,7 +493,7 @@ public class FilterBuilderTests
     private static List<ChecklistLookup> ChecklistLookupEventStatus() =>
         new()
         {
-            new ChecklistLookup("Published", true.ToString()),
-            new ChecklistLookup("Cancelled", false.ToString())
+            new ChecklistLookup(EventStatus.Published, true.ToString()),
+            new ChecklistLookup(EventStatus.Cancelled, false.ToString())
         };
 }
