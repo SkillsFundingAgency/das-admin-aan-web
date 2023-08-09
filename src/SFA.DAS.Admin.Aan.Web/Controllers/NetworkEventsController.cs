@@ -28,7 +28,7 @@ public class NetworkEventsController : Controller
     public async Task<IActionResult> Index(GetNetworkEventsRequest request, CancellationToken cancellationToken)
     {
         var filterUrl = FilterBuilder.BuildFullQueryString(request, Url);
-        var calendarEventsTask = _outerApiClient.GetCalendarEvents(new Guid(), QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
+        var calendarEventsTask = _outerApiClient.GetCalendarEvents(Guid.NewGuid(), QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
         var regionTask = _outerApiClient.GetRegions(cancellationToken);
 
