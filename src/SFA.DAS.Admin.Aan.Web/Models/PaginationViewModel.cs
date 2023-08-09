@@ -52,6 +52,7 @@ public class PaginationViewModel
 
         var query = $"page={page}&pageSize={pageSize}";
         var hasQueryParameters = baseUrl.Contains('?');
+
         var queryToAppend = hasQueryParameters ? $"&{query}" : $"?{query}";
 
         return $"{baseUrl}{queryToAppend}";
