@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Web.Controllers;
@@ -50,5 +51,64 @@ public class NetworkEventsControllerTests
         model.FilterChoices.ToDate?.ToApiString().Should().Be(toDateFormatted);
 
         outerApiMock.Verify(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+
+    [TestCase(true, true)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(false, false)]
+
+    public void GetCalendarEventsWithEventStatusCheck_ReturnsApiResponse(bool isPublishedTicked, bool isCancelledTicked)
+    {
+
+        var request = new GetNetworkEventsRequest
+        {
+            Page = 1,
+            PageSize = 1
+        };
+
+        if (isPublishedTicked)
+            request.IsActive.Add(true);
+        if (isCancelledTicked)
+            request.IsActive.Add(false);
+
+
+        var expectedResult = new GetCalendarEventsQueryResult();
+
+        var outerApiMock = new Moq.Mock<IOuterApiClient>();
+
+        outerApiMock.Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(), It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);
+        outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Calendar>());
+        outerApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(new GetRegionsResult());
+
+        var sut = new NetworkEventsController(outerApiMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+
+        var actualResult = sut.Index(request, new CancellationToken());
+
+        var viewResult = actualResult.Result.As<ViewResult>();
+        var model = viewResult.Model as NetworkEventsViewModel;
+
+        switch (isPublishedTicked)
+        {
+            case true:
+                model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Published").Checked.Should().NotBeEmpty();
+                break;
+            case false:
+                model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Published").Checked.Should().BeEmpty();
+                break;
+        }
+
+        switch (isCancelledTicked)
+        {
+            case true:
+                model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Cancelled").Checked.Should().NotBeEmpty();
+                break;
+            case false:
+                model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Cancelled").Checked.Should().BeEmpty();
+                break;
+        }
     }
 }
