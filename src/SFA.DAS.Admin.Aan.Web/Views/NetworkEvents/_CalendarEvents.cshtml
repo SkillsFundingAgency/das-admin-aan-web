@@ -19,7 +19,7 @@
                     <dd class="das-definition-list__definition">Signed up</dd>
                 </dl>
                 <div class="govuk-button-group govuk-!-margin-bottom-0">
-                    @if(calendarEvent.IsActive && calendarEvent.Start >= DateTime.Now)
+                    @if(calendarEvent.IsEditable)
                     {
                         <a href="#" class="govuk-link">Make changes</a>
                         <a href="#" class="govuk-link">Cancel event</a>

@@ -17,9 +17,19 @@ public class CalendarEventViewModelTest
 
     [TestCase(true, "Published")]
     [TestCase(false, "Cancelled")]
-    public void Operator_GivenCalendarEventSummaryIsActive_MatchesStatus(bool isActive, string status)
+    public void Operator_GivenCalendarViewModelIsActive_MatchesStatus(bool isActive, string status)
     {
         var sut = new CalendarEventViewModel { IsActive = isActive };
         sut.Status.Should().Be(status);
     }
+
+    [TestCase(false, "3000-01-01", false)]
+    [TestCase(true, "2000-01-01", false)]
+    [TestCase(true, "3000-01-01", true)]
+    public void Operator_GivenCalendarViewModelIsActiveAndStart_MatchesIsEditable(bool isActive, DateTime startDate, bool isEditable)
+    {
+        var sut = new CalendarEventViewModel { IsActive = isActive, Start = startDate };
+        sut.IsEditable.Should().Be(isEditable);
+    }
+
 }
