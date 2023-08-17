@@ -33,6 +33,8 @@
             <div class="govuk-grid-column-one-quarter">
                 <div class="govuk-body app-date">
                     <span class="app-date__day">@calendarEvent.Start.Day</span>
+                    <span aria-hidden="true" class="govuk-visually-hidden">@calendarEvent.Start.ToString("MMM")</span>
+                    <span class="govuk-visually-hidden">@calendarEvent.Start.ToString("MMMM")</span>
                     <span class="app-date__month">@calendarEvent.Start.ToString("MMM")</span>
                 </div>
                 <strong class="govuk-tag app-tag app-tag--@calendarEvent.EventFormat">@calendarEvent.EventFormat.GetDescription()</strong>
