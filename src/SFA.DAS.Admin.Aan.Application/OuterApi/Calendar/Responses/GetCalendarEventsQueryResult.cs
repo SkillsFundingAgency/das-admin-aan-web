@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
+﻿namespace SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 public class GetCalendarEventsQueryResult
 {
     public int Page { get; set; }

@@ -2,9 +2,10 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.Services;
-using SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Web.Controllers;
 using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -90,6 +91,8 @@ public class NetworkEventsControllerTests
 
         var viewResult = actualResult.Result.As<ViewResult>();
         var model = viewResult.Model as NetworkEventsViewModel;
+
+        model!.ClearSelectedFiltersLink.Should().Be(AllNetworksUrl);
 
         switch (isPublishedTicked)
         {

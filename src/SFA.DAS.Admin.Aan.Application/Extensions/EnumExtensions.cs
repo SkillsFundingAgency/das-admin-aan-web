@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace SFA.DAS.Admin.Aan.Domain.Extensions;
+namespace SFA.DAS.Admin.Aan.Application.Extensions;
 public static class EnumExtensions
 {
     public static string? GetDescription(this Enum value)

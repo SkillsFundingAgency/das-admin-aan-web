@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
+using SFA.DAS.Admin.Aan.Application.Constants;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.Services;
-using SFA.DAS.Admin.Aan.Domain.Constants;
-using SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
@@ -45,6 +45,7 @@ public class NetworkEventsController : Controller
         var filterChoices = PopulateFilterChoices(request, calendars, regions);
         model.FilterChoices = filterChoices;
         model.SelectedFilters = FilterBuilder.Build(request, Url, filterChoices.EventStatusChecklistDetails.Lookups, filterChoices.EventTypeChecklistDetails.Lookups, filterChoices.RegionChecklistDetails.Lookups);
+        model.ClearSelectedFiltersLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
 
         return View(model);
     }

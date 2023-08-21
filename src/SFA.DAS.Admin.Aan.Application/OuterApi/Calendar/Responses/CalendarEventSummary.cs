@@ -1,6 +1,6 @@
-﻿using SFA.DAS.Admin.Aan.Domain.Constants;
+﻿using SFA.DAS.Admin.Aan.Application.Constants;
 
-namespace SFA.DAS.Admin.Aan.Domain.OuterApi.Responses;
+namespace SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 
 public class CalendarEventSummary
 {

@@ -1,5 +1,6 @@
-﻿using FluentAssertions;
-using SFA.DAS.Admin.Aan.Domain.Extensions;
+﻿
+using FluentAssertions;
+using SFA.DAS.Admin.Aan.Application.Extensions;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Extensions;

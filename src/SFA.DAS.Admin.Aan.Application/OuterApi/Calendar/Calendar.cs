@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
+﻿namespace SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 
 public class Calendar
 {
