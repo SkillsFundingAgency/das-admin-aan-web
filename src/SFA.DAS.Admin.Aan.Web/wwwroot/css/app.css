@@ -450,6 +450,14 @@ a.das-show-hide__button {
   float: right;
 }
 
+.das-search-title {
+    clear: both;
+    float: left;
+    margin-right: 7px;
+    font-weight: 700;
+    flex-basis: 35%;
+}
+
 .das-pagination-links > a, .das-pagination-links span {
   height: 40px;
   line-height: 40px;
