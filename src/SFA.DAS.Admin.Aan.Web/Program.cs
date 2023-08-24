@@ -2,10 +2,16 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Web.AppStart;
 using SFA.DAS.Admin.Aan.Web.Authentication;
+using SFA.DAS.Admin.Aan.Web.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var rootConfiguration = builder.Configuration.LoadConfiguration();
+
+
+var environmentName = rootConfiguration["EnvironmentName"];
+var applicationConfiguration = rootConfiguration.Get<ApplicationConfiguration>();
+builder.Services.AddSingleton(applicationConfiguration);
 
 builder.Services
     .AddOptions()
@@ -21,6 +27,18 @@ builder.Services
     .AddSessionStateTempDataProvider();
 
 builder.Services.AddHealthChecks();
+
+// builder.Services
+//     .Configure<RouteOptions>(options => { options.LowercaseUrls = true; })
+//     .AddMvc(options =>
+//     {
+//         //MFCMFC not sure what this is for
+//         // options.Filters.Add<RequiresRegistrationAuthorizationFilter>();
+//         // options.Filters.Add<RequiresExistingMemberAttribute>();
+//         options.Filters.Add<RequiresSessionModelAttribute>();
+//         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+//     })
+//     .AddSessionStateTempDataProvider();
 
 #if DEBUG
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
@@ -47,6 +65,7 @@ app
     .UseRouting()
     .UseAuthentication()
     .UseAuthorization()
+    .UseSession()
     .UseHealthChecks("/health");
 
 app.MapControllerRoute(
