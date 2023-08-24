@@ -6,4 +6,5 @@ namespace SFA.DAS.Admin.Aan.Web.Infrastructure;
 public static class RouteNames
 {
     public const string AdministratorHub = nameof(AdministratorHub);
+    public const string NetworkEvents = nameof(NetworkEvents);
 }
