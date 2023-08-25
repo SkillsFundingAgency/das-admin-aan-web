@@ -53,8 +53,33 @@ public class NetworkEventFormatControllerTests
 
         var result = (ViewResult)sut.Post(submitModel);
 
+        sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventFormat == eventFormat)));
 
+        Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
+        var vm = result.Model as CreateEventFormatViewModel;
+        vm!.BackLink.Should().Be(AllNetworksUrl);
+    }
+
+    [MoqAutoData]
+    public void Post_WhenNoSelectionOfEventFormat_Errors(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] NetworkEventFormatController sut)
+    {
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+
+
+        var sessionModel = new CreateEventSessionModel();
+
+        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+
+        sut.ModelState.AddModelError("key", "message");
+
+        var submitModel = new CreateEventFormatViewModel();
+
+        var result = (ViewResult)sut.Post(submitModel);
+
+        sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
         var vm = result.Model as CreateEventFormatViewModel;
         vm!.BackLink.Should().Be(AllNetworksUrl);
