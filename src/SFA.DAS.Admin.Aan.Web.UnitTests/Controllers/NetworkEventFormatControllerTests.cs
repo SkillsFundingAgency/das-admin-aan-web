@@ -33,7 +33,7 @@ public class NetworkEventFormatControllerTests
     [TestCase(EventFormat.InPerson)]
     [TestCase(EventFormat.Hybrid)]
     [TestCase(EventFormat.Online)]
-    public void Post_SetNullEventFormatOnSessionModel(EventFormat eventFormat)
+    public void Post_SetEventFormatOnSessionModel(EventFormat eventFormat)
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<CreateEventFormatViewModel>>();
@@ -61,7 +61,39 @@ public class NetworkEventFormatControllerTests
         vm!.BackLink.Should().Be(AllNetworksUrl);
     }
 
-    [MoqAutoData]
+
+    [TestCase(EventFormat.InPerson)]
+    [TestCase(EventFormat.Hybrid)]
+    [TestCase(EventFormat.Online)]
+    public void Post_SetEventFormatOnNoSessionModel(EventFormat eventFormat)
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<CreateEventFormatViewModel>>();
+
+        var sessionModel = new CreateEventSessionModel();
+
+        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
+
+        var submitModel = new CreateEventFormatViewModel { EventFormat = eventFormat };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new NetworkEventFormatController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+
+        var result = (ViewResult)sut.Post(submitModel);
+
+        sut.ModelState.IsValid.Should().BeTrue();
+        sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventFormat == eventFormat)));
+
+        Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
+        var vm = result.Model as CreateEventFormatViewModel;
+        vm!.BackLink.Should().Be(AllNetworksUrl);
+    }
+
+    [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventFormat_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] NetworkEventFormatController sut)

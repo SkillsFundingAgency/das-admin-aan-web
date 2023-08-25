@@ -14,7 +14,6 @@
         </h1>
         <form asp-route="@RouteNames.CreateEvent.EventFormat" method="POST">
             <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset">
                 <input type="hidden" asp-for="@Model.BackLink"/>
                     <div esfa-validation-marker-for="@Model.EventFormat" class="govuk-form-group" >
                         <span asp-validation-for="EventFormat" class="govuk-error-message"></span>
@@ -36,7 +35,6 @@
                         <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>
                         <a href="@Model.BackLink" class="govuk-link">Cancel</a>
                     </div>
-                </fieldset>
             </div>
         </form>
     </div>
