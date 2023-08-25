@@ -17,16 +17,18 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers;
 public class NetworkEventsController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
-
-    public NetworkEventsController(IOuterApiClient outerApiClient)
+    private readonly ISessionService _sessionService;
+    public NetworkEventsController(IOuterApiClient outerApiClient, ISessionService sessionService)
     {
         _outerApiClient = outerApiClient;
+        _sessionService = sessionService;
     }
 
     [HttpGet]
     [Route("", Name = RouteNames.NetworkEvents)]
     public async Task<IActionResult> Index(GetNetworkEventsRequest request, CancellationToken cancellationToken)
     {
+        _sessionService.Clear();
         var filterUrl = FilterBuilder.BuildFullQueryString(request, Url);
         var calendarEventsTask = _outerApiClient.GetCalendarEvents(Guid.NewGuid(), QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
@@ -50,11 +52,12 @@ public class NetworkEventsController : Controller
         return View(model);
     }
 
-    private static NetworkEventsViewModel InitialiseViewModel(GetCalendarEventsQueryResult result)
+    private NetworkEventsViewModel InitialiseViewModel(GetCalendarEventsQueryResult result)
     {
         var model = new NetworkEventsViewModel
         {
-            TotalCount = result.TotalCount
+            TotalCount = result.TotalCount,
+            CreateEventLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!
         };
 
         foreach (var calendarEvent in result.CalendarEvents)

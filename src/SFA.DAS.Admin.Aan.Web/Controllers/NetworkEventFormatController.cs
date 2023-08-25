@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -12,22 +14,46 @@ public class NetworkEventFormatController : Controller
 {
     public const string ViewPath = "~/Views/NetworkEvent/EventFormat.cshtml";
     private readonly ISessionService _sessionService;
+    private readonly IValidator<CreateEventFormatViewModel> _validator;
 
-    public NetworkEventFormatController(ISessionService sessionService)
+    public NetworkEventFormatController(ISessionService sessionService, IValidator<CreateEventFormatViewModel> validator)
     {
         _sessionService = sessionService;
+        _validator = validator;
     }
 
+    [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var model = GetViewModel();
+        // not sure if this is right MFCMFC
+        //_sessionService.Delete("CreateEventSessionModel");
+
+        var sessionModel = _sessionService.Get<CreateEventSessionModel>();
+
+        var model = GetViewModel(sessionModel);
         return View(ViewPath, model);
     }
 
-    private CreateEventFormatViewModel GetViewModel()
+    [HttpPost]
+    public IActionResult Post(CreateEventFormatViewModel submitModel)
     {
-        var sessionModel = _sessionService.Get<CreateEventSessionModel>();
+        var sessionModel = _sessionService.Get<CreateEventSessionModel>() ?? new CreateEventSessionModel();
 
+        var result = _validator.Validate(submitModel);
+
+        if (!result.IsValid)
+        {
+            result.AddToModelState(ModelState);
+            return View(ViewPath, GetViewModel(sessionModel));
+        }
+
+        sessionModel.EventFormat = submitModel.EventFormat;
+        _sessionService.Set(sessionModel);
+        return View(ViewPath, GetViewModel(sessionModel));
+    }
+
+    private CreateEventFormatViewModel GetViewModel(CreateEventSessionModel sessionModel)
+    {
         return new CreateEventFormatViewModel
         {
             EventFormat = sessionModel?.EventFormat,

@@ -7,68 +7,35 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+        <h2>Create Event</h2>
         <h2 class="govuk-heading-m govuk-!-margin-bottom-5">Event format</h2>
     </div>
 </div>
 <div class="govuk-grid-row">
+    <partial name="_validationSummary" />
     <div class="govuk-grid-column-one-third">
-        <partial name="_validationSummary" />
-        <div class="das-show-hide" data-module="das-show-hide">
-            @* <div class="das-filter das-!-show--from-tablet das-show-hide__section" id="events-filter" tabindex="0"> *@
-            @*     <div class="das-filter__header"> *@
-            @*         <h2 class="das-filter__heading">Filter</h2> *@
-            @*     </div> *@
-            
-            <span asp-validation-for="EventFormat" class="govuk-error-message"></span>
-            <div id="EngagedWithAPreviousAmbassadorInTheNetwork" class="govuk-radios" data-module="govuk-radios">
-                <div class="govuk-radios__item">
-                    <input asp-for="EventFormat" id="InPerson" class="govuk-radios__input" type="radio" value="InPerson"
-                           sfa-validationerror-class="form-control-error">
-                    <label class="govuk-label govuk-radios__label" for="InPerson">
-                        In person
-                    </label>
-                </div>
-                <div class="govuk-radios__item">
-                    <input asp-for="EventFormat" id="Online" class="govuk-radios__input" type="radio" value="Online"
-                           sfa-validationerror-class="form-control-error" checked>
-                    <label class="govuk-label govuk-radios__label" for="Online">
-                        Online
-                    </label>
-                </div>
-                <div class="govuk-radios__item">
-                    <input asp-for="EventFormat" id="Hybrid" class="govuk-radios__input" type="radio" value="Hybrid"
-                           sfa-validationerror-class="form-control-error">
-                    <label class="govuk-label govuk-radios__label" for="Hybrid">
-                        Hybrid
-                    </label>
-                </div>
-            </div>
 
-            <div class="das-!-show--from-tablet" id="events-filter-options">
-                <form asp-route="@RouteNames.CreateEvent.EventFormat" method="POST">
-                    <button type="submit" id="continue" d class="govuk-button" data-disable-on-submit="true">Continue</button>
-                </form>
-                @*//MFCMFC this needs to clear the session model*@
-                <a href="@Model.BackLink" title="Cancel create event" class="govuk-back-link">Cancel</a>
-            </div>
-            @* </div> *@
-            @* <button class="govuk-button das-filter__toggle das-show-hide__button govuk-visually-hidden" data-button-string="filter " data-aria-controls="events-filter" aria-expanded="true">Show filter </button> *@
-        </div>
+        <form asp-route="@RouteNames.CreateEvent.EventFormat" method="POST">
+            <input type="hidden" asp-for="@Model.BackLink"/>
+            <div class="das-show-hide" data-module="das-show-hide">
+
+                <span asp-validation-for="EventFormat" class="govuk-error-message"></span>
+                <div id="EngagedWithAPreviousAmbassadorInTheNetwork" class="govuk-radios" data-module="govuk-radios">
+                    @foreach (var ef in Model.EventFormats)
+                    {
+                        <div class="govuk-radios__item">
+                            <input asp-for="EventFormat" id="@ef.Value" class="govuk-radios__input" type="radio" value="@ef.Value"
+                                   sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="@ef.Value">
+                                @ef.Name
+                            </label>
+                        </div>
+                    }
+                </div>
+
+                <button type="submit" id="continue" d class="govuk-button" data-disable-on-submit="true">Continue</button>
+                <a href="@Model.BackLink" title="Cancel create event" class="govuk-link">Cancel</a>
+                </div>
+        </form>
     </div>
-    @* <div class="govuk-grid-column-two-thirds"> *@
-    @*     <h2 class="govuk-heading-m">@totalCountDescription</h2> *@
-    @*     <p class="govuk-body govuk-!-margin-bottom-6  govuk-visually-hidden"> *@
-    @*         Sorted by: *@
-    @*         <span class="govuk-!-font-weight-bold">Name</span> *@
-    @*     </p> *@
-    @*     <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-3 "> *@
-    @*     <div class="das-search-results"> *@
-    @*         @{ *@
-    @*             await Html.RenderPartialAsync("_CalendarEvents"); *@
-    @*         } *@
-    @*     </div> *@
-    @*     @{ *@
-    @*         await Html.RenderPartialAsync("_Pagination", Model.PaginationViewModel); *@
-    @*     } *@
-    @* </div> *@
 </div>

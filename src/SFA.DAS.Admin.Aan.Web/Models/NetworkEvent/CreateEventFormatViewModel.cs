@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
+using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
@@ -22,6 +23,4 @@ public class CreateEventFormatViewModel : IBackLink
         {
             EventFormat = request.EventFormat
         };
-
-
 }

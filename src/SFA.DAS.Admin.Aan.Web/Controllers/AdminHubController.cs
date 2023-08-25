@@ -11,6 +11,6 @@ public class AdminHubController : Controller
 {
     public IActionResult Index()
     {
-        return View(new AdminHubViewModel());
+        return View(new AdminHubViewModel { ManageEventsUrl = Url.RouteUrl(RouteNames.NetworkEvents)! });
     }
 }
