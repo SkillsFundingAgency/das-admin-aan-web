@@ -33,7 +33,7 @@ public class NetworkEventFormatController : Controller
     [HttpPost]
     public IActionResult Post(CreateEventFormatViewModel submitModel)
     {
-        var sessionModel = _sessionService.Get<CreateEventSessionModel>() ?? new CreateEventSessionModel();
+        var sessionModel = _sessionService.Get<CreateEventSessionModel?>() ?? new CreateEventSessionModel();
 
         var result = _validator.Validate(submitModel);
 
