@@ -28,18 +28,6 @@ builder.Services
 
 builder.Services.AddHealthChecks();
 
-// builder.Services
-//     .Configure<RouteOptions>(options => { options.LowercaseUrls = true; })
-//     .AddMvc(options =>
-//     {
-//         //MFCMFC not sure what this is for
-//         // options.Filters.Add<RequiresRegistrationAuthorizationFilter>();
-//         // options.Filters.Add<RequiresExistingMemberAttribute>();
-//         options.Filters.Add<RequiresSessionModelAttribute>();
-//         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
-//     })
-//     .AddSessionStateTempDataProvider();
-
 #if DEBUG
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 #endif

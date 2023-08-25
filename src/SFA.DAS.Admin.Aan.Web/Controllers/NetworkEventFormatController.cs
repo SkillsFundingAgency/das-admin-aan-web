@@ -25,11 +25,7 @@ public class NetworkEventFormatController : Controller
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        // not sure if this is right MFCMFC
-        //_sessionService.Delete("CreateEventSessionModel");
-
         var sessionModel = _sessionService.Get<CreateEventSessionModel>();
-
         var model = GetViewModel(sessionModel);
         return View(ViewPath, model);
     }
