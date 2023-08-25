@@ -10,4 +10,3 @@ public enum EventFormat
     [Description("Hybrid")]
     Hybrid
 }
-

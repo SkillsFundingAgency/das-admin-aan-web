@@ -8,8 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var rootConfiguration = builder.Configuration.LoadConfiguration();
 
-
-var environmentName = rootConfiguration["EnvironmentName"];
 var applicationConfiguration = rootConfiguration.Get<ApplicationConfiguration>();
 builder.Services.AddSingleton(applicationConfiguration);
 

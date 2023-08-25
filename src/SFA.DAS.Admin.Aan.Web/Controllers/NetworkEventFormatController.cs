@@ -23,7 +23,7 @@ public class NetworkEventFormatController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public IActionResult Get()
     {
         var sessionModel = _sessionService.Get<CreateEventSessionModel>();
         var model = GetViewModel(sessionModel);
@@ -53,7 +53,7 @@ public class NetworkEventFormatController : Controller
         return new CreateEventFormatViewModel
         {
             EventFormat = sessionModel?.EventFormat,
-            BackLink = Url.RouteUrl(RouteNames.NetworkEvents)
+            BackLink = Url.RouteUrl(RouteNames.NetworkEvents)!
         };
     }
 }
