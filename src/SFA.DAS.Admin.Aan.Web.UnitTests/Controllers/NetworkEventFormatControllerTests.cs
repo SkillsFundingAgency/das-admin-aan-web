@@ -17,8 +17,7 @@ public class NetworkEventFormatControllerTests
 {
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
 
-    [Test]
-    [MoqAutoData]
+    [Test, MoqAutoData]
     public void Details_ReturnsCreateEventFormatViewModel(
         [Greedy] NetworkEventFormatController sut)
     {
@@ -57,8 +56,7 @@ public class NetworkEventFormatControllerTests
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventFormat == eventFormat)));
 
         Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
-        var vm = result.Model as CreateEventFormatViewModel;
-        vm!.BackLink.Should().Be(AllNetworksUrl);
+        (result.Model as CreateEventFormatViewModel)!.BackLink.Should().Be(AllNetworksUrl);
     }
 
 
@@ -69,8 +67,6 @@ public class NetworkEventFormatControllerTests
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<CreateEventFormatViewModel>>();
-
-        var sessionModel = new CreateEventSessionModel();
 
         sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
 
@@ -89,8 +85,7 @@ public class NetworkEventFormatControllerTests
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventFormat == eventFormat)));
 
         Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
-        var vm = result.Model as CreateEventFormatViewModel;
-        vm!.BackLink.Should().Be(AllNetworksUrl);
+        (result.Model as CreateEventFormatViewModel)!.BackLink.Should().Be(AllNetworksUrl);
     }
 
     [Test, MoqAutoData]
@@ -113,7 +108,6 @@ public class NetworkEventFormatControllerTests
 
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
-        var vm = result.Model as CreateEventFormatViewModel;
-        vm!.BackLink.Should().Be(AllNetworksUrl);
+        (result.Model as CreateEventFormatViewModel)!.BackLink.Should().Be(AllNetworksUrl);
     }
 }
