@@ -472,3 +472,15 @@ a.das-show-hide__button {
   color: #383f43;background: #eeefef;
 }
 
+.app-user-header {
+    background-color: #1d70b8;
+    margin-top: -10px;
+    padding-top: 15px;
+    padding-bottom: 5px
+}
+
+.app-user-header__name {
+    color: #fff;
+    margin: 10px 0
+}
+
