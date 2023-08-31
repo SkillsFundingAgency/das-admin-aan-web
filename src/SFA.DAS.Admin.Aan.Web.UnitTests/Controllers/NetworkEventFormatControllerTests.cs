@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
-using SFA.DAS.Admin.Aan.Web.Controllers;
+using SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;

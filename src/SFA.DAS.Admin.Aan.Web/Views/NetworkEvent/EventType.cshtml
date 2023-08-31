@@ -1,0 +1,96 @@
+﻿@using SFA.DAS.Admin.Aan.Web.Infrastructure
+@model SFA.DAS.Admin.Aan.Web.Models.NetworkEvent.CreateEventTypeViewModel
+@{
+    ViewData["Title"] = "Create Calendar Event";
+    //ViewBag.EventTypes = Model.EventTypes;
+}
+
+<partial name="_validationSummary" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+       
+        <form asp-route="@RouteNames.CreateEvent.EventType" method="POST">
+        <div class="govuk-form-group">
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-l">Create event</span>
+            </h1>
+            <input type="hidden" asp-for="@Model.BackLink"/>
+            <div esfa-validation-marker-for="@Model.EventTitle" class="govuk-form-group">
+                <span asp-validation-for="EventTitle" class="govuk-error-message"></span>
+                <div id="EventTitle">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            Event title
+                        </legend>
+                        <div class="govuk-form-group">
+                            <input class="govuk-input" id="eventTitle" name="eventTitle" type="text" value="@Model.EventTitle" maxlength="200">
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+          
+            <div esfa-validation-marker-for="@Model.EventTypeId" class="govuk-form-group">
+                <span asp-validation-for="EventTypeId" class="govuk-error-message"></span>
+                <div id="EventTypeId">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            Event type
+                        </legend>
+                        <div class="govuk-form-group">
+                            @Html.DropDownListFor(m => m.EventTypeId,new SelectList(Model.EventTypes, "EventTypeId", "Name"),"Select an event type",new { @class = "govuk-select" })
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div esfa-validation-marker-for="@Model.EventRegionId" class="govuk-form-group">
+                <span asp-validation-for="EventRegionId" class="govuk-error-message"></span>
+                <div id="EventRegionId">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            Event region
+                        </legend>
+                        <div class="govuk-form-group">
+                            @Html.DropDownListFor(m => m.EventRegionId,new SelectList(Model.EventRegions, "RegionId", "Name"),"Select a region",new { @class = "govuk-select" })
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+                
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="sort">
+                        Sort by
+                    </label>
+                    <select class="govuk-select" id="sort" name="sort">
+                        <option value="published">Recently published</option>
+                        <option value="updated" selected>Recently updated</option>
+                        <option value="views">Most views</option>
+                        <option value="comments">Most comments</option>
+                    </select>
+                </div>
+
+                @* <div esfa-validation-marker-for="@Model.EventFormat" class="govuk-form-group" > *@
+                @*     <span asp-validation-for="EventFormat" class="govuk-error-message"></span> *@
+                @*     <div id="EventFormat" class="govuk-radios" data-module="govuk-radios"> *@
+                @*         @foreach (var ef in Model.EventFormats) *@
+                @*         { *@
+                @*             <div class="govuk-radios__item"> *@
+                @*                 <input asp-for="EventFormat" id="@ef.Value" class="govuk-radios__input" type="radio" value="@ef.Value" *@
+                @*                        sfa-validationerror-class="form-control-error"> *@
+                @*                 <label class="govuk-label govuk-radios__label" for="@ef.Value"> *@
+                @*                     @ef.Name *@
+                @*                 </label> *@
+                @*             </div> *@
+                @*         } *@
+                @*     </div> *@
+                @* </div> *@
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+                <div class="govuk-button-group">
+                    <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>
+                    <a href="@Model.BackLink" class="govuk-link">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
