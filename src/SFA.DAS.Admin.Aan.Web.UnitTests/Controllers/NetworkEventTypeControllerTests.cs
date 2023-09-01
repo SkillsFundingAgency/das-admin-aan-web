@@ -4,6 +4,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.Services;
@@ -21,8 +22,23 @@ public class NetworkEventTypeControllerTests
     [Test, MoqAutoData]
     public void Get_ReturnsCreateEventTypeViewModel(
         [Frozen] Mock<IOuterApiClient> outerApiMock,
-        [Greedy] NetworkEventTypeController sut)
+        [Frozen] Mock<IValidator<CreateEventTypeViewModel>> validatorMock)
     {
+        var sessionServiceMock = new Mock<ISessionService>();
+
+        var sessionModel = new CreateEventSessionModel
+        {
+            EventTitle = "title",
+            EventTypeId = 1,
+            EventRegionId = 2,
+            EventFormat = EventFormat.Hybrid
+        };
+
+        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+
+        var sut = new NetworkEventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+
+
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, Url);
         var actualResult = sut.Get(new CancellationToken());
         var viewResult = actualResult.Result.As<ViewResult>();
@@ -34,12 +50,14 @@ public class NetworkEventTypeControllerTests
         ((CreateEventTypeViewModel)viewResult.Model!).BackLink.Should().Be(Url);
     }
 
-    [TestCase("title")]
-    public void Post_SetEventTitleTypeAndRegionOnSessionModel(string eventTitle)
+    [Test]
+    public void Post_SetEventTitleTypeAndRegionOnEmptySessionModel()
     {
+        var eventTitle = "title";
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<CreateEventTypeViewModel>>();
         var sessionModel = new CreateEventSessionModel();
+
         var submitModel = new CreateEventTypeViewModel { EventTitle = eventTitle };
 
         sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
@@ -68,7 +86,6 @@ public class NetworkEventTypeControllerTests
     [Test]
     public void Post_SetEventTypeOnNoSessionModel()
     {
-
         var validatorMock = new Mock<IValidator<CreateEventTypeViewModel>>();
         var sessionServiceMock = new Mock<ISessionService>();
         sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
