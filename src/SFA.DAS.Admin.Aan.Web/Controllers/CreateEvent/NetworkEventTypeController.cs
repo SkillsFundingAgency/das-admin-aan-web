@@ -66,7 +66,7 @@ public class NetworkEventTypeController : Controller
         var eventTypes = calendarTask.Result;
         var regions = regionTask.Result.Regions;
 
-        var eventTypeDropdown = eventTypes.Select(cal => new EventType(cal.CalendarName, cal.Id));
+        var eventTypeDropdown = eventTypes.Select(cal => new EventTypeSelection(cal.CalendarName, cal.Id));
 
         var regionDropdowns = regions.Select(reg => new RegionSelection(reg.Area, reg.Id));
 

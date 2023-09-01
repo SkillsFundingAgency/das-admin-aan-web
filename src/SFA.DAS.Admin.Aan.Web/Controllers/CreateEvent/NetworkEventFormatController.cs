@@ -45,7 +45,6 @@ public class NetworkEventFormatController : Controller
 
         sessionModel.EventFormat = submitModel.EventFormat;
         _sessionService.Set(sessionModel);
-        //return View(ViewPath, GetViewModel(sessionModel));
         return RedirectToAction("Get", "NetworkEventType");
     }
 

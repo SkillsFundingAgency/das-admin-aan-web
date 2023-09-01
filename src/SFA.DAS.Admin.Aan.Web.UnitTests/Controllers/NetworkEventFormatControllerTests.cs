@@ -50,15 +50,13 @@ public class NetworkEventFormatControllerTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
-        var result = (ViewResult)sut.Post(submitModel);
+        var result = (RedirectToActionResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventFormat == eventFormat)));
-
-        Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
-        (result.Model as CreateEventFormatViewModel)!.BackLink.Should().Be(AllNetworksUrl);
+        result.ControllerName.Should().Be("NetworkEventType");
+        result.ActionName.Should().Be("Get");
     }
-
 
     [TestCase(EventFormat.InPerson)]
     [TestCase(EventFormat.Hybrid)]
@@ -79,13 +77,13 @@ public class NetworkEventFormatControllerTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
-        var result = (ViewResult)sut.Post(submitModel);
+        var result = (RedirectToActionResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventFormat == eventFormat)));
 
-        Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
-        (result.Model as CreateEventFormatViewModel)!.BackLink.Should().Be(AllNetworksUrl);
+        result.ControllerName.Should().Be("NetworkEventType");
+        result.ActionName.Should().Be("Get");
     }
 
     [Test, MoqAutoData]

@@ -2,7 +2,6 @@
 @model SFA.DAS.Admin.Aan.Web.Models.NetworkEvent.CreateEventTypeViewModel
 @{
     ViewData["Title"] = "Create Calendar Event";
-    //ViewBag.EventTypes = Model.EventTypes;
 }
 
 <partial name="_validationSummary" />
@@ -56,36 +55,7 @@
                     </fieldset>
                 </div>
             </div>
-
-                
-                <div class="govuk-form-group">
-                    <label class="govuk-label" for="sort">
-                        Sort by
-                    </label>
-                    <select class="govuk-select" id="sort" name="sort">
-                        <option value="published">Recently published</option>
-                        <option value="updated" selected>Recently updated</option>
-                        <option value="views">Most views</option>
-                        <option value="comments">Most comments</option>
-                    </select>
-                </div>
-
-                @* <div esfa-validation-marker-for="@Model.EventFormat" class="govuk-form-group" > *@
-                @*     <span asp-validation-for="EventFormat" class="govuk-error-message"></span> *@
-                @*     <div id="EventFormat" class="govuk-radios" data-module="govuk-radios"> *@
-                @*         @foreach (var ef in Model.EventFormats) *@
-                @*         { *@
-                @*             <div class="govuk-radios__item"> *@
-                @*                 <input asp-for="EventFormat" id="@ef.Value" class="govuk-radios__input" type="radio" value="@ef.Value" *@
-                @*                        sfa-validationerror-class="form-control-error"> *@
-                @*                 <label class="govuk-label govuk-radios__label" for="@ef.Value"> *@
-                @*                     @ef.Name *@
-                @*                 </label> *@
-                @*             </div> *@
-                @*         } *@
-                @*     </div> *@
-                @* </div> *@
-                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
                 <div class="govuk-button-group">
                     <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>
                     <a href="@Model.BackLink" class="govuk-link">Cancel</a>
