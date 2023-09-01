@@ -1,7 +1,11 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -28,5 +32,81 @@ public class NetworkEventTypeControllerTests
         Assert.That(viewResult.Model, Is.TypeOf<CreateEventTypeViewModel>());
 
         ((CreateEventTypeViewModel)viewResult.Model!).BackLink.Should().Be(Url);
+    }
+
+    [TestCase("title")]
+    public void Post_SetEventTitleTypeAndRegionOnSessionModel(string eventTitle)
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<CreateEventTypeViewModel>>();
+        var sessionModel = new CreateEventSessionModel();
+        var submitModel = new CreateEventTypeViewModel { EventTitle = eventTitle };
+
+        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.ValidateAsync(submitModel, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
+
+        var outerApiMock = new Mock<IOuterApiClient>();
+        outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Calendar>());
+        outerApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(new GetRegionsResult());
+
+        var sut = new NetworkEventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, Url);
+
+        var actualResult = sut.Post(submitModel, new CancellationToken());
+
+        var result = actualResult.Result.As<RedirectToActionResult>();
+
+        sut.ModelState.IsValid.Should().BeTrue();
+        sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventTitle == eventTitle)));
+        result.ControllerName.Should().Be("NetworkEventType");
+        result.ActionName.Should().Be("Get");
+    }
+
+    [Test]
+    public void Post_SetEventTypeOnNoSessionModel()
+    {
+
+        var validatorMock = new Mock<IValidator<CreateEventTypeViewModel>>();
+        var sessionServiceMock = new Mock<ISessionService>();
+        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
+
+        var submitModel = new CreateEventTypeViewModel();
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.ValidateAsync(submitModel, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
+
+        var sut = new NetworkEventTypeController(Mock.Of<IOuterApiClient>(), sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, Url);
+
+        var actualResult = sut.Post(submitModel, new CancellationToken());
+        var result = actualResult.Result.As<RedirectToActionResult>();
+        result.ControllerName.Should().Be("NetworkEventFormat");
+        result.ActionName.Should().Be("Get");
+    }
+
+    [Test, MoqAutoData]
+    public void Post_WhenValidationErrors_RedirectToEventFormat(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] NetworkEventTypeController sut)
+    {
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, Url);
+
+        var sessionModel = new CreateEventSessionModel();
+        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+
+        sut.ModelState.AddModelError("key", "message");
+
+        var submitModel = new CreateEventTypeViewModel();
+        var actualResult = sut.Post(submitModel, new CancellationToken());
+
+        var result = actualResult.Result.As<ViewResult>();
+
+        sut.ModelState.IsValid.Should().BeFalse();
+        Assert.That(result.Model, Is.TypeOf<CreateEventTypeViewModel>());
+        (result.Model as CreateEventTypeViewModel)!.BackLink.Should().Be(Url);
     }
 }
