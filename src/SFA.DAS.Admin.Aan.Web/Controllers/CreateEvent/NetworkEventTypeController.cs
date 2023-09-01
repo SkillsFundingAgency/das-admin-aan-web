@@ -39,7 +39,7 @@ public class NetworkEventTypeController : Controller
 
         sessionModel.EventTitle = submitModel.EventTitle;
         sessionModel.EventTypeId = submitModel.EventTypeId;
-        sessionModel.EventRegionId = sessionModel.EventRegionId;
+        sessionModel.EventRegionId = submitModel.EventRegionId;
 
         var result = await _validator.ValidateAsync(submitModel, cancellationToken);
 

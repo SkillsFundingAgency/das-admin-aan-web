@@ -32,7 +32,8 @@ public class NetworkEventFormatControllerTests
     [TestCase(EventFormat.InPerson)]
     [TestCase(EventFormat.Hybrid)]
     [TestCase(EventFormat.Online)]
-    public void Post_SetEventFormatOnSessionModel(EventFormat eventFormat)
+    [TestCase(null)]
+    public void Post_SetEventFormatOnSessionModel(EventFormat? eventFormat)
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<CreateEventFormatViewModel>>();
