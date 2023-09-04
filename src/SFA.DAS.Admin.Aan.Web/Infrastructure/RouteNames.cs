@@ -12,5 +12,6 @@ public static class RouteNames
     {
         public const string EventFormat = nameof(EventFormat);
         public const string EventType = nameof(EventType);
+        public const string EventDescription = nameof(EventDescription);
     }
 }
