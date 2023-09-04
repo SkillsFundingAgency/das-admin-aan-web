@@ -2,10 +2,14 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Web.AppStart;
 using SFA.DAS.Admin.Aan.Web.Authentication;
+using SFA.DAS.Admin.Aan.Web.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var rootConfiguration = builder.Configuration.LoadConfiguration();
+
+var applicationConfiguration = rootConfiguration.Get<ApplicationConfiguration>();
+builder.Services.AddSingleton(applicationConfiguration);
 
 builder.Services
     .AddOptions()
@@ -47,6 +51,7 @@ app
     .UseRouting()
     .UseAuthentication()
     .UseAuthorization()
+    .UseSession()
     .UseHealthChecks("/health");
 
 app.MapControllerRoute(

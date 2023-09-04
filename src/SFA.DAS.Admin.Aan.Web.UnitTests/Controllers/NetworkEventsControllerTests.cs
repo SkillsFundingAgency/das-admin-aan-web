@@ -78,12 +78,12 @@ public class NetworkEventsControllerTests
         var expectedResult = new GetCalendarEventsQueryResult();
 
         var outerApiMock = new Moq.Mock<IOuterApiClient>();
-
+        var sessionServiceMock = new Mock<ISessionService>();
         outerApiMock.Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(), It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);
         outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Calendar>());
         outerApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(new GetRegionsResult());
 
-        var sut = new NetworkEventsController(outerApiMock.Object);
+        var sut = new NetworkEventsController(outerApiMock.Object, sessionServiceMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
@@ -113,5 +113,7 @@ public class NetworkEventsControllerTests
                 model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Cancelled").Checked.Should().BeEmpty();
                 break;
         }
+
+        sessionServiceMock.Verify(s => s.Clear(), Times.Once);
     }
 }

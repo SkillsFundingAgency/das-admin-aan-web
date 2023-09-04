@@ -1,0 +1,41 @@
+﻿@using SFA.DAS.Admin.Aan.Web.Infrastructure
+@model SFA.DAS.Admin.Aan.Web.Models.NetworkEvent.CreateEventFormatViewModel
+@{
+    ViewData["Title"] = "Create Calendar Event";
+}
+
+<partial name="_validationSummary" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">
+            <span class="govuk-caption-l">Create event</span>
+            Event format
+        </h1>
+        <form asp-route="@RouteNames.CreateEvent.EventFormat" method="POST">
+            <div class="govuk-form-group">
+                <input type="hidden" asp-for="@Model.BackLink"/>
+                    <div esfa-validation-marker-for="@Model.EventFormat" class="govuk-form-group" >
+                        <span asp-validation-for="EventFormat" class="govuk-error-message"></span>
+                        <div id="EventFormat" class="govuk-radios" data-module="govuk-radios">
+                            @foreach (var ef in Model.EventFormats)
+                            {
+                                <div class="govuk-radios__item">
+                                    <input asp-for="EventFormat" id="@ef.Value" class="govuk-radios__input" type="radio" value="@ef.Value"
+                                           sfa-validationerror-class="form-control-error">
+                                    <label class="govuk-label govuk-radios__label" for="@ef.Value">
+                                        @ef.Name
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+                    <div class="govuk-button-group">
+                        <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>
+                        <a href="@Model.BackLink" class="govuk-link">Cancel</a>
+                    </div>
+            </div>
+        </form>
+    </div>
+</div>
