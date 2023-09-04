@@ -62,18 +62,26 @@
 
     @if (User.Identity.IsAuthenticated)
     {
-        <div class="app-user-panel">
+        <div class="app-user-header">
             <div class="govuk-width-container">
-                <div class="app-user-panel__content">
-                    <span class="govuk-body-s app-user-panel__item app-user-panel__item--grow">
-                        <p class="app-user-panel__user das-no-wrap">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-half">
+                        <p class="govuk-body-l app-user-header__name">
                             <span class="govuk-visually-hidden">Signed in as </span>
-                            @User.UserDisplayName()
+                            <span>@User.UserDisplayName()</span>&nbsp;
                         </p>
-                    </span>
-                    <span class="govuk-body-s app-user-panel__item">
-                        <a class="govuk-link govuk-link--inverse" asp-controller="Account" asp-action="SignOut">Sign out</a>
-                    </span>
+                    </div>
+                    <div class="govuk-grid-column-one-half">
+                        <div class="das-account-header">
+                            <nav class="das-user-navigation" id="das-user-navigation">
+                                <ul class="das-user-navigation__list" role="menu">
+                                    <li role="menuitem" class="das-user-navigation__list-item">
+                                         <a class="das-user-navigation__link" asp-controller="Account" asp-action="SignOut">Sign out</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
