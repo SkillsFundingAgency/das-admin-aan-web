@@ -13,7 +13,7 @@ using Region = SFA.DAS.Admin.Aan.Application.OuterApi.Regions.Region;
 namespace SFA.DAS.Admin.Aan.Web.Controllers;
 
 [Authorize]
-[Route("network-events")]
+[Route("manage-events")]
 public class NetworkEventsController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;

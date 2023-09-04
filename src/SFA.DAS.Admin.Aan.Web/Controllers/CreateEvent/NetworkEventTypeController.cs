@@ -9,7 +9,7 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 
 [Authorize]
-[Route("network-event/create-event-type", Name = RouteNames.CreateEvent.EventType)]
+[Route("manage-events/new/event-type", Name = RouteNames.CreateEvent.EventType)]
 public class NetworkEventTypeController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
