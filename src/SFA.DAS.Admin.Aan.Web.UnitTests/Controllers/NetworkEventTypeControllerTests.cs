@@ -79,7 +79,7 @@ public class NetworkEventTypeControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventTitle == eventTitle)));
-        result.ControllerName.Should().Be("NetworkEventType");
+        result.ControllerName.Should().Be("NetworkEventDescription");
         result.ActionName.Should().Be("Get");
     }
 

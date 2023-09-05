@@ -10,4 +10,8 @@ public class CreateEventSessionModel
     public int? EventTypeId { get; set; }
     public int? EventRegionId { get; set; }
 
+    public string? EventOutline { get; set; }
+    public string? EventSummary { get; set; }
+    public bool? GuestSpeaker { get; set; }
+
 }

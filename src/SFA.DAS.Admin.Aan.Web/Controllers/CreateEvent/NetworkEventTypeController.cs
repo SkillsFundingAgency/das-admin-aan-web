@@ -52,7 +52,7 @@ public class NetworkEventTypeController : Controller
 
         sessionModel.EventTitle = submitModel.EventTitle;
         _sessionService.Set(sessionModel);
-        return RedirectToAction("Get", "NetworkEventType");
+        return RedirectToAction("Get", "NetworkEventDescription");
     }
 
     private async Task<CreateEventTypeViewModel> GetViewModel(CreateEventSessionModel sessionModel, CancellationToken cancellationToken)

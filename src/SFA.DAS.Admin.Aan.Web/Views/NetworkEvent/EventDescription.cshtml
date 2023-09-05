@@ -1,0 +1,110 @@
+﻿@using SFA.DAS.Admin.Aan.Web.Infrastructure
+@model SFA.DAS.Admin.Aan.Web.Models.NetworkEvent.CreateEventDescriptionViewModel
+@{
+    ViewData["Title"] = "Create Calendar Event";
+}
+
+<partial name="_validationSummary" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+       
+        <form asp-route="@RouteNames.CreateEvent.EventDescription" method="POST">
+        <div class="govuk-form-group">
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-l">Create event</span>
+            </h1>
+            <input type="hidden" asp-for="@Model.BackLink"/>
+            <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.EventOutlineMaxCount">
+                <div esfa-validation-marker-for="@Model.EventOutline" class="govuk-form-group"> 
+                    <span asp-validation-for="@Model.EventOutline" class="govuk-error-message"></span>
+                    <div id="EventOutline">
+                        <h1 class="govuk-label-wrapper">
+                            <label class="govuk-label govuk-label--m" for="eventOutline">
+                               Event outline
+                            </label>
+                        </h1>
+                        <div id="eventOutline-hint" class="govuk-hint">
+                            Short description that outlines the event listing
+                        </div>
+                        <textarea class="govuk-textarea govuk-js-character-count" id="eventOutline" name="eventOutline" rows="5" aria-describedby="eventOutline-info eventOutline-hint"
+                                      sfa-validationerror-class="form-control-error">@Model.EventOutline</textarea>
+                    </div>
+                    <div id="eventOutline-info" class="govuk-hint govuk-character-count__message">
+                        You can enter up to @Model.EventOutlineMaxCount characters
+                    </div>
+                </div>
+            </div>
+
+            <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.EventSummaryMaxCount">
+                <div esfa-validation-marker-for="@Model.EventSummary" class="govuk-form-group"> 
+                    <span asp-validation-for="@Model.EventSummary" class="govuk-error-message"></span>
+                    <div id="EventSummary">
+                        <h1 class="govuk-label-wrapper">
+                            <label class="govuk-label govuk-label--m" for="eventSummary">
+                                Event summary
+                            </label>
+                        </h1>
+                        <div id="eventSummary-hint" class="govuk-hint">
+                            A summary of the event including an agenda and any pre-event preparation required.
+                            Include any practical information such as how to enter the venue, parking and nearest bus/tram/tube/train stop to the venue.
+                        </div>
+                        <textarea class="govuk-textarea govuk-js-character-count" id="eventSummary" name="eventSummary" rows="5" aria-describedby="eventSummary-info eventSummary-hint"
+                                      sfa-validationerror-class="form-control-error">@Model.EventSummary</textarea>
+                    </div>
+                    <div id="eventSummary-info" class="govuk-hint govuk-character-count__message">
+                        You can enter up to @Model.EventSummaryMaxCount characters
+                    </div>
+                </div>
+            </div>
+
+            @* <div esfa-validation-marker-for="@Model.EventSummary" class="govuk-form-group"> *@
+            @*     <span asp-validation-for="EventSummary" class="govuk-error-message"></span> *@
+            @*     <div id="EventSummary"> *@
+            @*         <fieldset class="govuk-fieldset"> *@
+            @*             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m"> *@
+            @*                 Event summary *@
+            @*             </legend> *@
+            @*             <div class="govuk-form-group"> *@
+            @*                 <input class="govuk-input" id="eventSummary" name="eventSummary" type="text" value="@Model.EventSummary"> *@
+            @*             </div> *@
+            @*         </fieldset> *@
+            @*     </div> *@
+            @* </div> *@
+            <div esfa-validation-marker-for="@Model.GuestSpeaker" class="govuk-form-group" >
+                <span asp-validation-for="GuestSpeaker" class="govuk-error-message"></span>
+                <div id="GuestSpeaker" class="govuk-radios" data-module="govuk-radios">
+                    <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        Does the event include guest speakers?
+                    </legend>
+                    <div class="govuk-radios__item">
+                        <input asp-for="GuestSpeaker" id="true" class="govuk-radios__input" type="radio" value="true"
+                               sfa-validationerror-class="form-control-error">
+                        <label class="govuk-label govuk-radios__label" for="true">
+                            Yes
+                        </label>
+                    </div>
+
+
+                        <div class="govuk-radios__item">
+                            <input asp-for="GuestSpeaker" id="false" class="govuk-radios__input" type="radio" value="false"
+                                   sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="false">
+                                No
+                            </label>
+                        </div>
+
+                    </fieldset>
+
+                </div>
+            </div>
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+            <div class="govuk-button-group">
+                <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>
+                <a href="@Model.BackLink" class="govuk-link">Cancel</a>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
