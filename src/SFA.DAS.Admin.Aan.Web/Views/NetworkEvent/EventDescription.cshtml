@@ -35,7 +35,9 @@
                     </div>
                 </div>
             </div>
-
+            
+            
+          @*  CKEditor Needed*@
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.EventSummaryMaxCount">
                 <div esfa-validation-marker-for="@Model.EventSummary" class="govuk-form-group"> 
                     <span asp-validation-for="@Model.EventSummary" class="govuk-error-message"></span>
@@ -58,19 +60,6 @@
                 </div>
             </div>
 
-            @* <div esfa-validation-marker-for="@Model.EventSummary" class="govuk-form-group"> *@
-            @*     <span asp-validation-for="EventSummary" class="govuk-error-message"></span> *@
-            @*     <div id="EventSummary"> *@
-            @*         <fieldset class="govuk-fieldset"> *@
-            @*             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m"> *@
-            @*                 Event summary *@
-            @*             </legend> *@
-            @*             <div class="govuk-form-group"> *@
-            @*                 <input class="govuk-input" id="eventSummary" name="eventSummary" type="text" value="@Model.EventSummary"> *@
-            @*             </div> *@
-            @*         </fieldset> *@
-            @*     </div> *@
-            @* </div> *@
             <div esfa-validation-marker-for="@Model.GuestSpeaker" class="govuk-form-group" >
                 <span asp-validation-for="GuestSpeaker" class="govuk-error-message"></span>
                 <div id="GuestSpeaker" class="govuk-radios" data-module="govuk-radios">
