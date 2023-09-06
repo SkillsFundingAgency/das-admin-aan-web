@@ -484,3 +484,31 @@ a.das-show-hide__button {
     margin: 10px 0
 }
 
+/* CK Editor Styles */
+
+.ck-powered-by {
+  display: none;
+}
+
+.app-editor .ck.ck-editor {
+  border: 1px solid #0b0c0c;
+}
+
+.app-editor .ck.ck-toolbar {
+  border: 1px solid #0b0c0c;
+}
+
+.app-editor .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
+  border: 1px solid #0b0c0c;
+}
+
+.app-editor .ck.ck-editor__main > .ck-editor__editable.ck-focused {
+  outline: 3px solid #fd0;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 2px;
+}
+
+.app-editor .ck.ck-button.ck-on, .app-editor a.ck.ck-button.ck-on {
+ background-color: #fd0;
+ color: #0b0c0c;
+}
