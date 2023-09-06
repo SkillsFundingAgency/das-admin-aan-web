@@ -9,6 +9,7 @@ using SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
+using SFA.DAS.Admin.Aan.Web.Validators.CreateEvent;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
@@ -97,6 +98,9 @@ public class NetworkEventDescriptionControllerTests
         sut.ModelState.AddModelError("key", "message");
 
         var submitModel = new CreateEventDescriptionViewModel();
+
+        submitModel.EventOutlineMaxCount.Should().Be(CreateEventDescriptionViewModelValidator.EventOutlineMaxLength);
+        submitModel.EventSummaryMaxCount.Should().Be(CreateEventDescriptionViewModelValidator.EventSummaryMaxLength);
 
         var result = (ViewResult)sut.Post(submitModel);
 
