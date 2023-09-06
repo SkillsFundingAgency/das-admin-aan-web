@@ -22,6 +22,7 @@ public class NetworkEventDescriptionController : Controller
         _sessionService = sessionService;
         _validator = validator;
     }
+
     [HttpGet]
     public IActionResult Get()
     {
@@ -49,7 +50,9 @@ public class NetworkEventDescriptionController : Controller
         }
 
         _sessionService.Set(sessionModel);
-        return RedirectToAction("Get", "EventHasGuestSpeakers");
+        if (sessionModel.GuestSpeaker == true) return RedirectToAction("Get", "GuestSpeakerList");
+
+        return RedirectToAction("Get", "NetworkEventDescription");
     }
 
     private CreateEventDescriptionViewModel GetViewModel(CreateEventSessionModel sessionModel)
