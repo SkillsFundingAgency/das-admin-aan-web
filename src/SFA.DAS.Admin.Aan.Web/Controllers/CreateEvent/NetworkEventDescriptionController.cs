@@ -12,27 +12,25 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 [Route("manage-events/new/event-description", Name = RouteNames.CreateEvent.EventDescription)]
 public class NetworkEventDescriptionController : Controller
 {
-    private readonly IOuterApiClient _outerApiClient;
     private readonly ISessionService _sessionService;
     private readonly IValidator<CreateEventDescriptionViewModel> _validator;
 
     public const string ViewPath = "~/Views/NetworkEvent/EventDescription.cshtml";
-    public NetworkEventDescriptionController(IOuterApiClient outerApiClient, ISessionService sessionService, IValidator<CreateEventDescriptionViewModel> validator)
+    public NetworkEventDescriptionController(ISessionService sessionService, IValidator<CreateEventDescriptionViewModel> validator)
     {
-        _outerApiClient = outerApiClient;
         _sessionService = sessionService;
         _validator = validator;
     }
     [HttpGet]
-    public async Task<IActionResult> Get(CancellationToken cancellationToken)
+    public IActionResult Get()
     {
         var sessionModel = _sessionService.Get<CreateEventSessionModel>();
-        var model = await GetViewModel(sessionModel, cancellationToken);
+        var model = GetViewModel(sessionModel);
         return View(ViewPath, model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(CreateEventDescriptionViewModel submitModel, CancellationToken cancellationToken)
+    public IActionResult Post(CreateEventDescriptionViewModel submitModel)
     {
         var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
         if (sessionModel == null) return RedirectToAction("Get", "NetworkEventFormat");
@@ -41,20 +39,20 @@ public class NetworkEventDescriptionController : Controller
         sessionModel.EventSummary = submitModel.EventSummary;
         sessionModel.GuestSpeaker = submitModel.GuestSpeaker;
 
-        var result = await _validator.ValidateAsync(submitModel, cancellationToken);
+        var result = _validator.Validate(submitModel);
 
         if (!result.IsValid)
         {
 
             result.AddToModelState(ModelState);
-            return View(ViewPath, await GetViewModel(sessionModel, cancellationToken));
+            return View(ViewPath, GetViewModel(sessionModel));
         }
 
         _sessionService.Set(sessionModel);
         return RedirectToAction("Get", "NetworkEventDescription");
     }
 
-    private async Task<CreateEventDescriptionViewModel> GetViewModel(CreateEventSessionModel sessionModel, CancellationToken cancellationToken)
+    private CreateEventDescriptionViewModel GetViewModel(CreateEventSessionModel sessionModel)
     {
         return new CreateEventDescriptionViewModel
         {
