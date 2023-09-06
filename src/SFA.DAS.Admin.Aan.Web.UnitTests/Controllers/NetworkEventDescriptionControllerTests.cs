@@ -90,7 +90,6 @@ public class NetworkEventDescriptionControllerTests
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
-
         var sessionModel = new CreateEventSessionModel();
 
         sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
