@@ -9,7 +9,7 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 
 [Authorize]
-[Route("network-event/create-event-format", Name = RouteNames.CreateEvent.EventFormat)]
+[Route("network-event/new/event-format", Name = RouteNames.CreateEvent.EventFormat)]
 public class NetworkEventFormatController : Controller
 {
     public const string ViewPath = "~/Views/NetworkEvent/EventFormat.cshtml";
