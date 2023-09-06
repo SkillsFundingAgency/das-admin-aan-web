@@ -13,6 +13,6 @@ public class CreateEventDescriptionViewModel : IBackLink
     public bool? GuestSpeaker { get; set; }
 
 
-    public int EventOutlineMaxCount = CreateEventDescriptionViewModelValidator.EventOutlineMaxLength;
-    public int EventSummaryMaxCount = CreateEventDescriptionViewModelValidator.EventSummaryMaxLength;
+    public int EventOutlineMaxCount => CreateEventDescriptionViewModelValidator.EventOutlineMaxLength;
+    public int EventSummaryMaxCount => CreateEventDescriptionViewModelValidator.EventSummaryMaxLength;
 }
