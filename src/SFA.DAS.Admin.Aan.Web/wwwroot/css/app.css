@@ -494,6 +494,10 @@ a.das-show-hide__button {
   border: 1px solid #0b0c0c;
 }
 
+.app-editor .ck-editor__editable {
+  min-height: 150px;
+}
+
 .app-editor .ck.ck-toolbar {
   border: 1px solid #0b0c0c;
 }
