@@ -51,8 +51,10 @@
                             A summary of the event including an agenda and any pre-event preparation required.
                             Include any practical information such as how to enter the venue, parking and nearest bus/tram/tube/train stop to the venue.
                         </div>
+                        <div class="app-editor">
                         <textarea class="govuk-textarea govuk-js-character-count" id="eventSummary" name="eventSummary" rows="5" aria-describedby="eventSummary-info eventSummary-hint"
                                       sfa-validationerror-class="form-control-error">@Model.EventSummary</textarea>
+                                      </div>
                     </div>
                     <div id="eventSummary-info" class="govuk-hint govuk-character-count__message">
                         You can enter up to @Model.EventSummaryMaxCount characters
@@ -97,3 +99,17 @@
         </form>
     </div>
 </div>
+
+@section PageSpecificJS {
+    <script src="/js/ckeditor/ckeditor.js" no-cdn></script>
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '.app-editor textarea' ))
+            .then( editor => {
+                window.editor = editor;
+            } )
+            .catch( err => {
+                console.error( err.stack );
+            } );
+    </script>
+}

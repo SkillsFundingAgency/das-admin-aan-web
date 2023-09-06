@@ -512,3 +512,16 @@ a.das-show-hide__button {
  background-color: #fd0;
  color: #0b0c0c;
 }
+
+.app-editor .ck-content ul,
+.app-editor .ck-content ol {
+  color: #0b0c0c;
+  font-family: "GDS Transport",arial,sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.25;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
