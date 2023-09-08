@@ -44,9 +44,9 @@ public class NetworkEventDescriptionControllerTests
         vm!.PostLink.Should().Be(PostUrl);
     }
 
-    [TestCase("outline 1", "summary 1", true)]
-    [TestCase("outline 2", "summary 2", false)]
-    public void Post_SetEventDetailsOnSessionModel(string eventOutline, string eventSummary, bool guestSpeaker)
+    [TestCase("outline 1", "summary 1")]
+    [TestCase("outline 2", "summary 2")]
+    public void Post_SetEventDetailsOnSessionModel(string eventOutline, string eventSummary)
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<CreateEventDescriptionViewModel>>();
@@ -55,7 +55,7 @@ public class NetworkEventDescriptionControllerTests
 
         sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new CreateEventDescriptionViewModel { EventOutline = eventOutline, EventSummary = eventSummary, GuestSpeaker = guestSpeaker };
+        var submitModel = new CreateEventDescriptionViewModel { EventOutline = eventOutline, EventSummary = eventSummary };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -67,20 +67,20 @@ public class NetworkEventDescriptionControllerTests
         var result = (RedirectToActionResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventOutline == eventOutline && m.EventSummary == eventSummary && m.GuestSpeaker == guestSpeaker)));
-        result.ControllerName.Should().Be("NetworkEventDescription");
+        sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventOutline == eventOutline && m.EventSummary == eventSummary)));
+        result.ControllerName.Should().Be("EventGuestSpeaker");
         result.ActionName.Should().Be("Get");
     }
 
-    [TestCase("outline 1", "summary 1", true)]
-    public void Post_SetEventDetailsOnNoSessionModel(string eventOutline, string eventSummary, bool guestSpeaker)
+    [TestCase("outline 1", "summary 1")]
+    public void Post_SetEventDetailsOnNoSessionModel(string eventOutline, string eventSummary)
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<CreateEventDescriptionViewModel>>();
 
         sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
 
-        var submitModel = new CreateEventDescriptionViewModel { EventOutline = eventOutline, EventSummary = eventSummary, GuestSpeaker = guestSpeaker };
+        var submitModel = new CreateEventDescriptionViewModel { EventOutline = eventOutline, EventSummary = eventSummary };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
