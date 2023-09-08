@@ -59,35 +59,6 @@
                     </div>
                 </div>
             </div>
-
-            <div esfa-validation-marker-for="@Model.GuestSpeaker" class="govuk-form-group" >
-                <span asp-validation-for="GuestSpeaker" class="govuk-error-message"></span>
-                <div id="GuestSpeaker" class="govuk-radios" data-module="govuk-radios">
-                    <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        Does the event include guest speakers?
-                    </legend>
-                    <div class="govuk-radios__item">
-                        <input asp-for="GuestSpeaker" id="true" class="govuk-radios__input" type="radio" value="true"
-                               sfa-validationerror-class="form-control-error">
-                        <label class="govuk-label govuk-radios__label" for="true">
-                            Yes
-                        </label>
-                    </div>
-
-
-                        <div class="govuk-radios__item">
-                            <input asp-for="GuestSpeaker" id="false" class="govuk-radios__input" type="radio" value="false"
-                                   sfa-validationerror-class="form-control-error">
-                            <label class="govuk-label govuk-radios__label" for="false">
-                                No
-                            </label>
-                        </div>
-
-                    </fieldset>
-
-                </div>
-            </div>
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
             <div class="govuk-button-group">
                 <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>

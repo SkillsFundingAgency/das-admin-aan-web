@@ -9,14 +9,14 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 
 [Authorize]
-[Route("manage-events/new/event-description", Name = RouteNames.CreateEvent.EventDescription)]
-public class NetworkEventDescriptionController : Controller
+[Route("manage-events/new/event-guest-speaker", Name = RouteNames.CreateEvent.EventGuestSpeaker)]
+public class EventGuestSpeakerController : Controller
 {
     private readonly ISessionService _sessionService;
-    private readonly IValidator<CreateEventDescriptionViewModel> _validator;
+    private readonly IValidator<CreateEventGuestSpeakerViewModel> _validator;
 
-    public const string ViewPath = "~/Views/NetworkEvent/EventDescription.cshtml";
-    public NetworkEventDescriptionController(ISessionService sessionService, IValidator<CreateEventDescriptionViewModel> validator)
+    public const string ViewPath = "~/Views/NetworkEvent/EventGuestSpeaker.cshtml";
+    public EventGuestSpeakerController(ISessionService sessionService, IValidator<CreateEventGuestSpeakerViewModel> validator)
     {
         _sessionService = sessionService;
         _validator = validator;
@@ -30,13 +30,12 @@ public class NetworkEventDescriptionController : Controller
     }
 
     [HttpPost]
-    public IActionResult Post(CreateEventDescriptionViewModel submitModel)
+    public IActionResult Post(CreateEventGuestSpeakerViewModel submitModel)
     {
         var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
         if (sessionModel == null) return RedirectToAction("Get", "NetworkEventFormat");
 
-        sessionModel.EventOutline = submitModel.EventOutline;
-        sessionModel.EventSummary = submitModel.EventSummary;
+        sessionModel.GuestSpeaker = submitModel.GuestSpeaker;
 
         var result = _validator.Validate(submitModel);
 
@@ -51,12 +50,11 @@ public class NetworkEventDescriptionController : Controller
         return RedirectToAction("Get", "EventGuestSpeaker");
     }
 
-    private CreateEventDescriptionViewModel GetViewModel(CreateEventSessionModel sessionModel)
+    private CreateEventGuestSpeakerViewModel GetViewModel(CreateEventSessionModel sessionModel)
     {
-        return new CreateEventDescriptionViewModel
+        return new CreateEventGuestSpeakerViewModel
         {
-            EventOutline = sessionModel?.EventOutline,
-            EventSummary = sessionModel?.EventSummary,
+            GuestSpeaker = sessionModel?.GuestSpeaker,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle

@@ -11,7 +11,6 @@ public class CreateEventDescriptionViewModelValidator : AbstractValidator<Create
     public const string EventOutlineTooLong = "Your event outline must be 200 characters or less";
     public const string EventSummaryEmpty = "You must include an event summary";
     public const string EventSummaryTooLong = "Your event summary must be 2000 characters or less";
-    public const string GuestSpeakerEmpty = "You must select an option";
 
     public CreateEventDescriptionViewModelValidator()
     {
@@ -26,9 +25,5 @@ public class CreateEventDescriptionViewModelValidator : AbstractValidator<Create
             .WithMessage(EventSummaryEmpty)
             .MaximumLength(EventSummaryMaxLength)
             .WithMessage(EventSummaryTooLong);
-
-        RuleFor(x => x.GuestSpeaker)
-            .NotEmpty()
-            .WithMessage(GuestSpeakerEmpty);
     }
 }

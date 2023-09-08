@@ -10,9 +10,10 @@ public class CreateEventTypeViewModel : IEventPageEditFields
 
     public List<RegionSelection> EventRegions { get; set; } = new List<RegionSelection>();
     public List<EventTypeSelection> EventTypes { get; set; } = new List<EventTypeSelection>();
-    public string CancelLink { get; set; } = null!;
-    public string PostLink { get; set; } = null!;
-    public string PageTitle { get; set; } = null!;
+
+    public string? PageTitle { get; set; }
+    public string? PostLink { get; set; }
+    public string? CancelLink { get; set; }
 }
 
 public class RegionSelection

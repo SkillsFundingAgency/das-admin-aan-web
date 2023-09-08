@@ -2,8 +2,7 @@
 
 public interface IEventPageEditFields
 {
-    public string PageTitle { get; set; }
-    public string PostLink { get; set; }
-
-    public string CancelLink { get; set; }
+    public string? PageTitle { get; set; }
+    public string? PostLink { get; set; }
+    public string? CancelLink { get; set; }
 }

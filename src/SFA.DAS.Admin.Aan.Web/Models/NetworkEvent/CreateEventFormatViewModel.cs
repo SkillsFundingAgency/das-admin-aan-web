@@ -23,7 +23,7 @@ public class CreateEventFormatViewModel : IEventPageEditFields
             EventFormat = request.EventFormat
         };
 
-    public string CancelLink { get; set; } = null!;
-    public string PostLink { get; set; } = null!;
-    public string PageTitle { get; set; } = null!;
+    public string? CancelLink { get; set; }
+    public string? PostLink { get; set; }
+    public string? PageTitle { get; set; }
 }
