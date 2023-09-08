@@ -15,5 +15,7 @@ public static class RouteNames
         public const string EventDescription = nameof(EventDescription);
         public const string EventHasGuestSpeakers = nameof(EventHasGuestSpeakers);
         public const string GuestSpeakerList = nameof(GuestSpeakerList);
+        public const string GuestSpeakerAdd = nameof(GuestSpeakerAdd);
+        public const string GuestSpeakerDelete = nameof(GuestSpeakerDelete);
     }
 }

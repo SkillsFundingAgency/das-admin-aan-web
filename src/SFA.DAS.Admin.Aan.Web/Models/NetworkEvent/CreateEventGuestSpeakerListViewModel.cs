@@ -2,12 +2,12 @@
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-public class CreateEventGuestSpeakerListViewModel : IBackLink
+public class CreateEventGuestSpeakerListViewModel : ICancelLink, IPostLink
 {
-    public string BackLink { get; set; } = null!;
+    public string CancelLink { get; set; } = null!;
     public List<GuestSpeaker> GuestSpeakers { get; set; } = new List<GuestSpeaker>();
 
+    public string PostLink { get; set; } = null!;
+    public string AddGuestSpeakerLink { get; set; } = null!;
+    public string DeleteSpeakerLink { get; set; } = null!;
 }
-
-
-public record GuestSpeaker(string Name, int JobRoleAndOrganisation, int Id);

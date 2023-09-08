@@ -28,12 +28,22 @@ public class GuestSpeakerListController : Controller
         return View(ViewPath, model);
     }
 
+    [HttpPost]
+    public IActionResult Post()
+    {
+        return RedirectToAction("Get", "GuestSpeakerList");
+    }
+
+
     private CreateEventGuestSpeakerListViewModel GetViewModel(CreateEventSessionModel sessionModel)
     {
         return new CreateEventGuestSpeakerListViewModel
         {
             GuestSpeakers = sessionModel.GuestSpeakers,
-            BackLink = Url.RouteUrl(RouteNames.NetworkEvents)!
+            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            PostLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerList)!,
+            AddGuestSpeakerLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerAdd)!,
+            DeleteSpeakerLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerDelete)!
         };
     }
 }
