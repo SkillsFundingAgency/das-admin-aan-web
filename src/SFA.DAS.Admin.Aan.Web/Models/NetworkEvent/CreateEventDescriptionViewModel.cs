@@ -3,10 +3,8 @@ using SFA.DAS.Admin.Aan.Web.Validators.CreateEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-public class CreateEventDescriptionViewModel : IBackLink
+public class CreateEventDescriptionViewModel : IEventPageEditFields
 {
-    public string BackLink { get; set; } = null!;
-
     public string? EventOutline { get; set; }
     public string? EventSummary { get; set; }
 
@@ -15,4 +13,7 @@ public class CreateEventDescriptionViewModel : IBackLink
 
     public int EventOutlineMaxCount => CreateEventDescriptionViewModelValidator.EventOutlineMaxLength;
     public int EventSummaryMaxCount => CreateEventDescriptionViewModelValidator.EventSummaryMaxLength;
+    public string PageTitle { get; set; } = null!;
+    public string PostLink { get; set; } = null!;
+    public string CancelLink { get; set; } = null!;
 }

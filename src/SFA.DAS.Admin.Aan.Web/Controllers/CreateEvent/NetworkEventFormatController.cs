@@ -53,7 +53,9 @@ public class NetworkEventFormatController : Controller
         return new CreateEventFormatViewModel
         {
             EventFormat = sessionModel?.EventFormat,
-            BackLink = Url.RouteUrl(RouteNames.NetworkEvents)!
+            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!,
+            PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }
 }

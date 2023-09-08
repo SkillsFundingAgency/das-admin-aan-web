@@ -59,7 +59,9 @@ public class NetworkEventDescriptionController : Controller
             EventOutline = sessionModel?.EventOutline,
             EventSummary = sessionModel?.EventSummary,
             GuestSpeaker = sessionModel?.GuestSpeaker,
-            BackLink = Url.RouteUrl(RouteNames.NetworkEvents)!
+            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!,
+            PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }
 }

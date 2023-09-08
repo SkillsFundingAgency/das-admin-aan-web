@@ -77,7 +77,9 @@ public class NetworkEventTypeController : Controller
             EventRegionId = sessionModel?.EventRegionId,
             EventTypes = eventTypeDropdown.ToList(),
             EventRegions = regionDropdowns.ToList(),
-            BackLink = Url.RouteUrl(RouteNames.NetworkEvents)!
+            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventType)!,
+            PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }
 }

@@ -4,6 +4,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -16,6 +17,7 @@ namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
 public class NetworkEventDescriptionControllerTests
 {
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
+    private static readonly string PostUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Details_ReturnsCreateEventDetailsViewModel(
@@ -26,7 +28,20 @@ public class NetworkEventDescriptionControllerTests
 
         Assert.That(result.Model, Is.TypeOf<CreateEventDescriptionViewModel>());
         var vm = result.Model as CreateEventDescriptionViewModel;
-        vm!.BackLink.Should().Be(AllNetworksUrl);
+        vm!.CancelLink.Should().Be(AllNetworksUrl);
+        vm.PageTitle.Should().Be(CreateEvent.PageTitle);
+    }
+
+    [Test, MoqAutoData]
+    public void Details_ReturnsExpectedPostLink(
+        [Greedy] NetworkEventDescriptionController sut)
+    {
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.EventFormat, PostUrl);
+        var result = (ViewResult)sut.Get();
+
+        Assert.That(result.Model, Is.TypeOf<CreateEventDescriptionViewModel>());
+        var vm = result.Model as CreateEventDescriptionViewModel;
+        vm!.PostLink.Should().Be(PostUrl);
     }
 
     [TestCase("outline 1", "summary 1", true)]
@@ -105,6 +120,6 @@ public class NetworkEventDescriptionControllerTests
 
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<CreateEventDescriptionViewModel>());
-        (result.Model as CreateEventDescriptionViewModel)!.BackLink.Should().Be(AllNetworksUrl);
+        (result.Model as CreateEventDescriptionViewModel)!.CancelLink.Should().Be(AllNetworksUrl);
     }
 }

@@ -5,10 +5,9 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-public class CreateEventFormatViewModel : IBackLink
+public class CreateEventFormatViewModel : IEventPageEditFields
 {
     public EventFormat? EventFormat { get; set; }
-    public string BackLink { get; set; } = null!;
 
     public List<ChecklistLookup> EventFormats =>
         new()
@@ -23,4 +22,8 @@ public class CreateEventFormatViewModel : IBackLink
         {
             EventFormat = request.EventFormat
         };
+
+    public string CancelLink { get; set; } = null!;
+    public string PostLink { get; set; } = null!;
+    public string PageTitle { get; set; } = null!;
 }
