@@ -65,8 +65,17 @@ public class EventHasGuestSpeakersControllerTests
         var result = (RedirectToActionResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.HasGuestSpeakers == hasGuestSpeakers)));
-        result.ControllerName.Should().Be("EventHasGuestSpeakers");
+        sessionServiceMock.Verify(s =>
+            s.Set(It.Is<CreateEventSessionModel>(m => m.HasGuestSpeakers == hasGuestSpeakers)));
+        if (hasGuestSpeakers == true)
+        {
+            result.ControllerName.Should().Be("GuestSpeakerList");
+        }
+        else
+        {
+            result.ControllerName.Should().Be("EventHasGuestSpeakers");
+        }
+
         result.ActionName.Should().Be("Get");
     }
 

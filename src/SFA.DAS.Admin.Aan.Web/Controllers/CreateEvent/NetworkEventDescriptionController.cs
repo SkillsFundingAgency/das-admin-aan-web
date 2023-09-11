@@ -50,9 +50,8 @@ public class NetworkEventDescriptionController : Controller
         }
 
         _sessionService.Set(sessionModel);
-        if (sessionModel.GuestSpeaker == true) return RedirectToAction("Get", "GuestSpeakerList");
 
-        return RedirectToAction("Get", "NetworkEventDescription");
+        return RedirectToAction("Get", "EventHasGuestSpeakers");
     }
 
     private CreateEventDescriptionViewModel GetViewModel(CreateEventSessionModel sessionModel)

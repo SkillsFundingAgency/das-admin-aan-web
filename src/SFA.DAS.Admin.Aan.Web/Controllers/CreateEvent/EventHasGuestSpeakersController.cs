@@ -48,6 +48,8 @@ public class EventHasGuestSpeakersController : Controller
         }
 
         _sessionService.Set(sessionModel);
+
+        if (sessionModel.HasGuestSpeakers == true) return RedirectToAction("Get", "GuestSpeakerList");
         return RedirectToAction("Get", "EventHasGuestSpeakers");
     }
 
