@@ -8,9 +8,9 @@ public static class Roles
 {
     public const string RoleClaimType = "http://service/service";
 
-    public const string ManageEventsRole = "TAD";
+    public const string ManageEventsRole = "AME";
 
-    public const string ManageMembersRole = "TAD";
+    public const string ManageMembersRole = "AMM";
 
     public static bool HasValidRole(this ClaimsPrincipal user)
     {

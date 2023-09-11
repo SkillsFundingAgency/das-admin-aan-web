@@ -4,6 +4,7 @@ using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.Services;
+using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
@@ -12,7 +13,7 @@ using Region = SFA.DAS.Admin.Aan.Application.OuterApi.Regions.Region;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers;
 
-[Authorize]
+[Authorize(Roles = Roles.ManageEventsRole)]
 [Route("manage-events")]
 public class NetworkEventsController : Controller
 {

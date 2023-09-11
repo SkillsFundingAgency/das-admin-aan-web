@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers;
+
 public class AccountController : Controller
 {
     private readonly ILogger<AccountController> _logger;
@@ -28,6 +29,10 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult PostSignIn()
     {
+        if (!User.HasValidRole())
+        {
+            return RedirectToAction("AccessDenied");
+        }
         return RedirectToAction("Index", "Home");
     }
 
