@@ -10,27 +10,21 @@
         <span class="govuk-caption-l">Create event</span>
         <br/>
         <h1 class="govuk-heading-l">
-
-            Guest Speaker
+            Guest Speakers
         </h1>
         <form asp-route="@Model.PostLink" method="POST">
             <div class="govuk-form-group">
                 <input type="hidden" asp-for="@Model.CancelLink"/>
                 <div class="govuk-form-group">
-
-
-
                     @foreach (var guestSpeaker in Model.GuestSpeakers.OrderBy(x => x.Id))
                     {
-                        <h1 class="govuk-label-wrapper">
-                            <label class="govuk-label govuk-label--m">
-                                Guest speaker @speakerCount
-                                @{
-                                    speakerCount++;
-                                }
-                            </label>
-                        </h1>
                         <table class="govuk-table">
+                            <caption class="govuk-table__caption govuk-table__caption--m"> Guest speaker @speakerCount
+                            @{
+                                speakerCount++;
+                            }
+                            </caption>
+
                             <tbody class="govuk-table__body">
                             <tr class="govuk-table__row">
                                 <th scope="row" class="govuk-table__header">Guest speaker name</th>
@@ -47,7 +41,6 @@
                         </div>
                     }
                 </div>
-
                 <a href="@Model.AddGuestSpeakerLink" class="govuk-link">Add Speaker</a>
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
                 <div class="govuk-button-group">

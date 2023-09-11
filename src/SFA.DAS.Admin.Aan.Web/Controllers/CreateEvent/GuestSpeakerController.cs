@@ -39,9 +39,11 @@ public class GuestSpeakerController : Controller
         if (sessionModel == null) return RedirectToAction("Get", "NetworkEventFormat");
 
         var currentGuestList = sessionModel.GuestSpeakers;
-        var removeItem = currentGuestList.FirstOrDefault(x => x.Id == id);
-
-        if (removeItem != null) currentGuestList.Remove(removeItem);
+        if (currentGuestList.Any())
+        {
+            var removeItem = currentGuestList.First(x => x.Id == id);
+            currentGuestList.Remove(removeItem);
+        }
 
         sessionModel.GuestSpeakers = currentGuestList;
         _sessionService.Set(sessionModel);
