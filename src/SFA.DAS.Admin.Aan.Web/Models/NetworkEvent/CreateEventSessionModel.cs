@@ -12,6 +12,6 @@ public class CreateEventSessionModel
 
     public string? EventOutline { get; set; }
     public string? EventSummary { get; set; }
-    public bool? GuestSpeaker { get; set; }
+    public bool? HasGuestSpeakers { get; set; }
 
 }

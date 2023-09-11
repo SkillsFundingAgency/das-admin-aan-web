@@ -12,7 +12,7 @@
         <form asp-route="@Model.PostLink" method="POST">
         <div class="govuk-form-group">
             <h1 class="govuk-heading-l">
-                <span class="govuk-caption-l">@Model.PostLink</span>
+                <span class="govuk-caption-l">@Model.PageTitle</span>
             </h1>
             <input type="hidden" asp-for="@Model.CancelLink"/>
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.EventOutlineMaxCount">
@@ -27,7 +27,7 @@
                         <div id="eventOutline-hint" class="govuk-hint">
                             Short description that outlines the event listing
                         </div>
-                        <textarea class="govuk-textarea govuk-js-character-count" id="eventOutline" name="eventOutline" rows="5" aria-describedby="eventOutline-info eventOutline-hint"
+                        <textarea class="govuk-textarea govuk-js-character-count" id="eventOutline" name="eventOutline" rows="4" aria-describedby="eventOutline-info eventOutline-hint"
                                       sfa-validationerror-class="form-control-error" maxlength="500">@Model.EventOutline</textarea>
                     </div>
                     <div id="eventOutline-info" class="govuk-hint govuk-character-count__message">

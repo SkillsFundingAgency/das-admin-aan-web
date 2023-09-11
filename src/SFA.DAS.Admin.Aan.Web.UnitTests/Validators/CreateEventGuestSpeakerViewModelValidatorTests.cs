@@ -12,14 +12,14 @@ public class CreateEventGuestSpeakerViewModelValidatorTests
     [TestCase(null, false)]
     public void Validate_GuestSpeaker_Check(bool? guestSpeaker, bool isValid)
     {
-        var model = new CreateEventGuestSpeakerViewModel { GuestSpeaker = guestSpeaker };
+        var model = new CreateEventHasGuestSpeakersViewModel { HasGuestSpeakers = guestSpeaker };
 
         var sut = new CreateEventGuestSpeakerViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
         {
-            result.ShouldHaveValidationErrorFor(c => c.GuestSpeaker)
+            result.ShouldHaveValidationErrorFor(c => c.HasGuestSpeakers)
                 .WithErrorMessage(CreateEventGuestSpeakerViewModelValidator.GuestSpeakerEmpty);
         }
         else

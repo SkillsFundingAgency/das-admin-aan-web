@@ -14,7 +14,7 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.CreateEvent;
 public class NetworkEventTypeControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
@@ -49,7 +49,7 @@ public class NetworkEventTypeControllerTests
         Assert.That(viewResult.Model, Is.TypeOf<CreateEventTypeViewModel>());
 
         ((CreateEventTypeViewModel)viewResult.Model!).CancelLink.Should().Be(NetworkEventsUrl);
-        ((CreateEventTypeViewModel)viewResult.Model!).PageTitle.Should().Be(CreateEvent.PageTitle);
+        ((CreateEventTypeViewModel)viewResult.Model!).PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
 
     [Test, MoqAutoData]

@@ -4,7 +4,6 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -13,7 +12,7 @@ using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Admin.Aan.Web.Validators.CreateEvent;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.CreateEvent;
 public class NetworkEventDescriptionControllerTests
 {
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
@@ -29,7 +28,7 @@ public class NetworkEventDescriptionControllerTests
         Assert.That(result.Model, Is.TypeOf<CreateEventDescriptionViewModel>());
         var vm = result.Model as CreateEventDescriptionViewModel;
         vm!.CancelLink.Should().Be(AllNetworksUrl);
-        vm.PageTitle.Should().Be(CreateEvent.PageTitle);
+        vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
 
     [Test, MoqAutoData]
@@ -68,7 +67,7 @@ public class NetworkEventDescriptionControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventOutline == eventOutline && m.EventSummary == eventSummary)));
-        result.ControllerName.Should().Be("EventGuestSpeaker");
+        result.ControllerName.Should().Be("EventHasGuestSpeakers");
         result.ActionName.Should().Be("Get");
     }
 

@@ -1,4 +1,4 @@
-﻿@model SFA.DAS.Admin.Aan.Web.Models.NetworkEvent.CreateEventGuestSpeakerViewModel
+﻿@model SFA.DAS.Admin.Aan.Web.Models.NetworkEvent.CreateEventHasGuestSpeakersViewModel
 @{
     ViewData["Title"] = "Create Calendar Event";
 }
@@ -15,22 +15,22 @@
             </h1>
             <input type="hidden" asp-for="@Model.CancelLink"/>
 
-            <div esfa-validation-marker-for="@Model.GuestSpeaker" class="govuk-form-group" >
-                <span asp-validation-for="GuestSpeaker" class="govuk-error-message"></span>
-                <div id="GuestSpeaker" class="govuk-radios" data-module="govuk-radios">
+            <div esfa-validation-marker-for="@Model.HasGuestSpeakers" class="govuk-form-group" >
+                <span asp-validation-for="HasGuestSpeakers" class="govuk-error-message"></span>
+                    <div id="HasGuestSpeakers" class="govuk-radios" data-module="govuk-radios">
                     <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                         Does the event include guest speakers?
                     </legend>
                     <div class="govuk-radios__item">
-                        <input asp-for="GuestSpeaker" id="true" class="govuk-radios__input" type="radio" value="true"
+                        <input asp-for="HasGuestSpeakers" id="true" class="govuk-radios__input" type="radio" value="true"
                                sfa-validationerror-class="form-control-error">
                         <label class="govuk-label govuk-radios__label" for="true">
                             Yes
                         </label>
                     </div>
                     <div class="govuk-radios__item">
-                        <input asp-for="GuestSpeaker" id="false" class="govuk-radios__input" type="radio" value="false"
+                        <input asp-for="HasGuestSpeakers" id="false" class="govuk-radios__input" type="radio" value="false"
                                sfa-validationerror-class="form-control-error">
                         <label class="govuk-label govuk-radios__label" for="false">
                             No
