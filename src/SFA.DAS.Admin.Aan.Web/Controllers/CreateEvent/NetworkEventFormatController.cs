@@ -6,7 +6,7 @@ using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Controllers;
+namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 
 [Authorize]
 [Route("network-event/create-event-format", Name = RouteNames.CreateEvent.EventFormat)]
@@ -45,7 +45,7 @@ public class NetworkEventFormatController : Controller
 
         sessionModel.EventFormat = submitModel.EventFormat;
         _sessionService.Set(sessionModel);
-        return View(ViewPath, GetViewModel(sessionModel));
+        return RedirectToAction("Get", "NetworkEventType");
     }
 
     private CreateEventFormatViewModel GetViewModel(CreateEventSessionModel sessionModel)

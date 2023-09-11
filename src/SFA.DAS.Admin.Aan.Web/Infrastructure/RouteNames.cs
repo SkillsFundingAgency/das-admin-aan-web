@@ -11,5 +11,6 @@ public static class RouteNames
     public static class CreateEvent
     {
         public const string EventFormat = nameof(EventFormat);
+        public const string EventType = nameof(EventType);
     }
 }

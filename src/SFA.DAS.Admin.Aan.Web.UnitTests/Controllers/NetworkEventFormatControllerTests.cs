@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
-using SFA.DAS.Admin.Aan.Web.Controllers;
+using SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
@@ -32,7 +32,8 @@ public class NetworkEventFormatControllerTests
     [TestCase(EventFormat.InPerson)]
     [TestCase(EventFormat.Hybrid)]
     [TestCase(EventFormat.Online)]
-    public void Post_SetEventFormatOnSessionModel(EventFormat eventFormat)
+    [TestCase(null)]
+    public void Post_SetEventFormatOnSessionModel(EventFormat? eventFormat)
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<CreateEventFormatViewModel>>();
@@ -50,15 +51,13 @@ public class NetworkEventFormatControllerTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
-        var result = (ViewResult)sut.Post(submitModel);
+        var result = (RedirectToActionResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventFormat == eventFormat)));
-
-        Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
-        (result.Model as CreateEventFormatViewModel)!.BackLink.Should().Be(AllNetworksUrl);
+        result.ControllerName.Should().Be("NetworkEventType");
+        result.ActionName.Should().Be("Get");
     }
-
 
     [TestCase(EventFormat.InPerson)]
     [TestCase(EventFormat.Hybrid)]
@@ -79,13 +78,13 @@ public class NetworkEventFormatControllerTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
-        var result = (ViewResult)sut.Post(submitModel);
+        var result = (RedirectToActionResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventFormat == eventFormat)));
 
-        Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
-        (result.Model as CreateEventFormatViewModel)!.BackLink.Should().Be(AllNetworksUrl);
+        result.ControllerName.Should().Be("NetworkEventType");
+        result.ActionName.Should().Be("Get");
     }
 
     [Test, MoqAutoData]
