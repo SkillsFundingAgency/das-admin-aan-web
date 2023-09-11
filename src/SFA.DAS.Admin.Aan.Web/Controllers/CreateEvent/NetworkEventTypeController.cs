@@ -63,7 +63,7 @@ public class NetworkEventTypeController : Controller
         List<Task> tasks = new() { calendarTask, regionTask };
         await Task.WhenAll(tasks);
 
-        var eventTypes = calendarTask.Result;
+        var eventTypes = calendarTask.Result.OrderBy(x => x.CalendarName);
         var regions = regionTask.Result.Regions;
 
         var eventTypeDropdown = eventTypes.Select(cal => new EventTypeSelection(cal.CalendarName, cal.Id));
