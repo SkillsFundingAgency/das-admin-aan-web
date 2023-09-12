@@ -78,7 +78,6 @@ public class GuestSpeakerControllerTests
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<GuestSpeakerAddViewModel>>();
-        var sessionModel = new CreateEventSessionModel();
 
         var submitModel = new GuestSpeakerAddViewModel();
 
@@ -96,6 +95,44 @@ public class GuestSpeakerControllerTests
         sut.ModelState.IsValid.Should().BeTrue();
 
         result.ControllerName.Should().Be("NetworkEventFormat");
+        result.ActionName.Should().Be("Get");
+    }
+
+    [Test]
+    public void Post_SetEventGuestListOnSessionModel()
+    {
+        var name = "name 1";
+        var id = 1;
+        var jobRoleAndOrganisation = "job role";
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<GuestSpeakerAddViewModel>>();
+
+        var sessionModel = new CreateEventSessionModel { GuestSpeakers = new List<GuestSpeaker>() };
+
+        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new GuestSpeakerAddViewModel { Name = name, Id = id, JobRoleAndOrganisation = jobRoleAndOrganisation };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new GuestSpeakerController(sessionServiceMock.Object, validatorMock.Object);
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.GuestSpeakerList, GuestSpeakerListUrl);
+
+        var result = (RedirectToActionResult)sut.Post(submitModel);
+
+        sut.ModelState.IsValid.Should().BeTrue();
+
+
+        sessionServiceMock.Verify(s =>
+            s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.Count == 1)));
+
+        sessionServiceMock.Verify(s =>
+            s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.First().Id == id)));
+
+        result.ControllerName.Should().Be("GuestSpeakerList");
         result.ActionName.Should().Be("Get");
     }
 
@@ -156,6 +193,26 @@ public class GuestSpeakerControllerTests
 
         sessionServiceMock.Verify(s =>
             s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.Last().Id == idSecond)));
+    }
+
+    [Test]
+    public void Delete_GuestSpeakerOnNoSessionModel()
+    {
+        var idToRemove = 5;
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<GuestSpeakerAddViewModel>>();
+        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
+
+        var sut = new GuestSpeakerController(sessionServiceMock.Object, validatorMock.Object);
+
+        var actualResult = sut.Delete(idToRemove);
+
+        var result = actualResult.As<RedirectToActionResult>();
+
+        sut.ModelState.IsValid.Should().BeTrue();
+
+        result.ControllerName.Should().Be("NetworkEventFormat");
+        result.ActionName.Should().Be("Get");
     }
 }
 
