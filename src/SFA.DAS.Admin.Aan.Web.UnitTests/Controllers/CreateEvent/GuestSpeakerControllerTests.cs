@@ -120,5 +120,42 @@ public class GuestSpeakerControllerTests
         Assert.That(result.Model, Is.TypeOf<GuestSpeakerAddViewModel>());
         (result.Model as GuestSpeakerAddViewModel)!.CancelLink.Should().Be(GuestSpeakerListUrl);
     }
+
+    [Test, MoqAutoData]
+    public void Delete_GuestSpeakerRemovedFromSession(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] GuestSpeakerController sut)
+    {
+        var guestSpeakerList = new List<GuestSpeaker>();
+        var idToRemove = 5;
+        var idFirst = 1;
+        var idSecond = 2;
+        var guestSpeakerToRemove = new GuestSpeaker("Aaron Aardvark", "Chief", idToRemove);
+
+        guestSpeakerList.Add(new GuestSpeaker("Betty Boop", "President", idFirst));
+        guestSpeakerList.Add(guestSpeakerToRemove);
+        guestSpeakerList.Add(new GuestSpeaker("Charlie Chaplin", "Bottle Washer", idSecond));
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.GuestSpeakerList, GuestSpeakerListUrl);
+
+        var sessionModel = new CreateEventSessionModel { GuestSpeakers = guestSpeakerList };
+        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+
+        var actualResult = sut.Delete(idToRemove);
+        var result = actualResult.As<RedirectToActionResult>();
+
+        sut.ModelState.IsValid.Should().BeTrue();
+        result.ControllerName.Should().Be("GuestSpeakerList");
+        result.ActionName.Should().Be("Get");
+
+        sessionServiceMock.Verify(s =>
+            s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.Count == 2)));
+
+        sessionServiceMock.Verify(s =>
+            s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.First().Id == idFirst)));
+
+        sessionServiceMock.Verify(s =>
+            s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.Last().Id == idSecond)));
+    }
 }
 
