@@ -86,7 +86,8 @@ public class GuestSpeakerController : Controller
             Name = originalModel.Name,
             JobRoleAndOrganisation = originalModel.JobRoleAndOrganisation,
             CancelLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerList)!,
-            PostLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerAdd)!
+            PostLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerAdd)!,
+            PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }
 

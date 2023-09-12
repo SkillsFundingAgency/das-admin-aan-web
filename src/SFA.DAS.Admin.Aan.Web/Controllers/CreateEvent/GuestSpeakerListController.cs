@@ -43,7 +43,8 @@ public class GuestSpeakerListController : Controller
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerList)!,
             AddGuestSpeakerLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerAdd)!,
-            DeleteSpeakerLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerDelete)!
+            DeleteSpeakerLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerDelete)!,
+            PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }
 }

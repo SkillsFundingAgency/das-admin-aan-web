@@ -12,7 +12,7 @@
         <form asp-route="@Model.PostLink" method="POST">
         <div class="govuk-form-group">
             <h1 class="govuk-heading-l">
-                <span class="govuk-caption-l">Create event</span>
+                <span class="govuk-caption-l">@Model.PageTitle</span>
             </h1>
             <input type="hidden" asp-for="@Model.CancelLink"/>
             <div esfa-validation-marker-for="@Model.Name" class="govuk-form-group">
