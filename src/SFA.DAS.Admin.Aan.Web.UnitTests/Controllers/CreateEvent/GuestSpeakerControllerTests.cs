@@ -102,7 +102,7 @@ public class GuestSpeakerControllerTests
     public void Post_SetEventGuestListOnSessionModel()
     {
         var name = "name 1";
-        var id = 1;
+        var idExpected = 1;
         var jobRoleAndOrganisation = "job role";
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<GuestSpeakerAddViewModel>>();
@@ -111,7 +111,7 @@ public class GuestSpeakerControllerTests
 
         sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new GuestSpeakerAddViewModel { Name = name, Id = id, JobRoleAndOrganisation = jobRoleAndOrganisation };
+        var submitModel = new GuestSpeakerAddViewModel { Name = name, JobRoleAndOrganisation = jobRoleAndOrganisation };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -125,12 +125,11 @@ public class GuestSpeakerControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
 
-
         sessionServiceMock.Verify(s =>
             s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.Count == 1)));
 
         sessionServiceMock.Verify(s =>
-            s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.First().Id == id)));
+            s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.First().Id == idExpected)));
 
         result.ControllerName.Should().Be("GuestSpeakerList");
         result.ActionName.Should().Be("Get");
