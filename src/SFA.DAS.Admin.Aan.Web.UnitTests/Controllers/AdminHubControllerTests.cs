@@ -1,26 +1,74 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Controllers;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
-using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
 
 public class AdminHubControllerTests
 {
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
-    [Test, MoqAutoData]
-    public void GetAdminHub_GeneratesExpectedViewModel(
-        [Greedy] AdminHubController sut)
-    {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+    private AdminHubViewModel _viewModel = null!;
 
+    [SetUp]
+    public void GivenUserHasAllRoles()
+    {
+        AdminHubController sut = new();
+        sut
+            .AddControllerContextWithAllRoles()
+            .AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+
+        //action
         var actualResult = sut.Index();
-        var viewResult = actualResult.As<ViewResult>();
-        var model = viewResult.Model as AdminHubViewModel;
-        model!.ManageEventsUrl.Should().Be(AllNetworksUrl);
+        _viewModel = actualResult.As<ViewResult>().Model.As<AdminHubViewModel>();
+    }
+
+    [Test]
+    public void GetAdminHub_HasManageEventsUrl()
+    {
+        _viewModel.ManageEventsUrl.Should().Be(AllNetworksUrl);
+    }
+
+    [Test]
+    public void GetAdminHub_HasManageAmbassadorsUrl()
+    {
+        _viewModel.ManageAmbassadorsUrl.Should().Be("#");
+    }
+
+    [Test]
+    public void GetAdminHub_HasManageEventsRole()
+    {
+        _viewModel.HasManageEventsRole.Should().BeTrue();
+    }
+
+    [Test]
+    public void GetAdminHub_HasManageMembersRole()
+    {
+        _viewModel.HasManageMembersRole.Should().BeTrue();
+    }
+}
+
+public class AdminHubControllerRoleTests
+{
+    [TestCase(Roles.ManageEventsRole, true, false)]
+    [TestCase(Roles.ManageMembersRole, false, true)]
+    public void GetAdminHub_HasCorrectRoleFlagsSet(string role, bool hasManageEvents, bool hasManageAmbassadors)
+    {
+        AdminHubController sut = new();
+        sut
+            .AddControllerContextWithRoles(new[] { role })
+            .AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.NetworkEvents, TestConstants.DefaultUrl);
+
+        //action
+        var actualResult = sut.Index();
+        var viewModel = actualResult.As<ViewResult>().Model.As<AdminHubViewModel>();
+
+        viewModel.HasManageEventsRole.Should().Be(hasManageEvents);
+        viewModel.HasManageMembersRole.Should().Be(hasManageAmbassadors);
     }
 }
