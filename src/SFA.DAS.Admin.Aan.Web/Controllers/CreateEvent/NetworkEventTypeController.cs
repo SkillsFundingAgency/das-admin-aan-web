@@ -71,13 +71,15 @@ public class NetworkEventTypeController : Controller
 
         var regionDropdowns = regions.Select(reg => new RegionSelection(reg.Area, reg.Id));
 
+        var regionsWithNational = regionDropdowns.ToList();
+        regionsWithNational.Add(new RegionSelection("National", 0));
         return new CreateEventTypeViewModel
         {
             EventTitle = sessionModel?.EventTitle,
             EventTypeId = sessionModel?.EventTypeId,
             EventRegionId = sessionModel?.EventRegionId,
             EventTypes = eventTypeDropdown.ToList(),
-            EventRegions = regionDropdowns.ToList(),
+            EventRegions = regionsWithNational,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventType)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
