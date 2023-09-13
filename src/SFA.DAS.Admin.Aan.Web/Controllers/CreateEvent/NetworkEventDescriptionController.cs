@@ -9,19 +9,18 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 
 [Authorize]
-[Route("manage-events/new/event-format", Name = RouteNames.CreateEvent.EventFormat)]
-public class NetworkEventFormatController : Controller
+[Route("manage-events/new/event-description", Name = RouteNames.CreateEvent.EventDescription)]
+public class NetworkEventDescriptionController : Controller
 {
-    public const string ViewPath = "~/Views/NetworkEvent/EventFormat.cshtml";
     private readonly ISessionService _sessionService;
-    private readonly IValidator<CreateEventFormatViewModel> _validator;
+    private readonly IValidator<CreateEventDescriptionViewModel> _validator;
 
-    public NetworkEventFormatController(ISessionService sessionService, IValidator<CreateEventFormatViewModel> validator)
+    public const string ViewPath = "~/Views/NetworkEvent/EventDescription.cshtml";
+    public NetworkEventDescriptionController(ISessionService sessionService, IValidator<CreateEventDescriptionViewModel> validator)
     {
         _sessionService = sessionService;
         _validator = validator;
     }
-
     [HttpGet]
     public IActionResult Get()
     {
@@ -31,28 +30,33 @@ public class NetworkEventFormatController : Controller
     }
 
     [HttpPost]
-    public IActionResult Post(CreateEventFormatViewModel submitModel)
+    public IActionResult Post(CreateEventDescriptionViewModel submitModel)
     {
-        var sessionModel = _sessionService.Get<CreateEventSessionModel?>() ?? new CreateEventSessionModel();
+        var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
+        if (sessionModel == null) return RedirectToAction("Get", "NetworkEventFormat");
+
+        sessionModel.EventOutline = submitModel.EventOutline;
+        sessionModel.EventSummary = submitModel.EventSummary;
 
         var result = _validator.Validate(submitModel);
 
         if (!result.IsValid)
         {
+
             result.AddToModelState(ModelState);
             return View(ViewPath, GetViewModel(sessionModel));
         }
 
-        sessionModel.EventFormat = submitModel.EventFormat;
         _sessionService.Set(sessionModel);
-        return RedirectToAction("Get", "NetworkEventType");
+        return RedirectToAction("Get", "EventHasGuestSpeakers");
     }
 
-    private CreateEventFormatViewModel GetViewModel(CreateEventSessionModel sessionModel)
+    private CreateEventDescriptionViewModel GetViewModel(CreateEventSessionModel sessionModel)
     {
-        return new CreateEventFormatViewModel
+        return new CreateEventDescriptionViewModel
         {
-            EventFormat = sessionModel?.EventFormat,
+            EventOutline = sessionModel?.EventOutline,
+            EventSummary = sessionModel?.EventSummary,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle

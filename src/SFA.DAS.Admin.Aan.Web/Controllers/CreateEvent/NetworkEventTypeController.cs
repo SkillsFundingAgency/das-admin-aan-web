@@ -9,7 +9,7 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 
 [Authorize]
-[Route("network-event/create-event-type", Name = RouteNames.CreateEvent.EventType)]
+[Route("manage-events/new/event-type", Name = RouteNames.CreateEvent.EventType)]
 public class NetworkEventTypeController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
@@ -52,7 +52,7 @@ public class NetworkEventTypeController : Controller
 
         sessionModel.EventTitle = submitModel.EventTitle;
         _sessionService.Set(sessionModel);
-        return RedirectToAction("Get", "NetworkEventType");
+        return RedirectToAction("Get", "NetworkEventDescription");
     }
 
     private async Task<CreateEventTypeViewModel> GetViewModel(CreateEventSessionModel sessionModel, CancellationToken cancellationToken)
@@ -63,7 +63,7 @@ public class NetworkEventTypeController : Controller
         List<Task> tasks = new() { calendarTask, regionTask };
         await Task.WhenAll(tasks);
 
-        var eventTypes = calendarTask.Result;
+        var eventTypes = calendarTask.Result.OrderBy(x => x.CalendarName);
         var regions = regionTask.Result.Regions;
 
         var eventTypeDropdown = eventTypes.Select(cal => new EventTypeSelection(cal.CalendarName, cal.Id));
@@ -77,7 +77,9 @@ public class NetworkEventTypeController : Controller
             EventRegionId = sessionModel?.EventRegionId,
             EventTypes = eventTypeDropdown.ToList(),
             EventRegions = regionDropdowns.ToList(),
-            BackLink = Url.RouteUrl(RouteNames.NetworkEvents)!
+            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventType)!,
+            PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }
 }
