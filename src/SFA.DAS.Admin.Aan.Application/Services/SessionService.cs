@@ -14,7 +14,7 @@ public class SessionService : ISessionService
 
     public void Set<T>(T model) => Set(typeof(T).Name, JsonSerializer.Serialize(model));
 
-    public string Get(string key) => _httpContextAccessor.HttpContext?.Session.GetString(key)!;
+    public string? Get(string key) => _httpContextAccessor.HttpContext?.Session.GetString(key);
 
     public T Get<T>()
     {
