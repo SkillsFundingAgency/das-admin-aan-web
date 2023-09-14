@@ -11,7 +11,7 @@ namespace SFA.DAS.Admin.Aan.Web.UnitTests.Services;
 [TestFixture]
 public class FilterBuilderTests
 {
-    private const string LocationUrl = "manage-events";
+    private const string LocationUrl = "events";
 
     [Test]
     public void BuildFilterChoicesForNoFilters()

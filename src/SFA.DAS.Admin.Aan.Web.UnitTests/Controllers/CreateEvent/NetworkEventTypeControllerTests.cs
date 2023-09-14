@@ -103,12 +103,11 @@ public class NetworkEventTypeControllerTests
 
         var actualResult = sut.Post(submitModel, new CancellationToken());
 
-        var result = actualResult.Result.As<RedirectToActionResult>();
+        var result = actualResult.Result.As<RedirectToRouteResult>();
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventTitle == eventTitle)));
-        result.ControllerName.Should().Be("NetworkEventDescription");
-        result.ActionName.Should().Be("Get");
+        result.RouteName.Should().Be(RouteNames.CreateEvent.EventDescription);
     }
 
     [Test]
@@ -128,9 +127,8 @@ public class NetworkEventTypeControllerTests
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
         var actualResult = sut.Post(submitModel, new CancellationToken());
-        var result = actualResult.Result.As<RedirectToActionResult>();
-        result.ControllerName.Should().Be("NetworkEventFormat");
-        result.ActionName.Should().Be("Get");
+        var result = actualResult.Result.As<RedirectToRouteResult>();
+        result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
     }
 
     [Test, MoqAutoData]

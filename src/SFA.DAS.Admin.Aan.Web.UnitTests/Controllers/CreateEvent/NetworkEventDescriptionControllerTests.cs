@@ -63,12 +63,11 @@ public class NetworkEventDescriptionControllerTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
-        var result = (RedirectToActionResult)sut.Post(submitModel);
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventOutline == eventOutline && m.EventSummary == eventSummary)));
-        result.ControllerName.Should().Be("EventHasGuestSpeakers");
-        result.ActionName.Should().Be("Get");
+        result.RouteName.Should().Be(RouteNames.CreateEvent.EventHasGuestSpeakers);
     }
 
     [TestCase("outline 1", "summary 1")]
@@ -88,13 +87,12 @@ public class NetworkEventDescriptionControllerTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
-        var result = (RedirectToActionResult)sut.Post(submitModel);
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.IsAny<CreateEventSessionModel>()), Times.Never());
 
-        result.ControllerName.Should().Be("NetworkEventFormat");
-        result.ActionName.Should().Be("Get");
+        result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
     }
 
     [Test, MoqAutoData]

@@ -64,12 +64,11 @@ public class NetworkEventFormatControllerTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
-        var result = (RedirectToActionResult)sut.Post(submitModel);
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventFormat == eventFormat)));
-        result.ControllerName.Should().Be("NetworkEventType");
-        result.ActionName.Should().Be("Get");
+        result.RouteName.Should().Be(RouteNames.CreateEvent.EventType);
     }
 
     [TestCase(EventFormat.InPerson)]
@@ -91,13 +90,12 @@ public class NetworkEventFormatControllerTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
-        var result = (RedirectToActionResult)sut.Post(submitModel);
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventFormat == eventFormat)));
 
-        result.ControllerName.Should().Be("NetworkEventType");
-        result.ActionName.Should().Be("Get");
+        result.RouteName.Should().Be(RouteNames.CreateEvent.EventType);
     }
 
     [Test, MoqAutoData]

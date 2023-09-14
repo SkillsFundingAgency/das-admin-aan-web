@@ -19,10 +19,10 @@ public class EventHasGuestSpeakersControllerTests
 
     [Test, MoqAutoData]
     public void Details_ReturnsEventGuestSpeakerViewModel(
-        [Greedy] EventHasGuestSpeakersController sut)
+        [Greedy] GuestSpeakersController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-        var result = (ViewResult)sut.Get();
+        var result = (ViewResult)sut.GetHasGuestSpeakers();
 
         Assert.That(result.Model, Is.TypeOf<CreateEventHasGuestSpeakersViewModel>());
         var vm = result.Model as CreateEventHasGuestSpeakersViewModel;
@@ -32,10 +32,10 @@ public class EventHasGuestSpeakersControllerTests
 
     [Test, MoqAutoData]
     public void Details_ReturnsExpectedPostLink(
-        [Greedy] EventHasGuestSpeakersController sut)
+        [Greedy] GuestSpeakersController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.EventHasGuestSpeakers, PostUrl);
-        var result = (ViewResult)sut.Get();
+        var result = (ViewResult)sut.GetHasGuestSpeakers();
         Assert.That(result.Model, Is.TypeOf<CreateEventHasGuestSpeakersViewModel>());
         var vm = result.Model as CreateEventHasGuestSpeakersViewModel;
         vm!.PostLink.Should().Be(PostUrl);
@@ -58,25 +58,23 @@ public class EventHasGuestSpeakersControllerTests
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
 
-        var sut = new EventHasGuestSpeakersController(sessionServiceMock.Object, validatorMock.Object);
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), validatorMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
-        var result = (RedirectToActionResult)sut.Post(submitModel);
+        var result = (RedirectToRouteResult)sut.PostHasGuestSpeakers(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s =>
             s.Set(It.Is<CreateEventSessionModel>(m => m.HasGuestSpeakers == hasGuestSpeakers)));
         if (hasGuestSpeakers == true)
         {
-            result.ControllerName.Should().Be("GuestSpeakerList");
+            result.RouteName.Should().Be(RouteNames.CreateEvent.GuestSpeakerList);
         }
         else
         {
-            result.ControllerName.Should().Be("EventHasGuestSpeakers");
+            result.RouteName.Should().Be(RouteNames.CreateEvent.EventHasGuestSpeakers);
         }
-
-        result.ActionName.Should().Be("Get");
     }
 
     [TestCase(true)]
@@ -93,23 +91,22 @@ public class EventHasGuestSpeakersControllerTests
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
 
-        var sut = new EventHasGuestSpeakersController(sessionServiceMock.Object, validatorMock.Object);
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), validatorMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
-        var result = (RedirectToActionResult)sut.Post(submitModel);
+        var result = (RedirectToRouteResult)sut.PostHasGuestSpeakers(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.IsAny<CreateEventSessionModel>()), Times.Never());
 
-        result.ControllerName.Should().Be("NetworkEventFormat");
-        result.ActionName.Should().Be("Get");
+        result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
     }
 
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfHasGuestSpeakers_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] EventHasGuestSpeakersController sut)
+        [Greedy] GuestSpeakersController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
@@ -121,7 +118,7 @@ public class EventHasGuestSpeakersControllerTests
 
         var submitModel = new CreateEventHasGuestSpeakersViewModel();
 
-        var result = (ViewResult)sut.Post(submitModel);
+        var result = (ViewResult)sut.PostHasGuestSpeakers(submitModel);
 
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<CreateEventHasGuestSpeakersViewModel>());

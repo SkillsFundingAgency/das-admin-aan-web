@@ -10,7 +10,7 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("manage-events/new/event-type", Name = RouteNames.CreateEvent.EventType)]
+[Route("events/new/type", Name = RouteNames.CreateEvent.EventType)]
 public class NetworkEventTypeController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
@@ -36,7 +36,7 @@ public class NetworkEventTypeController : Controller
     public async Task<IActionResult> Post(CreateEventTypeViewModel submitModel, CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
-        if (sessionModel == null) return RedirectToAction("Get", "NetworkEventFormat");
+        if (sessionModel == null) return RedirectToRoute(RouteNames.CreateEvent.EventFormat);
 
         sessionModel.EventTitle = submitModel.EventTitle;
         sessionModel.EventTypeId = submitModel.EventTypeId;
@@ -53,7 +53,7 @@ public class NetworkEventTypeController : Controller
 
         sessionModel.EventTitle = submitModel.EventTitle;
         _sessionService.Set(sessionModel);
-        return RedirectToAction("Get", "NetworkEventDescription");
+        return RedirectToRoute(RouteNames.CreateEvent.EventDescription);
     }
 
     private async Task<CreateEventTypeViewModel> GetViewModel(CreateEventSessionModel sessionModel, CancellationToken cancellationToken)

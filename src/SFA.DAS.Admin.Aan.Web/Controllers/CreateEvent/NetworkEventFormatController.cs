@@ -10,7 +10,7 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("manage-events/new/event-format", Name = RouteNames.CreateEvent.EventFormat)]
+[Route("events/new/format", Name = RouteNames.CreateEvent.EventFormat)]
 public class NetworkEventFormatController : Controller
 {
     public const string ViewPath = "~/Views/NetworkEvent/EventFormat.cshtml";
@@ -46,7 +46,7 @@ public class NetworkEventFormatController : Controller
 
         sessionModel.EventFormat = submitModel.EventFormat;
         _sessionService.Set(sessionModel);
-        return RedirectToAction("Get", "NetworkEventType");
+        return RedirectToRoute(RouteNames.CreateEvent.EventType);
     }
 
     private CreateEventFormatViewModel GetViewModel(CreateEventSessionModel sessionModel)

@@ -10,7 +10,7 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("manage-events/new/event-description", Name = RouteNames.CreateEvent.EventDescription)]
+[Route("events/new/description", Name = RouteNames.CreateEvent.EventDescription)]
 public class NetworkEventDescriptionController : Controller
 {
     private readonly ISessionService _sessionService;
@@ -35,7 +35,7 @@ public class NetworkEventDescriptionController : Controller
     public IActionResult Post(CreateEventDescriptionViewModel submitModel)
     {
         var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
-        if (sessionModel == null) return RedirectToAction("Get", "NetworkEventFormat");
+        if (sessionModel == null) return RedirectToRoute(RouteNames.CreateEvent.EventFormat);
 
         sessionModel.EventOutline = submitModel.EventOutline;
         sessionModel.EventSummary = submitModel.EventSummary;
@@ -51,7 +51,7 @@ public class NetworkEventDescriptionController : Controller
 
         _sessionService.Set(sessionModel);
 
-        return RedirectToAction("Get", "EventHasGuestSpeakers");
+        return RedirectToRoute(RouteNames.CreateEvent.EventHasGuestSpeakers);
     }
 
     private CreateEventDescriptionViewModel GetViewModel(CreateEventSessionModel sessionModel)
