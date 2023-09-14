@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Security.Claims;
 
 namespace SFA.DAS.Admin.Aan.Web.Authentication;
 
@@ -11,9 +10,4 @@ public static class Roles
     public const string ManageEventsRole = "AME";
 
     public const string ManageMembersRole = "AMM";
-
-    public static bool HasValidRole(this ClaimsPrincipal user)
-    {
-        return user.IsInRole(ManageEventsRole) || user.IsInRole(ManageMembersRole);
-    }
 }

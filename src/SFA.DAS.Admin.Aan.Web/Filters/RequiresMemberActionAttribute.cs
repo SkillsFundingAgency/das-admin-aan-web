@@ -23,12 +23,15 @@ public class RequiresMemberActionAttribute : ActionFilterAttribute
     {
         if (context.ActionDescriptor is not ControllerActionDescriptor) return;
 
-        var memberId = _sessionService.Get(SessionKeys.MemberId);
-
-        if (string.IsNullOrEmpty(memberId))
+        if (context.HttpContext.User.HasValidRole())
         {
-            var member = await _outerApiClient.GetAdminMember(new(context.HttpContext.User.GetEmail(), context.HttpContext.User.GetFirstName(), context.HttpContext.User.GetLastName()), CancellationToken.None);
-            _sessionService.Set(SessionKeys.MemberId, member.MemberId.ToString());
+            var memberId = _sessionService.Get(SessionKeys.MemberId);
+
+            if (string.IsNullOrEmpty(memberId))
+            {
+                var member = await _outerApiClient.GetAdminMember(new(context.HttpContext.User.GetEmail(), context.HttpContext.User.GetFirstName(), context.HttpContext.User.GetLastName()), CancellationToken.None);
+                _sessionService.Set(SessionKeys.MemberId, member.MemberId.ToString());
+            }
         }
 
         await next();
