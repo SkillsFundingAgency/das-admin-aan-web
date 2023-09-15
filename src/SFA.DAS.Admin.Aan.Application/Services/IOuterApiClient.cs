@@ -1,5 +1,6 @@
 ﻿using RestEase;
 using SFA.DAS.Admin.Aan.Application.Constants;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Admins;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using Calendar = SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Calendar;
@@ -17,4 +18,6 @@ public interface IOuterApiClient
     [Get("calendarEvents")]
     Task<GetCalendarEventsQueryResult> GetCalendarEvents([Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [QueryMap] IDictionary<string, string[]> parameters, CancellationToken cancellationToken);
 
+    [Post("admins")]
+    Task<LookupAdminMemberResult> GetAdminMember([Body] LookupAdminMemberRequest request, CancellationToken cancellationToken);
 }

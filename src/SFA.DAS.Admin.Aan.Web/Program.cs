@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Web.AppStart;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Configuration;
+using SFA.DAS.Admin.Aan.Web.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,11 @@ builder.Services
     .AddServiceRegistrations(rootConfiguration)
     .AddValidatorsFromAssembly(typeof(Program).Assembly)
     .Configure<RouteOptions>(o => o.LowercaseUrls = true)
-    .AddControllersWithViews(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
+    .AddControllersWithViews(options =>
+    {
+        options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+        options.Filters.Add<RequiresMemberActionAttribute>();
+    })
     .AddSessionStateTempDataProvider();
 
 builder.Services.AddHealthChecks();

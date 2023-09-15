@@ -3,28 +3,18 @@ using Microsoft.AspNetCore.Http;
 
 namespace SFA.DAS.Admin.Aan.Application.Services;
 
-public interface ISessionService
-{
-    void Set(string value, string key);
-    void Set<T>(T model);
-    string Get(string key);
-    T Get<T>();
-    void Delete(string key);
-    void Delete<T>(T model);
-    void Clear();
-    bool Contains<T>();
-}
-
 public class SessionService : ISessionService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public SessionService(IHttpContextAccessor httpContextAccessor) => _httpContextAccessor = httpContextAccessor;
 
-    public void Set(string value, string key) => _httpContextAccessor.HttpContext?.Session.SetString(key, value);
-    public void Set<T>(T model) => Set(JsonSerializer.Serialize(model), typeof(T).Name);
+    public void Set(string key, string value) => _httpContextAccessor.HttpContext?.Session.SetString(
+        key, value);
 
-    public string Get(string key) => _httpContextAccessor.HttpContext?.Session.GetString(key)!;
+    public void Set<T>(T model) => Set(typeof(T).Name, JsonSerializer.Serialize(model));
+
+    public string? Get(string key) => _httpContextAccessor.HttpContext?.Session.GetString(key);
 
     public T Get<T>()
     {

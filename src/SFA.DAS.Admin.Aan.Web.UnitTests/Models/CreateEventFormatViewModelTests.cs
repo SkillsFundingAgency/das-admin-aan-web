@@ -16,11 +16,11 @@ public class CreateEventFormatViewModelTests
     {
         var expectedEventFormatChecklistLookup = new ChecklistLookup[]
         {
-            new(EventFormat.InPerson.GetDescription()!, EventFormat.InPerson.ToString(),
+            new(EventFormat.InPerson.GetDescription(), EventFormat.InPerson.ToString(),
                 eventFormat == EventFormat.InPerson),
-            new(EventFormat.Online.GetDescription()!, EventFormat.Online.ToString(),
+            new(EventFormat.Online.GetDescription(), EventFormat.Online.ToString(),
                 eventFormat == EventFormat.Online),
-            new(EventFormat.Hybrid.GetDescription()!, EventFormat.Hybrid.ToString(),
+            new(EventFormat.Hybrid.GetDescription(), EventFormat.Hybrid.ToString(),
                 eventFormat == EventFormat.Hybrid)
         };
 
