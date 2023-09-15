@@ -38,9 +38,7 @@ public class GuestSpeakersController : Controller
     public IActionResult PostHasGuestSpeakers(CreateEventHasGuestSpeakersViewModel submitModel)
     {
         var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
-        if (sessionModel == null) return RedirectToRoute(RouteNames.CreateEvent.EventFormat);
-
-        sessionModel.HasGuestSpeakers = submitModel.HasGuestSpeakers;
+        sessionModel!.HasGuestSpeakers = submitModel.HasGuestSpeakers;
 
         var result = _hasGuestSpeakersValidator.Validate(submitModel);
 
@@ -72,9 +70,7 @@ public class GuestSpeakersController : Controller
     public IActionResult DeleteGuestSpeaker(int id)
     {
         var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
-        if (sessionModel == null) return RedirectToRoute(RouteNames.CreateEvent.EventFormat);
-
-        var currentGuestList = sessionModel.GuestSpeakers;
+        var currentGuestList = sessionModel!.GuestSpeakers;
         if (currentGuestList.Any())
         {
             var removeItem = currentGuestList.First(x => x.Id == id);
@@ -90,9 +86,6 @@ public class GuestSpeakersController : Controller
     [Route("add", Name = RouteNames.CreateEvent.GuestSpeakerAdd)]
     public IActionResult PostAddGuestSpeaker(GuestSpeakerAddViewModel submitModel)
     {
-        var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
-        if (sessionModel == null) return RedirectToRoute(RouteNames.CreateEvent.EventFormat);
-
         var result = _addGuestSpeakerValidator.Validate(submitModel);
 
         if (!result.IsValid)
@@ -102,8 +95,8 @@ public class GuestSpeakersController : Controller
             return View(GuestSpeakerAddViewPath, GetGuestSpeakerAddViewModel(submitModel));
         }
 
-
-        var currentGuestList = sessionModel.GuestSpeakers;
+        var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
+        var currentGuestList = sessionModel!.GuestSpeakers;
 
         var id = currentGuestList.Any() ? currentGuestList.Max(x => x.Id) + 1 : 1;
 

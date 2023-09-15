@@ -35,9 +35,7 @@ public class NetworkEventDescriptionController : Controller
     public IActionResult Post(CreateEventDescriptionViewModel submitModel)
     {
         var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
-        if (sessionModel == null) return RedirectToRoute(RouteNames.CreateEvent.EventFormat);
-
-        sessionModel.EventOutline = submitModel.EventOutline;
+        sessionModel!.EventOutline = submitModel.EventOutline;
         sessionModel.EventSummary = submitModel.EventSummary;
 
         var result = _validator.Validate(submitModel);

@@ -29,6 +29,13 @@ builder.Services
     })
     .AddSessionStateTempDataProvider();
 
+builder.Services
+    .AddMvc(options =>
+    {
+        options.Filters.Add<RequiresCreateEventSessionModelAttribute>();
+        options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+    });
+
 builder.Services.AddHealthChecks();
 
 #if DEBUG

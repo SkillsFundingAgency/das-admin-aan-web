@@ -70,30 +70,30 @@ public class NetworkEventDescriptionControllerTests
         result.RouteName.Should().Be(RouteNames.CreateEvent.EventHasGuestSpeakers);
     }
 
-    [TestCase("outline 1", "summary 1")]
-    public void Post_SetEventDetailsOnNoSessionModel(string eventOutline, string eventSummary)
-    {
-        var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<CreateEventDescriptionViewModel>>();
-
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
-
-        var submitModel = new CreateEventDescriptionViewModel { EventOutline = eventOutline, EventSummary = eventSummary };
-
-        var validationResult = new ValidationResult();
-        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
-
-        var sut = new NetworkEventDescriptionController(sessionServiceMock.Object, validatorMock.Object);
-
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
-
-        var result = (RedirectToRouteResult)sut.Post(submitModel);
-
-        sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.IsAny<CreateEventSessionModel>()), Times.Never());
-
-        result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
-    }
+    // [TestCase("outline 1", "summary 1")]
+    // public void Post_SetEventDetailsOnNoSessionModel(string eventOutline, string eventSummary)
+    // {
+    //     var sessionServiceMock = new Mock<ISessionService>();
+    //     var validatorMock = new Mock<IValidator<CreateEventDescriptionViewModel>>();
+    //
+    //     sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
+    //
+    //     var submitModel = new CreateEventDescriptionViewModel { EventOutline = eventOutline, EventSummary = eventSummary };
+    //
+    //     var validationResult = new ValidationResult();
+    //     validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+    //
+    //     var sut = new NetworkEventDescriptionController(sessionServiceMock.Object, validatorMock.Object);
+    //
+    //     sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+    //
+    //     var result = (RedirectToRouteResult)sut.Post(submitModel);
+    //
+    //     sut.ModelState.IsValid.Should().BeTrue();
+    //     sessionServiceMock.Verify(s => s.Set(It.IsAny<CreateEventSessionModel>()), Times.Never());
+    //
+    //     result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
+    // }
 
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventDetails_Errors(

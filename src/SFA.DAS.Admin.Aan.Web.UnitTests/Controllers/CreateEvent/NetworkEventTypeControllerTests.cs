@@ -110,26 +110,26 @@ public class NetworkEventTypeControllerTests
         result.RouteName.Should().Be(RouteNames.CreateEvent.EventDescription);
     }
 
-    [Test]
-    public void Post_SetEventTypeOnNoSessionModel()
-    {
-        var validatorMock = new Mock<IValidator<CreateEventTypeViewModel>>();
-        var sessionServiceMock = new Mock<ISessionService>();
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
-
-        var submitModel = new CreateEventTypeViewModel();
-
-        var validationResult = new ValidationResult();
-        validatorMock.Setup(v => v.ValidateAsync(submitModel, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
-
-        var sut = new NetworkEventTypeController(Mock.Of<IOuterApiClient>(), sessionServiceMock.Object, validatorMock.Object);
-
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-
-        var actualResult = sut.Post(submitModel, new CancellationToken());
-        var result = actualResult.Result.As<RedirectToRouteResult>();
-        result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
-    }
+    // [Test]
+    // public void Post_SetEventTypeOnNoSessionModel()
+    // {
+    //     var validatorMock = new Mock<IValidator<CreateEventTypeViewModel>>();
+    //     var sessionServiceMock = new Mock<ISessionService>();
+    //     sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
+    //
+    //     var submitModel = new CreateEventTypeViewModel();
+    //
+    //     var validationResult = new ValidationResult();
+    //     validatorMock.Setup(v => v.ValidateAsync(submitModel, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
+    //
+    //     var sut = new NetworkEventTypeController(Mock.Of<IOuterApiClient>(), sessionServiceMock.Object, validatorMock.Object);
+    //
+    //     sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
+    //
+    //     var actualResult = sut.Post(submitModel, new CancellationToken());
+    //     var result = actualResult.Result.As<RedirectToRouteResult>();
+    //     result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
+    // }
 
     [Test, MoqAutoData]
     public void Post_WhenValidationErrors_RedirectToEventFormat(

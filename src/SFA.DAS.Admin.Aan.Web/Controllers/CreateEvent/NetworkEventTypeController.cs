@@ -36,9 +36,7 @@ public class NetworkEventTypeController : Controller
     public async Task<IActionResult> Post(CreateEventTypeViewModel submitModel, CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
-        if (sessionModel == null) return RedirectToRoute(RouteNames.CreateEvent.EventFormat);
-
-        sessionModel.EventTitle = submitModel.EventTitle;
+        sessionModel!.EventTitle = submitModel.EventTitle;
         sessionModel.EventTypeId = submitModel.EventTypeId;
         sessionModel.EventRegionId = submitModel.EventRegionId;
 

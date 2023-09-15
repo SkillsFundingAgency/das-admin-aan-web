@@ -73,29 +73,29 @@ public class GuestSpeakerControllerTests
         ((GuestSpeakerAddViewModel)viewResult.Model!).PostLink.Should().Be(GuestSpeakerAddUrl);
     }
 
-    [Test]
-    public void Post_SetGuestSpeakerAddOnNoSessionModel()
-    {
-        var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<GuestSpeakerAddViewModel>>();
-
-        var submitModel = new GuestSpeakerAddViewModel();
-
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
-
-        var validationResult = new ValidationResult();
-        validatorMock.Setup(v => v.ValidateAsync(submitModel, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
-
-        var sut = new GuestSpeakersController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<CreateEventHasGuestSpeakersViewModel>>());
-
-        var actualResult = sut.PostAddGuestSpeaker(submitModel);
-
-        var result = actualResult.As<RedirectToRouteResult>();
-
-        sut.ModelState.IsValid.Should().BeTrue();
-
-        result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
-    }
+    // [Test]
+    // public void Post_SetGuestSpeakerAddOnNoSessionModel()
+    // {
+    //     var sessionServiceMock = new Mock<ISessionService>();
+    //     var validatorMock = new Mock<IValidator<GuestSpeakerAddViewModel>>();
+    //
+    //     var submitModel = new GuestSpeakerAddViewModel();
+    //
+    //     sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
+    //
+    //     var validationResult = new ValidationResult();
+    //     validatorMock.Setup(v => v.ValidateAsync(submitModel, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
+    //
+    //     var sut = new GuestSpeakersController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<CreateEventHasGuestSpeakersViewModel>>());
+    //
+    //     var actualResult = sut.PostAddGuestSpeaker(submitModel);
+    //
+    //     var result = actualResult.As<RedirectToRouteResult>();
+    //
+    //     sut.ModelState.IsValid.Should().BeTrue();
+    //
+    //     result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
+    // }
 
     [Test]
     public void Post_SetEventGuestListOnSessionModel()
@@ -191,23 +191,23 @@ public class GuestSpeakerControllerTests
             s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.Last().Id == idSecond)));
     }
 
-    [Test]
-    public void Delete_GuestSpeakerOnNoSessionModel()
-    {
-        var idToRemove = 5;
-        var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<GuestSpeakerAddViewModel>>();
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
-
-        var sut = new GuestSpeakersController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<CreateEventHasGuestSpeakersViewModel>>());
-
-        var actualResult = sut.DeleteGuestSpeaker(idToRemove);
-
-        var result = actualResult.As<RedirectToRouteResult>();
-
-        sut.ModelState.IsValid.Should().BeTrue();
-
-        result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
-    }
+    // [Test]
+    // public void Delete_GuestSpeakerOnNoSessionModel()
+    // {
+    //     var idToRemove = 5;
+    //     var sessionServiceMock = new Mock<ISessionService>();
+    //     var validatorMock = new Mock<IValidator<GuestSpeakerAddViewModel>>();
+    //     sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
+    //
+    //     var sut = new GuestSpeakersController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<CreateEventHasGuestSpeakersViewModel>>());
+    //
+    //     var actualResult = sut.DeleteGuestSpeaker(idToRemove);
+    //
+    //     var result = actualResult.As<RedirectToRouteResult>();
+    //
+    //     sut.ModelState.IsValid.Should().BeTrue();
+    //
+    //     result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
+    // }
 }
 

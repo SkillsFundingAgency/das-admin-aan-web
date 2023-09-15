@@ -14,7 +14,7 @@ using Region = SFA.DAS.Admin.Aan.Application.OuterApi.Regions.Region;
 namespace SFA.DAS.Admin.Aan.Web.Controllers;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events")]
+[Route("events", Name = RouteNames.NetworkEvents)]
 public class NetworkEventsController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
@@ -26,7 +26,6 @@ public class NetworkEventsController : Controller
     }
 
     [HttpGet]
-    [Route("", Name = RouteNames.NetworkEvents)]
     public async Task<IActionResult> Index(GetNetworkEventsRequest request, CancellationToken cancellationToken)
     {
         _sessionService.Clear();
