@@ -3,11 +3,12 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.Services;
+using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
-[Authorize]
+[Authorize(Roles = Roles.ManageEventsRole)]
 [Route("events/new/guestspeakers")]
 public class GuestSpeakersController : Controller
 {
