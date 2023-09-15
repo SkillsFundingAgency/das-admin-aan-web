@@ -7,18 +7,18 @@ using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
+namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/type", Name = RouteNames.CreateEvent.EventType)]
+[Route("events/new/type", Name = RouteNames.ManageEvent.EventType)]
 public class NetworkEventTypeController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
     private readonly ISessionService _sessionService;
-    private readonly IValidator<CreateEventTypeViewModel> _validator;
+    private readonly IValidator<EventTypeViewModel> _validator;
 
     public const string ViewPath = "~/Views/NetworkEvent/EventType.cshtml";
-    public NetworkEventTypeController(IOuterApiClient outerApiClient, ISessionService sessionService, IValidator<CreateEventTypeViewModel> validator)
+    public NetworkEventTypeController(IOuterApiClient outerApiClient, ISessionService sessionService, IValidator<EventTypeViewModel> validator)
     {
         _outerApiClient = outerApiClient;
         _sessionService = sessionService;
@@ -27,15 +27,15 @@ public class NetworkEventTypeController : Controller
     [HttpGet]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
-        var sessionModel = _sessionService.Get<CreateEventSessionModel>();
+        var sessionModel = _sessionService.Get<EventSessionModel>();
         var model = await GetViewModel(sessionModel, cancellationToken);
         return View(ViewPath, model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(CreateEventTypeViewModel submitModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> Post(EventTypeViewModel submitModel, CancellationToken cancellationToken)
     {
-        var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
+        var sessionModel = _sessionService.Get<EventSessionModel?>();
         sessionModel!.EventTitle = submitModel.EventTitle;
         sessionModel.EventTypeId = submitModel.EventTypeId;
         sessionModel.EventRegionId = submitModel.EventRegionId;
@@ -51,10 +51,10 @@ public class NetworkEventTypeController : Controller
 
         sessionModel.EventTitle = submitModel.EventTitle;
         _sessionService.Set(sessionModel);
-        return RedirectToRoute(RouteNames.CreateEvent.EventDescription);
+        return RedirectToRoute(RouteNames.ManageEvent.EventDescription);
     }
 
-    private async Task<CreateEventTypeViewModel> GetViewModel(CreateEventSessionModel sessionModel, CancellationToken cancellationToken)
+    private async Task<EventTypeViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
     {
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
         var regionTask = _outerApiClient.GetRegions(cancellationToken);
@@ -71,7 +71,7 @@ public class NetworkEventTypeController : Controller
 
         var regionsWithNational = regionDropdowns.ToList();
         regionsWithNational.Add(new RegionSelection("National", 0));
-        return new CreateEventTypeViewModel
+        return new EventTypeViewModel
         {
             EventTitle = sessionModel?.EventTitle,
             EventTypeId = sessionModel?.EventTypeId,
@@ -79,7 +79,7 @@ public class NetworkEventTypeController : Controller
             EventTypes = eventTypeDropdown.ToList(),
             EventRegions = regionsWithNational,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
-            PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventType)!,
+            PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventType)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }

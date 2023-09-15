@@ -7,17 +7,17 @@ using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
+namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/description", Name = RouteNames.CreateEvent.EventDescription)]
+[Route("events/new/description", Name = RouteNames.ManageEvent.EventDescription)]
 public class NetworkEventDescriptionController : Controller
 {
     private readonly ISessionService _sessionService;
-    private readonly IValidator<CreateEventDescriptionViewModel> _validator;
+    private readonly IValidator<EventDescriptionViewModel> _validator;
 
     public const string ViewPath = "~/Views/NetworkEvent/EventDescription.cshtml";
-    public NetworkEventDescriptionController(ISessionService sessionService, IValidator<CreateEventDescriptionViewModel> validator)
+    public NetworkEventDescriptionController(ISessionService sessionService, IValidator<EventDescriptionViewModel> validator)
     {
         _sessionService = sessionService;
         _validator = validator;
@@ -26,15 +26,15 @@ public class NetworkEventDescriptionController : Controller
     [HttpGet]
     public IActionResult Get()
     {
-        var sessionModel = _sessionService.Get<CreateEventSessionModel>();
+        var sessionModel = _sessionService.Get<EventSessionModel>();
         var model = GetViewModel(sessionModel);
         return View(ViewPath, model);
     }
 
     [HttpPost]
-    public IActionResult Post(CreateEventDescriptionViewModel submitModel)
+    public IActionResult Post(EventDescriptionViewModel submitModel)
     {
-        var sessionModel = _sessionService.Get<CreateEventSessionModel?>();
+        var sessionModel = _sessionService.Get<EventSessionModel?>();
         sessionModel!.EventOutline = submitModel.EventOutline;
         sessionModel.EventSummary = submitModel.EventSummary;
 
@@ -49,17 +49,17 @@ public class NetworkEventDescriptionController : Controller
 
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(RouteNames.CreateEvent.EventHasGuestSpeakers);
+        return RedirectToRoute(RouteNames.ManageEvent.EventHasGuestSpeakers);
     }
 
-    private CreateEventDescriptionViewModel GetViewModel(CreateEventSessionModel sessionModel)
+    private EventDescriptionViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        return new CreateEventDescriptionViewModel
+        return new EventDescriptionViewModel
         {
             EventOutline = sessionModel?.EventOutline,
             EventSummary = sessionModel?.EventSummary,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
-            PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!,
+            PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }

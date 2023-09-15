@@ -8,7 +8,7 @@ public static class RouteNames
     public const string AdministratorHub = nameof(AdministratorHub);
     public const string NetworkEvents = nameof(NetworkEvents);
 
-    public static class CreateEvent
+    public static class ManageEvent
     {
         public const string EventFormat = nameof(EventFormat);
         public const string EventType = nameof(EventType);

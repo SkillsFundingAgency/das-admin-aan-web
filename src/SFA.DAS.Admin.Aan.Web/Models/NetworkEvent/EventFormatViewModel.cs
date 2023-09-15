@@ -5,7 +5,7 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-public class CreateEventFormatViewModel : IEventPageEditFields
+public class EventFormatViewModel : IEventPageEditFields
 {
     public EventFormat? EventFormat { get; set; }
 
@@ -17,7 +17,7 @@ public class CreateEventFormatViewModel : IEventPageEditFields
             new ChecklistLookup(Application.Constants.EventFormat.Hybrid.GetDescription(), Application.Constants.EventFormat.Hybrid.ToString(), EventFormat==Application.Constants.EventFormat.Hybrid)
         };
 
-    public static implicit operator CreateEventFormatViewModel(GetCreateEventFormatRequest request)
+    public static implicit operator EventFormatViewModel(GetManageEventFormatRequest request)
         => new()
         {
             EventFormat = request.EventFormat

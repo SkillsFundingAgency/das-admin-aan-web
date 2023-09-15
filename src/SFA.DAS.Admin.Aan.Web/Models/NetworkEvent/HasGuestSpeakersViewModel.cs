@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-public class CreateEventHasGuestSpeakersViewModel : IEventPageEditFields
+public class HasGuestSpeakersViewModel : IEventPageEditFields
 {
     public bool? HasGuestSpeakers { get; set; }
     public string? PageTitle { get; set; }

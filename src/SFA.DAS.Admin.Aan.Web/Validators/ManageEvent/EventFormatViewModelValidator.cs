@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Validators.CreateEvent;
+namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
-public class CreateEventFormatViewModelValidator : AbstractValidator<CreateEventFormatViewModel>
+public class EventFormatViewModelValidator : AbstractValidator<EventFormatViewModel>
 {
     public const string EventFormatErrorMessage = "You must select an event format";
 
-    public CreateEventFormatViewModelValidator()
+    public EventFormatViewModelValidator()
     {
         RuleFor(x => x.EventFormat)
             .NotEmpty()

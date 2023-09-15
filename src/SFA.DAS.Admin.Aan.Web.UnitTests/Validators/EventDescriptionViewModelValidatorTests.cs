@@ -1,22 +1,22 @@
 ﻿using FluentValidation.TestHelper;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
-using SFA.DAS.Admin.Aan.Web.Validators.CreateEvent;
+using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators;
 
-public class CreateEventDescriptionViewModelValidatorTests
+public class EventDescriptionViewModelValidatorTests
 {
-    [TestCase(0, CreateEventDescriptionViewModelValidator.EventOutlineEmpty, false)]
+    [TestCase(0, EventDescriptionViewModelValidator.EventOutlineEmpty, false)]
     [TestCase(1, null, true)]
-    [TestCase(CreateEventDescriptionViewModelValidator.EventOutlineMaxLength, null, true)]
-    [TestCase(CreateEventDescriptionViewModelValidator.EventOutlineMaxLength + 1,
-        CreateEventDescriptionViewModelValidator.EventOutlineTooLong, false)]
+    [TestCase(EventDescriptionViewModelValidator.EventOutlineMaxLength, null, true)]
+    [TestCase(EventDescriptionViewModelValidator.EventOutlineMaxLength + 1,
+        EventDescriptionViewModelValidator.EventOutlineTooLong, false)]
     public void Validate_EventOutline(int lengthOfOutline, string? errorMessage, bool isValid)
     {
-        var model = new CreateEventDescriptionViewModel
+        var model = new EventDescriptionViewModel
         { EventOutline = new string('x', lengthOfOutline), EventSummary = "y" };
 
-        var sut = new CreateEventDescriptionViewModelValidator();
+        var sut = new EventDescriptionViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
@@ -30,17 +30,17 @@ public class CreateEventDescriptionViewModelValidatorTests
         }
     }
 
-    [TestCase(0, CreateEventDescriptionViewModelValidator.EventSummaryEmpty, false)]
+    [TestCase(0, EventDescriptionViewModelValidator.EventSummaryEmpty, false)]
     [TestCase(1, null, true)]
-    [TestCase(CreateEventDescriptionViewModelValidator.EventSummaryMaxLength, null, true)]
-    [TestCase(CreateEventDescriptionViewModelValidator.EventSummaryMaxLength + 1,
-        CreateEventDescriptionViewModelValidator.EventSummaryTooLong, false)]
+    [TestCase(EventDescriptionViewModelValidator.EventSummaryMaxLength, null, true)]
+    [TestCase(EventDescriptionViewModelValidator.EventSummaryMaxLength + 1,
+        EventDescriptionViewModelValidator.EventSummaryTooLong, false)]
     public void Validate_EventSummary(int lengthOfSummary, string? errorMessage, bool isValid)
     {
-        var model = new CreateEventDescriptionViewModel
+        var model = new EventDescriptionViewModel
         { EventOutline = "x", EventSummary = new string('x', lengthOfSummary) };
 
-        var sut = new CreateEventDescriptionViewModelValidator();
+        var sut = new EventDescriptionViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)

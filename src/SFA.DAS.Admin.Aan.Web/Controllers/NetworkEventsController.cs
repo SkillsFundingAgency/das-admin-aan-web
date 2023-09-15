@@ -29,6 +29,7 @@ public class NetworkEventsController : Controller
     public async Task<IActionResult> Index(GetNetworkEventsRequest request, CancellationToken cancellationToken)
     {
         _sessionService.Clear();
+
         var filterUrl = FilterBuilder.BuildFullQueryString(request, Url);
         var calendarEventsTask = _outerApiClient.GetCalendarEvents(Guid.NewGuid(), QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
@@ -57,7 +58,7 @@ public class NetworkEventsController : Controller
         var model = new NetworkEventsViewModel
         {
             TotalCount = result.TotalCount,
-            CreateEventLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!
+            CreateEventLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!
         };
 
         foreach (var calendarEvent in result.CalendarEvents)

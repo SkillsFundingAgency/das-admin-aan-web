@@ -4,23 +4,23 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
-using SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
+using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.CreateEvent.GuestSpeakers;
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent.GuestSpeakers;
 public class GuestSpeakerControllerListTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
 
     [Test]
-    public void Get_ReturnsCreateEventGuestSpeakerListViewModel()
+    public void Get_ReturnsEventGuestSpeakerListViewModel()
     {
         var sessionServiceMock = new Mock<ISessionService>();
 
-        var sessionModel = new CreateEventSessionModel
+        var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
             EventTypeId = 1,
@@ -29,18 +29,18 @@ public class GuestSpeakerControllerListTests
             GuestSpeakers = new List<GuestSpeaker>()
         };
 
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<CreateEventHasGuestSpeakersViewModel>>());
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var actualResult = sut.GetSpeakerList();
         var viewResult = actualResult.As<ViewResult>();
 
-        Assert.That(viewResult.Model, Is.TypeOf<CreateEventGuestSpeakerListViewModel>());
+        Assert.That(viewResult.Model, Is.TypeOf<GuestSpeakerListViewModel>());
 
-        ((CreateEventGuestSpeakerListViewModel)viewResult.Model!).CancelLink.Should().Be(NetworkEventsUrl);
-        ((CreateEventGuestSpeakerListViewModel)viewResult.Model!).PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
+        ((GuestSpeakerListViewModel)viewResult.Model!).CancelLink.Should().Be(NetworkEventsUrl);
+        ((GuestSpeakerListViewModel)viewResult.Model!).PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
 
     [Test]
@@ -48,7 +48,7 @@ public class GuestSpeakerControllerListTests
     {
         var sessionServiceMock = new Mock<ISessionService>();
 
-        var sessionModel = new CreateEventSessionModel
+        var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
             EventTypeId = 1,
@@ -57,15 +57,15 @@ public class GuestSpeakerControllerListTests
             GuestSpeakers = new List<GuestSpeaker>()
         };
 
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<CreateEventHasGuestSpeakersViewModel>>());
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.GuestSpeakerList, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.GuestSpeakerList, PostUrl);
         var actualResult = sut.GetSpeakerList();
         var viewResult = actualResult.As<ViewResult>();
 
-        ((CreateEventGuestSpeakerListViewModel)viewResult.Model!).PostLink.Should().Be(PostUrl);
+        ((GuestSpeakerListViewModel)viewResult.Model!).PostLink.Should().Be(PostUrl);
     }
 
     [Test]
@@ -73,7 +73,7 @@ public class GuestSpeakerControllerListTests
     {
         var sessionServiceMock = new Mock<ISessionService>();
 
-        var sessionModel = new CreateEventSessionModel
+        var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
             EventTypeId = 1,
@@ -82,16 +82,16 @@ public class GuestSpeakerControllerListTests
             GuestSpeakers = new List<GuestSpeaker>()
         };
 
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<CreateEventHasGuestSpeakersViewModel>>());
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
 
         var addGuestSpeakerLink = Guid.NewGuid().ToString();
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.GuestSpeakerAdd, addGuestSpeakerLink);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.GuestSpeakerAdd, addGuestSpeakerLink);
         var actualResult = sut.GetSpeakerList();
         var viewResult = actualResult.As<ViewResult>();
 
-        ((CreateEventGuestSpeakerListViewModel)viewResult.Model!).AddGuestSpeakerLink.Should().Be(addGuestSpeakerLink);
+        ((GuestSpeakerListViewModel)viewResult.Model!).AddGuestSpeakerLink.Should().Be(addGuestSpeakerLink);
     }
 
     [Test]
@@ -99,7 +99,7 @@ public class GuestSpeakerControllerListTests
     {
         var sessionServiceMock = new Mock<ISessionService>();
 
-        var sessionModel = new CreateEventSessionModel
+        var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
             EventTypeId = 1,
@@ -108,16 +108,16 @@ public class GuestSpeakerControllerListTests
             GuestSpeakers = new List<GuestSpeaker>()
         };
 
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<CreateEventHasGuestSpeakersViewModel>>());
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
 
         var deleteGuestSpeakerLink = Guid.NewGuid().ToString();
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.GuestSpeakerDelete, deleteGuestSpeakerLink);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.GuestSpeakerDelete, deleteGuestSpeakerLink);
         var actualResult = sut.GetSpeakerList();
         var viewResult = actualResult.As<ViewResult>();
 
-        ((CreateEventGuestSpeakerListViewModel)viewResult.Model!).DeleteSpeakerLink.Should().Be(deleteGuestSpeakerLink);
+        ((GuestSpeakerListViewModel)viewResult.Model!).DeleteSpeakerLink.Should().Be(deleteGuestSpeakerLink);
     }
 
     [Test]
@@ -126,10 +126,10 @@ public class GuestSpeakerControllerListTests
         var sessionServiceMock = new Mock<ISessionService>();
         var guestSpeakers = new List<GuestSpeaker>();
 
-        var sessionModel = new CreateEventSessionModel { GuestSpeakers = guestSpeakers };
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        var sessionModel = new EventSessionModel { GuestSpeakers = guestSpeakers };
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<CreateEventHasGuestSpeakersViewModel>>());
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
@@ -137,6 +137,6 @@ public class GuestSpeakerControllerListTests
         var result = actualResult.As<RedirectToRouteResult>();
         sut.ModelState.IsValid.Should().BeTrue();
 
-        result.RouteName.Should().Be(RouteNames.CreateEvent.GuestSpeakerList);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.GuestSpeakerList);
     }
 }

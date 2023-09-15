@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Validators.CreateEvent;
+namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
-public class CreateEventGuestSpeakerViewModelValidator : AbstractValidator<CreateEventHasGuestSpeakersViewModel>
+public class HasGuestSpeakersViewModelValidator : AbstractValidator<HasGuestSpeakersViewModel>
 {
     public const string GuestSpeakerEmpty = "You must select an option";
 
-    public CreateEventGuestSpeakerViewModelValidator()
+    public HasGuestSpeakersViewModelValidator()
     {
         RuleFor(x => x.HasGuestSpeakers)
             .NotEmpty()

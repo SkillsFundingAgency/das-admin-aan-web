@@ -32,7 +32,7 @@ builder.Services
 builder.Services
     .AddMvc(options =>
     {
-        options.Filters.Add<RequiresCreateEventSessionModelAttribute>();
+        options.Filters.Add<RequiresEventSessionModelAttribute>();
     });
 
 builder.Services.AddHealthChecks();

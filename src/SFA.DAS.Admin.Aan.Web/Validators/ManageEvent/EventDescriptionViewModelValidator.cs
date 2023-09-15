@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Validators.CreateEvent;
+namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
-public class CreateEventDescriptionViewModelValidator : AbstractValidator<CreateEventDescriptionViewModel>
+public class EventDescriptionViewModelValidator : AbstractValidator<EventDescriptionViewModel>
 {
     public const int EventOutlineMaxLength = 200;
     public const int EventSummaryMaxLength = 2000;
@@ -12,7 +12,7 @@ public class CreateEventDescriptionViewModelValidator : AbstractValidator<Create
     public const string EventSummaryEmpty = "You must include an event summary";
     public const string EventSummaryTooLong = "Your event summary must be 2000 characters or less";
 
-    public CreateEventDescriptionViewModelValidator()
+    public EventDescriptionViewModelValidator()
     {
         RuleFor(x => x.EventOutline)
             .NotEmpty()

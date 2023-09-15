@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-public class CreateEventGuestSpeakerListViewModel : IEventPageEditFields
+public class GuestSpeakerListViewModel : IEventPageEditFields
 {
     public List<GuestSpeaker> GuestSpeakers { get; set; } = new List<GuestSpeaker>();
     public string AddGuestSpeakerLink { get; set; } = null!;

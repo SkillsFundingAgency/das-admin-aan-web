@@ -1,22 +1,22 @@
 ﻿using FluentValidation.TestHelper;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
-using SFA.DAS.Admin.Aan.Web.Validators.CreateEvent;
+using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators;
-public class CreateEventFormatViewModelValidatorTests
+public class EventFormatViewModelValidatorTests
 {
     [Test]
     public void Validate_EmptyEventFormat_Invalid()
     {
-        var model = new CreateEventFormatViewModel();
+        var model = new EventFormatViewModel();
 
 
-        var sut = new CreateEventFormatViewModelValidator();
+        var sut = new EventFormatViewModelValidator();
         var result = sut.TestValidate(model);
 
         result.ShouldHaveValidationErrorFor(c => c.EventFormat)
-            .WithErrorMessage(CreateEventFormatViewModelValidator.EventFormatErrorMessage);
+            .WithErrorMessage(EventFormatViewModelValidator.EventFormatErrorMessage);
     }
 
     [TestCase(EventFormat.Hybrid)]
@@ -24,10 +24,10 @@ public class CreateEventFormatViewModelValidatorTests
     [TestCase(EventFormat.Online)]
     public void Validate_EventFormat_Valid(EventFormat eventFormat)
     {
-        var model = new CreateEventFormatViewModel { EventFormat = eventFormat };
+        var model = new EventFormatViewModel { EventFormat = eventFormat };
 
 
-        var sut = new CreateEventFormatViewModelValidator();
+        var sut = new EventFormatViewModelValidator();
         var result = sut.TestValidate(model);
 
         result.ShouldNotHaveAnyValidationErrors();

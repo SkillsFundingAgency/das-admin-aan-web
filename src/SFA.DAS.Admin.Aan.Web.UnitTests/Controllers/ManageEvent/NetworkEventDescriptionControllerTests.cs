@@ -5,14 +5,14 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Admin.Aan.Application.Services;
-using SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
+using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
-using SFA.DAS.Admin.Aan.Web.Validators.CreateEvent;
+using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.CreateEvent;
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent;
 public class NetworkEventDescriptionControllerTests
 {
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
@@ -25,8 +25,8 @@ public class NetworkEventDescriptionControllerTests
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
         var result = (ViewResult)sut.Get();
 
-        Assert.That(result.Model, Is.TypeOf<CreateEventDescriptionViewModel>());
-        var vm = result.Model as CreateEventDescriptionViewModel;
+        Assert.That(result.Model, Is.TypeOf<EventDescriptionViewModel>());
+        var vm = result.Model as EventDescriptionViewModel;
         vm!.CancelLink.Should().Be(AllNetworksUrl);
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
@@ -35,11 +35,11 @@ public class NetworkEventDescriptionControllerTests
     public void Details_ReturnsExpectedPostLink(
         [Greedy] NetworkEventDescriptionController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.EventFormat, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventFormat, PostUrl);
         var result = (ViewResult)sut.Get();
 
-        Assert.That(result.Model, Is.TypeOf<CreateEventDescriptionViewModel>());
-        var vm = result.Model as CreateEventDescriptionViewModel;
+        Assert.That(result.Model, Is.TypeOf<EventDescriptionViewModel>());
+        var vm = result.Model as EventDescriptionViewModel;
         vm!.PostLink.Should().Be(PostUrl);
     }
 
@@ -48,13 +48,13 @@ public class NetworkEventDescriptionControllerTests
     public void Post_SetEventDetailsOnSessionModel(string eventOutline, string eventSummary)
     {
         var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<CreateEventDescriptionViewModel>>();
+        var validatorMock = new Mock<IValidator<EventDescriptionViewModel>>();
 
-        var sessionModel = new CreateEventSessionModel();
+        var sessionModel = new EventSessionModel();
 
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new CreateEventDescriptionViewModel { EventOutline = eventOutline, EventSummary = eventSummary };
+        var submitModel = new EventDescriptionViewModel { EventOutline = eventOutline, EventSummary = eventSummary };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -66,8 +66,8 @@ public class NetworkEventDescriptionControllerTests
         var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventOutline == eventOutline && m.EventSummary == eventSummary)));
-        result.RouteName.Should().Be(RouteNames.CreateEvent.EventHasGuestSpeakers);
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventOutline == eventOutline && m.EventSummary == eventSummary)));
+        result.RouteName.Should().Be(RouteNames.ManageEvent.EventHasGuestSpeakers);
     }
 
     [Test, MoqAutoData]
@@ -77,21 +77,21 @@ public class NetworkEventDescriptionControllerTests
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
-        var sessionModel = new CreateEventSessionModel();
+        var sessionModel = new EventSessionModel();
 
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new CreateEventDescriptionViewModel();
+        var submitModel = new EventDescriptionViewModel();
 
-        submitModel.EventOutlineMaxCount.Should().Be(CreateEventDescriptionViewModelValidator.EventOutlineMaxLength);
-        submitModel.EventSummaryMaxCount.Should().Be(CreateEventDescriptionViewModelValidator.EventSummaryMaxLength);
+        submitModel.EventOutlineMaxCount.Should().Be(EventDescriptionViewModelValidator.EventOutlineMaxLength);
+        submitModel.EventSummaryMaxCount.Should().Be(EventDescriptionViewModelValidator.EventSummaryMaxLength);
 
         var result = (ViewResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<CreateEventDescriptionViewModel>());
-        (result.Model as CreateEventDescriptionViewModel)!.CancelLink.Should().Be(AllNetworksUrl);
+        Assert.That(result.Model, Is.TypeOf<EventDescriptionViewModel>());
+        (result.Model as EventDescriptionViewModel)!.CancelLink.Should().Be(AllNetworksUrl);
     }
 }

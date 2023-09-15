@@ -2,16 +2,16 @@
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Validators.CreateEvent;
+namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
-public class CreateEventTypeViewModelValidator : AbstractValidator<CreateEventTypeViewModel>
+public class EventTypeViewModelValidator : AbstractValidator<EventTypeViewModel>
 {
     public const string EventTitleEmpty = "You must include an event title";
     public const string EventTitleHasExcludedCharacter = "Your event title must not include any special characters: @, #, $, ^, =, +, \\, /, <, >, %";
     public const string EventTypeEmpty = "You must select an event type";
     public const string EventRegionEmpty = "You must select a region";
 
-    public CreateEventTypeViewModelValidator()
+    public EventTypeViewModelValidator()
     {
         RuleFor(x => x.EventTitle)
             .NotEmpty()

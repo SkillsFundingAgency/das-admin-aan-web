@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-public class CreateEventTypeViewModel : IEventPageEditFields
+public class EventTypeViewModel : IEventPageEditFields
 {
     public string? EventTitle { get; set; }
     public int? EventTypeId { get; set; }

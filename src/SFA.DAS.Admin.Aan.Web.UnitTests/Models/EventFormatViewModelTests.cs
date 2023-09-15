@@ -6,7 +6,7 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Models;
-public class CreateEventFormatViewModelTests
+public class EventFormatViewModelTests
 {
     [TestCase(EventFormat.InPerson)]
     [TestCase(EventFormat.Hybrid)]
@@ -24,16 +24,16 @@ public class CreateEventFormatViewModelTests
                 eventFormat == EventFormat.Hybrid)
         };
 
-        var vm = new CreateEventFormatViewModel { EventFormat = eventFormat };
+        var vm = new EventFormatViewModel { EventFormat = eventFormat };
         vm.EventFormats.Count.Should().Be(3);
         vm.EventFormat.Should().Be(eventFormat);
         vm.EventFormats.Should().BeEquivalentTo(expectedEventFormatChecklistLookup);
     }
 
     [Test, AutoData]
-    public void Operator_GivenGetCreateEventFormatRequest_ReturnsViewModel(GetCreateEventFormatRequest source)
+    public void Operator_GivenGetEventFormatRequest_ReturnsViewModel(GetManageEventFormatRequest source)
     {
-        CreateEventFormatViewModel sut = source;
+        EventFormatViewModel sut = source;
         sut.EventFormat.Should().Be(source.EventFormat);
     }
 }

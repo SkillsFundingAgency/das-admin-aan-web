@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-public class CreateEventSessionModel
+public class EventSessionModel
 {
     public EventFormat? EventFormat { get; set; }
 

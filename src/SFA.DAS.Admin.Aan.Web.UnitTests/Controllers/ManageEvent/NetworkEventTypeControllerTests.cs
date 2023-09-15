@@ -8,13 +8,13 @@ using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.Services;
-using SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
+using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.CreateEvent;
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent;
 public class NetworkEventTypeControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
@@ -23,11 +23,11 @@ public class NetworkEventTypeControllerTests
     [Test, MoqAutoData]
     public void Get_ReturnsCreateEventTypeViewModel(
         [Frozen] Mock<IOuterApiClient> outerApiMock,
-        [Frozen] Mock<IValidator<CreateEventTypeViewModel>> validatorMock)
+        [Frozen] Mock<IValidator<EventTypeViewModel>> validatorMock)
     {
         var sessionServiceMock = new Mock<ISessionService>();
 
-        var sessionModel = new CreateEventSessionModel
+        var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
             EventTypeId = 1,
@@ -35,7 +35,7 @@ public class NetworkEventTypeControllerTests
             EventFormat = EventFormat.Hybrid
         };
 
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
         var sut = new NetworkEventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
 
@@ -46,20 +46,20 @@ public class NetworkEventTypeControllerTests
 
         outerApiMock.Verify(o => o.GetCalendars(It.IsAny<CancellationToken>()), Times.Once);
         outerApiMock.Verify(o => o.GetRegions(It.IsAny<CancellationToken>()), Times.Once);
-        Assert.That(viewResult.Model, Is.TypeOf<CreateEventTypeViewModel>());
+        Assert.That(viewResult.Model, Is.TypeOf<EventTypeViewModel>());
 
-        ((CreateEventTypeViewModel)viewResult.Model!).CancelLink.Should().Be(NetworkEventsUrl);
-        ((CreateEventTypeViewModel)viewResult.Model!).PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
+        ((EventTypeViewModel)viewResult.Model!).CancelLink.Should().Be(NetworkEventsUrl);
+        ((EventTypeViewModel)viewResult.Model!).PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
 
     [Test, MoqAutoData]
     public void Get_ReturnsExpectedPostLink(
         [Frozen] Mock<IOuterApiClient> outerApiMock,
-        [Frozen] Mock<IValidator<CreateEventTypeViewModel>> validatorMock)
+        [Frozen] Mock<IValidator<EventTypeViewModel>> validatorMock)
     {
         var sessionServiceMock = new Mock<ISessionService>();
 
-        var sessionModel = new CreateEventSessionModel
+        var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
             EventTypeId = 1,
@@ -67,15 +67,15 @@ public class NetworkEventTypeControllerTests
             EventFormat = EventFormat.Hybrid
         };
 
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
         var sut = new NetworkEventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.EventType, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventType, PostUrl);
         var actualResult = sut.Get(new CancellationToken());
         var viewResult = actualResult.Result.As<ViewResult>();
 
-        ((CreateEventTypeViewModel)viewResult.Model!).PostLink.Should().Be(PostUrl);
+        ((EventTypeViewModel)viewResult.Model!).PostLink.Should().Be(PostUrl);
     }
 
     [Test]
@@ -83,12 +83,12 @@ public class NetworkEventTypeControllerTests
     {
         var eventTitle = "title";
         var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<CreateEventTypeViewModel>>();
-        var sessionModel = new CreateEventSessionModel();
+        var validatorMock = new Mock<IValidator<EventTypeViewModel>>();
+        var sessionModel = new EventSessionModel();
 
-        var submitModel = new CreateEventTypeViewModel { EventTitle = eventTitle };
+        var submitModel = new EventTypeViewModel { EventTitle = eventTitle };
 
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.ValidateAsync(submitModel, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
@@ -106,8 +106,8 @@ public class NetworkEventTypeControllerTests
         var result = actualResult.Result.As<RedirectToRouteResult>();
 
         sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventTitle == eventTitle)));
-        result.RouteName.Should().Be(RouteNames.CreateEvent.EventDescription);
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventTitle == eventTitle)));
+        result.RouteName.Should().Be(RouteNames.ManageEvent.EventDescription);
     }
 
     [Test, MoqAutoData]
@@ -117,18 +117,18 @@ public class NetworkEventTypeControllerTests
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
-        var sessionModel = new CreateEventSessionModel();
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        var sessionModel = new EventSessionModel();
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new CreateEventTypeViewModel();
+        var submitModel = new EventTypeViewModel();
         var actualResult = sut.Post(submitModel, new CancellationToken());
 
         var result = actualResult.Result.As<ViewResult>();
 
         sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<CreateEventTypeViewModel>());
-        (result.Model as CreateEventTypeViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        Assert.That(result.Model, Is.TypeOf<EventTypeViewModel>());
+        (result.Model as EventTypeViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
     }
 }

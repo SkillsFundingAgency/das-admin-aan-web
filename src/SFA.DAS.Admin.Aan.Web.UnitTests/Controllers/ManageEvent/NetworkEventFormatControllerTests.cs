@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
-using SFA.DAS.Admin.Aan.Web.Controllers.CreateEvent;
+using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.CreateEvent;
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent;
 public class NetworkEventFormatControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
@@ -25,8 +25,8 @@ public class NetworkEventFormatControllerTests
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var result = (ViewResult)sut.Get();
 
-        Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
-        var vm = result.Model as CreateEventFormatViewModel;
+        Assert.That(result.Model, Is.TypeOf<EventFormatViewModel>());
+        var vm = result.Model as EventFormatViewModel;
         vm!.CancelLink.Should().Be(NetworkEventsUrl);
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
@@ -35,10 +35,10 @@ public class NetworkEventFormatControllerTests
     public void Details_ReturnsExpectedPostLink(
         [Greedy] NetworkEventFormatController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.EventFormat, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventFormat, PostUrl);
         var result = (ViewResult)sut.Get();
-        Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
-        var vm = result.Model as CreateEventFormatViewModel;
+        Assert.That(result.Model, Is.TypeOf<EventFormatViewModel>());
+        var vm = result.Model as EventFormatViewModel;
         vm!.PostLink.Should().Be(PostUrl);
     }
 
@@ -49,13 +49,13 @@ public class NetworkEventFormatControllerTests
     public void Post_SetEventFormatOnSessionModel(EventFormat? eventFormat)
     {
         var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<CreateEventFormatViewModel>>();
+        var validatorMock = new Mock<IValidator<EventFormatViewModel>>();
 
-        var sessionModel = new CreateEventSessionModel();
+        var sessionModel = new EventSessionModel();
 
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new CreateEventFormatViewModel { EventFormat = eventFormat };
+        var submitModel = new EventFormatViewModel { EventFormat = eventFormat };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -67,8 +67,8 @@ public class NetworkEventFormatControllerTests
         var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventFormat == eventFormat)));
-        result.RouteName.Should().Be(RouteNames.CreateEvent.EventType);
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventFormat == eventFormat)));
+        result.RouteName.Should().Be(RouteNames.ManageEvent.EventType);
     }
 
     [TestCase(EventFormat.InPerson)]
@@ -77,11 +77,11 @@ public class NetworkEventFormatControllerTests
     public void Post_SetEventFormatOnNoSessionModel(EventFormat eventFormat)
     {
         var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<CreateEventFormatViewModel>>();
+        var validatorMock = new Mock<IValidator<EventFormatViewModel>>();
 
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
 
-        var submitModel = new CreateEventFormatViewModel { EventFormat = eventFormat };
+        var submitModel = new EventFormatViewModel { EventFormat = eventFormat };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -93,9 +93,9 @@ public class NetworkEventFormatControllerTests
         var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.Is<CreateEventSessionModel>(m => m.EventFormat == eventFormat)));
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventFormat == eventFormat)));
 
-        result.RouteName.Should().Be(RouteNames.CreateEvent.EventType);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.EventType);
     }
 
     [Test, MoqAutoData]
@@ -106,18 +106,18 @@ public class NetworkEventFormatControllerTests
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
 
-        var sessionModel = new CreateEventSessionModel();
+        var sessionModel = new EventSessionModel();
 
-        sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new CreateEventFormatViewModel();
+        var submitModel = new EventFormatViewModel();
 
         var result = (ViewResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<CreateEventFormatViewModel>());
-        (result.Model as CreateEventFormatViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        Assert.That(result.Model, Is.TypeOf<EventFormatViewModel>());
+        (result.Model as EventFormatViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
     }
 }
