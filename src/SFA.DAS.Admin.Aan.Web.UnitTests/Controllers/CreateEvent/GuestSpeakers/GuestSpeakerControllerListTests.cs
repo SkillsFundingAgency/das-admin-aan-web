@@ -9,8 +9,8 @@ using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.CreateEvent;
-public class GuestSpeakerListControllerTests
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.CreateEvent.GuestSpeakers;
+public class GuestSpeakerControllerListTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();

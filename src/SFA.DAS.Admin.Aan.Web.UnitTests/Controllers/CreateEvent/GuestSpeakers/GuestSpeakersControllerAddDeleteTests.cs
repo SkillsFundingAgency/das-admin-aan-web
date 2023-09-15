@@ -12,14 +12,14 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.CreateEvent;
-public class GuestSpeakerControllerTests
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.CreateEvent.GuestSpeakers;
+public class GuestSpeakersControllerAddDeleteTests
 {
     private static readonly string GuestSpeakerListUrl = Guid.NewGuid().ToString();
     private static readonly string GuestSpeakerAddUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
-    public void Get_ReturnsCreateEventTypeViewModel(
+    public void Get_ReturnsSpeakerAddViewModel(
         [Frozen] Mock<IValidator<GuestSpeakerAddViewModel>> validatorMock)
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -183,24 +183,5 @@ public class GuestSpeakerControllerTests
         sessionServiceMock.Verify(s =>
             s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.Last().Id == idSecond)));
     }
-
-    // [Test]
-    // public void Delete_GuestSpeakerOnNoSessionModel()
-    // {
-    //     var idToRemove = 5;
-    //     var sessionServiceMock = new Mock<ISessionService>();
-    //     var validatorMock = new Mock<IValidator<GuestSpeakerAddViewModel>>();
-    //     sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
-    //
-    //     var sut = new GuestSpeakersController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<CreateEventHasGuestSpeakersViewModel>>());
-    //
-    //     var actualResult = sut.DeleteGuestSpeaker(idToRemove);
-    //
-    //     var result = actualResult.As<RedirectToRouteResult>();
-    //
-    //     sut.ModelState.IsValid.Should().BeTrue();
-    //
-    //     result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
-    // }
 }
 

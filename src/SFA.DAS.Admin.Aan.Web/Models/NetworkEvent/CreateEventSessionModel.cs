@@ -15,5 +15,4 @@ public class CreateEventSessionModel
     public bool? HasGuestSpeakers { get; set; }
 
     public List<GuestSpeaker> GuestSpeakers { get; set; } = new List<GuestSpeaker>();
-
 }

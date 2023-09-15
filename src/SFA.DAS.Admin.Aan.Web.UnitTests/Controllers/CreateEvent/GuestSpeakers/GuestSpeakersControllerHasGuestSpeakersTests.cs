@@ -11,8 +11,8 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.CreateEvent;
-public class EventHasGuestSpeakersControllerTests
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.CreateEvent.GuestSpeakers;
+public class GuestSpeakersControllerHasGuestSpeakersTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
