@@ -16,7 +16,7 @@ public class NetworkEventDescriptionController : Controller
     private readonly ISessionService _sessionService;
     private readonly IValidator<EventDescriptionViewModel> _validator;
 
-    public const string ViewPath = "~/Views/NetworkEvent/EventDescription.cshtml";
+    public const string ViewPath = "~/Views/ManageEvent/EventDescription.cshtml";
     public NetworkEventDescriptionController(ISessionService sessionService, IValidator<EventDescriptionViewModel> validator)
     {
         _sessionService = sessionService;

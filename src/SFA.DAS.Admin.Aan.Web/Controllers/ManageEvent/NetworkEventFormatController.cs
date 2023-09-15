@@ -13,7 +13,7 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 [Route("events/new/format", Name = RouteNames.ManageEvent.EventFormat)]
 public class NetworkEventFormatController : Controller
 {
-    public const string ViewPath = "~/Views/NetworkEvent/EventFormat.cshtml";
+    public const string ViewPath = "~/Views/ManageEvent/EventFormat.cshtml";
     private readonly ISessionService _sessionService;
     private readonly IValidator<EventFormatViewModel> _validator;
 

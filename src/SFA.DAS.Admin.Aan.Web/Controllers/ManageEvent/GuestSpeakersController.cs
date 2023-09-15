@@ -16,9 +16,9 @@ public class GuestSpeakersController : Controller
     private readonly IValidator<GuestSpeakerAddViewModel> _addGuestSpeakerValidator;
     private readonly IValidator<HasGuestSpeakersViewModel> _hasGuestSpeakersValidator;
 
-    public const string GuestSpeakerListViewPath = "~/Views/NetworkEvent/GuestSpeakerList.cshtml";
-    public const string HasGuestSpeakersViewPath = "~/Views/NetworkEvent/EventGuestSpeaker.cshtml";
-    public const string GuestSpeakerAddViewPath = "~/Views/NetworkEvent/GuestSpeakerAdd.cshtml";
+    public const string GuestSpeakerListViewPath = "~/Views/ManageEvent/GuestSpeakerList.cshtml";
+    public const string HasGuestSpeakersViewPath = "~/Views/ManageEvent/EventGuestSpeaker.cshtml";
+    public const string GuestSpeakerAddViewPath = "~/Views/ManageEvent/GuestSpeakerAdd.cshtml";
     public GuestSpeakersController(ISessionService sessionService, IValidator<GuestSpeakerAddViewModel> addGuestSpeakerValidator, IValidator<HasGuestSpeakersViewModel> hasGuestSpeakersValidator)
     {
         _sessionService = sessionService;

@@ -17,7 +17,7 @@ public class NetworkEventTypeController : Controller
     private readonly ISessionService _sessionService;
     private readonly IValidator<EventTypeViewModel> _validator;
 
-    public const string ViewPath = "~/Views/NetworkEvent/EventType.cshtml";
+    public const string ViewPath = "~/Views/ManageEvent/EventType.cshtml";
     public NetworkEventTypeController(IOuterApiClient outerApiClient, ISessionService sessionService, IValidator<EventTypeViewModel> validator)
     {
         _outerApiClient = outerApiClient;
