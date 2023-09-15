@@ -73,40 +73,25 @@ public class GuestSpeakerControllerTests
         ((GuestSpeakerAddViewModel)viewResult.Model!).PostLink.Should().Be(GuestSpeakerAddUrl);
     }
 
-    // [Test]
-    // public void Post_SetGuestSpeakerAddOnNoSessionModel()
-    // {
-    //     var sessionServiceMock = new Mock<ISessionService>();
-    //     var validatorMock = new Mock<IValidator<GuestSpeakerAddViewModel>>();
-    //
-    //     var submitModel = new GuestSpeakerAddViewModel();
-    //
-    //     sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns((CreateEventSessionModel)null!);
-    //
-    //     var validationResult = new ValidationResult();
-    //     validatorMock.Setup(v => v.ValidateAsync(submitModel, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
-    //
-    //     var sut = new GuestSpeakersController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<CreateEventHasGuestSpeakersViewModel>>());
-    //
-    //     var actualResult = sut.PostAddGuestSpeaker(submitModel);
-    //
-    //     var result = actualResult.As<RedirectToRouteResult>();
-    //
-    //     sut.ModelState.IsValid.Should().BeTrue();
-    //
-    //     result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
-    // }
-
-    [Test]
-    public void Post_SetEventGuestListOnSessionModel()
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    public void Post_SetEventGuestListOnSessionModel(int idInCurrentList)
     {
         var name = "name 1";
-        var idExpected = 1;
         var jobRoleAndOrganisation = "job role";
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<GuestSpeakerAddViewModel>>();
 
-        var sessionModel = new CreateEventSessionModel { GuestSpeakers = new List<GuestSpeaker>() };
+        var sessionModel = new CreateEventSessionModel
+        {
+            GuestSpeakers = new List<GuestSpeaker>()
+        };
+
+        if (idInCurrentList > 0)
+        {
+            sessionModel.GuestSpeakers.Add(new GuestSpeaker("name x", "org x", idInCurrentList));
+        }
 
         sessionServiceMock.Setup(s => s.Get<CreateEventSessionModel>()).Returns(sessionModel);
 
@@ -124,11 +109,19 @@ public class GuestSpeakerControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
 
-        sessionServiceMock.Verify(s =>
-            s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.Count == 1)));
+        if (idInCurrentList == 0)
+        {
+            sessionServiceMock.Verify(s =>
+                s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.Count == 1)));
+        }
+        else
+        {
+            sessionServiceMock.Verify(s =>
+                s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.Count == 2)));
+        }
 
         sessionServiceMock.Verify(s =>
-            s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.First().Id == idExpected)));
+            s.Set(It.Is<CreateEventSessionModel>(x => x.GuestSpeakers.Last().Id == idInCurrentList + 1)));
 
         result.RouteName.Should().Be(RouteNames.CreateEvent.GuestSpeakerList);
     }
