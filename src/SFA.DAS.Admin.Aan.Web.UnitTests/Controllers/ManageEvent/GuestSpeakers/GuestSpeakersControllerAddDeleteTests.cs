@@ -32,14 +32,12 @@ public class GuestSpeakersControllerAddDeleteTests
             EventFormat = EventFormat.Hybrid
         };
 
-        var model = new GuestSpeakerAddViewModel();
-
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
         var sut = new GuestSpeakersController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.GuestSpeakerList, GuestSpeakerListUrl);
-        var actualResult = sut.GetAddGuestSpeaker(model);
+        var actualResult = sut.GetAddGuestSpeaker();
         var viewResult = actualResult.As<ViewResult>();
 
         Assert.That(viewResult.Model, Is.TypeOf<GuestSpeakerAddViewModel>());
@@ -62,12 +60,11 @@ public class GuestSpeakersControllerAddDeleteTests
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
-        var model = new GuestSpeakerAddViewModel();
 
         var sut = new GuestSpeakersController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.GuestSpeakerAdd, GuestSpeakerAddUrl);
-        var actualResult = sut.GetAddGuestSpeaker(model);
+        var actualResult = sut.GetAddGuestSpeaker();
         var viewResult = actualResult.As<ViewResult>();
 
         ((GuestSpeakerAddViewModel)viewResult.Model!).PostLink.Should().Be(GuestSpeakerAddUrl);
@@ -127,7 +124,7 @@ public class GuestSpeakersControllerAddDeleteTests
     }
 
     [Test, MoqAutoData]
-    public void Post_WhenValidationErrors_RedirectToEventFormat(
+    public void Post_WhenValidationErrors_RedirectBackToPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] GuestSpeakersController sut)
     {

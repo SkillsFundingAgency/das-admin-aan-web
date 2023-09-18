@@ -4,7 +4,7 @@ using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators;
 
-public class HasEventGuestSpeakersViewModelValidatorTests
+public class HasGuestSpeakersViewModelValidatorTests
 {
 
     [TestCase(true, true)]

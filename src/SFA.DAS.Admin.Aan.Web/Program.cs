@@ -25,15 +25,10 @@ builder.Services
     .AddControllersWithViews(options =>
     {
         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+        options.Filters.Add<RequiresEventSessionModelAttribute>();
         options.Filters.Add<RequiresMemberActionAttribute>();
     })
     .AddSessionStateTempDataProvider();
-
-builder.Services
-    .AddMvc(options =>
-    {
-        options.Filters.Add<RequiresEventSessionModelAttribute>();
-    });
 
 builder.Services.AddHealthChecks();
 

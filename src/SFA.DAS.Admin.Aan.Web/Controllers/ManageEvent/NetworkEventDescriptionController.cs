@@ -34,8 +34,8 @@ public class NetworkEventDescriptionController : Controller
     [HttpPost]
     public IActionResult Post(EventDescriptionViewModel submitModel)
     {
-        var sessionModel = _sessionService.Get<EventSessionModel?>();
-        sessionModel!.EventOutline = submitModel.EventOutline;
+        var sessionModel = _sessionService.Get<EventSessionModel>();
+        sessionModel.EventOutline = submitModel.EventOutline;
         sessionModel.EventSummary = submitModel.EventSummary;
 
         var result = _validator.Validate(submitModel);
@@ -56,8 +56,8 @@ public class NetworkEventDescriptionController : Controller
     {
         return new EventDescriptionViewModel
         {
-            EventOutline = sessionModel?.EventOutline,
-            EventSummary = sessionModel?.EventSummary,
+            EventOutline = sessionModel.EventOutline,
+            EventSummary = sessionModel.EventSummary,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle

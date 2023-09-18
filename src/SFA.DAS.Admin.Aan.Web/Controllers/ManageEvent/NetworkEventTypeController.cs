@@ -35,8 +35,8 @@ public class NetworkEventTypeController : Controller
     [HttpPost]
     public async Task<IActionResult> Post(EventTypeViewModel submitModel, CancellationToken cancellationToken)
     {
-        var sessionModel = _sessionService.Get<EventSessionModel?>();
-        sessionModel!.EventTitle = submitModel.EventTitle;
+        var sessionModel = _sessionService.Get<EventSessionModel>();
+        sessionModel.EventTitle = submitModel.EventTitle;
         sessionModel.EventTypeId = submitModel.EventTypeId;
         sessionModel.EventRegionId = submitModel.EventRegionId;
 
@@ -73,9 +73,9 @@ public class NetworkEventTypeController : Controller
         regionsWithNational.Add(new RegionSelection("National", 0));
         return new EventTypeViewModel
         {
-            EventTitle = sessionModel?.EventTitle,
-            EventTypeId = sessionModel?.EventTypeId,
-            EventRegionId = sessionModel?.EventRegionId,
+            EventTitle = sessionModel.EventTitle,
+            EventTypeId = sessionModel.EventTypeId,
+            EventRegionId = sessionModel.EventRegionId,
             EventTypes = eventTypeDropdown.ToList(),
             EventRegions = regionsWithNational,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,

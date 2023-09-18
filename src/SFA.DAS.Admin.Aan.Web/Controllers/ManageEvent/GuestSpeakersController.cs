@@ -38,10 +38,9 @@ public class GuestSpeakersController : Controller
     [Route("question", Name = RouteNames.ManageEvent.EventHasGuestSpeakers)]
     public IActionResult PostHasGuestSpeakers(HasGuestSpeakersViewModel submitModel)
     {
-        var sessionModel = _sessionService.Get<EventSessionModel?>();
-        sessionModel!.HasGuestSpeakers = submitModel.HasGuestSpeakers;
-
         var result = _hasGuestSpeakersValidator.Validate(submitModel);
+
+        var sessionModel = _sessionService.Get<EventSessionModel>();
 
         if (!result.IsValid)
         {
@@ -50,6 +49,7 @@ public class GuestSpeakersController : Controller
             return View(HasGuestSpeakersViewPath, GetViewModelHasGuestSpeakers(sessionModel));
         }
 
+        sessionModel.HasGuestSpeakers = submitModel.HasGuestSpeakers;
         _sessionService.Set(sessionModel);
 
         if (sessionModel.HasGuestSpeakers == true) return RedirectToRoute(RouteNames.ManageEvent.GuestSpeakerList);
@@ -58,29 +58,11 @@ public class GuestSpeakersController : Controller
 
     [HttpGet]
     [Route("add", Name = RouteNames.ManageEvent.GuestSpeakerAdd)]
-    public IActionResult GetAddGuestSpeaker(GuestSpeakerAddViewModel model)
+    public IActionResult GetAddGuestSpeaker()
     {
-        var augmentedModel = GetGuestSpeakerAddViewModel(model);
+        var augmentedModel = GetGuestSpeakerAddViewModel(new GuestSpeakerAddViewModel());
 
         return View(GuestSpeakerAddViewPath, augmentedModel);
-    }
-
-
-    [HttpGet]
-    [Route("delete", Name = RouteNames.ManageEvent.GuestSpeakerDelete)]
-    public IActionResult DeleteGuestSpeaker(int id)
-    {
-        var sessionModel = _sessionService.Get<EventSessionModel?>();
-        var currentGuestList = sessionModel!.GuestSpeakers;
-        if (currentGuestList.Any())
-        {
-            var removeItem = currentGuestList.First(x => x.Id == id);
-            currentGuestList.Remove(removeItem);
-        }
-
-        sessionModel.GuestSpeakers = currentGuestList;
-        _sessionService.Set(sessionModel);
-        return RedirectToRoute(RouteNames.ManageEvent.GuestSpeakerList);
     }
 
     [HttpPost]
@@ -96,8 +78,8 @@ public class GuestSpeakersController : Controller
             return View(GuestSpeakerAddViewPath, GetGuestSpeakerAddViewModel(submitModel));
         }
 
-        var sessionModel = _sessionService.Get<EventSessionModel?>();
-        var currentGuestList = sessionModel!.GuestSpeakers;
+        var sessionModel = _sessionService.Get<EventSessionModel>();
+        var currentGuestList = sessionModel.GuestSpeakers;
 
         var id = currentGuestList.Any() ? currentGuestList.Max(x => x.Id) + 1 : 1;
 
@@ -105,6 +87,23 @@ public class GuestSpeakersController : Controller
         currentGuestList.Add(new GuestSpeaker(submitModel.Name!, submitModel.JobRoleAndOrganisation!, id));
         sessionModel.GuestSpeakers = currentGuestList;
 
+        _sessionService.Set(sessionModel);
+        return RedirectToRoute(RouteNames.ManageEvent.GuestSpeakerList);
+    }
+
+    [HttpGet]
+    [Route("delete", Name = RouteNames.ManageEvent.GuestSpeakerDelete)]
+    public IActionResult DeleteGuestSpeaker(int id)
+    {
+        var sessionModel = _sessionService.Get<EventSessionModel>();
+        var currentGuestList = sessionModel!.GuestSpeakers;
+        if (currentGuestList.Any())
+        {
+            var removeItem = currentGuestList.First(x => x.Id == id);
+            currentGuestList.Remove(removeItem);
+        }
+
+        sessionModel.GuestSpeakers = currentGuestList;
         _sessionService.Set(sessionModel);
         return RedirectToRoute(RouteNames.ManageEvent.GuestSpeakerList);
     }

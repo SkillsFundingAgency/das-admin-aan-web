@@ -31,7 +31,6 @@ public class RequiresEventSessionModelAttribute : ActionFilterAttribute
 
     private static bool BypassEventCheck(ControllerActionDescriptor controllerActionDescriptor)
     {
-        return controllerActionDescriptor.ControllerTypeInfo.FullName != null &&
-               !controllerActionDescriptor.ControllerTypeInfo.FullName.Contains("ManageEvent");
+        return !controllerActionDescriptor.ControllerTypeInfo.FullName!.Contains("ManageEvent");
     }
 }

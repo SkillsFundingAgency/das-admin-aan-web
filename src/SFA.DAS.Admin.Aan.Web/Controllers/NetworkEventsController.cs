@@ -59,8 +59,6 @@ public class NetworkEventsController : Controller
     [Route("create-event", Name = RouteNames.ManageEvent.CreateEvent)]
     public IActionResult CreateEvent()
     {
-        _sessionService.Clear();
-
         var sessionModel = new EventSessionModel();
         _sessionService.Set(sessionModel);
         return RedirectToRoute(RouteNames.ManageEvent.EventFormat);

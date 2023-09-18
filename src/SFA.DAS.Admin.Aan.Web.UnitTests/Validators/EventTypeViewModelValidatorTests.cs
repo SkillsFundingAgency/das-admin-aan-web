@@ -57,6 +57,7 @@ public class EventTypeViewModelValidatorTests
     }
 
     [TestCase(1, true)]
+    [TestCase(0, true)]
     [TestCase(null, false)]
     public void Validate_RegionId_Check(int? regionId, bool isValid)
     {
