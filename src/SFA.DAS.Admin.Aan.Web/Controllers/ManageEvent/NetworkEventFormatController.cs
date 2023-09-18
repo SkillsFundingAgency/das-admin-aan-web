@@ -26,7 +26,7 @@ public class NetworkEventFormatController : Controller
     [HttpGet]
     public IActionResult Get()
     {
-        var sessionModel = _sessionService.Get<EventSessionModel?>() ?? new EventSessionModel();
+        var sessionModel = _sessionService.Get<EventSessionModel>();
         var model = GetViewModel(sessionModel);
         return View(ViewPath, model);
     }
@@ -34,7 +34,7 @@ public class NetworkEventFormatController : Controller
     [HttpPost]
     public IActionResult Post(EventFormatViewModel submitModel)
     {
-        var sessionModel = _sessionService.Get<EventSessionModel?>() ?? new EventSessionModel();
+        var sessionModel = _sessionService.Get<EventSessionModel>();
 
         var result = _validator.Validate(submitModel);
 

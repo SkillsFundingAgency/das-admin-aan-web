@@ -31,9 +31,6 @@ public class RequiresEventSessionModelAttribute : ActionFilterAttribute
 
     private static bool BypassEventCheck(ControllerActionDescriptor controllerActionDescriptor)
     {
-        if (controllerActionDescriptor.ControllerTypeInfo.Name == "NetworkEventFormatController")
-            return true;
-
         return controllerActionDescriptor.ControllerTypeInfo.FullName != null &&
                !controllerActionDescriptor.ControllerTypeInfo.FullName.Contains("ManageEvent");
     }

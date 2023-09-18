@@ -71,33 +71,6 @@ public class NetworkEventFormatControllerTests
         result.RouteName.Should().Be(RouteNames.ManageEvent.EventType);
     }
 
-    [TestCase(EventFormat.InPerson)]
-    [TestCase(EventFormat.Hybrid)]
-    [TestCase(EventFormat.Online)]
-    public void Post_SetEventFormatOnNoSessionModel(EventFormat eventFormat)
-    {
-        var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<EventFormatViewModel>>();
-
-        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
-
-        var submitModel = new EventFormatViewModel { EventFormat = eventFormat };
-
-        var validationResult = new ValidationResult();
-        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
-
-        var sut = new NetworkEventFormatController(sessionServiceMock.Object, validatorMock.Object);
-
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-
-        var result = (RedirectToRouteResult)sut.Post(submitModel);
-
-        sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventFormat == eventFormat)));
-
-        result.RouteName.Should().Be(RouteNames.ManageEvent.EventType);
-    }
-
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventFormat_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
