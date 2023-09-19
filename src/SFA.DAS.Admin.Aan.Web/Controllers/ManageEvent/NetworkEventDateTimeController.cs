@@ -37,7 +37,6 @@ public class NetworkEventDateTimeController : Controller
     public IActionResult Post(EventDateTimeViewModel submitModel)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
-
         sessionModel.DateOfEvent = submitModel.DateOfEvent;
         sessionModel.StartHour = submitModel.StartHour;
         sessionModel.StartMinutes = submitModel.StartMinutes;
@@ -53,10 +52,13 @@ public class NetworkEventDateTimeController : Controller
             return View(ViewPath, GetViewModel(sessionModel));
         }
 
+
+
         _sessionService.Set(sessionModel);
 
         return RedirectToRoute(RouteNames.ManageEvent.EventDateTime);
     }
+
 
     private EventDateTimeViewModel GetViewModel(EventSessionModel sessionModel)
     {
