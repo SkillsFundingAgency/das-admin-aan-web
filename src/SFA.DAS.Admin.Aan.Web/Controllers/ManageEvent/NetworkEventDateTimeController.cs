@@ -52,13 +52,10 @@ public class NetworkEventDateTimeController : Controller
             return View(ViewPath, GetViewModel(sessionModel));
         }
 
-
-
         _sessionService.Set(sessionModel);
 
         return RedirectToRoute(RouteNames.ManageEvent.EventDateTime);
     }
-
 
     private EventDateTimeViewModel GetViewModel(EventSessionModel sessionModel)
     {
