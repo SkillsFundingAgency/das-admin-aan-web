@@ -137,6 +137,6 @@ public class GuestSpeakerControllerListTests
         var result = actualResult.As<RedirectToRouteResult>();
         sut.ModelState.IsValid.Should().BeTrue();
 
-        result.RouteName.Should().Be(RouteNames.ManageEvent.GuestSpeakerList);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.EventDateTime);
     }
 }

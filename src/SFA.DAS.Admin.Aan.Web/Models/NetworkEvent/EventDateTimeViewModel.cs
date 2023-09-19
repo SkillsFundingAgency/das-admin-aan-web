@@ -2,11 +2,11 @@
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-public class CreateEventDateTimeViewModel : IEventPageEditFields
+public class EventDateTimeViewModel : IEventPageEditFields
 {
     public DateTime? DateOfEvent { get; set; }
     public int? StartHour { get; set; }
-    public int? StartMinutes{ get; set; }
+    public int? StartMinutes { get; set; }
     public int? EndHour { get; set; }
     public int? EndMinutes { get; set; }
 

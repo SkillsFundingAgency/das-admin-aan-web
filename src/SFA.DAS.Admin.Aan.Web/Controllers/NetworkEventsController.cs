@@ -29,7 +29,7 @@ public class NetworkEventsController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(GetNetworkEventsRequest request, CancellationToken cancellationToken)
     {
-        _sessionService.Clear();
+        _sessionService.Delete(nameof(EventSessionModel));
 
         var filterUrl = FilterBuilder.BuildFullQueryString(request, Url);
         var calendarEventsTask = _outerApiClient.GetCalendarEvents(Guid.NewGuid(), QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
@@ -54,7 +54,6 @@ public class NetworkEventsController : Controller
         return View(model);
     }
 
-
     [HttpGet]
     [Route("create-event", Name = RouteNames.ManageEvent.CreateEvent)]
     public IActionResult CreateEvent()
@@ -63,7 +62,6 @@ public class NetworkEventsController : Controller
         _sessionService.Set(sessionModel);
         return RedirectToRoute(RouteNames.ManageEvent.EventFormat);
     }
-
 
     private NetworkEventsViewModel InitialiseViewModel(GetCalendarEventsQueryResult result)
     {
