@@ -12,7 +12,7 @@ public class GuestSpeakerAddViewModelValidator : AbstractValidator<GuestSpeakerA
     public const string NameTooLong = "Your guest speakers name must be 200 characters or less";
     public const string JobRoleAndOrganisationEmpty = "You must include a guest speakers role and organisation";
     public const string JobRoleAndOrganisationHasExcludedCharacter = "Your guest speaker role and organisation must be in alphanumeric text";
-    public const string JobRoleAndOrganisationTooLong = "Your guest speakers name must be 200 characters or less";
+    public const string JobRoleAndOrganisationTooLong = "Your guest speaker role and organisation must be 200 characters or less";
 
     public GuestSpeakerAddViewModelValidator()
     {
