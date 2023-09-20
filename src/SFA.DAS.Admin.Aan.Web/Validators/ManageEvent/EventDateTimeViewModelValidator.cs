@@ -40,7 +40,7 @@ public class EventDateTimeViewModelValidator : AbstractValidator<EventDateTimeVi
             .WithMessage(EventEndHourEmpty)
             .Must(EndTimePresent)
             .WithMessage(EventEndMinutesEmpty)
-            .Must(StartTimeAfterEndTime)
+            .Must(StartTimeBeforeEndTime)
             .WithMessage(EventEndTimeBeforeStartTime);
     }
 
@@ -64,8 +64,11 @@ public class EventDateTimeViewModelValidator : AbstractValidator<EventDateTimeVi
         return model.EndMinutes != null;
     }
 
-    private bool StartTimeAfterEndTime(EventDateTimeViewModel model, int? startHour)
+    private bool StartTimeBeforeEndTime(EventDateTimeViewModel model, int? startHour)
     {
+        if (model.StartHour == null || model.StartMinutes == null || model.EndHour == null ||
+            model.EndMinutes == null) return true;
+
         var startTime = (model.StartHour * 60) + model.StartMinutes;
         var endTime = (model.EndHour * 60) + model.EndMinutes;
         return startTime <= endTime;

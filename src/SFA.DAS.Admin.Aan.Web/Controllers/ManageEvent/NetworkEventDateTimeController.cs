@@ -47,7 +47,6 @@ public class NetworkEventDateTimeController : Controller
 
         if (!result.IsValid)
         {
-
             result.AddToModelState(ModelState);
             return View(ViewPath, GetViewModel(sessionModel));
         }
