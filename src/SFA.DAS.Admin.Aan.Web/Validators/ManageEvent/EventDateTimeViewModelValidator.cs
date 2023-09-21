@@ -44,33 +44,33 @@ public class EventDateTimeViewModelValidator : AbstractValidator<EventDateTimeVi
             .WithMessage(EventEndTimeBeforeStartTime);
     }
 
-    private bool StartHoursAndMinutesPresent(EventDateTimeViewModel model, int? startHour)
+    private static bool StartHoursAndMinutesPresent(EventDateTimeViewModel model, int? startHour)
     {
         return !(model.StartMinutes == null && startHour == null);
     }
 
-    private bool StartTimePresent(EventDateTimeViewModel model, int? startHour)
+    private static bool StartTimePresent(EventDateTimeViewModel model, int? startHour)
     {
         return model.StartMinutes != null;
     }
 
-    private bool EndHoursAndMinutesPresent(EventDateTimeViewModel model, int? endHour)
+    private static bool EndHoursAndMinutesPresent(EventDateTimeViewModel model, int? endHour)
     {
         return !(model.EndMinutes == null && endHour == null);
     }
 
-    private bool EndTimePresent(EventDateTimeViewModel model, int? endHour)
+    private static bool EndTimePresent(EventDateTimeViewModel model, int? endHour)
     {
         return model.EndMinutes != null;
     }
 
-    private bool StartTimeBeforeEndTime(EventDateTimeViewModel model, int? startHour)
+    private static bool StartTimeBeforeEndTime(EventDateTimeViewModel model, int? startHour)
     {
         if (model.StartHour == null || model.StartMinutes == null || model.EndHour == null ||
             model.EndMinutes == null) return true;
 
-        var startTime = (model.StartHour * 60) + model.StartMinutes;
-        var endTime = (model.EndHour * 60) + model.EndMinutes;
+        var startTime = (int)((model.StartHour * 60) + model.StartMinutes);
+        var endTime = (int)((model.EndHour * 60) + model.EndMinutes);
         return startTime <= endTime;
     }
 }
