@@ -9,22 +9,20 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
-
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/datetime", Name = RouteNames.ManageEvent.EventDateTime)]
-public class NetworkEventDateTimeController : Controller
+[Route("events/new/location", Name = RouteNames.ManageEvent.EventLocation)]
+public class NetworkEventLocationController : Controller
 {
+    public const string ViewPath = "~/Views/ManageEvent/EventLocation.cshtml";
     private readonly ISessionService _sessionService;
-    private readonly IValidator<EventDateTimeViewModel> _validator;
+    private readonly IValidator<EventLocationViewModel> _validator;
 
-    public const string ViewPath = "~/Views/ManageEvent/EventDateTime.cshtml";
-    public NetworkEventDateTimeController(ISessionService sessionService, IValidator<EventDateTimeViewModel> validator)
+    public NetworkEventLocationController(ISessionService sessionService, IValidator<EventLocationViewModel> validator)
     {
         _sessionService = sessionService;
         _validator = validator;
     }
 
-    [Authorize(Roles = Roles.ManageEventsRole)]
     [HttpGet]
     public IActionResult Get()
     {
@@ -34,16 +32,13 @@ public class NetworkEventDateTimeController : Controller
     }
 
     [HttpPost]
-    public IActionResult Post(EventDateTimeViewModel submitModel)
+    public IActionResult Post(EventLocationViewModel submitModel)
     {
-        var result = _validator.Validate(submitModel);
-
         var sessionModel = _sessionService.Get<EventSessionModel>();
-        sessionModel.DateOfEvent = submitModel.DateOfEvent;
-        sessionModel.StartHour = submitModel.StartHour;
-        sessionModel.StartMinutes = submitModel.StartMinutes;
-        sessionModel.EndHour = submitModel.EndHour;
-        sessionModel.EndMinutes = submitModel.EndMinutes;
+        sessionModel.EventLocation = submitModel.EventLocation;
+        sessionModel.OnlineEventLink = submitModel.OnlineEventLink;
+
+        var result = _validator.Validate(submitModel);
 
         if (!result.IsValid)
         {
@@ -52,21 +47,19 @@ public class NetworkEventDateTimeController : Controller
         }
 
         _sessionService.Set(sessionModel);
-
         return RedirectToRoute(RouteNames.ManageEvent.EventLocation);
     }
 
-    private EventDateTimeViewModel GetViewModel(EventSessionModel sessionModel)
+    private EventLocationViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        return new EventDateTimeViewModel
+        var locationTitle = "In person event location";
+        return new EventLocationViewModel
         {
-            DateOfEvent = sessionModel.DateOfEvent,
-            StartHour = sessionModel.StartHour,
-            StartMinutes = sessionModel.StartMinutes,
-            EndHour = sessionModel.EndHour,
-            EndMinutes = sessionModel.EndMinutes,
+            LocationTitle = locationTitle,
+            EventLocation = sessionModel.EventLocation,
+            OnlineEventLink = sessionModel.OnlineEventLink,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventDateTime)!,
+            PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }

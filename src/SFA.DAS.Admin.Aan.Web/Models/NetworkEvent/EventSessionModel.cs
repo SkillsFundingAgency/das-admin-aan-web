@@ -4,6 +4,8 @@ namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
 public class EventSessionModel
 {
+    public bool HasSeenPreview { get; set; }
+
     public EventFormat? EventFormat { get; set; }
 
     public string? EventTitle { get; set; }
@@ -19,6 +21,9 @@ public class EventSessionModel
     public int? StartMinutes { get; set; }
     public int? EndHour { get; set; }
     public int? EndMinutes { get; set; }
+
+    public string? EventLocation { get; set; }
+    public string? OnlineEventLink { get; set; }
 
     public List<GuestSpeaker> GuestSpeakers { get; set; } = new List<GuestSpeaker>();
 }
