@@ -51,14 +51,32 @@
             <input type="hidden" asp-for="@Model.CancelLink" /> 
             <input type="hidden" asp-for="@Model.LocationTitle" /> 
             <div esfa-validation-marker-for="SearchTerm" class="govuk-form-group">
-                <h1 class="govuk-heading-l"> @Model.LocationTitle</h1>
-               
                 <span asp-validation-for="SearchTerm" class="govuk-error-message"></span>
-                <label class="govuk-visually-hidden" asp-for="SearchTerm">
-                    Search Term
-                </label>
-                <div data-module="govuk-input">
-                    <input id="SearchTerm" type="text" asp-for="SearchTerm" class="govuk-input" sfa-validationerror-class="form-control-error" maxlength="250" data-module="autoComplete" />
+                <div id="SearchTerm">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            @Model.LocationTitle
+                        </legend>
+                        <label class="govuk-visually-hidden" asp-for="SearchTerm">
+                            Search Term
+                        </label>
+                        <div data-module="govuk-input">
+                            <input id="SearchTerm" type="text" asp-for="SearchTerm" class="govuk-input" sfa-validationerror-class="form-control-error" maxlength="250" data-module="autoComplete" />
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div esfa-validation-marker-for="@Model.OnlineEventLink" class="govuk-form-group">
+                <span asp-validation-for="OnlineEventLink" class="govuk-error-message"></span>
+                <div id="OnlineEventLink">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            Online event link (optional)
+                        </legend>
+                        <div class="govuk-form-group">
+                            <input class="govuk-input" id="onlineEventLink" name="onlineEventLink" type="text" value="@Model.OnlineEventLink" maxlength="1050">
+                        </div>
+                    </fieldset>
                 </div>
             </div>
             <div class="govuk-button-group">

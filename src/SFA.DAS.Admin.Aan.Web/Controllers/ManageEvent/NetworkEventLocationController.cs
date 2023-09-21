@@ -56,7 +56,7 @@ public class NetworkEventLocationController : Controller
         return new EventLocationViewModel
         {
             LocationTitle = locationTitle,
-            EventLocation = sessionModel.EventLocation,
+            SearchTerm = sessionModel.EventLocation,
             OnlineEventLink = sessionModel.OnlineEventLink,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!,
