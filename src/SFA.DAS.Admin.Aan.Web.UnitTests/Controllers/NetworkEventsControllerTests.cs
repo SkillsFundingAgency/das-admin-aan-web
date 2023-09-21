@@ -9,6 +9,7 @@ using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers;
 using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
+using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
@@ -21,11 +22,11 @@ public class NetworkEventsControllerTests
 
     [Test, MoqAutoData]
     public void GetCalendarEvents_ReturnsApiResponse(
-    [Frozen] Mock<IOuterApiClient> outerApiMock,
-    [Greedy] NetworkEventsController sut,
-    GetCalendarEventsQueryResult expectedResult,
-    DateTime? fromDate,
-    DateTime? toDate)
+        [Frozen] Mock<IOuterApiClient> outerApiMock,
+        [Greedy] NetworkEventsController sut,
+        GetCalendarEventsQueryResult expectedResult,
+        DateTime? fromDate,
+        DateTime? toDate)
     {
         var fromDateFormatted = fromDate?.ToString("yyyy-MM-dd")!;
         var toDateFormatted = toDate?.ToString("yyyy-MM-dd")!;
@@ -36,7 +37,9 @@ public class NetworkEventsControllerTests
             PageSize = expectedResult.PageSize,
         };
 
-        outerApiMock.Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(), It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);
+        outerApiMock
+            .Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
+                It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
@@ -51,7 +54,9 @@ public class NetworkEventsControllerTests
         model.FilterChoices.FromDate?.ToApiString().Should().Be(fromDateFormatted);
         model.FilterChoices.ToDate?.ToApiString().Should().Be(toDateFormatted);
 
-        outerApiMock.Verify(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(), It.IsAny<CancellationToken>()), Times.Once);
+        outerApiMock.Verify(
+            o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
 
@@ -79,7 +84,9 @@ public class NetworkEventsControllerTests
 
         var outerApiMock = new Moq.Mock<IOuterApiClient>();
         var sessionServiceMock = new Mock<ISessionService>();
-        outerApiMock.Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(), It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);
+        outerApiMock
+            .Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
+                It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);
         outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Calendar>());
         outerApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(new GetRegionsResult());
 
@@ -97,23 +104,44 @@ public class NetworkEventsControllerTests
         switch (isPublishedTicked)
         {
             case true:
-                model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Published").Checked.Should().NotBeEmpty();
+                model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Published").Checked
+                    .Should().NotBeEmpty();
                 break;
             case false:
-                model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Published").Checked.Should().BeEmpty();
+                model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Published").Checked
+                    .Should().BeEmpty();
                 break;
         }
 
         switch (isCancelledTicked)
         {
             case true:
-                model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Cancelled").Checked.Should().NotBeEmpty();
+                model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Cancelled").Checked
+                    .Should().NotBeEmpty();
                 break;
             case false:
-                model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Cancelled").Checked.Should().BeEmpty();
+                model!.FilterChoices.EventStatusChecklistDetails.Lookups.First(x => x.Name == "Cancelled").Checked
+                    .Should().BeEmpty();
                 break;
         }
 
         sessionServiceMock.Verify(s => s.Clear(), Times.Once);
+    }
+
+    [Test]
+    public void CreateEvent_BuildSessionModelAndRerouteToCreateEventFormat()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+
+        var sut = new NetworkEventsController(Mock.Of<IOuterApiClient>(), sessionServiceMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CreateEvent, AllNetworksUrl);
+
+        var actualResult = sut.CreateEvent();
+
+        var result = (RedirectToRouteResult)actualResult;
+
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Once());
+        result.RouteName.Should().Be(RouteNames.ManageEvent.EventFormat);
     }
 }

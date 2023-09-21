@@ -1,10 +1,10 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Extensions;
+using System.Security.Claims;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers;
 

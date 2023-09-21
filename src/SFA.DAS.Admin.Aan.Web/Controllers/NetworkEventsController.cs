@@ -7,6 +7,7 @@ using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models;
+using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 using SFA.DAS.Admin.Aan.Web.Services;
 using Region = SFA.DAS.Admin.Aan.Application.OuterApi.Regions.Region;
@@ -14,7 +15,7 @@ using Region = SFA.DAS.Admin.Aan.Application.OuterApi.Regions.Region;
 namespace SFA.DAS.Admin.Aan.Web.Controllers;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("manage-events")]
+[Route("events", Name = RouteNames.NetworkEvents)]
 public class NetworkEventsController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
@@ -26,10 +27,10 @@ public class NetworkEventsController : Controller
     }
 
     [HttpGet]
-    [Route("", Name = RouteNames.NetworkEvents)]
     public async Task<IActionResult> Index(GetNetworkEventsRequest request, CancellationToken cancellationToken)
     {
         _sessionService.Clear();
+
         var filterUrl = FilterBuilder.BuildFullQueryString(request, Url);
         var calendarEventsTask = _outerApiClient.GetCalendarEvents(Guid.NewGuid(), QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
@@ -53,12 +54,23 @@ public class NetworkEventsController : Controller
         return View(model);
     }
 
+
+    [HttpGet]
+    [Route("create-event", Name = RouteNames.ManageEvent.CreateEvent)]
+    public IActionResult CreateEvent()
+    {
+        var sessionModel = new EventSessionModel();
+        _sessionService.Set(sessionModel);
+        return RedirectToRoute(RouteNames.ManageEvent.EventFormat);
+    }
+
+
     private NetworkEventsViewModel InitialiseViewModel(GetCalendarEventsQueryResult result)
     {
         var model = new NetworkEventsViewModel
         {
             TotalCount = result.TotalCount,
-            CreateEventLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!
+            CreateEventLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!
         };
 
         foreach (var calendarEvent in result.CalendarEvents)

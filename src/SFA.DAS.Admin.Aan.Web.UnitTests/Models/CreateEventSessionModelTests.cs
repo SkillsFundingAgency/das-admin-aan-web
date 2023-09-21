@@ -3,7 +3,7 @@ using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Models;
-public class CreateEventSessionModelTests
+public class EventSessionModelTests
 {
     [TestCase(EventFormat.InPerson)]
     [TestCase(EventFormat.Hybrid)]
@@ -11,7 +11,7 @@ public class CreateEventSessionModelTests
     [TestCase(null)]
     public void SessionModel_ContainsExpectedValues(EventFormat? eventFormat)
     {
-        var vm = new CreateEventSessionModel { EventFormat = eventFormat };
+        var vm = new EventSessionModel { EventFormat = eventFormat };
         vm.EventFormat.Should().Be(eventFormat);
     }
 }

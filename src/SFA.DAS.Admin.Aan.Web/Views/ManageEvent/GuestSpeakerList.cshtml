@@ -1,0 +1,53 @@
+﻿@using SFA.DAS.Admin.Aan.Web.Infrastructure
+@model SFA.DAS.Admin.Aan.Web.Models.NetworkEvent.GuestSpeakerListViewModel
+@{
+    ViewData["Title"] = "Create Calendar Event";
+    var speakerCount = 1;
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">@Model.PageTitle</span>
+        <br/>
+        <h1 class="govuk-heading-l">
+            Guest Speakers
+        </h1>
+        <form asp-route="@Model.PostLink" method="POST">
+            <div class="govuk-form-group">
+                <input type="hidden" asp-for="@Model.CancelLink"/>
+                <div class="govuk-form-group">
+                    @foreach (var guestSpeaker in Model.GuestSpeakers.OrderBy(x => x.Id))
+                    {
+                        <table class="govuk-table">
+                            <caption class="govuk-table__caption govuk-table__caption--m"> Guest speaker @speakerCount
+                            @{
+                                speakerCount++;
+                            }
+                            </caption>
+
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Guest speaker name</th>
+                                <td class="govuk-table__cell">@guestSpeaker.Name</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Guest speaker job role and organisation</th>
+                                <td class="govuk-table__cell">@guestSpeaker.JobRoleAndOrganisation</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="govuk-button-group">
+                            <a href="@Model.DeleteSpeakerLink?id=@guestSpeaker.Id" class="govuk-link">Delete</a>
+                        </div>
+                    }
+                </div>
+                <a href="@Model.AddGuestSpeakerLink" class="govuk-link">Add Speaker</a>
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+                <div class="govuk-button-group">
+                    <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>
+                    <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

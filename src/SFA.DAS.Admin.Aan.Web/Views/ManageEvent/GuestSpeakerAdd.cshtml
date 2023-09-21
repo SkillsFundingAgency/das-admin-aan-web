@@ -1,0 +1,53 @@
+﻿@using SFA.DAS.Admin.Aan.Web.Infrastructure
+@model SFA.DAS.Admin.Aan.Web.Models.NetworkEvent.GuestSpeakerAddViewModel
+@{
+    ViewData["Title"] = "Create Calendar Event";
+}
+
+<partial name="_validationSummary" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+       
+        <form asp-route="@Model.PostLink" method="POST">
+        <div class="govuk-form-group">
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-l">@Model.PageTitle</span>
+            </h1>
+            <input type="hidden" asp-for="@Model.CancelLink"/>
+            <div esfa-validation-marker-for="@Model.Name" class="govuk-form-group">
+                <span asp-validation-for="Name" class="govuk-error-message"></span>
+                <div id="Name">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            Guest speaker name 
+                        </legend>
+                        <div class="govuk-form-group">
+                            <input class="govuk-input" id="name" name="name" type="text" value="@Model.Name" maxlength="250">
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div esfa-validation-marker-for="@Model.JobRoleAndOrganisation" class="govuk-form-group">
+                    <span asp-validation-for="JobRoleAndOrganisation" class="govuk-error-message"></span>
+                    <div id="JobRoleAndOrganisation">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            Guest speaker job role and organisation
+                        </legend>
+                        <div class="govuk-form-group">
+                                <input class="govuk-input" id="jobRoleAndOrganisation" name="jobRoleAndOrganisation" type="text" value="@Model.JobRoleAndOrganisation" maxlength="250">
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+                <div class="govuk-button-group">
+                    <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>
+                    <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
