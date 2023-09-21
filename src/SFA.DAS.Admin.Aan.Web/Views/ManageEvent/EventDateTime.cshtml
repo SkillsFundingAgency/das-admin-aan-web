@@ -17,7 +17,7 @@
                 </label>
                 <span asp-validation-for="DateOfEvent" class="govuk-error-message"></span>
                 <input class="govuk-input govuk-input--width-10" id="dateOfEvent" name="dateOfEvent" type="date"
-                    value="@Model.DateOfEvent?.ToApiString()">
+                       value="@Model.DateOfEvent?.ToApiString()">
             </div>
             <div esfa-validation-marker-for="@Model.StartHour" class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
@@ -35,8 +35,8 @@
                                     Hour
                                 </label>
                                 <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="startHour"
-                                    name="startHour" type="text" inputmode="numeric" maxlength="2"
-                                    value="@Model.StartHour">
+                                       name="startHour" type="text" inputmode="numeric" maxlength="2"
+                                       value="@Model.StartHour">
                             </div>
                         </div>
                         <span class="app-time-separator">:</span>
@@ -46,12 +46,13 @@
                                     Minutes
                                 </label>
                                 <input class="govuk-input govuk-date-input__input govuk-input--width-2"
-                                    id="startMinutes" name="startMinutes" type="text" inputmode="numeric" maxlength="2"
-                                    value="@Model.StartMinutes">
+                                       id="startMinutes" name="startMinutes" type="text" inputmode="numeric" maxlength="2"
+                                       value="@Model.StartMinutes">
                             </div>
                         </div>
                     </div>
                 </fieldset>
+            </div>
             <div esfa-validation-marker-for="@Model.EndHour" class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -68,7 +69,7 @@
                                     Hour
                                 </label>
                                 <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="EndHour"
-                                    name="EndHour" type="text" inputmode="numeric" maxlength="2" value="@Model.EndHour">
+                                       name="EndHour" type="text" inputmode="numeric" maxlength="2" value="@Model.EndHour">
                             </div>
                         </div>
                         <span class="app-time-separator">:</span>
@@ -78,22 +79,9 @@
                                     Minutes
                                 </label>
                                 <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="EndMinutes"
-                                    name="EndMinutes" type="text" inputmode="numeric" maxlength="2"
-                                    value="@Model.EndMinutes">
+                                       name="EndMinutes" type="text" inputmode="numeric" maxlength="2"
+                                       value="@Model.EndMinutes">
                             </div>
-                        <span class="app-time-separator">:</span>
-                        <div class="govuk-date-input__item">
-                            <div class="govuk-form-group">
-                                <label class="govuk-label govuk-date-input__label" for="EndMinutes">
-                                    Minutes
-                                </label>
-                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="EndMinutes"
-                                    name="EndMinutes" type="text" inputmode="numeric" maxlength="2"
-                                    value="@Model.EndMinutes">
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
                         </div>
                     </div>
                 </fieldset>
