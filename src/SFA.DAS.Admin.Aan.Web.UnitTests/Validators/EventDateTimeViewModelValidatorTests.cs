@@ -55,7 +55,7 @@ public class EventDateTimeViewModelValidatorTests
     [TestCase(null, 30, 1, 30, EventDateTimeViewModelValidator.EventStartHourEmpty, null)]
     [TestCase(12, 30, 13, 0, null, null)]
     [TestCase(12, 30, 12, 30, null, null)]
-    public void Validate_StartAndEndTime_InvalidDetails(int? startHour, int? startMinutes, int? endHour, int? endMinutes,
+    public void Validate_StartAndEndTime_CheckForInvalidDetails(int? startHour, int? startMinutes, int? endHour, int? endMinutes,
         string? errorMessageForStart, string? errorMessageForEnd)
     {
         var model = GetHydratedModel();
