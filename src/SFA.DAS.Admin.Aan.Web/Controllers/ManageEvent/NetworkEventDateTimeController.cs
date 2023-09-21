@@ -36,14 +36,14 @@ public class NetworkEventDateTimeController : Controller
     [HttpPost]
     public IActionResult Post(EventDateTimeViewModel submitModel)
     {
+        var result = _validator.Validate(submitModel);
+
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.DateOfEvent = submitModel.DateOfEvent;
         sessionModel.StartHour = submitModel.StartHour;
         sessionModel.StartMinutes = submitModel.StartMinutes;
         sessionModel.EndHour = submitModel.EndHour;
         sessionModel.EndMinutes = submitModel.EndMinutes;
-
-        var result = _validator.Validate(submitModel);
 
         if (!result.IsValid)
         {

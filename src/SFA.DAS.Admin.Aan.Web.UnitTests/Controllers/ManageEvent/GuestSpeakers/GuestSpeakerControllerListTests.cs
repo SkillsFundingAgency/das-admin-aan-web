@@ -121,7 +121,7 @@ public class GuestSpeakerControllerListTests
     }
 
     [Test]
-    public void Post_RedirectToNextPage()
+    public void Post_RerouteToEventDateTime()
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var guestSpeakers = new List<GuestSpeaker>();

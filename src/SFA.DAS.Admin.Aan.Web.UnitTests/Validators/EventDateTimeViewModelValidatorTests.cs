@@ -49,6 +49,10 @@ public class EventDateTimeViewModelValidatorTests
     [TestCase(null, null, 13, null, EventDateTimeViewModelValidator.EventStartHourAndMinutesEmpty, EventDateTimeViewModelValidator.EventEndMinutesEmpty)]
     [TestCase(null, null, null, 0, EventDateTimeViewModelValidator.EventStartHourAndMinutesEmpty, EventDateTimeViewModelValidator.EventEndHourEmpty)]
     [TestCase(12, 30, 11, 0, null, EventDateTimeViewModelValidator.EventEndTimeBeforeStartTime)]
+    [TestCase(12, 30, 1, null, null, EventDateTimeViewModelValidator.EventEndMinutesEmpty)]
+    [TestCase(12, 30, null, 30, null, EventDateTimeViewModelValidator.EventEndHourEmpty)]
+    [TestCase(12, null, 1, 30, EventDateTimeViewModelValidator.EventStartMinutesEmpty, null)]
+    [TestCase(null, 30, 1, 30, EventDateTimeViewModelValidator.EventStartHourEmpty, null)]
     public void Validate_StartAndEndTime_InvalidDetails(int? startHour, int? startMinutes, int? endHour, int? endMinutes,
         string? errorMessageForStart, string? errorMessageForEnd)
     {
