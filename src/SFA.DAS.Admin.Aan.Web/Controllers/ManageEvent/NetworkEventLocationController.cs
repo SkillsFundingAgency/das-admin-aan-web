@@ -27,6 +27,7 @@ public class NetworkEventLocationController : Controller
     public IActionResult Get()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
+
         var model = GetViewModel(sessionModel);
         return View(ViewPath, model);
     }
@@ -35,6 +36,8 @@ public class NetworkEventLocationController : Controller
     public IActionResult Post(EventLocationViewModel submitModel)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
+
+
         sessionModel.EventLocation = submitModel.EventLocation;
         sessionModel.OnlineEventLink = submitModel.OnlineEventLink;
 
@@ -56,7 +59,7 @@ public class NetworkEventLocationController : Controller
         return new EventLocationViewModel
         {
             LocationTitle = locationTitle,
-            SearchTerm = sessionModel.EventLocation,
+            SearchResult = sessionModel.EventLocation,
             OnlineEventLink = sessionModel.OnlineEventLink,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!,

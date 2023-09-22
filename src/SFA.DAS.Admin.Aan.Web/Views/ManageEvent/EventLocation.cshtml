@@ -39,7 +39,9 @@
         @* </div> *@
         @* </form> *@
         <form method="post" asp-route="@RouteNames.ManageEvent.EventLocation" enctype="multipart/form-data" novalidate>
-
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-l">@Model.PageTitle</span>
+            </h1>
             <input asp-for="OrganisationName" id="OrganisationName" type="hidden"/>
             <input asp-for="AddressLine1" id="AddressLine1" type="hidden" />
             <input asp-for="AddressLine2" id="AddressLine2" type="hidden" />
@@ -55,13 +57,17 @@
                 <div id="SearchTerm">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                            @Model.LocationTitle
+                            @Model.LocationTitle 
                         </legend>
                         <label class="govuk-visually-hidden" asp-for="SearchTerm">
                             Search Term
                         </label>
                         <div data-module="govuk-input">
-                            <input id="SearchTerm" type="text" asp-for="SearchTerm" class="govuk-input" sfa-validationerror-class="form-control-error" maxlength="250" data-module="autoComplete" />
+                            <input id="SearchTerm" type="text"
+                                   placeholder="@Model.SearchResult"
+                                   asp-for="SearchTerm" class="govuk-input" sfa-validationerror-class="form-control-error" data-module="autoComplete"/>
+                        
+                            <label class="govuk-visually-hidden" asp-for="SearchResult">Search Result: @Model.SearchResult</label>
                         </div>
                     </fieldset>
                 </div>
@@ -73,8 +79,14 @@
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                             Online event link (optional)
                         </legend>
+                        <div id="eventOutline-hint" class="govuk-hint">
+                            You can add this later, but you must add an outline event link before the event starts
+                        </div>
                         <div class="govuk-form-group">
-                            <input class="govuk-input" id="onlineEventLink" name="onlineEventLink" type="text" value="@Model.OnlineEventLink" maxlength="1050">
+                            <input class="govuk-input" id="onlineEventLink" name="onlineEventLink" type="text" value="@Model.OnlineEventLink" maxlength="@Model.EventOnlineLinkMaxLength">
+                            <div id="eventSummary-guide" class="govuk-hint">
+                                You can enter up to @Model.EventOnlineLinkMaxLength characters
+                            </div>
                         </div>
                     </fieldset>
                 </div>
@@ -83,6 +95,7 @@
                 <button id="continue" type="submit" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
                     Continue
                 </button>
+                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
             </div>
         </form>
     </div>
