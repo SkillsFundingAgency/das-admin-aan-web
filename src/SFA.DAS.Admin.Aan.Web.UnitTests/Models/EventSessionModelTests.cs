@@ -13,5 +13,6 @@ public class EventSessionModelTests
     {
         var vm = new EventSessionModel { EventFormat = eventFormat };
         vm.EventFormat.Should().Be(eventFormat);
+        vm.HasSeenPreview.Should().Be(false);
     }
 }

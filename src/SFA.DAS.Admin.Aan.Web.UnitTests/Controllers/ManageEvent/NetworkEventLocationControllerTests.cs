@@ -44,9 +44,9 @@ public class NetworkEventLocationControllerTests
         vm!.PostLink.Should().Be(PostUrl);
     }
 
-    [TestCase("location 1")]
-    [TestCase("location 2")]
-    public void Post_SetEventDetailsOnSessionModel(string eventLocation)
+    [TestCase("location 1", null)]
+    [TestCase("location 2", "event online link")]
+    public void Post_SetEventDetailsOnSessionModel(string eventLocation, string? eventOnlineLink)
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<EventLocationViewModel>>();
@@ -55,7 +55,7 @@ public class NetworkEventLocationControllerTests
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new EventLocationViewModel { Postcode = eventLocation };
+        var submitModel = new EventLocationViewModel { Postcode = eventLocation, OnlineEventLink = eventOnlineLink };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -67,7 +67,7 @@ public class NetworkEventLocationControllerTests
         var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventLocation == eventLocation)));
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventLocation == eventLocation && m.OnlineEventLink == eventOnlineLink)));
         result.RouteName.Should().Be(RouteNames.ManageEvent.EventLocation);
     }
 
