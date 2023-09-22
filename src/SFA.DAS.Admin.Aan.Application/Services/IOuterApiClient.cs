@@ -22,7 +22,6 @@ public interface IOuterApiClient
     [Get("/locations")]
     Task<GetAddressesResult> GetAddresses([Query] string query, CancellationToken cancellationToken);
 
-
     [Post("admins")]
     Task<LookupAdminMemberResult> GetAdminMember([Body] LookupAdminMemberRequest request, CancellationToken cancellationToken);
 }

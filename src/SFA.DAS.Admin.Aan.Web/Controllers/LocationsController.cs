@@ -18,7 +18,6 @@ public class LocationsController : Controller
     public async Task<IActionResult> GetAddresses([FromQuery] string query, CancellationToken cancellationToken)
     {
         var result = await _outerApiClient.GetAddresses(query, cancellationToken);
-
         return Ok(result.Addresses);
     }
 }

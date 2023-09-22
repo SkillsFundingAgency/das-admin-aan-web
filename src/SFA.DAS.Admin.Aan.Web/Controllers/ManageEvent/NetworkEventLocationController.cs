@@ -27,7 +27,6 @@ public class NetworkEventLocationController : Controller
     public IActionResult Get()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
-
         var model = GetViewModel(sessionModel);
         return View(ViewPath, model);
     }
@@ -36,7 +35,6 @@ public class NetworkEventLocationController : Controller
     public IActionResult Post(EventLocationViewModel submitModel)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
-
 
         sessionModel.EventLocation = submitModel.EventLocation;
         sessionModel.OnlineEventLink = submitModel.OnlineEventLink;

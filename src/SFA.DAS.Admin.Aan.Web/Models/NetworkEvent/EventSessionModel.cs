@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-public class EventSessionModel // : EventLocationDetailsModel
+public class EventSessionModel
 {
     public bool HasSeenPreview { get; set; }
 

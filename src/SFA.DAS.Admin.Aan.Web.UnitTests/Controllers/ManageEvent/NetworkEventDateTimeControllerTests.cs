@@ -78,7 +78,7 @@ public class NetworkEventDateTimeControllerTests
                m.StartMinutes == startMinutes &&
                m.EndHour == endHour &&
                m.EndMinutes == endMinutes)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.EventDateTime);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.EventLocation);
     }
 
     [Test, MoqAutoData]
