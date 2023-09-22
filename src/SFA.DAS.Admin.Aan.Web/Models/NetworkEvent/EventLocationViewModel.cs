@@ -22,9 +22,10 @@ public class EventLocationViewModel : EventLocationDetailsModel, IEventPageEditF
 
         if (!string.IsNullOrWhiteSpace(OrganisationName)) locationDetails.Add(OrganisationName);
         if (!string.IsNullOrWhiteSpace(AddressLine1)) locationDetails.Add(AddressLine1);
-        if (!string.IsNullOrWhiteSpace(AddressLine2) && string.IsNullOrEmpty(AddressLine1)) locationDetails.Add(AddressLine2);
-        if (!string.IsNullOrWhiteSpace(County)) locationDetails.Add(County);
+        if (!string.IsNullOrWhiteSpace(AddressLine2) && string.IsNullOrEmpty(AddressLine1))
+            locationDetails.Add(AddressLine2);
         if (!string.IsNullOrWhiteSpace(Town)) locationDetails.Add(Town);
+        if (!string.IsNullOrWhiteSpace(County)) locationDetails.Add(County);
         if (!string.IsNullOrWhiteSpace(Postcode)) locationDetails.Add(Postcode);
 
         return string.Join(", ", locationDetails);
