@@ -10,7 +10,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <form method="post" asp-route="@RouteNames.ManageEvent.EventLocation" enctype="multipart/form-data" novalidate>
+        <form method="post" asp-route="@Model.PostLink" enctype="multipart/form-data" novalidate>
             <h1 class="govuk-heading-l">
                 <span class="govuk-caption-l">@Model.PageTitle</span>
             </h1>
@@ -20,8 +20,6 @@
             <input asp-for="Town" id="Town" type="hidden" />
             <input asp-for="County" id="County" type="hidden" />
             <input asp-for="Postcode" id="Postcode" type="hidden" />
-            <input asp-for="Longitude" id="Longitude" type="hidden" />
-            <input asp-for="Latitude" id="Latitude" type="hidden" />
             <input type="hidden" asp-for="@Model.CancelLink" /> 
             <input type="hidden" asp-for="@Model.LocationTitle" /> 
             <div esfa-validation-marker-for="SearchTerm" class="govuk-form-group">

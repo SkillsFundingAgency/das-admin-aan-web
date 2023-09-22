@@ -14,6 +14,7 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 public class NetworkEventLocationController : Controller
 {
     public const string ViewPath = "~/Views/ManageEvent/EventLocation.cshtml";
+    public const string LocationTitleInPerson = "In person event location";
     private readonly ISessionService _sessionService;
     private readonly IValidator<EventLocationViewModel> _validator;
 
@@ -53,14 +54,14 @@ public class NetworkEventLocationController : Controller
 
     private EventLocationViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        var locationTitle = "In person event location";
+        var locationTitle = LocationTitleInPerson;
         return new EventLocationViewModel
         {
             LocationTitle = locationTitle,
             SearchResult = sessionModel.EventLocation,
             OnlineEventLink = sessionModel.OnlineEventLink,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!,
+            PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventLocation)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }
