@@ -49,8 +49,6 @@ public class EventLocationDetailsModel
     public string? AddressLine2 { get; set; }
     public double? Longitude { get; set; }
     public double? Latitude { get; set; }
-
-
 }
 
 
