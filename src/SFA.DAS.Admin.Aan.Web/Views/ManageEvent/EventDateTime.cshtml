@@ -34,8 +34,8 @@
                                 <label class="govuk-label govuk-date-input__label" for="startHour">
                                     Hour
                                 </label>
-                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="startHour"
-                                       name="startHour" type="text" inputmode="numeric" maxlength="2"
+                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="StartHour"
+                                       name="StartHour" type="number" min="0" max="23" maxlength="2"
                                        value="@Model.StartHour">
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                                     Minutes
                                 </label>
                                 <input class="govuk-input govuk-date-input__input govuk-input--width-2"
-                                       id="startMinutes" name="startMinutes" type="text" inputmode="numeric" maxlength="2"
+                                       id="startMinutes" name="startMinutes" type="number" maxlength="2" max="59" min="0"
                                        value="@Model.StartMinutes">
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                                     Hour
                                 </label>
                                 <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="EndHour"
-                                       name="EndHour" type="text" inputmode="numeric" maxlength="2" value="@Model.EndHour">
+                                       name="EndHour" type="number" maxlength="2" max="23" min="0" value="@Model.EndHour">
                             </div>
                         </div>
                         <span class="app-time-separator">:</span>
@@ -79,7 +79,7 @@
                                     Minutes
                                 </label>
                                 <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="EndMinutes"
-                                       name="EndMinutes" type="text" inputmode="numeric" maxlength="2"
+                                       name="EndMinutes" type="number" maxlength="2" max="59" min="0"
                                        value="@Model.EndMinutes">
                             </div>
                         </div>
