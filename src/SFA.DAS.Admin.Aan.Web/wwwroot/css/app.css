@@ -529,3 +529,11 @@ a.das-show-hide__button {
   margin-top: 0;
   margin-bottom: 15px;
 }
+
+.app-time-separator {
+  display: inline-block;
+  margin-left: -15px;
+  margin-right: 5px;
+  position: relative;
+  font-size: 19px;
+}

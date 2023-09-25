@@ -1,0 +1,96 @@
+﻿@using SFA.DAS.Admin.Aan.Web.Extensions
+@model SFA.DAS.Admin.Aan.Web.Models.NetworkEvent.EventDateTimeViewModel
+@{
+    ViewData["Title"] = "Create Calendar Event";
+}
+<partial name="_validationSummary" />
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <form asp-route="@Model.PostLink" method="POST">
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-l">@Model.PageTitle</span>
+            </h1>
+            <input type="hidden" asp-for="@Model.CancelLink" />
+            <div esfa-validation-marker-for="@Model.DateOfEvent" class="govuk-form-group" id="DateOfEvent">
+                <label class="govuk-label govuk-label--m" for="dateOfEvent">
+                    Event date
+                </label>
+                <span asp-validation-for="DateOfEvent" class="govuk-error-message"></span>
+                <input class="govuk-input govuk-input--width-10" id="dateOfEvent" name="dateOfEvent" type="date"
+                       value="@Model.DateOfEvent?.ToApiString()">
+            </div>
+            <div esfa-validation-marker-for="@Model.StartHour" class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        Start time
+                    </legend>
+                    <div id="startHour-hint" class="govuk-hint">
+                        For example 14:30
+                    </div>
+                    <span asp-validation-for="StartHour" class="govuk-error-message"></span>
+                    <div class="govuk-date-input" id="start-time">
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="startHour">
+                                    Hour
+                                </label>
+                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="StartHour"
+                                       name="StartHour" type="number" min="0" max="23" maxlength="2"
+                                       value="@Model.StartHour">
+                            </div>
+                        </div>
+                        <span class="app-time-separator">:</span>
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="startMinutes">
+                                    Minutes
+                                </label>
+                                <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                       id="startMinutes" name="startMinutes" type="number" maxlength="2" max="59" min="0"
+                                       value="@Model.StartMinutes">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div esfa-validation-marker-for="@Model.EndHour" class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        End time
+                    </legend>
+                    <div id="endHour-hint" class="govuk-hint">
+                        For example 14:30
+                    </div>
+                    <span asp-validation-for="EndHour" class="govuk-error-message"></span>
+                    <div class="govuk-date-input" id="end-time">
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="EndHour">
+                                    Hour
+                                </label>
+                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="EndHour"
+                                       name="EndHour" type="number" maxlength="2" max="23" min="0" value="@Model.EndHour">
+                            </div>
+                        </div>
+                        <span class="app-time-separator">:</span>
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="EndMinutes">
+                                    Minutes
+                                </label>
+                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="EndMinutes"
+                                       name="EndMinutes" type="number" maxlength="2" max="59" min="0"
+                                       value="@Model.EndMinutes">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+            <div class="govuk-button-group">
+                <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>
+                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

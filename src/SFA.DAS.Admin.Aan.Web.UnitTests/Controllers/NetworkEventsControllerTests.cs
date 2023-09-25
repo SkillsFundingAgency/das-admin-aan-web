@@ -125,7 +125,7 @@ public class NetworkEventsControllerTests
                 break;
         }
 
-        sessionServiceMock.Verify(s => s.Clear(), Times.Once);
+        sessionServiceMock.Verify(s => s.Delete(nameof(EventSessionModel)), Times.Once);
     }
 
     [Test]

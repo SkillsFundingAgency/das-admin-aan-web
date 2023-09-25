@@ -14,5 +14,11 @@ public class EventSessionModel
     public string? EventSummary { get; set; }
     public bool? HasGuestSpeakers { get; set; }
 
+    public DateTime? DateOfEvent { get; set; }
+    public int? StartHour { get; set; }
+    public int? StartMinutes { get; set; }
+    public int? EndHour { get; set; }
+    public int? EndMinutes { get; set; }
+
     public List<GuestSpeaker> GuestSpeakers { get; set; } = new List<GuestSpeaker>();
 }
