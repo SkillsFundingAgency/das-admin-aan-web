@@ -33,7 +33,6 @@ AutoComplete.prototype.onConfirm = function (option) {
     document.getElementById("Postcode").value = option.postcode
     document.getElementById("Longitude").value = option.longitude
     document.getElementById("Latitude").value = option.latitude
-
 }
 
 function inputValueTemplate(result) {

@@ -21,52 +21,56 @@
             <input asp-for="Town" id="Town" type="hidden" />
             <input asp-for="County" id="County" type="hidden" />
             <input asp-for="Postcode" id="Postcode" type="hidden" />
+            <input asp-for="Latitude" id="Latitude" type="hidden" />
+            <input asp-for="Longitude" id="Longitude" type="hidden" />
             <input type="hidden" asp-for="@Model.CancelLink" />
-           @if (Model.ShowLocationDropdown)
-           {
-               <div esfa-validation-marker-for="SearchTerm" class="govuk-form-group">
-                   <span asp-validation-for="SearchTerm" class="govuk-error-message"></span>
-                   <div id="SearchTerm">
-                       <fieldset class="govuk-fieldset">
-                           <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                               In person event location
-                           </legend>
-                           <label class="govuk-visually-hidden" asp-for="SearchTerm">
-                               Search Term
-                           </label>
-                           <div data-module="govuk-input">
-                               <input id="SearchTerm" type="text"
-                                      placeholder="@Model.SearchResult"
-                                      asp-for="SearchTerm" class="govuk-input" sfa-validationerror-class="form-control-error" data-module="autoComplete"/>
+            <input type="hidden" asp-for="@Model.EventFormat" />
 
-                               <label class="govuk-visually-hidden" asp-for="SearchResult">Search Result: @Model.SearchResult</label>
-                           </div>
-                       </fieldset>
-                   </div>
-               </div>
-           }
-           @if (Model.ShowOnlineEventLink)
-           {
-               <div esfa-validation-marker-for="@Model.OnlineEventLink" class="govuk-form-group">
-                   <span asp-validation-for="OnlineEventLink" class="govuk-error-message"></span>
-                   <div id="OnlineEventLink">
-                       <fieldset class="govuk-fieldset">
-                           <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                               Online event link (optional)
-                           </legend>
-                           <div id="eventOutline-hint" class="govuk-hint">
-                               You can add this later, but you must add an outline event link before the event starts
-                           </div>
-                           <div class="govuk-form-group">
-                               <input class="govuk-input" id="onlineEventLink" name="onlineEventLink" type="text" value="@Model.OnlineEventLink" maxlength="@Model.EventOnlineLinkMaxLength">
-                               <div id="eventSummary-guide" class="govuk-hint">
-                                   You can enter up to @Model.EventOnlineLinkMaxLength characters
-                               </div>
-                           </div>
-                       </fieldset>
-                   </div>
-               </div>
-           }
+            @if (Model.ShowLocationDropdown)
+            {
+                <div esfa-validation-marker-for="SearchTerm" class="govuk-form-group">
+                    <span asp-validation-for="SearchTerm" class="govuk-error-message"></span>
+                    <div id="SearchTerm">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                In person event location
+                            </legend>
+                            <label class="govuk-visually-hidden" asp-for="SearchTerm">
+                                Search Term
+                            </label>
+                            <div data-module="govuk-input">
+                                <input id="SearchTerm" type="text"
+                                       placeholder="@Model.SearchResult"
+                                       asp-for="SearchTerm" class="govuk-input" sfa-validationerror-class="form-control-error" data-module="autoComplete"/>
+
+                                <label class="govuk-visually-hidden" asp-for="SearchResult">Search Result: @Model.SearchResult</label>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            }
+            @if (Model.ShowOnlineEventLink)
+            {
+                <div esfa-validation-marker-for="@Model.OnlineEventLink" class="govuk-form-group">
+                    <span asp-validation-for="OnlineEventLink" class="govuk-error-message"></span>
+                    <div id="OnlineEventLink">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                Online event link (optional)
+                            </legend>
+                            <div id="eventOutline-hint" class="govuk-hint">
+                                You can add this later, but you must add an outline event link before the event starts
+                            </div>
+                            <div class="govuk-form-group">
+                                <input class="govuk-input" id="onlineEventLink" name="onlineEventLink" type="text" value="@Model.OnlineEventLink" maxlength="@Model.EventOnlineLinkMaxLength">
+                                <div id="eventSummary-guide" class="govuk-hint">
+                                    You can enter up to @Model.EventOnlineLinkMaxLength characters
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            }
             <div class="govuk-button-group">
                 <button id="continue" type="submit" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
                     Continue

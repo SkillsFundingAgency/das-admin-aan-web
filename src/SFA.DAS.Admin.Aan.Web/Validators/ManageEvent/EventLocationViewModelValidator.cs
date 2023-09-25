@@ -9,11 +9,14 @@ public class EventLocationViewModelValidator : AbstractValidator<EventLocationVi
 
     public EventLocationViewModelValidator()
     {
-        When(m => string.IsNullOrWhiteSpace(m.Postcode), () =>
-        {
-            RuleFor(e => e.SearchTerm)
-                .NotEmpty()
+        RuleFor(e => e.SearchTerm)
+                .Must(LocationVisibleButNotEntered)
                 .WithMessage(EventLocationEmpty);
-        });
+
+    }
+
+    private static bool LocationVisibleButNotEntered(EventLocationViewModel model, string? searchTerm)
+    {
+        return !(model.ShowLocationDropdown && string.IsNullOrEmpty(model.Postcode));
     }
 }
