@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Models;
@@ -54,5 +55,25 @@ public class EventLocationViewModelTests
         };
 
         model.EventLocation.Should().Be(locationName);
+    }
+
+    [TestCase(null, false)]
+    [TestCase(EventFormat.Hybrid, true)]
+    [TestCase(EventFormat.Online, true)]
+    [TestCase(EventFormat.InPerson, false)]
+    public void ViewModel_CheckShowEventOnlineLink(EventFormat? eventFormat, bool expectedValue)
+    {
+        var model = new EventLocationViewModel { EventFormat = eventFormat };
+        model.ShowOnlineEventLink.Should().Be(expectedValue);
+    }
+
+    [TestCase(null, false)]
+    [TestCase(EventFormat.Hybrid, true)]
+    [TestCase(EventFormat.Online, false)]
+    [TestCase(EventFormat.InPerson, true)]
+    public void ViewModel_ShowLocationDropdown(EventFormat? eventFormat, bool expectedValue)
+    {
+        var model = new EventLocationViewModel { EventFormat = eventFormat };
+        model.ShowLocationDropdown.Should().Be(expectedValue);
     }
 }
