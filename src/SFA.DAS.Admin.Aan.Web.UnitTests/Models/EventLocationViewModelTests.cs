@@ -51,7 +51,9 @@ public class EventLocationViewModelTests
             AddressLine2 = address2,
             Town = town,
             County = county,
-            Postcode = postcode
+            Postcode = postcode,
+            Latitude = null,
+            Longitude = null
         };
 
         model.EventLocation.Should().Be(locationName);
@@ -63,8 +65,12 @@ public class EventLocationViewModelTests
     [TestCase(EventFormat.InPerson, false)]
     public void ViewModel_CheckShowEventOnlineLink(EventFormat? eventFormat, bool expectedValue)
     {
-        var model = new EventLocationViewModel { EventFormat = eventFormat };
+        var longitude = new Random().NextDouble();
+        var latitude = new Random().NextDouble();
+        var model = new EventLocationViewModel { EventFormat = eventFormat, Longitude = longitude, Latitude = latitude };
         model.ShowOnlineEventLink.Should().Be(expectedValue);
+        model.Latitude.Should().Be(latitude);
+        model.Longitude.Should().Be(longitude);
     }
 
     [TestCase(null, false)]
