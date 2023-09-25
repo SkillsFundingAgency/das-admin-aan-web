@@ -29,7 +29,6 @@ public class NetworkEventLocationControllerTests
         var vm = result.Model as EventLocationViewModel;
         vm!.CancelLink.Should().Be(AllNetworksUrl);
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
-        vm.LocationTitle.Should().Be(NetworkEventLocationController.LocationTitleInPerson);
     }
 
     [Test, MoqAutoData]

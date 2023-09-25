@@ -1,19 +1,25 @@
-﻿using SFA.DAS.Admin.Aan.Web.Infrastructure;
+﻿using SFA.DAS.Admin.Aan.Application.Constants;
+using SFA.DAS.Admin.Aan.Web.Infrastructure;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
 public class EventLocationViewModel : EventLocationDetailsModel, IEventPageEditFields
 {
+    public EventFormat? EventFormat { get; set; }
     public string? OnlineEventLink { get; set; }
-
-    public string LocationTitle { get; set; } = null!;
-
     public string? SearchResult { get; set; }
     public string? EventLocation => BuildLocationName();
     public string? PageTitle { get; set; }
     public string? PostLink { get; set; }
     public string? CancelLink { get; set; }
     public int EventOnlineLinkMaxLength => 1000;
+
+    public bool ShowLocationDropdown =>
+        EventFormat is Application.Constants.EventFormat.InPerson or Application.Constants.EventFormat.Hybrid;
+
+    public bool ShowOnlineEventLink =>
+        EventFormat is Application.Constants.EventFormat.Online or Application.Constants.EventFormat.Hybrid;
+
     private string? BuildLocationName()
     {
         if (string.IsNullOrEmpty(Postcode)) return null;
