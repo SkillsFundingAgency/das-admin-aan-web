@@ -15,6 +15,7 @@ public class EventSessionModel
     public string? EventOutline { get; set; }
     public string? EventSummary { get; set; }
     public bool? HasGuestSpeakers { get; set; }
+    public List<GuestSpeaker> GuestSpeakers { get; set; } = new List<GuestSpeaker>();
 
     public DateTime? DateOfEvent { get; set; }
     public int? StartHour { get; set; }
@@ -25,5 +26,5 @@ public class EventSessionModel
     public string? EventLocation { get; set; }
     public string? OnlineEventLink { get; set; }
 
-    public List<GuestSpeaker> GuestSpeakers { get; set; } = new List<GuestSpeaker>();
+    public bool? IsAtSchool { get; set; }
 }
