@@ -5,7 +5,7 @@ namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 public class EventLocationViewModelValidator : AbstractValidator<EventLocationViewModel>
 {
-    public const string EventLocationEmpty = "You must include an event location";
+    public const string EventLocationEmpty = "You must include an in person event location";
 
     public EventLocationViewModelValidator()
     {
