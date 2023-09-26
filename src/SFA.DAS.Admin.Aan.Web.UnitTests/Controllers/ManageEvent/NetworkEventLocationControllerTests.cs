@@ -4,6 +4,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -43,9 +44,10 @@ public class NetworkEventLocationControllerTests
         vm!.PostLink.Should().Be(PostUrl);
     }
 
-    [TestCase("location 1", null)]
-    [TestCase("location 2", "event online link")]
-    public void Post_SetEventDetailsOnSessionModel(string eventLocation, string? eventOnlineLink)
+    [TestCase("location 1", null, null)]
+    [TestCase("location 2", "event online link", null)]
+    [TestCase(null, "event online link", EventFormat.Hybrid)]
+    public void Post_SetEventDetailsOnSessionModel(string eventLocation, string? eventOnlineLink, EventFormat? eventFormat)
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<EventLocationViewModel>>();
@@ -54,7 +56,7 @@ public class NetworkEventLocationControllerTests
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new EventLocationViewModel { Postcode = eventLocation, OnlineEventLink = eventOnlineLink };
+        var submitModel = new EventLocationViewModel { Postcode = eventLocation, OnlineEventLink = eventOnlineLink, EventFormat = eventFormat };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -67,7 +69,9 @@ public class NetworkEventLocationControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventLocation == eventLocation && m.OnlineEventLink == eventOnlineLink)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.EventLocation);
+        result.RouteName.Should().Be(submitModel.EventFormat == null
+            ? RouteNames.ManageEvent.EventLocation
+            : RouteNames.ManageEvent.EventIsAtSchool);
     }
 
     [Test, MoqAutoData]
