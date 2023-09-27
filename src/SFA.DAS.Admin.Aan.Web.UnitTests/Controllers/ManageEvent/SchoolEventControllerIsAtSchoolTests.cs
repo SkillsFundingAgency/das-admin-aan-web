@@ -39,7 +39,7 @@ public class SchoolEventControllerIsAtSchoolTests
         var sessionServiceMock = new Mock<ISessionService>();
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
         var sut =
-            new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<EventAtSchoolViewModel>>());
+            new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<EventAtSchoolViewModel>>(), Mock.Of<IValidator<EventSchoolNameViewModel>>());
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventIsAtSchool, PostUrl);
         var result = (ViewResult)sut.GetEventIsAtSchool();
         Assert.That(result.Model, Is.TypeOf<EventAtSchoolViewModel>());
@@ -64,7 +64,7 @@ public class SchoolEventControllerIsAtSchoolTests
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
 
-        var sut = new SchoolEventController(sessionServiceMock.Object, validatorMock.Object);
+        var sut = new SchoolEventController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<EventSchoolNameViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
@@ -75,7 +75,7 @@ public class SchoolEventControllerIsAtSchoolTests
             s.Set(It.Is<EventSessionModel>(m => m.IsAtSchool == isAtSchool)));
         if (isAtSchool == true)
         {
-            result.RouteName.Should().Be(RouteNames.ManageEvent.EventIsAtSchool);
+            result.RouteName.Should().Be(RouteNames.ManageEvent.EventSchoolName);
         }
         else
         {
