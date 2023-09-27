@@ -102,11 +102,7 @@ public class SchoolEventController : Controller
 
     private EventSchoolNameViewModel GetViewModelEventSchoolName(EventSessionModel sessionModel)
     {
-        var searchResult = sessionModel?.SchoolName;
-        if (searchResult != null && sessionModel?.Urn != null)
-        {
-            searchResult = $"{searchResult} (URN: {sessionModel?.Urn})";
-        }
+        var searchResult = $"{sessionModel?.SchoolName} (URN: {sessionModel.Urn})";
 
         return new EventSchoolNameViewModel
         {
