@@ -30,10 +30,12 @@ public class SchoolEventControllerIsAtSchoolTests
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
 
-    [Test, MoqAutoData]
-    public void Details_ReturnsExpectedPostLink()
+    [TestCase(true)]
+    [TestCase(false)]
+    [TestCase(null)]
+    public void Details_ReturnsExpectedPostLink(bool? isAtSchool)
     {
-        var sessionModel = new EventSessionModel { IsAtSchool = true };
+        var sessionModel = new EventSessionModel { IsAtSchool = isAtSchool };
         var sessionServiceMock = new Mock<ISessionService>();
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
         var sut =
