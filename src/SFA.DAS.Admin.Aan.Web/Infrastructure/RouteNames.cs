@@ -19,5 +19,6 @@ public static class RouteNames
         public const string GuestSpeakerDelete = nameof(GuestSpeakerDelete);
         public const string CreateEvent = nameof(CreateEvent);
         public const string EventDateTime = nameof(EventDateTime);
+        public const string EventLocation = nameof(EventLocation);
     }
 }
