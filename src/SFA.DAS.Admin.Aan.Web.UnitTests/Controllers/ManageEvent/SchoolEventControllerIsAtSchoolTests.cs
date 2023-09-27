@@ -31,9 +31,13 @@ public class SchoolEventControllerIsAtSchoolTests
     }
 
     [Test, MoqAutoData]
-    public void Details_ReturnsExpectedPostLink(
-        [Greedy] SchoolEventController sut)
+    public void Details_ReturnsExpectedPostLink()
     {
+        var sessionModel = new EventSessionModel { IsAtSchool = true };
+        var sessionServiceMock = new Mock<ISessionService>();
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+        var sut =
+            new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<EventAtSchoolViewModel>>());
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventIsAtSchool, PostUrl);
         var result = (ViewResult)sut.GetEventIsAtSchool();
         Assert.That(result.Model, Is.TypeOf<EventAtSchoolViewModel>());
