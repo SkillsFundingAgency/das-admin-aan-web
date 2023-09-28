@@ -76,6 +76,7 @@ public class SchoolEventControllerIsAtSchoolTests
         if (isAtSchool == true)
         {
             result.RouteName.Should().Be(RouteNames.ManageEvent.EventSchoolName);
+            result.RouteName.Should().Be(RouteNames.ManageEvent.EventSchoolName);
         }
         else
         {

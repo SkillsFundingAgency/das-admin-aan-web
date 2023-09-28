@@ -102,13 +102,13 @@ public class SchoolEventController : Controller
 
     private EventSchoolNameViewModel GetViewModelEventSchoolName(EventSessionModel sessionModel)
     {
-        var searchResult = $"{sessionModel?.SchoolName} (URN: {sessionModel.Urn})";
+        var searchResult = $"{sessionModel?.SchoolName} (URN: {sessionModel?.Urn})";
 
         return new EventSchoolNameViewModel
         {
             SearchResult = searchResult,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventIsAtSchool)!,
+            PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventSchoolName)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }
