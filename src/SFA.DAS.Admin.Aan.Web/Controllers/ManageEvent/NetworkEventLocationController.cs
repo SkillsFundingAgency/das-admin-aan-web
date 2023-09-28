@@ -49,7 +49,7 @@ public class NetworkEventLocationController : Controller
 
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(submitModel.ShowLocationDropdown ? RouteNames.ManageEvent.EventIsAtSchool : RouteNames.ManageEvent.EventLocation);
+        return RedirectToRoute(submitModel.ShowLocationDropdown ? RouteNames.ManageEvent.EventIsAtSchool : RouteNames.ManageEvent.EventOrganiserName);
     }
 
     private EventLocationViewModel GetViewModel(EventSessionModel sessionModel)

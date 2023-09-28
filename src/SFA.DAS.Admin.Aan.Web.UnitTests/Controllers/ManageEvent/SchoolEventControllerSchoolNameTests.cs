@@ -93,7 +93,7 @@ public class SchoolEventControllerSchoolNameTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.Urn == urn)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.EventSchoolName);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.EventOrganiserName);
     }
 
     [Test, MoqAutoData]
