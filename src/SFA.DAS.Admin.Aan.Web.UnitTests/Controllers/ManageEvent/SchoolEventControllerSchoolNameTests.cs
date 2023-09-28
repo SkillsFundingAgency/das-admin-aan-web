@@ -30,6 +30,7 @@ public class SchoolEventControllerSchoolNameTests
         var vm = result.Model as EventSchoolNameViewModel;
         vm!.CancelLink.Should().Be(NetworkEventsUrl);
         vm.PageTitle.Should().Be(CreateEvent.PageTitle);
+        vm.SearchResult.Should().Be(" (URN: )");
     }
 
     [Test, MoqAutoData]
@@ -43,6 +44,30 @@ public class SchoolEventControllerSchoolNameTests
         var vm = result.Model as EventSchoolNameViewModel;
         vm!.PostLink.Should().Be(PostUrl);
     }
+
+
+    [TestCase("name 1", "urn 1", "name 1 (URN: urn 1)")]
+    [TestCase(null, "urn 1", " (URN: urn 1)")]
+    [TestCase("name 1", null, "name 1 (URN: )")]
+    [TestCase(null, null, " (URN: )")]
+    public void Details_ReturnsExpectedSearchTerm(string? schoolName, string? urn, string expectedResult)
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var sessionModel = new EventSessionModel { SchoolName = schoolName, Urn = urn };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<EventAtSchoolViewModel>>(), Mock.Of<IValidator<EventSchoolNameViewModel>>());
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventSchoolName, PostUrl);
+        var result = (ViewResult)sut.GetSchoolName();
+
+        Assert.That(result.Model, Is.TypeOf<EventSchoolNameViewModel>());
+        var vm = result.Model as EventSchoolNameViewModel;
+        vm!.PostLink.Should().Be(PostUrl);
+        vm.SearchResult.Should().Be(expectedResult);
+    }
+
 
     [TestCase("12345")]
     [TestCase("54321")]
