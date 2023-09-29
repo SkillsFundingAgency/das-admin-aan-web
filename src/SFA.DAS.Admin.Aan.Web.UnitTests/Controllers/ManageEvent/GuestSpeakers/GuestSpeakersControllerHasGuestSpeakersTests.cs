@@ -18,7 +18,7 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
     private static readonly string PostUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
-    public void Details_ReturnsEventGuestSpeakerViewModel(
+    public void Get_ReturnsEventGuestSpeakerViewModel(
         [Greedy] GuestSpeakersController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
@@ -31,7 +31,7 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
     }
 
     [Test, MoqAutoData]
-    public void Details_ReturnsExpectedPostLink(
+    public void Get_ReturnsExpectedPostLink(
         [Greedy] GuestSpeakersController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventHasGuestSpeakers, PostUrl);
@@ -97,5 +97,6 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<HasGuestSpeakersViewModel>());
         (result.Model as HasGuestSpeakersViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

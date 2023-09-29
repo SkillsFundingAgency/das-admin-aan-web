@@ -11,19 +11,19 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
 [Route("events/new/organiser", Name = RouteNames.ManageEvent.EventOrganiserName)]
-public class NetworkEventOrganiserNameController : Controller
+public class OrganiserDetailsController : Controller
 {
 
     private readonly ISessionService _sessionService;
-    private readonly IValidator<EventOrganiserNameViewModel> _organiserNameValidator;
+    private readonly IValidator<OrganiserDetailsViewModel> _organiserNameValidator;
 
-    public NetworkEventOrganiserNameController(ISessionService sessionService, IValidator<EventOrganiserNameViewModel> organiserNameValidator)
+    public OrganiserDetailsController(ISessionService sessionService, IValidator<OrganiserDetailsViewModel> organiserNameValidator)
     {
         _sessionService = sessionService;
         _organiserNameValidator = organiserNameValidator;
     }
 
-    public const string OrganiserNameViewPath = "~/Views/ManageEvent/EventOrganiserName.cshtml";
+    public const string OrganiserDetailsViewPath = "~/Views/ManageEvent/OrganiserDetails.cshtml";
 
 
     [HttpGet]
@@ -32,34 +32,34 @@ public class NetworkEventOrganiserNameController : Controller
         var sessionModel = _sessionService.Get<EventSessionModel>();
         var augmentedModel = GetOrganiserNameViewModel(sessionModel);
 
-        return View(OrganiserNameViewPath, augmentedModel);
+        return View(OrganiserDetailsViewPath, augmentedModel);
     }
 
     [HttpPost]
-    public IActionResult Post(EventOrganiserNameViewModel submitModel)
+    public IActionResult Post(OrganiserDetailsViewModel submitModel)
     {
         var result = _organiserNameValidator.Validate(submitModel);
+
+        if (!result.IsValid)
+        {
+            result.AddToModelState(ModelState);
+            return View(OrganiserDetailsViewPath, submitModel);
+        }
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.OrganiserName = submitModel.OrganiserName;
         sessionModel.OrganiserEmail = submitModel.OrganiserEmail;
 
-        if (!result.IsValid)
-        {
-            result.AddToModelState(ModelState);
-            return View(OrganiserNameViewPath, GetOrganiserNameViewModel(sessionModel));
-        }
-
         _sessionService.Set(sessionModel);
         return RedirectToRoute(RouteNames.ManageEvent.EventOrganiserName);
     }
 
-    private EventOrganiserNameViewModel GetOrganiserNameViewModel(EventSessionModel originalModel)
+    private OrganiserDetailsViewModel GetOrganiserNameViewModel(EventSessionModel sessionModel)
     {
-        return new EventOrganiserNameViewModel
+        return new OrganiserDetailsViewModel
         {
-            OrganiserName = originalModel.OrganiserName,
-            OrganiserEmail = originalModel.OrganiserEmail,
+            OrganiserName = sessionModel.OrganiserName,
+            OrganiserEmail = sessionModel.OrganiserEmail,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventOrganiserName)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle

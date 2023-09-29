@@ -2,9 +2,9 @@
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
+namespace SFA.DAS.Admin.Aan.Web.Validators;
 
-public class EventOrganiserNameViewModelValidator : AbstractValidator<EventOrganiserNameViewModel>
+public class OrganiserDetailsViewModelValidator : AbstractValidator<OrganiserDetailsViewModel>
 {
     public const int OrganiserNameMaximumLength = 200;
     public const string OrganiserNameEmpty = "You must include an event organiser name";
@@ -15,7 +15,7 @@ public class EventOrganiserNameViewModelValidator : AbstractValidator<EventOrgan
     public const string OrganiserEmailTooLong = "The email address of your event organiser must be 256 characters or less";
     public const string OrganiserEmailWrongFormat = "Enter an email address in the correct format. For example, name@example.com";
 
-    public EventOrganiserNameViewModelValidator()
+    public OrganiserDetailsViewModelValidator()
     {
         RuleFor(x => x.OrganiserName)
             .NotEmpty()

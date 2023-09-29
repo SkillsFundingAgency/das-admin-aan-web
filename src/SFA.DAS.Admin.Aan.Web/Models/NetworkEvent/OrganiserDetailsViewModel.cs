@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-public class EventOrganiserNameViewModel : IEventPageEditFields
+public class OrganiserDetailsViewModel : IEventPageEditFields
 {
     public string? OrganiserName { get; set; }
     public string? OrganiserEmail { get; set; }

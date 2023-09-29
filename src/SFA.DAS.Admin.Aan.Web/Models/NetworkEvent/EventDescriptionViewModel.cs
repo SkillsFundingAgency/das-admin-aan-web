@@ -1,5 +1,5 @@
 ﻿using SFA.DAS.Admin.Aan.Web.Infrastructure;
-using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
+using SFA.DAS.Admin.Aan.Web.Validators;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 

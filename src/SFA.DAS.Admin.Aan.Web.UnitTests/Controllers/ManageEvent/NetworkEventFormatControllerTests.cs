@@ -19,7 +19,7 @@ public class NetworkEventFormatControllerTests
     private static readonly string PostUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
-    public void Details_ReturnsCreateEventFormatViewModel(
+    public void Get_ReturnsCreateEventFormatViewModel(
         [Greedy] NetworkEventFormatController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
@@ -32,7 +32,7 @@ public class NetworkEventFormatControllerTests
     }
 
     [Test, MoqAutoData]
-    public void Details_ReturnsExpectedPostLink(
+    public void Get_ReturnsExpectedPostLink(
         [Greedy] NetworkEventFormatController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventFormat, PostUrl);
@@ -92,5 +92,6 @@ public class NetworkEventFormatControllerTests
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<EventFormatViewModel>());
         (result.Model as EventFormatViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

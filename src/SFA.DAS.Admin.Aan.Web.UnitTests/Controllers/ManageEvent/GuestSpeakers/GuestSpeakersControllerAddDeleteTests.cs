@@ -143,6 +143,7 @@ public class GuestSpeakersControllerAddDeleteTests
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<GuestSpeakerAddViewModel>());
         (result.Model as GuestSpeakerAddViewModel)!.CancelLink.Should().Be(GuestSpeakerListUrl);
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 
     [Test, MoqAutoData]

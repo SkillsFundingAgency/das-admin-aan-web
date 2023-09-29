@@ -20,7 +20,7 @@ public class NetworkEventLocationControllerTests
     private static readonly string PostUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
-    public void Details_ReturnsCreateEventDetailsViewModel(
+    public void Get_ReturnsCreateEventDetailsViewModel(
         [Greedy] NetworkEventLocationController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
@@ -33,7 +33,7 @@ public class NetworkEventLocationControllerTests
     }
 
     [Test, MoqAutoData]
-    public void Details_ReturnsExpectedPostLink(
+    public void Get_ReturnsExpectedPostLink(
         [Greedy] NetworkEventLocationController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventLocation, PostUrl);
@@ -96,5 +96,6 @@ public class NetworkEventLocationControllerTests
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<EventLocationViewModel>());
         (result.Model as EventLocationViewModel)!.CancelLink.Should().Be(AllNetworksUrl);
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

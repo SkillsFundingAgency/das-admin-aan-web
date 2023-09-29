@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
+namespace SFA.DAS.Admin.Aan.Web.Validators;
 
 public class EventDateTimeViewModelValidator : AbstractValidator<EventDateTimeViewModel>
 {
@@ -69,8 +69,8 @@ public class EventDateTimeViewModelValidator : AbstractValidator<EventDateTimeVi
         if (model.StartHour == null || model.StartMinutes == null || model.EndHour == null ||
             model.EndMinutes == null) return true;
 
-        var startTime = (int)((model.StartHour * 60) + model.StartMinutes);
-        var endTime = (int)((model.EndHour * 60) + model.EndMinutes);
+        var startTime = (int)(model.StartHour * 60 + model.StartMinutes);
+        var endTime = (int)(model.EndHour * 60 + model.EndMinutes);
         return startTime <= endTime;
     }
 }

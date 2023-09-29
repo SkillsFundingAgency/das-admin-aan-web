@@ -18,7 +18,7 @@ public class SchoolEventControllerIsAtSchoolTests
     private static readonly string PostUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
-    public void Details_ReturnsEventAtSchoolViewModel(
+    public void GetEventIsAtSchool_ReturnsEventAtSchoolViewModel(
         [Greedy] SchoolEventController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
@@ -33,7 +33,7 @@ public class SchoolEventControllerIsAtSchoolTests
     [TestCase(true)]
     [TestCase(false)]
     [TestCase(null)]
-    public void Details_ReturnsExpectedPostLink(bool? isAtSchool)
+    public void GetEventIsAtSchool_ReturnsExpectedPostLink(bool? isAtSchool)
     {
         var sessionModel = new EventSessionModel { IsAtSchool = isAtSchool };
         var sessionServiceMock = new Mock<ISessionService>();
@@ -103,5 +103,6 @@ public class SchoolEventControllerIsAtSchoolTests
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<EventAtSchoolViewModel>());
         (result.Model as EventAtSchoolViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

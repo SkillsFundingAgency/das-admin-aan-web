@@ -1,20 +1,20 @@
 ﻿using FluentValidation.TestHelper;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
-using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
+using SFA.DAS.Admin.Aan.Web.Validators;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators;
-public class EventOrganiserNameViewModelValidatorTests
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
+public class OrganiserDetailsViewModelValidatorTests
 {
-    [TestCase(0, EventOrganiserNameViewModelValidator.OrganiserNameEmpty, false)]
+    [TestCase(0, OrganiserDetailsViewModelValidator.OrganiserNameEmpty, false)]
     [TestCase(1, null, true)]
-    [TestCase(EventOrganiserNameViewModelValidator.OrganiserNameMaximumLength, null, true)]
-    [TestCase(EventOrganiserNameViewModelValidator.OrganiserNameMaximumLength + 1, EventOrganiserNameViewModelValidator.OrganiserNameTooLong, false)]
+    [TestCase(OrganiserDetailsViewModelValidator.OrganiserNameMaximumLength, null, true)]
+    [TestCase(OrganiserDetailsViewModelValidator.OrganiserNameMaximumLength + 1, OrganiserDetailsViewModelValidator.OrganiserNameTooLong, false)]
     public void Validate_OrganiserName(int lengthOfOrganiserName, string? errorMessage, bool isValid)
     {
-        var model = new EventOrganiserNameViewModel
+        var model = new OrganiserDetailsViewModel
         { OrganiserName = new string('x', lengthOfOrganiserName), OrganiserEmail = "test@test.com" };
 
-        var sut = new EventOrganiserNameViewModelValidator();
+        var sut = new OrganiserDetailsViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
@@ -30,9 +30,9 @@ public class EventOrganiserNameViewModelValidatorTests
 
 
 
-    [TestCase(0, EventOrganiserNameViewModelValidator.OrganiserEmailEmpty, false)]
-    [TestCase(EventOrganiserNameViewModelValidator.OrganiserEmailMaximumLength, null, true)]
-    [TestCase(EventOrganiserNameViewModelValidator.OrganiserEmailMaximumLength + 1, EventOrganiserNameViewModelValidator.OrganiserEmailTooLong, false)]
+    [TestCase(0, OrganiserDetailsViewModelValidator.OrganiserEmailEmpty, false)]
+    [TestCase(OrganiserDetailsViewModelValidator.OrganiserEmailMaximumLength, null, true)]
+    [TestCase(OrganiserDetailsViewModelValidator.OrganiserEmailMaximumLength + 1, OrganiserDetailsViewModelValidator.OrganiserEmailTooLong, false)]
     public void Validate_OrganisationEmail_EmptyAndLength(int lengthOfOrganiserEmail, string? errorMessage, bool isValid)
     {
         var organiserEmail = string.Empty;
@@ -42,10 +42,10 @@ public class EventOrganiserNameViewModelValidatorTests
             organiserEmail = "a@" + new string('x', lengthOfOrganiserEmail - 6) + ".com";
         }
 
-        var model = new EventOrganiserNameViewModel
+        var model = new OrganiserDetailsViewModel
         { OrganiserName = "test", OrganiserEmail = organiserEmail };
 
-        var sut = new EventOrganiserNameViewModelValidator();
+        var sut = new OrganiserDetailsViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
@@ -66,10 +66,10 @@ public class EventOrganiserNameViewModelValidatorTests
     [TestCase("email@email.com", true)]
     public void Validate_OrganiserEmail(string email, bool isValid)
     {
-        var model = new EventOrganiserNameViewModel
+        var model = new OrganiserDetailsViewModel
         { OrganiserName = "test", OrganiserEmail = email };
 
-        var sut = new EventOrganiserNameViewModelValidator();
+        var sut = new OrganiserDetailsViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (isValid)

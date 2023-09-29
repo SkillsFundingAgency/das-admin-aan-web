@@ -101,5 +101,6 @@ public class NetworkEventDateTimeControllerTests
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<EventDateTimeViewModel>());
         (result.Model as EventDateTimeViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

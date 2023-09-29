@@ -14,33 +14,33 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent;
 
-public class NetworkEventOrganiserNameControllerTests
+public class OrganiserDetailsControllerTests
 {
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
-    public void Details_ReturnsCreateEventDetailsViewModel(
-        [Greedy] NetworkEventOrganiserNameController sut)
+    public void Get_ReturnsCreateEventDetailsViewModel(
+        [Greedy] OrganiserDetailsController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
         var result = (ViewResult)sut.Get();
 
-        Assert.That(result.Model, Is.TypeOf<EventOrganiserNameViewModel>());
-        var vm = result.Model as EventOrganiserNameViewModel;
+        Assert.That(result.Model, Is.TypeOf<OrganiserDetailsViewModel>());
+        var vm = result.Model as OrganiserDetailsViewModel;
         vm!.CancelLink.Should().Be(AllNetworksUrl);
         vm.PageTitle.Should().Be(CreateEvent.PageTitle);
     }
 
     [Test, MoqAutoData]
-    public void Details_ReturnsExpectedPostLink(
-        [Greedy] NetworkEventOrganiserNameController sut)
+    public void Get_ReturnsExpectedPostLink(
+        [Greedy] OrganiserDetailsController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventOrganiserName, PostUrl);
         var result = (ViewResult)sut.Get();
 
-        Assert.That(result.Model, Is.TypeOf<EventOrganiserNameViewModel>());
-        var vm = result.Model as EventOrganiserNameViewModel;
+        Assert.That(result.Model, Is.TypeOf<OrganiserDetailsViewModel>());
+        var vm = result.Model as OrganiserDetailsViewModel;
         vm!.PostLink.Should().Be(PostUrl);
     }
 
@@ -50,18 +50,18 @@ public class NetworkEventOrganiserNameControllerTests
     public void Post_SetEventDetailsOnSessionModel(string organiserName, string? organiserEmail)
     {
         var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<EventOrganiserNameViewModel>>();
+        var validatorMock = new Mock<IValidator<OrganiserDetailsViewModel>>();
 
         var sessionModel = new EventSessionModel();
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new EventOrganiserNameViewModel { OrganiserName = organiserName, OrganiserEmail = organiserEmail };
+        var submitModel = new OrganiserDetailsViewModel { OrganiserName = organiserName, OrganiserEmail = organiserEmail };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
 
-        var sut = new NetworkEventOrganiserNameController(sessionServiceMock.Object, validatorMock.Object);
+        var sut = new OrganiserDetailsController(sessionServiceMock.Object, validatorMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
@@ -75,21 +75,16 @@ public class NetworkEventOrganiserNameControllerTests
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventLocation_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] NetworkEventOrganiserNameController sut)
+        [Greedy] OrganiserDetailsController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
-
-        var sessionModel = new EventSessionModel();
-
-        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
-
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new EventOrganiserNameViewModel();
+        var submitModel = new OrganiserDetailsViewModel { CancelLink = AllNetworksUrl };
         var result = (ViewResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<EventOrganiserNameViewModel>());
-        (result.Model as EventOrganiserNameViewModel)!.CancelLink.Should().Be(AllNetworksUrl);
+        Assert.That(result.Model, Is.TypeOf<OrganiserDetailsViewModel>());
+        (result.Model as OrganiserDetailsViewModel)!.CancelLink.Should().Be(AllNetworksUrl);
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }
