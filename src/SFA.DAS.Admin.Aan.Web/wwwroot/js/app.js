@@ -77,3 +77,72 @@ let autoCompletes = document.querySelectorAll('[data-module="autoComplete"]')
 nodeListForEach(autoCompletes, function (autoComplete) {
     new AutoComplete(autoComplete).init()
 })
+
+
+
+
+
+function AutoCompleteSchool(selectField) {
+    this.selectElement = selectField
+}
+
+AutoCompleteSchool.prototype.init = function () {
+    this.autoCompleteSchool()
+}
+
+AutoCompleteSchool.prototype.getSuggestions = function (query, updateResults) {
+    let results = [];
+    let apiUrl = "/schools?query=" + query
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            let jsonResponse = JSON.parse(xhr.responseText);
+            results = jsonResponse.map(function (result) {
+                return result
+            });
+            updateResults(results);
+        }
+    }
+    xhr.open("GET", apiUrl, true);
+    xhr.send();
+}
+
+AutoCompleteSchool.prototype.onConfirm = function (option) {
+    // Populate form fields with selected option
+    document.getElementById("Name").value = option.name
+    document.getElementById("Urn").value = option.urn
+}
+
+function inputValueSchoolTemplate(result) {
+    return result && [result.name, result.urn].filter(element => element).join(' URN: ')
+}
+
+function suggestionSchoolTemplate(result) {
+    return result && [result.name, result.urn].filter(element => element).join(' URN: ')
+}
+
+AutoCompleteSchool.prototype.autoCompleteSchool = function () {
+    let that = this
+    accessibleAutocomplete.enhanceSelectElement({
+        selectElement: that.selectElement,
+        minLength: 2,
+        autoselect: false,
+        defaultValue: '',
+        displayMenu: 'overlay',
+        placeholder: '',
+        source: that.getSuggestions,
+        showAllValues: false,
+        confirmOnBlur: false,
+        onConfirm: that.onConfirm,
+        templates: {
+            inputValue: inputValueSchoolTemplate,
+            suggestion: suggestionSchoolTemplate
+        }
+    });
+}
+
+let autoCompletesSchool = document.querySelectorAll('[data-module="autoCompleteSchool"]')
+
+nodeListForEach(autoCompletesSchool, function (autoCompleteSchool) {
+    new AutoCompleteSchool(autoCompleteSchool).init()
+})

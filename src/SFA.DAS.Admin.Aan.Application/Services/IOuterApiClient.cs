@@ -4,6 +4,7 @@ using SFA.DAS.Admin.Aan.Application.OuterApi.Admins;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Locations;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Schools;
 using Calendar = SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Calendar;
 
 namespace SFA.DAS.Admin.Aan.Application.Services;
@@ -24,4 +25,7 @@ public interface IOuterApiClient
 
     [Post("admins")]
     Task<LookupAdminMemberResult> GetAdminMember([Body] LookupAdminMemberRequest request, CancellationToken cancellationToken);
+
+    [Get("/Schools/find/{searchTerm}")]
+    Task<GetSchoolsResult> GetSchools([Path("searchTerm")] string searchTerm, CancellationToken cancellationToken);
 }

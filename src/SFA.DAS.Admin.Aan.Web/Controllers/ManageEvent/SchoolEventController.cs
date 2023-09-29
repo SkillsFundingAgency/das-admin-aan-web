@@ -15,13 +15,16 @@ public class SchoolEventController : Controller
 {
     private readonly ISessionService _sessionService;
     private readonly IValidator<EventAtSchoolViewModel> _eventAtSchoolValidator;
+    private readonly IValidator<EventSchoolNameViewModel> _eventSchoolNameValidator;
 
     public const string EventAtSchoolViewPath = "~/Views/ManageEvent/EventIsAtSchool.cshtml";
+    public const string EventSchoolNameViewPath = "~/Views/ManageEvent/EventSchoolName.cshtml";
 
-    public SchoolEventController(ISessionService sessionService, IValidator<EventAtSchoolViewModel> eventAtSchoolValidator)
+    public SchoolEventController(ISessionService sessionService, IValidator<EventAtSchoolViewModel> eventAtSchoolValidator, IValidator<EventSchoolNameViewModel> eventSchoolNameValidator)
     {
         _sessionService = sessionService;
         _eventAtSchoolValidator = eventAtSchoolValidator;
+        _eventSchoolNameValidator = eventSchoolNameValidator;
     }
 
     [HttpGet]
@@ -51,8 +54,39 @@ public class SchoolEventController : Controller
         sessionModel.IsAtSchool = submitModel.IsAtSchool;
         _sessionService.Set(sessionModel);
 
-        if (sessionModel.IsAtSchool == true) return RedirectToRoute(RouteNames.ManageEvent.EventIsAtSchool);
+        if (sessionModel.IsAtSchool == true) return RedirectToRoute(RouteNames.ManageEvent.EventSchoolName);
         return RedirectToRoute(RouteNames.ManageEvent.EventIsAtSchool);
+    }
+
+    [HttpGet]
+    [Route("name", Name = RouteNames.ManageEvent.EventSchoolName)]
+    public IActionResult GetSchoolName()
+    {
+        var sessionModel = _sessionService.Get<EventSessionModel>();
+        var model = GetViewModelEventSchoolName(sessionModel);
+        return View(EventSchoolNameViewPath, model);
+    }
+
+    [HttpPost]
+    [Route("name", Name = RouteNames.ManageEvent.EventSchoolName)]
+    public IActionResult PostSchoolName(EventSchoolNameViewModel submitModel)
+    {
+        var sessionModel = _sessionService.Get<EventSessionModel>();
+
+        sessionModel.SchoolName = submitModel.Name;
+        sessionModel.Urn = submitModel.Urn;
+
+        var result = _eventSchoolNameValidator.Validate(submitModel);
+
+        if (!result.IsValid)
+        {
+            result.AddToModelState(ModelState);
+            return View(EventSchoolNameViewPath, GetViewModelEventSchoolName(sessionModel));
+        }
+
+        _sessionService.Set(sessionModel);
+
+        return RedirectToRoute(RouteNames.ManageEvent.EventSchoolName);
     }
 
     private EventAtSchoolViewModel GetViewModelEventIsAtSchool(EventSessionModel sessionModel)
@@ -62,6 +96,19 @@ public class SchoolEventController : Controller
             IsAtSchool = sessionModel?.IsAtSchool,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventIsAtSchool)!,
+            PageTitle = Application.Constants.CreateEvent.PageTitle
+        };
+    }
+
+    private EventSchoolNameViewModel GetViewModelEventSchoolName(EventSessionModel sessionModel)
+    {
+        var searchResult = $"{sessionModel?.SchoolName} (URN: {sessionModel?.Urn})";
+
+        return new EventSchoolNameViewModel
+        {
+            SearchResult = searchResult,
+            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventSchoolName)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }
