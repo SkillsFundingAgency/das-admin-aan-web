@@ -28,8 +28,6 @@ public class OrganiserDetailsViewModelValidatorTests
         }
     }
 
-
-
     [TestCase(0, OrganiserDetailsViewModelValidator.OrganiserEmailEmpty, false)]
     [TestCase(OrganiserDetailsViewModelValidator.OrganiserEmailMaximumLength, null, true)]
     [TestCase(OrganiserDetailsViewModelValidator.OrganiserEmailMaximumLength + 1, OrganiserDetailsViewModelValidator.OrganiserEmailTooLong, false)]
