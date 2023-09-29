@@ -7,7 +7,7 @@ using Moq;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -34,7 +34,7 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
     public void Get_ReturnsExpectedPostLink(
         [Greedy] GuestSpeakersController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventHasGuestSpeakers, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.HasGuestSpeakers, PostUrl);
         var result = (ViewResult)sut.GetHasGuestSpeakers();
         Assert.That(result.Model, Is.TypeOf<HasGuestSpeakersViewModel>());
         var vm = result.Model as HasGuestSpeakersViewModel;
@@ -73,7 +73,7 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
         }
         else
         {
-            result.RouteName.Should().Be(RouteNames.ManageEvent.EventDateTime);
+            result.RouteName.Should().Be(RouteNames.ManageEvent.DateTime);
         }
     }
 

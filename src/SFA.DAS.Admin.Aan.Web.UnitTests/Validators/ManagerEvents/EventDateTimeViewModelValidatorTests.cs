@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using FluentValidation.TestHelper;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
-using SFA.DAS.Admin.Aan.Web.Validators;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
+using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
 public class EventDateTimeViewModelValidatorTests
@@ -11,7 +11,7 @@ public class EventDateTimeViewModelValidatorTests
     {
         var model = GetHydratedModel();
 
-        var sut = new EventDateTimeViewModelValidator();
+        var sut = new DateAndTimeViewModelValidator();
         var result = sut.TestValidate(model);
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -22,11 +22,11 @@ public class EventDateTimeViewModelValidatorTests
         var model = GetHydratedModel();
         model.DateOfEvent = null;
 
-        var sut = new EventDateTimeViewModelValidator();
+        var sut = new DateAndTimeViewModelValidator();
         var result = sut.TestValidate(model);
 
         result.ShouldHaveValidationErrorFor(c => c.DateOfEvent)
-            .WithErrorMessage(EventDateTimeViewModelValidator.EventDateEmpty);
+            .WithErrorMessage(DateAndTimeViewModelValidator.EventDateEmpty);
     }
 
     [Test]
@@ -35,24 +35,24 @@ public class EventDateTimeViewModelValidatorTests
         var model = GetHydratedModel();
         model.DateOfEvent = DateTime.Today.AddDays(-1);
 
-        var sut = new EventDateTimeViewModelValidator();
+        var sut = new DateAndTimeViewModelValidator();
         var result = sut.TestValidate(model);
 
         result.ShouldHaveValidationErrorFor(c => c.DateOfEvent)
-            .WithErrorMessage(EventDateTimeViewModelValidator.EventDateInPast);
+            .WithErrorMessage(DateAndTimeViewModelValidator.EventDateInPast);
     }
 
 
-    [TestCase(null, null, null, null, EventDateTimeViewModelValidator.EventStartHourAndMinutesEmpty, EventDateTimeViewModelValidator.EventEndHourAndMinutesEmpty)]
-    [TestCase(12, null, null, null, EventDateTimeViewModelValidator.EventStartMinutesEmpty, EventDateTimeViewModelValidator.EventEndHourAndMinutesEmpty)]
-    [TestCase(null, 30, null, null, EventDateTimeViewModelValidator.EventStartHourEmpty, EventDateTimeViewModelValidator.EventEndHourAndMinutesEmpty)]
-    [TestCase(null, null, 13, null, EventDateTimeViewModelValidator.EventStartHourAndMinutesEmpty, EventDateTimeViewModelValidator.EventEndMinutesEmpty)]
-    [TestCase(null, null, null, 0, EventDateTimeViewModelValidator.EventStartHourAndMinutesEmpty, EventDateTimeViewModelValidator.EventEndHourEmpty)]
-    [TestCase(12, 30, 11, 0, null, EventDateTimeViewModelValidator.EventEndTimeBeforeStartTime)]
-    [TestCase(12, 30, 1, null, null, EventDateTimeViewModelValidator.EventEndMinutesEmpty)]
-    [TestCase(12, 30, null, 30, null, EventDateTimeViewModelValidator.EventEndHourEmpty)]
-    [TestCase(12, null, 1, 30, EventDateTimeViewModelValidator.EventStartMinutesEmpty, null)]
-    [TestCase(null, 30, 1, 30, EventDateTimeViewModelValidator.EventStartHourEmpty, null)]
+    [TestCase(null, null, null, null, DateAndTimeViewModelValidator.EventStartHourAndMinutesEmpty, DateAndTimeViewModelValidator.EventEndHourAndMinutesEmpty)]
+    [TestCase(12, null, null, null, DateAndTimeViewModelValidator.EventStartMinutesEmpty, DateAndTimeViewModelValidator.EventEndHourAndMinutesEmpty)]
+    [TestCase(null, 30, null, null, DateAndTimeViewModelValidator.EventStartHourEmpty, DateAndTimeViewModelValidator.EventEndHourAndMinutesEmpty)]
+    [TestCase(null, null, 13, null, DateAndTimeViewModelValidator.EventStartHourAndMinutesEmpty, DateAndTimeViewModelValidator.EventEndMinutesEmpty)]
+    [TestCase(null, null, null, 0, DateAndTimeViewModelValidator.EventStartHourAndMinutesEmpty, DateAndTimeViewModelValidator.EventEndHourEmpty)]
+    [TestCase(12, 30, 11, 0, null, DateAndTimeViewModelValidator.EventEndTimeBeforeStartTime)]
+    [TestCase(12, 30, 1, null, null, DateAndTimeViewModelValidator.EventEndMinutesEmpty)]
+    [TestCase(12, 30, null, 30, null, DateAndTimeViewModelValidator.EventEndHourEmpty)]
+    [TestCase(12, null, 1, 30, DateAndTimeViewModelValidator.EventStartMinutesEmpty, null)]
+    [TestCase(null, 30, 1, 30, DateAndTimeViewModelValidator.EventStartHourEmpty, null)]
     [TestCase(12, 30, 13, 0, null, null)]
     [TestCase(12, 30, 12, 30, null, null)]
     public void Validate_StartAndEndTime_CheckForInvalidDetails(int? startHour, int? startMinutes, int? endHour, int? endMinutes,
@@ -64,7 +64,7 @@ public class EventDateTimeViewModelValidatorTests
         model.EndHour = endHour;
         model.EndMinutes = endMinutes;
 
-        var sut = new EventDateTimeViewModelValidator();
+        var sut = new DateAndTimeViewModelValidator();
         var result = sut.TestValidate(model);
 
         var numberOfErrorsExpected = 0;
@@ -87,9 +87,9 @@ public class EventDateTimeViewModelValidatorTests
     }
 
 
-    private static EventDateTimeViewModel GetHydratedModel()
+    private static DateAndTimeViewModel GetHydratedModel()
     {
-        return new EventDateTimeViewModel
+        return new DateAndTimeViewModel
         {
             DateOfEvent = DateTime.Today.AddDays(1),
             StartHour = 12,

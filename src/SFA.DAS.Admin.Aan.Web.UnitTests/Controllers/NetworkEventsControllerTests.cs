@@ -9,7 +9,7 @@ using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers;
 using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;

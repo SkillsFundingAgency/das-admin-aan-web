@@ -1,28 +1,28 @@
 ﻿using FluentValidation.TestHelper;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
-using SFA.DAS.Admin.Aan.Web.Validators;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
+using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
 public class EventTypeViewModelValidatorTests
 {
-    [TestCase(null, false, EventTypeViewModelValidator.EventTitleEmpty)]
+    [TestCase(null, false, TypeViewModelValidator.EventTitleEmpty)]
     [TestCase("title 1", true, null)]
 
-    [TestCase("title @", false, EventTypeViewModelValidator.EventTitleHasExcludedCharacter)]
-    [TestCase("title #", false, EventTypeViewModelValidator.EventTitleHasExcludedCharacter)]
-    [TestCase("title $", false, EventTypeViewModelValidator.EventTitleHasExcludedCharacter)]
-    [TestCase("title ^", false, EventTypeViewModelValidator.EventTitleHasExcludedCharacter)]
-    [TestCase("title =", false, EventTypeViewModelValidator.EventTitleHasExcludedCharacter)]
-    [TestCase("title +", false, EventTypeViewModelValidator.EventTitleHasExcludedCharacter)]
-    [TestCase("title \\", false, EventTypeViewModelValidator.EventTitleHasExcludedCharacter)]
-    [TestCase("title /", false, EventTypeViewModelValidator.EventTitleHasExcludedCharacter)]
-    [TestCase("title <", false, EventTypeViewModelValidator.EventTitleHasExcludedCharacter)]
-    [TestCase("title >", false, EventTypeViewModelValidator.EventTitleHasExcludedCharacter)]
+    [TestCase("title @", false, TypeViewModelValidator.EventTitleHasExcludedCharacter)]
+    [TestCase("title #", false, TypeViewModelValidator.EventTitleHasExcludedCharacter)]
+    [TestCase("title $", false, TypeViewModelValidator.EventTitleHasExcludedCharacter)]
+    [TestCase("title ^", false, TypeViewModelValidator.EventTitleHasExcludedCharacter)]
+    [TestCase("title =", false, TypeViewModelValidator.EventTitleHasExcludedCharacter)]
+    [TestCase("title +", false, TypeViewModelValidator.EventTitleHasExcludedCharacter)]
+    [TestCase("title \\", false, TypeViewModelValidator.EventTitleHasExcludedCharacter)]
+    [TestCase("title /", false, TypeViewModelValidator.EventTitleHasExcludedCharacter)]
+    [TestCase("title <", false, TypeViewModelValidator.EventTitleHasExcludedCharacter)]
+    [TestCase("title >", false, TypeViewModelValidator.EventTitleHasExcludedCharacter)]
     public void Validate_EmptyEventTitle_Check(string? title, bool isValid, string? errorMessage)
     {
-        var model = new EventTypeViewModel { EventTitle = title, EventRegionId = 1, EventTypeId = 2 };
+        var model = new TypeViewModel { EventTitle = title, EventRegionId = 1, EventTypeId = 2 };
 
-        var sut = new EventTypeViewModelValidator();
+        var sut = new TypeViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
@@ -40,15 +40,15 @@ public class EventTypeViewModelValidatorTests
     [TestCase(null, false)]
     public void Validate_EventType_Check(int? eventTypeId, bool isValid)
     {
-        var model = new EventTypeViewModel { EventTitle = "title", EventRegionId = 1, EventTypeId = eventTypeId };
+        var model = new TypeViewModel { EventTitle = "title", EventRegionId = 1, EventTypeId = eventTypeId };
 
-        var sut = new EventTypeViewModelValidator();
+        var sut = new TypeViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
         {
             result.ShouldHaveValidationErrorFor(c => c.EventTypeId)
-                .WithErrorMessage(EventTypeViewModelValidator.EventTypeEmpty);
+                .WithErrorMessage(TypeViewModelValidator.EventTypeEmpty);
         }
         else
         {
@@ -61,15 +61,15 @@ public class EventTypeViewModelValidatorTests
     [TestCase(null, false)]
     public void Validate_RegionId_Check(int? regionId, bool isValid)
     {
-        var model = new EventTypeViewModel { EventTitle = "title", EventRegionId = regionId, EventTypeId = 1 };
+        var model = new TypeViewModel { EventTitle = "title", EventRegionId = regionId, EventTypeId = 1 };
 
-        var sut = new EventTypeViewModelValidator();
+        var sut = new TypeViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
         {
             result.ShouldHaveValidationErrorFor(c => c.EventRegionId)
-                .WithErrorMessage(EventTypeViewModelValidator.EventRegionEmpty);
+                .WithErrorMessage(TypeViewModelValidator.EventRegionEmpty);
         }
         else
         {

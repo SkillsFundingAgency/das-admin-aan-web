@@ -12,16 +12,16 @@ public static class RouteNames
     {
         public const string EventFormat = nameof(EventFormat);
         public const string EventType = nameof(EventType);
-        public const string EventDescription = nameof(EventDescription);
-        public const string EventHasGuestSpeakers = nameof(EventHasGuestSpeakers);
+        public const string Description = nameof(Description);
+        public const string HasGuestSpeakers = nameof(HasGuestSpeakers);
         public const string GuestSpeakerList = nameof(GuestSpeakerList);
         public const string GuestSpeakerAdd = nameof(GuestSpeakerAdd);
         public const string GuestSpeakerDelete = nameof(GuestSpeakerDelete);
         public const string CreateEvent = nameof(CreateEvent);
-        public const string EventDateTime = nameof(EventDateTime);
-        public const string EventLocation = nameof(EventLocation);
-        public const string EventIsAtSchool = nameof(EventIsAtSchool);
-        public const string EventSchoolName = nameof(EventSchoolName);
-        public const string EventOrganiserName = nameof(EventOrganiserName);
+        public const string DateTime = nameof(DateTime);
+        public const string Location = nameof(Location);
+        public const string IsAtSchool = nameof(IsAtSchool);
+        public const string SchoolName = nameof(SchoolName);
+        public const string OrganiserName = nameof(OrganiserName);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Models;
 public class RegionSelectionTests

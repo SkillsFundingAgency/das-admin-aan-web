@@ -7,7 +7,7 @@ using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 using SFA.DAS.Admin.Aan.Web.Services;
 using Region = SFA.DAS.Admin.Aan.Application.OuterApi.Regions.Region;

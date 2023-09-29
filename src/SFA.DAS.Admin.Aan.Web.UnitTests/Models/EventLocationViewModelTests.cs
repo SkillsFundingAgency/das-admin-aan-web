@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using SFA.DAS.Admin.Aan.Application.Constants;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Models;
 public class EventLocationViewModelTests
@@ -44,7 +44,7 @@ public class EventLocationViewModelTests
     [TestCase(null, null, null, null, County, Postcode, $"{County}, {Postcode}")]
     public void ViewModel_LocationNameIsChecked(string? organisationName, string? address1, string? address2, string? town, string? county, string? postcode, string? locationName)
     {
-        var model = new EventLocationViewModel
+        var model = new LocationViewModel
         {
             OrganisationName = organisationName,
             AddressLine1 = address1,
@@ -67,7 +67,7 @@ public class EventLocationViewModelTests
     {
         var longitude = new Random().NextDouble();
         var latitude = new Random().NextDouble();
-        var model = new EventLocationViewModel { EventFormat = eventFormat, Longitude = longitude, Latitude = latitude };
+        var model = new LocationViewModel { EventFormat = eventFormat, Longitude = longitude, Latitude = latitude };
         model.ShowOnlineEventLink.Should().Be(expectedValue);
         model.Latitude.Should().Be(latitude);
         model.Longitude.Should().Be(longitude);
@@ -79,7 +79,7 @@ public class EventLocationViewModelTests
     [TestCase(EventFormat.InPerson, true)]
     public void ViewModel_ShowLocationDropdown(EventFormat? eventFormat, bool expectedValue)
     {
-        var model = new EventLocationViewModel { EventFormat = eventFormat };
+        var model = new LocationViewModel { EventFormat = eventFormat };
         model.ShowLocationDropdown.Should().Be(expectedValue);
     }
 }

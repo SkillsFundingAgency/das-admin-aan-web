@@ -1,7 +1,8 @@
 ﻿using FluentAssertions;
 using FluentValidation.TestHelper;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
-using SFA.DAS.Admin.Aan.Web.Validators;
+using SFA.DAS.Admin.Aan.Application.Constants;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
+using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
 
@@ -26,8 +27,8 @@ internal class GuestSpeakerAddViewModelValidatorTests
 
     [TestCase(0, GuestSpeakerAddViewModelValidator.NameEmpty, false)]
     [TestCase(1, null, true)]
-    [TestCase(GuestSpeakerAddViewModelValidator.GuestSpeakerMaximumLength, null, true)]
-    [TestCase(GuestSpeakerAddViewModelValidator.GuestSpeakerMaximumLength + 1,
+    [TestCase(ManageEventValidation.GuestSpeakerMaximumLength, null, true)]
+    [TestCase(ManageEventValidation.GuestSpeakerMaximumLength + 1,
         GuestSpeakerAddViewModelValidator.NameTooLong, false)]
     public void Validate_GuestSpeakerName(int name, string? errorMessage, bool isValid)
     {
@@ -79,8 +80,8 @@ internal class GuestSpeakerAddViewModelValidatorTests
 
     [TestCase(0, GuestSpeakerAddViewModelValidator.JobRoleAndOrganisationEmpty, false)]
     [TestCase(1, null, true)]
-    [TestCase(GuestSpeakerAddViewModelValidator.GuestSpeakerMaximumLength, null, true)]
-    [TestCase(GuestSpeakerAddViewModelValidator.GuestSpeakerMaximumLength + 1,
+    [TestCase(ManageEventValidation.GuestSpeakerMaximumLength, null, true)]
+    [TestCase(ManageEventValidation.GuestSpeakerMaximumLength + 1,
        GuestSpeakerAddViewModelValidator.JobRoleAndOrganisationTooLong, false)]
     public void Validate_GuestRoleAndDescription(int jobRoleAndDescriptionLength, string? errorMessage, bool isValid)
     {

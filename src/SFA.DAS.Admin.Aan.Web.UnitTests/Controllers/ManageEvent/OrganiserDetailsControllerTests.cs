@@ -8,7 +8,7 @@ using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -36,7 +36,7 @@ public class OrganiserDetailsControllerTests
     public void Get_ReturnsExpectedPostLink(
         [Greedy] OrganiserDetailsController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventOrganiserName, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.OrganiserName, PostUrl);
         var result = (ViewResult)sut.Get();
 
         Assert.That(result.Model, Is.TypeOf<OrganiserDetailsViewModel>());
@@ -69,7 +69,7 @@ public class OrganiserDetailsControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.OrganiserName == organiserName && m.OrganiserEmail == organiserEmail)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.EventOrganiserName);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.OrganiserName);
     }
 
     [Test, MoqAutoData]

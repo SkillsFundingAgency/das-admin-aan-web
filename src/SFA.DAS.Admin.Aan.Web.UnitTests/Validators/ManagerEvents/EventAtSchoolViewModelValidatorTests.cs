@@ -1,6 +1,6 @@
 ﻿using FluentValidation.TestHelper;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
-using SFA.DAS.Admin.Aan.Web.Validators;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
+using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
 
@@ -12,15 +12,15 @@ public class EventAtSchoolViewModelValidatorTests
     [TestCase(null, false)]
     public void Validate_EventAtSchool_Check(bool? isAtSchool, bool isValid)
     {
-        var model = new EventAtSchoolViewModel { IsAtSchool = isAtSchool };
+        var model = new IsAtSchoolViewModel { IsAtSchool = isAtSchool };
 
-        var sut = new EventAtSchoolViewModelValidator();
+        var sut = new IsAtSchoolViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
         {
             result.ShouldHaveValidationErrorFor(c => c.IsAtSchool)
-                .WithErrorMessage(EventAtSchoolViewModelValidator.EventAtSchoolEmpty);
+                .WithErrorMessage(IsAtSchoolViewModelValidator.EventAtSchoolEmpty);
         }
         else
         {

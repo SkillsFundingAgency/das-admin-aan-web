@@ -7,7 +7,7 @@ using Moq;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -24,8 +24,8 @@ public class SchoolEventControllerIsAtSchoolTests
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var result = (ViewResult)sut.GetEventIsAtSchool();
 
-        Assert.That(result.Model, Is.TypeOf<EventAtSchoolViewModel>());
-        var vm = result.Model as EventAtSchoolViewModel;
+        Assert.That(result.Model, Is.TypeOf<IsAtSchoolViewModel>());
+        var vm = result.Model as IsAtSchoolViewModel;
         vm!.CancelLink.Should().Be(NetworkEventsUrl);
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
@@ -39,11 +39,11 @@ public class SchoolEventControllerIsAtSchoolTests
         var sessionServiceMock = new Mock<ISessionService>();
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
         var sut =
-            new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<EventAtSchoolViewModel>>(), Mock.Of<IValidator<EventSchoolNameViewModel>>());
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventIsAtSchool, PostUrl);
+            new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<IsAtSchoolViewModel>>(), Mock.Of<IValidator<SchoolNameViewModel>>());
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.IsAtSchool, PostUrl);
         var result = (ViewResult)sut.GetEventIsAtSchool();
-        Assert.That(result.Model, Is.TypeOf<EventAtSchoolViewModel>());
-        var vm = result.Model as EventAtSchoolViewModel;
+        Assert.That(result.Model, Is.TypeOf<IsAtSchoolViewModel>());
+        var vm = result.Model as IsAtSchoolViewModel;
         vm!.PostLink.Should().Be(PostUrl);
     }
 
@@ -53,18 +53,18 @@ public class SchoolEventControllerIsAtSchoolTests
     public void Post_SetEventIsAtSchoolOnSessionModel(bool? isAtSchool)
     {
         var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<EventAtSchoolViewModel>>();
+        var validatorMock = new Mock<IValidator<IsAtSchoolViewModel>>();
 
         var sessionModel = new EventSessionModel();
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new EventAtSchoolViewModel { IsAtSchool = isAtSchool };
+        var submitModel = new IsAtSchoolViewModel { IsAtSchool = isAtSchool };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
 
-        var sut = new SchoolEventController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<EventSchoolNameViewModel>>());
+        var sut = new SchoolEventController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<SchoolNameViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
@@ -75,11 +75,11 @@ public class SchoolEventControllerIsAtSchoolTests
             s.Set(It.Is<EventSessionModel>(m => m.IsAtSchool == isAtSchool)));
         if (isAtSchool == true)
         {
-            result.RouteName.Should().Be(RouteNames.ManageEvent.EventSchoolName);
+            result.RouteName.Should().Be(RouteNames.ManageEvent.SchoolName);
         }
         else
         {
-            result.RouteName.Should().Be(RouteNames.ManageEvent.EventOrganiserName);
+            result.RouteName.Should().Be(RouteNames.ManageEvent.OrganiserName);
         }
     }
 
@@ -96,13 +96,13 @@ public class SchoolEventControllerIsAtSchoolTests
 
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new EventAtSchoolViewModel();
+        var submitModel = new IsAtSchoolViewModel();
 
         var result = (ViewResult)sut.PostHasGuestSpeakers(submitModel);
 
         sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<EventAtSchoolViewModel>());
-        (result.Model as EventAtSchoolViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        Assert.That(result.Model, Is.TypeOf<IsAtSchoolViewModel>());
+        (result.Model as IsAtSchoolViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }
