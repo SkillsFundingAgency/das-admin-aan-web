@@ -4,5 +4,4 @@ public class GuestSpeakerAddViewModel : EventPageEditFields
 {
     public string? Name { get; set; }
     public string? JobRoleAndOrganisation { get; set; }
-    public int? Id { get; set; }
 }

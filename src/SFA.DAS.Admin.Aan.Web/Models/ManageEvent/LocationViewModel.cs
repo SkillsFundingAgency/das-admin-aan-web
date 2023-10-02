@@ -33,10 +33,6 @@ public class LocationViewModel : EventPageEditFields
         return string.Join(", ", locationDetails);
     }
 
-    public string? PageTitle { get; set; }
-    public string? PostLink { get; set; }
-    public string? CancelLink { get; set; }
-
 
     public string? SearchTerm { get; set; }
     public string? OrganisationName { get; set; }
