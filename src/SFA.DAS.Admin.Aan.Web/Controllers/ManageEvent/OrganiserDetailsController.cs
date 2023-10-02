@@ -10,7 +10,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/organiser", Name = RouteNames.ManageEvent.OrganiserName)]
+[Route("events/new/organiser", Name = RouteNames.ManageEvent.OrganiserDetails)]
 public class OrganiserDetailsController : Controller
 {
 
@@ -51,7 +51,7 @@ public class OrganiserDetailsController : Controller
         sessionModel.OrganiserEmail = submitModel.OrganiserEmail;
 
         _sessionService.Set(sessionModel);
-        return RedirectToRoute(RouteNames.ManageEvent.OrganiserName);
+        return RedirectToRoute(RouteNames.ManageEvent.NumberOfAttendees);
     }
 
     private OrganiserDetailsViewModel GetOrganiserNameViewModel(EventSessionModel sessionModel)
@@ -61,7 +61,7 @@ public class OrganiserDetailsController : Controller
             OrganiserName = sessionModel.OrganiserName,
             OrganiserEmail = sessionModel.OrganiserEmail,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.OrganiserName)!,
+            PostLink = Url.RouteUrl(RouteNames.ManageEvent.OrganiserDetails)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }

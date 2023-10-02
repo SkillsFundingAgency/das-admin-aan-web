@@ -9,20 +9,22 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
-[Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/location", Name = RouteNames.ManageEvent.Location)]
-public class LocationController : Controller
-{
-    public const string ViewPath = "~/Views/ManageEvent/Location.cshtml";
-    private readonly ISessionService _sessionService;
-    private readonly IValidator<LocationViewModel> _validator;
 
-    public LocationController(ISessionService sessionService, IValidator<LocationViewModel> validator)
+[Authorize(Roles = Roles.ManageEventsRole)]
+[Route("events/new/attendees", Name = RouteNames.ManageEvent.NumberOfAttendees)]
+public class NumberOfAttendeesController : Controller
+{
+    private readonly ISessionService _sessionService;
+    private readonly IValidator<NumberOfAttendeesViewModel> _validator;
+
+    public const string ViewPath = "~/Views/ManageEvent/NumberOfAttendees.cshtml";
+    public NumberOfAttendeesController(ISessionService sessionService, IValidator<NumberOfAttendeesViewModel> validator)
     {
         _sessionService = sessionService;
         _validator = validator;
     }
 
+    [Authorize(Roles = Roles.ManageEventsRole)]
     [HttpGet]
     public IActionResult Get()
     {
@@ -32,9 +34,10 @@ public class LocationController : Controller
     }
 
     [HttpPost]
-    public IActionResult Post(LocationViewModel submitModel)
+    public IActionResult Post(NumberOfAttendeesViewModel submitModel)
     {
         var result = _validator.Validate(submitModel);
+
 
         if (!result.IsValid)
         {
@@ -43,24 +46,19 @@ public class LocationController : Controller
         }
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
-
-        sessionModel.EventLocation = submitModel.EventLocation;
-        sessionModel.OnlineEventLink = submitModel.OnlineEventLink;
+        sessionModel.NumberOfAttendees = submitModel.NumberOfAttendees;
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(submitModel.ShowLocationDropdown ? RouteNames.ManageEvent.IsAtSchool : RouteNames.ManageEvent.OrganiserDetails);
+        return RedirectToRoute(RouteNames.ManageEvent.NumberOfAttendees);
     }
 
-    private LocationViewModel GetViewModel(EventSessionModel sessionModel)
+    private NumberOfAttendeesViewModel GetViewModel(EventSessionModel sessionModel)
     {
-
-        return new LocationViewModel
+        return new NumberOfAttendeesViewModel
         {
-            EventFormat = sessionModel.EventFormat,
-            SearchResult = sessionModel.EventLocation,
-            OnlineEventLink = sessionModel.OnlineEventLink,
+            NumberOfAttendees = sessionModel.NumberOfAttendees,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.Location)!,
+            PostLink = Url.RouteUrl(RouteNames.ManageEvent.NumberOfAttendees)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }

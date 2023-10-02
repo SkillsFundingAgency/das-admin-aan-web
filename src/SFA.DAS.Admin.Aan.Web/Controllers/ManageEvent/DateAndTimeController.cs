@@ -38,7 +38,6 @@ public class DateAndTimeController : Controller
     {
         var result = _validator.Validate(submitModel);
 
-
         if (!result.IsValid)
         {
             result.AddToModelState(ModelState);

@@ -93,7 +93,7 @@ public class SchoolEventControllerSchoolNameTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.Urn == urn)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.OrganiserName);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.OrganiserDetails);
     }
 
     [Test, MoqAutoData]
@@ -101,15 +101,9 @@ public class SchoolEventControllerSchoolNameTests
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SchoolEventController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-
-        var sessionModel = new EventSessionModel();
-
-        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
-
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new SchoolNameViewModel();
+        var submitModel = new SchoolNameViewModel { CancelLink = NetworkEventsUrl };
 
         var result = (ViewResult)sut.PostSchoolName(submitModel);
 

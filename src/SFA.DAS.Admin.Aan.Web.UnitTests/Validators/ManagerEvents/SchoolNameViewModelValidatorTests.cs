@@ -4,7 +4,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
-public class EventSchoolNameViewModelValidatorTests
+public class SchoolNameViewModelValidatorTests
 {
     [TestCase(0, null, SchoolNameViewModelValidator.EventSchoolNameEmpty, false)]
     [TestCase(1, null, null, true)]

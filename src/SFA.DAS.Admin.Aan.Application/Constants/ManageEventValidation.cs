@@ -11,5 +11,4 @@ public static class ManageEventValidation
     public const int GuestSpeakerMaximumLength = 200;
     public const int OrganiserNameMaximumLength = 200;
     public const int OrganiserEmailMaximumLength = 256;
-
 }

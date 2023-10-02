@@ -36,7 +36,7 @@ public class OrganiserDetailsControllerTests
     public void Get_ReturnsExpectedPostLink(
         [Greedy] OrganiserDetailsController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.OrganiserName, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.OrganiserDetails, PostUrl);
         var result = (ViewResult)sut.Get();
 
         Assert.That(result.Model, Is.TypeOf<OrganiserDetailsViewModel>());
@@ -69,7 +69,7 @@ public class OrganiserDetailsControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.OrganiserName == organiserName && m.OrganiserEmail == organiserEmail)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.OrganiserName);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.NumberOfAttendees);
     }
 
     [Test, MoqAutoData]

@@ -3,7 +3,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
-public class EventTypeViewModelValidatorTests
+public class TypeViewModelValidatorTests
 {
     [TestCase(null, false, TypeViewModelValidator.EventTitleEmpty)]
     [TestCase("title 1", true, null)]

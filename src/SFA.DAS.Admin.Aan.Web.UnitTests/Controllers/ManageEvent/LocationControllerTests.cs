@@ -70,7 +70,7 @@ public class LocationControllerTests
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventLocation == eventLocation && m.OnlineEventLink == eventOnlineLink)));
         result.RouteName.Should().Be(submitModel.EventFormat == null
-            ? RouteNames.ManageEvent.OrganiserName
+            ? RouteNames.ManageEvent.OrganiserDetails
             : RouteNames.ManageEvent.IsAtSchool);
     }
 
@@ -80,14 +80,9 @@ public class LocationControllerTests
         [Greedy] LocationController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
-
-        var sessionModel = new EventSessionModel();
-
-        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
-
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new LocationViewModel();
+        var submitModel = new LocationViewModel { CancelLink = AllNetworksUrl };
 
         submitModel.EventOnlineLinkMaxLength.Should().Be(ManageEventValidation.EventOnlineLinkMaxLength);
 

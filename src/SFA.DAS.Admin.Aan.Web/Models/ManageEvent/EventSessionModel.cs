@@ -32,4 +32,6 @@ public class EventSessionModel
 
     public string? OrganiserName { get; set; }
     public string? OrganiserEmail { get; set; }
+
+    public int? NumberOfAttendees { get; set; }
 }

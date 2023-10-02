@@ -4,7 +4,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
-public class EventLocationViewModelValidatorTests
+public class LocationViewModelValidatorTests
 {
     [TestCase(0, null, LocationViewModelValidator.EventLocationEmpty, true)]
     [TestCase(1, null, null, true)]

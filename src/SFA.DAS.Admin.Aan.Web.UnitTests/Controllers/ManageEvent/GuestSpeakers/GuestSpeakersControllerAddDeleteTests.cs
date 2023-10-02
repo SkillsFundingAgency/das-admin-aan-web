@@ -128,14 +128,9 @@ public class GuestSpeakersControllerAddDeleteTests
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] GuestSpeakersController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.GuestSpeakerList, GuestSpeakerListUrl);
-
-        var sessionModel = new EventSessionModel();
-        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
-
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new GuestSpeakerAddViewModel();
+        var submitModel = new GuestSpeakerAddViewModel { CancelLink = GuestSpeakerListUrl };
         var actualResult = sut.PostAddGuestSpeaker(submitModel);
 
         var result = actualResult.As<ViewResult>();

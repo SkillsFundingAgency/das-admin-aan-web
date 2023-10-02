@@ -79,7 +79,7 @@ public class SchoolEventControllerIsAtSchoolTests
         }
         else
         {
-            result.RouteName.Should().Be(RouteNames.ManageEvent.OrganiserName);
+            result.RouteName.Should().Be(RouteNames.ManageEvent.OrganiserDetails);
         }
     }
 
@@ -88,15 +88,9 @@ public class SchoolEventControllerIsAtSchoolTests
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SchoolEventController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-
-        var sessionModel = new EventSessionModel();
-
-        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
-
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new IsAtSchoolViewModel();
+        var submitModel = new IsAtSchoolViewModel { CancelLink = NetworkEventsUrl };
 
         var result = (ViewResult)sut.PostHasGuestSpeakers(submitModel);
 

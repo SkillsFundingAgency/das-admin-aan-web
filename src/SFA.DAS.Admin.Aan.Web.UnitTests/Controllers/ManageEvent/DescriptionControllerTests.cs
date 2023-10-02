@@ -77,13 +77,9 @@ public class DescriptionControllerTests
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
-        var sessionModel = new EventSessionModel();
-
-        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
-
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new DescriptionViewModel();
+        var submitModel = new DescriptionViewModel { CancelLink = AllNetworksUrl };
 
         submitModel.EventOutlineMaxCount.Should().Be(ManageEventValidation.EventOutlineMaxLength);
         submitModel.EventSummaryMaxCount.Should().Be(ManageEventValidation.EventSummaryMaxLength);

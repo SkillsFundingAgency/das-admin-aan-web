@@ -12,60 +12,56 @@ using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent;
-public class DateAndTimeControllerTests
+public class NumberOfAttendeesControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
-    public void Get_ReturnsCreateEventDateTimeViewModel(
-        [Greedy] DateAndTimeController sut)
+    public void Get_ReturnsNumberOfAttendeesViewModel(
+        [Greedy] NumberOfAttendeesController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var result = (ViewResult)sut.Get();
 
-        Assert.That(result.Model, Is.TypeOf<DateAndTimeViewModel>());
-        var vm = result.Model as DateAndTimeViewModel;
+        Assert.That(result.Model, Is.TypeOf<NumberOfAttendeesViewModel>());
+        var vm = result.Model as NumberOfAttendeesViewModel;
         vm!.CancelLink.Should().Be(NetworkEventsUrl);
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
 
     [Test, MoqAutoData]
     public void Get_ReturnsExpectedPostLink(
-        [Greedy] DateAndTimeController sut)
+        [Greedy] NumberOfAttendeesController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.DateTime, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.NumberOfAttendees, PostUrl);
         var result = (ViewResult)sut.Get();
-        Assert.That(result.Model, Is.TypeOf<DateAndTimeViewModel>());
-        var vm = result.Model as DateAndTimeViewModel;
+        Assert.That(result.Model, Is.TypeOf<NumberOfAttendeesViewModel>());
+        var vm = result.Model as NumberOfAttendeesViewModel;
         vm!.PostLink.Should().Be(PostUrl);
     }
 
-    [TestCase(12, 0, 13, 0)]
-    public void Post_SetEventDateTimeOnSessionModel(int startHour, int startMinutes, int endHour, int endMinutes)
+    [TestCase(1)]
+    [TestCase(12)]
+    [TestCase(1000000)]
+    public void Post_SetEventNumberOfAttendeesOnSessionModel(int numberOfAttendees)
     {
-        var dateOfEvent = DateTime.Today.AddDays(1);
-
         var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<DateAndTimeViewModel>>();
+        var validatorMock = new Mock<IValidator<NumberOfAttendeesViewModel>>();
 
         var sessionModel = new EventSessionModel();
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new DateAndTimeViewModel
+        var submitModel = new NumberOfAttendeesViewModel
         {
-            DateOfEvent = dateOfEvent,
-            StartHour = startHour,
-            StartMinutes = startMinutes,
-            EndHour = endHour,
-            EndMinutes = endMinutes
+            NumberOfAttendees = numberOfAttendees
         };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
 
-        var sut = new DateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
+        var sut = new NumberOfAttendeesController(sessionServiceMock.Object, validatorMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
@@ -73,28 +69,24 @@ public class DateAndTimeControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m
-            => m.DateOfEvent == dateOfEvent &&
-               m.StartHour == startHour &&
-               m.StartMinutes == startMinutes &&
-               m.EndHour == endHour &&
-               m.EndMinutes == endMinutes)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.Location);
+            => m.NumberOfAttendees == numberOfAttendees)));
+        result.RouteName.Should().Be(RouteNames.ManageEvent.NumberOfAttendees);
     }
 
     [Test, MoqAutoData]
-    public void Post_WhenNoSelectionOfEventDateTime_Errors(
+    public void Post_WhenNoSelectionOfEventNumberOfAttendees_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] DateAndTimeController sut)
+        [Greedy] NumberOfAttendeesController sut)
     {
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new DateAndTimeViewModel { CancelLink = NetworkEventsUrl };
+        var submitModel = new NumberOfAttendeesViewModel { CancelLink = NetworkEventsUrl };
 
         var result = (ViewResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<DateAndTimeViewModel>());
-        (result.Model as DateAndTimeViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        Assert.That(result.Model, Is.TypeOf<NumberOfAttendeesViewModel>());
+        (result.Model as NumberOfAttendeesViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

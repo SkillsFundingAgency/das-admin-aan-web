@@ -60,8 +60,8 @@ public class GuestSpeakersController : Controller
     {
         var augmentedModel = new GuestSpeakerAddViewModel
         {
-            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.GuestSpeakerList)!,
+            CancelLink = Url.RouteUrl(RouteNames.ManageEvent.GuestSpeakerList)!,
+            PostLink = Url.RouteUrl(RouteNames.ManageEvent.GuestSpeakerAdd)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
 
@@ -85,7 +85,6 @@ public class GuestSpeakersController : Controller
         var currentGuestList = sessionModel.GuestSpeakers;
 
         var id = currentGuestList.Any() ? currentGuestList.Max(x => x.Id) + 1 : 1;
-
 
         currentGuestList.Add(new GuestSpeaker(submitModel.Name!, submitModel.JobRoleAndOrganisation!, id));
         sessionModel.GuestSpeakers = currentGuestList;

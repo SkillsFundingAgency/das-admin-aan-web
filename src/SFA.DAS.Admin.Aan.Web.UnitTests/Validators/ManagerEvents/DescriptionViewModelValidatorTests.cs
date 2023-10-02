@@ -5,7 +5,7 @@ using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
 
-public class EventDescriptionViewModelValidatorTests
+public class DescriptionViewModelValidatorTests
 {
     [TestCase(0, DescriptionViewModelValidator.EventOutlineEmpty, false)]
     [TestCase(1, null, true)]

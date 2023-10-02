@@ -4,7 +4,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
-public class EventDateTimeViewModelValidatorTests
+public class DateTimeViewModelValidatorTests
 {
     [Test]
     public void Validate_AllDetailsAreValid()
