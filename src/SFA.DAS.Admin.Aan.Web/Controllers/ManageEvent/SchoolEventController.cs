@@ -55,7 +55,7 @@ public class SchoolEventController : Controller
         _sessionService.Set(sessionModel);
 
         if (sessionModel.IsAtSchool == true) return RedirectToRoute(RouteNames.ManageEvent.EventSchoolName);
-        return RedirectToRoute(RouteNames.ManageEvent.EventIsAtSchool);
+        return RedirectToRoute(RouteNames.ManageEvent.EventOrganiserName);
     }
 
     [HttpGet]
@@ -86,7 +86,7 @@ public class SchoolEventController : Controller
 
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(RouteNames.ManageEvent.EventSchoolName);
+        return RedirectToRoute(RouteNames.ManageEvent.EventOrganiserName);
     }
 
     private EventAtSchoolViewModel GetViewModelEventIsAtSchool(EventSessionModel sessionModel)

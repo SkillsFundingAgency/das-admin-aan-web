@@ -9,7 +9,7 @@ using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
-using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
+using SFA.DAS.Admin.Aan.Web.Validators;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent;
@@ -19,7 +19,7 @@ public class NetworkEventDescriptionControllerTests
     private static readonly string PostUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
-    public void Details_ReturnsCreateEventDetailsViewModel(
+    public void Get_ReturnsCreateEventDetailsViewModel(
         [Greedy] NetworkEventDescriptionController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
@@ -32,7 +32,7 @@ public class NetworkEventDescriptionControllerTests
     }
 
     [Test, MoqAutoData]
-    public void Details_ReturnsExpectedPostLink(
+    public void Get_ReturnsExpectedPostLink(
         [Greedy] NetworkEventDescriptionController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventFormat, PostUrl);
@@ -93,5 +93,6 @@ public class NetworkEventDescriptionControllerTests
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<EventDescriptionViewModel>());
         (result.Model as EventDescriptionViewModel)!.CancelLink.Should().Be(AllNetworksUrl);
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

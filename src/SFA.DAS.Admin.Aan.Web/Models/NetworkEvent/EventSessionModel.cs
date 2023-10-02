@@ -29,4 +29,7 @@ public class EventSessionModel
     public string? SchoolName { get; set; }
     public string? Urn { get; set; }
     public bool? IsAtSchool { get; set; }
+
+    public string? OrganiserName { get; set; }
+    public string? OrganiserEmail { get; set; }
 }

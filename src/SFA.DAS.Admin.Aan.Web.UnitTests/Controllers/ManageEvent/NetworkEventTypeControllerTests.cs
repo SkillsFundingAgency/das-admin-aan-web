@@ -130,5 +130,6 @@ public class NetworkEventTypeControllerTests
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<EventTypeViewModel>());
         (result.Model as EventTypeViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

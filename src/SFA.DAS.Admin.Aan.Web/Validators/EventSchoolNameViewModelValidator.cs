@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
+namespace SFA.DAS.Admin.Aan.Web.Validators;
 
 public class EventSchoolNameViewModelValidator : AbstractValidator<EventSchoolNameViewModel>
 {
@@ -16,6 +16,6 @@ public class EventSchoolNameViewModelValidator : AbstractValidator<EventSchoolNa
 
     private static bool SchoolNotEntered(EventSchoolNameViewModel model, string? searchTerm)
     {
-        return !(string.IsNullOrEmpty(model.Urn));
+        return !string.IsNullOrEmpty(model.Urn);
     }
 }

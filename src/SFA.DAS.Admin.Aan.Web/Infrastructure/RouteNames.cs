@@ -22,5 +22,6 @@ public static class RouteNames
         public const string EventLocation = nameof(EventLocation);
         public const string EventIsAtSchool = nameof(EventIsAtSchool);
         public const string EventSchoolName = nameof(EventSchoolName);
+        public const string EventOrganiserName = nameof(EventOrganiserName);
     }
 }

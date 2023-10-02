@@ -2,7 +2,7 @@
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
+namespace SFA.DAS.Admin.Aan.Web.Validators;
 
 public class EventTypeViewModelValidator : AbstractValidator<EventTypeViewModel>
 {

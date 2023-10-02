@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using FluentValidation.TestHelper;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
-using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
+using SFA.DAS.Admin.Aan.Web.Validators;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators;
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
 
 internal class GuestSpeakerAddViewModelValidatorTests
 {

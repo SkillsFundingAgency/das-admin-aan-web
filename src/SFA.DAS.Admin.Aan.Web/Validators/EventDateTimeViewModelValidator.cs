@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
+namespace SFA.DAS.Admin.Aan.Web.Validators;
 
 public class EventDateTimeViewModelValidator : AbstractValidator<EventDateTimeViewModel>
 {
