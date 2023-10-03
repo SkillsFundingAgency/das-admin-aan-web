@@ -26,6 +26,9 @@ public class EventSessionModel
     public string? EventLocation { get; set; }
     public string? OnlineEventLink { get; set; }
 
+    public double? Longitude { get; set; }
+    public double? Latitude { get; set; }
+
     public string? SchoolName { get; set; }
     public string? Urn { get; set; }
     public bool? IsAtSchool { get; set; }

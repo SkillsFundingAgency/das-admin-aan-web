@@ -46,6 +46,8 @@ public class LocationController : Controller
 
         sessionModel.EventLocation = submitModel.EventLocation;
         sessionModel.OnlineEventLink = submitModel.OnlineEventLink;
+        sessionModel.Latitude = submitModel.Latitude;
+        sessionModel.Longitude = submitModel.Longitude;
         _sessionService.Set(sessionModel);
 
         return RedirectToRoute(submitModel.ShowLocationDropdown ? RouteNames.ManageEvent.IsAtSchool : RouteNames.ManageEvent.OrganiserDetails);

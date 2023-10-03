@@ -49,7 +49,7 @@ public class NumberOfAttendeesController : Controller
         sessionModel.NumberOfAttendees = submitModel.NumberOfAttendees;
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(RouteNames.ManageEvent.NumberOfAttendees);
+        return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
     }
 
     private NumberOfAttendeesViewModel GetViewModel(EventSessionModel sessionModel)

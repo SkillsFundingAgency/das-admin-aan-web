@@ -1,0 +1,145 @@
+﻿@using SFA.DAS.Admin.Aan.Web.Extensions
+@using SFA.DAS.Admin.Aan.Application.Extensions
+@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.CheckYourAnswersViewModel
+@{
+    ViewData["Title"] = "Create Calendar Event";
+}
+<partial name="_validationSummary" />
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <form asp-route="@Model.PostLink" method="POST">
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-l">@Model.PageTitle</span>
+            </h1>
+            <input type="hidden" asp-for="@Model.PageTitle" />
+            <input type="hidden" asp-for="@Model.PostLink"/> 
+            <input type="hidden" asp-for="@Model.CancelLink"/>
+            
+            <h1 class="govuk-heading-l">Check your event before publishing</h1>
+
+            <div id="previewlinkF" class="govuk-body">
+                You can <a href="@Model.PreviewLink" target="_blank">preview the event here</a>
+            </div>
+            
+            <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Format
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EventFormat.GetDescription()
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state">Change</a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Type
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EventType
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state">Change</a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Name
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EventTitle
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state">Change</a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Region
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EventRegion
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state">Change</a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Date and time
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.GetDateAndTime()
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state">Change</a>
+                    </dd>
+                </div>
+            @*     <div class="govuk-summary-list__row"> *@
+            @*         <dt class="govuk-summary-list__key">Current job title</dt> *@
+            @*         <dd class="govuk-summary-list__value">Senior projectionist</dd> *@
+            @*         <dd class="govuk-summary-list__actions"> *@
+            @*             <a href="/onboarding/current-job-title" class="govuk-link govuk-link--no-visited-state">Change</a> *@
+            @*         </dd> *@
+            @*     </div> *@
+            @*     <div class="govuk-summary-list__row"> *@
+            @*         <dt class="govuk-summary-list__key"> *@
+            @*             Region you are active in *@
+            @*         </dt> *@
+            @*         <dd class="govuk-summary-list__value"> *@
+            @*             Yorkshire and the Humber *@
+            @*         </dd> *@
+            @*         <dd class="govuk-summary-list__actions"> *@
+            @*             <a href="/onboarding/regions" class="govuk-link govuk-link--no-visited-state">Change</a> *@
+            @*         </dd> *@
+            @*     </div> *@
+            @*     <div class="govuk-summary-list__row"> *@
+            @*         <dt class="govuk-summary-list__key"> *@
+            @*             Reasons for applying *@
+            @*         </dt> *@
+            @*         <dd class="govuk-summary-list__value"> *@
+            @*             Why do you want to join the network? *@
+            @*             This can include information such as what initially attracted you to the network and what you would like to get out of being a network member. Your answer must be in 250 words or less. *@
+            @*         </dd> *@
+            @*         <dd class="govuk-summary-list__actions"> *@
+            @*             <a href="/onboarding/reason-to-join" class="govuk-link govuk-link--no-visited-state">Change</a> *@
+            @*         </dd> *@
+            @*     </div> *@
+            @*     <div class="govuk-summary-list__row"> *@
+            @*         <dt class="govuk-summary-list__key">Areas of interest in your role</dt> *@
+            @*         <dd class="govuk-summary-list__value"> *@
+            @*             <ul class="govuk-list govuk-list--bullet"> *@
+            @*                 <li>Networking at events in person</li> *@
+            @*                 <li>Presenting at events in person</li> *@
+            @*                 <li>Carrying out and writing up case studies</li> *@
+            @*             </ul> *@
+            @*         </dd> *@
+            @*         <dd class="govuk-summary-list__actions"> *@
+            @*             <a href="/onboarding/areas-of-interest" class="govuk-link govuk-link--no-visited-state">Change</a> *@
+            @*         </dd> *@
+            @*     </div> *@
+            @*     <div class="govuk-summary-list__row"> *@
+            @*         <dt class="govuk-summary-list__key"> *@
+            @*             Previous engagement with network ambassadors *@
+            @*         </dt> *@
+            @*         <dd class="govuk-summary-list__value"> *@
+            @*             Yes *@
+            @*         </dd> *@
+            @*         <dd class="govuk-summary-list__actions"> *@
+            @*             <a href="/onboarding/previous-engagement" class="govuk-link govuk-link--no-visited-state">Change</a> *@
+            @*         </dd> *@
+            @*     </div> *@
+            </dl>
+            
+
+
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+            <div class="govuk-button-group">
+                <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>
+                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
