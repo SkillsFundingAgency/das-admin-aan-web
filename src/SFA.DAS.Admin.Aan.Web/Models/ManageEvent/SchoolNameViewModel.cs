@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
-public class SchoolNameViewModel : EventPageEditFields
+public class SchoolNameViewModel : ManageEventViewModelBase
 {
     public string? SearchResult { get; set; }
 

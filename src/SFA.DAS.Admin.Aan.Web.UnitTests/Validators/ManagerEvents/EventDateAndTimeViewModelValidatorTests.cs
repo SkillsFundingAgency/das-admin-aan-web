@@ -87,9 +87,9 @@ public class EventDateAndTimeViewModelValidatorTests
     }
 
 
-    private static EventDateAndTimeViewModel GetHydratedModel()
+    private static ManageEventDateAndTimeViewModel GetHydratedModel()
     {
-        return new EventDateAndTimeViewModel
+        return new ManageEventDateAndTimeViewModel
         {
             DateOfEvent = DateTime.Today.AddDays(1),
             StartHour = 12,

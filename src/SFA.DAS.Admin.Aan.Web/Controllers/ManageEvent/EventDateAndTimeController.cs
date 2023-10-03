@@ -15,10 +15,10 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 public class EventDateAndTimeController : Controller
 {
     private readonly ISessionService _sessionService;
-    private readonly IValidator<EventDateAndTimeViewModel> _validator;
+    private readonly IValidator<ManageEventDateAndTimeViewModel> _validator;
 
     public const string ViewPath = "~/Views/ManageEvent/EventDateAndTime.cshtml";
-    public EventDateAndTimeController(ISessionService sessionService, IValidator<EventDateAndTimeViewModel> validator)
+    public EventDateAndTimeController(ISessionService sessionService, IValidator<ManageEventDateAndTimeViewModel> validator)
     {
         _sessionService = sessionService;
         _validator = validator;
@@ -34,7 +34,7 @@ public class EventDateAndTimeController : Controller
     }
 
     [HttpPost]
-    public IActionResult Post(EventDateAndTimeViewModel submitModel)
+    public IActionResult Post(ManageEventDateAndTimeViewModel submitModel)
     {
         var result = _validator.Validate(submitModel);
 
@@ -55,9 +55,9 @@ public class EventDateAndTimeController : Controller
         return RedirectToRoute(RouteNames.ManageEvent.Location);
     }
 
-    private EventDateAndTimeViewModel GetViewModel(EventSessionModel sessionModel)
+    private ManageEventDateAndTimeViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        return new EventDateAndTimeViewModel
+        return new ManageEventDateAndTimeViewModel
         {
             DateOfEvent = sessionModel.DateOfEvent,
             StartHour = sessionModel.StartHour,

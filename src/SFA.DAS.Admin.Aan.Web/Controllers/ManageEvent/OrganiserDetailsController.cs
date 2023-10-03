@@ -47,8 +47,8 @@ public class OrganiserDetailsController : Controller
         }
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
-        sessionModel.OrganiserName = submitModel.OrganiserName;
-        sessionModel.OrganiserEmail = submitModel.OrganiserEmail;
+        sessionModel.ContactName = submitModel.OrganiserName;
+        sessionModel.ContactEmail = submitModel.OrganiserEmail;
 
         _sessionService.Set(sessionModel);
         return RedirectToRoute(RouteNames.ManageEvent.NumberOfAttendees);
@@ -58,8 +58,8 @@ public class OrganiserDetailsController : Controller
     {
         return new OrganiserDetailsViewModel
         {
-            OrganiserName = sessionModel.OrganiserName,
-            OrganiserEmail = sessionModel.OrganiserEmail,
+            OrganiserName = sessionModel.ContactName,
+            OrganiserEmail = sessionModel.ContactEmail,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.OrganiserDetails)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle

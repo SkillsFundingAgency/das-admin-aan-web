@@ -3,7 +3,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
-public class EventDateAndTimeViewModelValidator : AbstractValidator<EventDateAndTimeViewModel>
+public class EventDateAndTimeViewModelValidator : AbstractValidator<ManageEventDateAndTimeViewModel>
 {
     public const string EventDateInPast = "Event date must not be in the past";
     public const string EventDateEmpty = "You must select an event date";
@@ -44,27 +44,27 @@ public class EventDateAndTimeViewModelValidator : AbstractValidator<EventDateAnd
             .WithMessage(EventEndTimeBeforeStartTime);
     }
 
-    private static bool StartHoursAndMinutesPresent(EventDateAndTimeViewModel model, int? startHour)
+    private static bool StartHoursAndMinutesPresent(ManageEventDateAndTimeViewModel model, int? startHour)
     {
         return !(model.StartMinutes == null && startHour == null);
     }
 
-    private static bool StartTimePresent(EventDateAndTimeViewModel model, int? startHour)
+    private static bool StartTimePresent(ManageEventDateAndTimeViewModel model, int? startHour)
     {
         return model.StartMinutes != null;
     }
 
-    private static bool EndHoursAndMinutesPresent(EventDateAndTimeViewModel model, int? endHour)
+    private static bool EndHoursAndMinutesPresent(ManageEventDateAndTimeViewModel model, int? endHour)
     {
         return !(model.EndMinutes == null && endHour == null);
     }
 
-    private static bool EndTimePresent(EventDateAndTimeViewModel model, int? endHour)
+    private static bool EndTimePresent(ManageEventDateAndTimeViewModel model, int? endHour)
     {
         return model.EndMinutes != null;
     }
 
-    private static bool StartTimeBeforeEndTime(EventDateAndTimeViewModel model, int? startHour)
+    private static bool StartTimeBeforeEndTime(ManageEventDateAndTimeViewModel model, int? startHour)
     {
         if (model.StartHour == null || model.StartMinutes == null || model.EndHour == null ||
             model.EndMinutes == null) return true;

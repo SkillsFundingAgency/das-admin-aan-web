@@ -68,7 +68,7 @@ public class OrganiserDetailsControllerTests
         var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.OrganiserName == organiserName && m.OrganiserEmail == organiserEmail)));
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.ContactName == organiserName && m.ContactEmail == organiserEmail)));
         result.RouteName.Should().Be(RouteNames.ManageEvent.NumberOfAttendees);
     }
 

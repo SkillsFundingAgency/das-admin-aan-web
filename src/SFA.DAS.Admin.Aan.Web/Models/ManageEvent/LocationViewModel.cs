@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
-public class LocationViewModel : EventPageEditFields
+public class LocationViewModel : ManageEventViewModelBase
 {
     public EventFormat? EventFormat { get; set; }
     public string? OnlineEventLink { get; set; }

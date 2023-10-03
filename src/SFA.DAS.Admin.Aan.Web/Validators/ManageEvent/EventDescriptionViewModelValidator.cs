@@ -3,7 +3,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
-public class EventDescriptionViewModelValidator : AbstractValidator<EventDescriptionViewModel>
+public class EventDescriptionViewModelValidator : AbstractValidator<ManageEventDescriptionViewModel>
 {
 
     public const string EventOutlineEmpty = "You must include an event outline";

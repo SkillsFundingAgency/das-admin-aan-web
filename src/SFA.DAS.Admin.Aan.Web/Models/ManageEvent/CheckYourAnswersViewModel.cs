@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
-public class CheckYourAnswersViewModel : EventPageEditFields
+public class CheckYourAnswersViewModel : ManageEventViewModelBase
 {
     public string PreviewLink { get; set; }
     public bool HasSeenPreview { get; set; }
@@ -10,31 +10,25 @@ public class CheckYourAnswersViewModel : EventPageEditFields
     public EventFormat? EventFormat { get; set; }
 
     public string? EventTitle { get; set; }
-    // public int? EventTypeId { get; set; }
-    // public int? EventRegionId { get; set; }
+    // public int? CalendarId { get; set; }
+    // public int? RegionId { get; set; }
 
     public string? EventType { get; set; }
     public string EventRegion { get; set; }
-
-    // public List<RegionSelection> EventRegions { get; set; } = new List<RegionSelection>();
-    // public List<EventTypeSelection> EventTypes { get; set; } = new List<EventTypeSelection>();
 
     public string? EventOutline { get; set; }
     public string? EventSummary { get; set; }
     public bool? HasGuestSpeakers { get; set; }
     public List<GuestSpeaker> GuestSpeakers { get; set; } = new List<GuestSpeaker>();
 
-    public DateTime? DateOfEvent { get; set; }
-    public int? StartHour { get; set; }
-    public int? StartMinutes { get; set; }
-    public int? EndHour { get; set; }
-    public int? EndMinutes { get; set; }
+    public DateTime? Start { get; set; }
+    public DateTime? End { get; set; }
 
     public string? EventLocation { get; set; }
     public string? OnlineEventLink { get; set; }
 
     public string? SchoolName { get; set; }
-    public string? Urn { get; set; }
+
     public bool? IsAtSchool { get; set; }
 
     public string? OrganiserName { get; set; }
@@ -42,26 +36,25 @@ public class CheckYourAnswersViewModel : EventPageEditFields
 
     public int? NumberOfAttendees { get; set; }
 
+    public bool ShowLocation =>
+        EventFormat is Application.Constants.EventFormat.InPerson or Application.Constants.EventFormat.Hybrid;
+
+    public bool ShowOnlineEventLink =>
+        EventFormat is Application.Constants.EventFormat.Online or Application.Constants.EventFormat.Hybrid;
+
     public string GetDateAndTimeFormatted()
     {
-        if (DateOfEvent == null || !StartHour.HasValue || !StartMinutes.HasValue || !EndHour.HasValue || !EndMinutes.HasValue) return "";
+        if (Start == null || End == null) return "";
 
-        var dateOfEventToUse = DateOfEvent.Value;
+        var startDateTimeFormatted = Start.Value.Minute == 0
+            ? Start.Value.ToString("htt").ToLower()
+            : Start.Value.ToString("h:mmtt").ToLower();
 
-        var startDate = new DateTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, StartHour.Value,
-            StartMinutes.Value, 0);
-        var endDate = new DateTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, EndHour.Value,
-            EndMinutes.Value, 0);
+        var endDateTimeFormatted = End.Value.Minute == 0
+            ? End.Value.ToString("htt").ToLower()
+            : End.Value.ToString("h:mmtt").ToLower();
 
-        var startDateTimeFormatted = startDate.Minute == 0
-            ? startDate.ToString("htt").ToLower()
-            : startDate.ToString("h:mmtt").ToLower();
-
-        var endDateTimeFormatted = endDate.Minute == 0
-            ? endDate.ToString("htt").ToLower()
-            : endDate.ToString("h:mmtt").ToLower();
-
-        return startDate.ToString("d MMMM yyyy") + ", " + startDateTimeFormatted + " to " + endDateTimeFormatted;
+        return Start.Value.ToString("d MMMM yyyy") + ", " + startDateTimeFormatted + " to " + endDateTimeFormatted;
     }
 
     public static implicit operator CheckYourAnswersViewModel(EventSessionModel source)
@@ -74,18 +67,14 @@ public class CheckYourAnswersViewModel : EventPageEditFields
             EventSummary = source.EventSummary,
             HasGuestSpeakers = source.HasGuestSpeakers,
             GuestSpeakers = source.GuestSpeakers,
-            DateOfEvent = source.DateOfEvent,
-            StartHour = source.StartHour,
-            StartMinutes = source.StartMinutes,
-            EndHour = source.EndHour,
-            EndMinutes = source.EndMinutes,
-            EventLocation = source.EventLocation,
-            OnlineEventLink = source.OnlineEventLink,
+            Start = source.Start,
+            End = source.End,
+            EventLocation = source.Location,
+            OnlineEventLink = source.EventLink,
             SchoolName = source.SchoolName,
-            Urn = source.Urn,
             IsAtSchool = source.IsAtSchool,
-            OrganiserName = source.OrganiserName,
-            OrganiserEmail = source.OrganiserEmail,
-            NumberOfAttendees = source.NumberOfAttendees
+            OrganiserName = source.ContactName,
+            OrganiserEmail = source.ContactEmail,
+            NumberOfAttendees = source.PlannedAttendees
         };
 }

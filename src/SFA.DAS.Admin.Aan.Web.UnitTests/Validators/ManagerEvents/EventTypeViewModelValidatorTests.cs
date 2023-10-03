@@ -20,7 +20,7 @@ public class EventTypeViewModelValidatorTests
     [TestCase("title >", false, EventTypeViewModelValidator.EventTitleHasExcludedCharacter)]
     public void Validate_EmptyEventTitle_Check(string? title, bool isValid, string? errorMessage)
     {
-        var model = new EventTypeViewModel { EventTitle = title, EventRegionId = 1, EventTypeId = 2 };
+        var model = new ManageEventTypeViewModel { EventTitle = title, EventRegionId = 1, EventTypeId = 2 };
 
         var sut = new EventTypeViewModelValidator();
         var result = sut.TestValidate(model);
@@ -40,7 +40,7 @@ public class EventTypeViewModelValidatorTests
     [TestCase(null, false)]
     public void Validate_EventType_Check(int? eventTypeId, bool isValid)
     {
-        var model = new EventTypeViewModel { EventTitle = "title", EventRegionId = 1, EventTypeId = eventTypeId };
+        var model = new ManageEventTypeViewModel { EventTitle = "title", EventRegionId = 1, EventTypeId = eventTypeId };
 
         var sut = new EventTypeViewModelValidator();
         var result = sut.TestValidate(model);
@@ -61,7 +61,7 @@ public class EventTypeViewModelValidatorTests
     [TestCase(null, false)]
     public void Validate_RegionId_Check(int? regionId, bool isValid)
     {
-        var model = new EventTypeViewModel { EventTitle = "title", EventRegionId = regionId, EventTypeId = 1 };
+        var model = new ManageEventTypeViewModel { EventTitle = "title", EventRegionId = regionId, EventTypeId = 1 };
 
         var sut = new EventTypeViewModelValidator();
         var result = sut.TestValidate(model);

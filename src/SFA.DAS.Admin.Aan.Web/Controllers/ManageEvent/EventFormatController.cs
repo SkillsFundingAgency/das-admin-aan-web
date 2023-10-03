@@ -16,9 +16,9 @@ public class EventFormatController : Controller
 {
     public const string ViewPath = "~/Views/ManageEvent/EventFormat.cshtml";
     private readonly ISessionService _sessionService;
-    private readonly IValidator<EventFormatViewModel> _validator;
+    private readonly IValidator<ManageEventFormatViewModel> _validator;
 
-    public EventFormatController(ISessionService sessionService, IValidator<EventFormatViewModel> validator)
+    public EventFormatController(ISessionService sessionService, IValidator<ManageEventFormatViewModel> validator)
     {
         _sessionService = sessionService;
         _validator = validator;
@@ -33,7 +33,7 @@ public class EventFormatController : Controller
     }
 
     [HttpPost]
-    public IActionResult Post(EventFormatViewModel submitModel)
+    public IActionResult Post(ManageEventFormatViewModel submitModel)
     {
         var result = _validator.Validate(submitModel);
 
@@ -49,9 +49,9 @@ public class EventFormatController : Controller
         return RedirectToRoute(RouteNames.ManageEvent.EventType);
     }
 
-    private EventFormatViewModel GetViewModel(EventSessionModel sessionModel)
+    private ManageEventFormatViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        var model = new EventFormatViewModel
+        var model = new ManageEventFormatViewModel
         {
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PageTitle = CreateEvent.PageTitle

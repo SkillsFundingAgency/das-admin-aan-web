@@ -69,7 +69,7 @@ public class NumberOfAttendeesControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m
-            => m.NumberOfAttendees == numberOfAttendees)));
+            => m.PlannedAttendees == numberOfAttendees)));
         result.RouteName.Should().Be(RouteNames.ManageEvent.NumberOfAttendees);
     }
 

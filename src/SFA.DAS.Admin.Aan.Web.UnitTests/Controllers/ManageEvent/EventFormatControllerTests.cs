@@ -25,8 +25,8 @@ public class EventFormatControllerTests
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var result = (ViewResult)sut.Get();
 
-        Assert.That(result.Model, Is.TypeOf<EventFormatViewModel>());
-        var vm = result.Model as EventFormatViewModel;
+        Assert.That(result.Model, Is.TypeOf<ManageEventFormatViewModel>());
+        var vm = result.Model as ManageEventFormatViewModel;
         vm!.CancelLink.Should().Be(NetworkEventsUrl);
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
@@ -37,8 +37,8 @@ public class EventFormatControllerTests
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventFormat, PostUrl);
         var result = (ViewResult)sut.Get();
-        Assert.That(result.Model, Is.TypeOf<EventFormatViewModel>());
-        var vm = result.Model as EventFormatViewModel;
+        Assert.That(result.Model, Is.TypeOf<ManageEventFormatViewModel>());
+        var vm = result.Model as ManageEventFormatViewModel;
         vm!.PostLink.Should().Be(PostUrl);
     }
 
@@ -49,13 +49,13 @@ public class EventFormatControllerTests
     public void Post_SetEventFormatOnSessionModel(EventFormat? eventFormat)
     {
         var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<EventFormatViewModel>>();
+        var validatorMock = new Mock<IValidator<ManageEventFormatViewModel>>();
 
         var sessionModel = new EventSessionModel();
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new EventFormatViewModel { EventFormat = eventFormat };
+        var submitModel = new ManageEventFormatViewModel { EventFormat = eventFormat };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -78,13 +78,13 @@ public class EventFormatControllerTests
     {
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new EventFormatViewModel { CancelLink = NetworkEventsUrl };
+        var submitModel = new ManageEventFormatViewModel { CancelLink = NetworkEventsUrl };
 
         var result = (ViewResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<EventFormatViewModel>());
-        (result.Model as EventFormatViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        Assert.That(result.Model, Is.TypeOf<ManageEventFormatViewModel>());
+        (result.Model as ManageEventFormatViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }
