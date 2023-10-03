@@ -61,7 +61,7 @@ public class EventSessionModel
             var dateOfEventToUse = DateOfEvent.Value;
 
             return new DateTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, EndHour.Value,
-                EndHour.Value, 0, DateTimeKind.Unspecified);
+                EndMinutes.Value, 0, DateTimeKind.Unspecified);
         }
     }
 }

@@ -60,8 +60,8 @@ public class CheckYourAnswersController : Controller
         model.CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
         model.PostLink = "#";
         model.PreviewLink = "#";
-        model.EventType = eventTypes.First(x => x.Id == sessionModel.CalendarId).CalendarName;
-        model.EventRegion = regions.First(x => x.RegionId == sessionModel.RegionId).Name;
+        model.EventType = eventTypes.FirstOrDefault(x => x.Id == sessionModel.CalendarId)?.CalendarName;
+        model.EventRegion = regions.FirstOrDefault(x => x.RegionId == sessionModel.RegionId)?.Name;
 
         return model;
     }
