@@ -4,7 +4,7 @@ using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
-public class ManageEventFormatViewModel : ManageEventViewModelBase
+public class EventFormatViewModel : ManageEventViewModelBase
 {
     public EventFormat? EventFormat { get; set; }
 

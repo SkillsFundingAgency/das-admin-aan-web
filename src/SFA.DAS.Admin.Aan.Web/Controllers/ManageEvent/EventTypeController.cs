@@ -15,10 +15,10 @@ public class EventTypeController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
     private readonly ISessionService _sessionService;
-    private readonly IValidator<ManageEventTypeViewModel> _validator;
+    private readonly IValidator<EventTypeViewModel> _validator;
 
     public const string ViewPath = "~/Views/ManageEvent/EventType.cshtml";
-    public EventTypeController(IOuterApiClient outerApiClient, ISessionService sessionService, IValidator<ManageEventTypeViewModel> validator)
+    public EventTypeController(IOuterApiClient outerApiClient, ISessionService sessionService, IValidator<EventTypeViewModel> validator)
     {
         _outerApiClient = outerApiClient;
         _sessionService = sessionService;
@@ -33,7 +33,7 @@ public class EventTypeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(ManageEventTypeViewModel submitModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> Post(EventTypeViewModel submitModel, CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.EventTitle = submitModel.EventTitle;
@@ -54,7 +54,7 @@ public class EventTypeController : Controller
         return RedirectToRoute(RouteNames.ManageEvent.Description);
     }
 
-    private async Task<ManageEventTypeViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
+    private async Task<EventTypeViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
     {
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
         var regionTask = _outerApiClient.GetRegions(cancellationToken);
@@ -71,7 +71,7 @@ public class EventTypeController : Controller
 
         var regionsWithNational = regionDropdowns.ToList();
         regionsWithNational.Add(new RegionSelection("National", 0));
-        return new ManageEventTypeViewModel
+        return new EventTypeViewModel
         {
             EventTitle = sessionModel.EventTitle,
             EventTypeId = sessionModel.CalendarId,

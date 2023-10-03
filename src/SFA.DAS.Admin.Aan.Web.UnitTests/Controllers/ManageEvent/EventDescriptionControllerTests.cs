@@ -25,8 +25,8 @@ public class EventDescriptionControllerTests
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
         var result = (ViewResult)sut.Get();
 
-        Assert.That(result.Model, Is.TypeOf<ManageEventDescriptionViewModel>());
-        var vm = result.Model as ManageEventDescriptionViewModel;
+        Assert.That(result.Model, Is.TypeOf<EventDescriptionViewModel>());
+        var vm = result.Model as EventDescriptionViewModel;
         vm!.CancelLink.Should().Be(AllNetworksUrl);
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
@@ -38,8 +38,8 @@ public class EventDescriptionControllerTests
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventFormat, PostUrl);
         var result = (ViewResult)sut.Get();
 
-        Assert.That(result.Model, Is.TypeOf<ManageEventDescriptionViewModel>());
-        var vm = result.Model as ManageEventDescriptionViewModel;
+        Assert.That(result.Model, Is.TypeOf<EventDescriptionViewModel>());
+        var vm = result.Model as EventDescriptionViewModel;
         vm!.PostLink.Should().Be(PostUrl);
     }
 
@@ -48,13 +48,13 @@ public class EventDescriptionControllerTests
     public void Post_SetEventDetailsOnSessionModel(string eventOutline, string eventSummary)
     {
         var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<ManageEventDescriptionViewModel>>();
+        var validatorMock = new Mock<IValidator<EventDescriptionViewModel>>();
 
         var sessionModel = new EventSessionModel();
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new ManageEventDescriptionViewModel { EventOutline = eventOutline, EventSummary = eventSummary };
+        var submitModel = new EventDescriptionViewModel { EventOutline = eventOutline, EventSummary = eventSummary };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -79,7 +79,7 @@ public class EventDescriptionControllerTests
 
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new ManageEventDescriptionViewModel { CancelLink = AllNetworksUrl };
+        var submitModel = new EventDescriptionViewModel { CancelLink = AllNetworksUrl };
 
         submitModel.EventOutlineMaxCount.Should().Be(ManageEventValidation.EventOutlineMaxLength);
         submitModel.EventSummaryMaxCount.Should().Be(ManageEventValidation.EventSummaryMaxLength);
@@ -87,8 +87,8 @@ public class EventDescriptionControllerTests
         var result = (ViewResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<ManageEventDescriptionViewModel>());
-        (result.Model as ManageEventDescriptionViewModel)!.CancelLink.Should().Be(AllNetworksUrl);
+        Assert.That(result.Model, Is.TypeOf<EventDescriptionViewModel>());
+        (result.Model as EventDescriptionViewModel)!.CancelLink.Should().Be(AllNetworksUrl);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

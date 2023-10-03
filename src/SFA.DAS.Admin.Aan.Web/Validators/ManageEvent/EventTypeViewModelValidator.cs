@@ -4,7 +4,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
-public class EventTypeViewModelValidator : AbstractValidator<ManageEventTypeViewModel>
+public class EventTypeViewModelValidator : AbstractValidator<EventTypeViewModel>
 {
     public const string EventTitleEmpty = "You must include an event title";
     public const string EventTitleHasExcludedCharacter = "Your event title must not include any special characters: @, #, $, ^, =, +, \\, /, <, >, %";

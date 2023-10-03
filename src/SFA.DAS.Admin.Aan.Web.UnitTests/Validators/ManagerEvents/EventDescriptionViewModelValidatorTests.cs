@@ -14,7 +14,7 @@ public class EventDescriptionViewModelValidatorTests
         EventDescriptionViewModelValidator.EventOutlineTooLong, false)]
     public void Validate_EventOutline(int lengthOfOutline, string? errorMessage, bool isValid)
     {
-        var model = new ManageEventDescriptionViewModel
+        var model = new EventDescriptionViewModel
         { EventOutline = new string('x', lengthOfOutline), EventSummary = "y" };
 
         var sut = new EventDescriptionViewModelValidator();
@@ -38,7 +38,7 @@ public class EventDescriptionViewModelValidatorTests
         EventDescriptionViewModelValidator.EventSummaryTooLong, false)]
     public void Validate_EventSummary(int lengthOfSummary, string? errorMessage, bool isValid)
     {
-        var model = new ManageEventDescriptionViewModel
+        var model = new EventDescriptionViewModel
         { EventOutline = "x", EventSummary = new string('x', lengthOfSummary) };
 
         var sut = new EventDescriptionViewModelValidator();

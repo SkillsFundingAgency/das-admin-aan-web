@@ -9,7 +9,7 @@ public class EventFormatViewModelValidatorTests
     [Test]
     public void Validate_EmptyEventFormat_Invalid()
     {
-        var model = new ManageEventFormatViewModel();
+        var model = new EventFormatViewModel();
 
 
         var sut = new EventFormatViewModelValidator();
@@ -24,7 +24,7 @@ public class EventFormatViewModelValidatorTests
     [TestCase(EventFormat.Online)]
     public void Validate_EventFormat_Valid(EventFormat eventFormat)
     {
-        var model = new ManageEventFormatViewModel { EventFormat = eventFormat };
+        var model = new EventFormatViewModel { EventFormat = eventFormat };
 
 
         var sut = new EventFormatViewModelValidator();

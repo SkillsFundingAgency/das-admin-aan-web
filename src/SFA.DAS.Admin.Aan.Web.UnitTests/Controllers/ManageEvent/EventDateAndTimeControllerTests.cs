@@ -24,8 +24,8 @@ public class EventDateAndTimeControllerTests
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var result = (ViewResult)sut.Get();
 
-        Assert.That(result.Model, Is.TypeOf<ManageEventDateAndTimeViewModel>());
-        var vm = result.Model as ManageEventDateAndTimeViewModel;
+        Assert.That(result.Model, Is.TypeOf<EventDateAndTimeViewModel>());
+        var vm = result.Model as EventDateAndTimeViewModel;
         vm!.CancelLink.Should().Be(NetworkEventsUrl);
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
@@ -36,8 +36,8 @@ public class EventDateAndTimeControllerTests
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.DateAndTime, PostUrl);
         var result = (ViewResult)sut.Get();
-        Assert.That(result.Model, Is.TypeOf<ManageEventDateAndTimeViewModel>());
-        var vm = result.Model as ManageEventDateAndTimeViewModel;
+        Assert.That(result.Model, Is.TypeOf<EventDateAndTimeViewModel>());
+        var vm = result.Model as EventDateAndTimeViewModel;
         vm!.PostLink.Should().Be(PostUrl);
     }
 
@@ -47,13 +47,13 @@ public class EventDateAndTimeControllerTests
         var dateOfEvent = DateTime.Today.AddDays(1);
 
         var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<ManageEventDateAndTimeViewModel>>();
+        var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
 
         var sessionModel = new EventSessionModel();
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new ManageEventDateAndTimeViewModel
+        var submitModel = new EventDateAndTimeViewModel
         {
             DateOfEvent = dateOfEvent,
             StartHour = startHour,
@@ -88,13 +88,13 @@ public class EventDateAndTimeControllerTests
     {
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new ManageEventDateAndTimeViewModel { CancelLink = NetworkEventsUrl };
+        var submitModel = new EventDateAndTimeViewModel { CancelLink = NetworkEventsUrl };
 
         var result = (ViewResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<ManageEventDateAndTimeViewModel>());
-        (result.Model as ManageEventDateAndTimeViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        Assert.That(result.Model, Is.TypeOf<EventDateAndTimeViewModel>());
+        (result.Model as EventDateAndTimeViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

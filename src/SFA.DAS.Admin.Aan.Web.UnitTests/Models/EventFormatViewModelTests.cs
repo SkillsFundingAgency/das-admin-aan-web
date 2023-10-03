@@ -23,7 +23,7 @@ public class EventFormatViewModelTests
                 eventFormat == EventFormat.Hybrid)
         };
 
-        var vm = new ManageEventFormatViewModel { EventFormat = eventFormat };
+        var vm = new EventFormatViewModel { EventFormat = eventFormat };
         vm.EventFormats.Count.Should().Be(3);
         vm.EventFormat.Should().Be(eventFormat);
         vm.EventFormats.Should().BeEquivalentTo(expectedEventFormatChecklistLookup);

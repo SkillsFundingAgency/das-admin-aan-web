@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
-public class ManageEventTypeViewModel : ManageEventViewModelBase
+public class EventTypeViewModel : ManageEventViewModelBase
 {
     public string? EventTitle { get; set; }
     public int? EventTypeId { get; set; }
