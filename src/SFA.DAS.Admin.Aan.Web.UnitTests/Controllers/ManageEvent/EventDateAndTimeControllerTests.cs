@@ -12,32 +12,32 @@ using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent;
-public class DateAndTimeControllerTests
+public class EventDateAndTimeControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsCreateEventDateTimeViewModel(
-        [Greedy] DateAndTimeController sut)
+        [Greedy] EventDateAndTimeController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var result = (ViewResult)sut.Get();
 
-        Assert.That(result.Model, Is.TypeOf<DateAndTimeViewModel>());
-        var vm = result.Model as DateAndTimeViewModel;
+        Assert.That(result.Model, Is.TypeOf<EventDateAndTimeViewModel>());
+        var vm = result.Model as EventDateAndTimeViewModel;
         vm!.CancelLink.Should().Be(NetworkEventsUrl);
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
 
     [Test, MoqAutoData]
     public void Get_ReturnsExpectedPostLink(
-        [Greedy] DateAndTimeController sut)
+        [Greedy] EventDateAndTimeController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.DateTime, PostUrl);
         var result = (ViewResult)sut.Get();
-        Assert.That(result.Model, Is.TypeOf<DateAndTimeViewModel>());
-        var vm = result.Model as DateAndTimeViewModel;
+        Assert.That(result.Model, Is.TypeOf<EventDateAndTimeViewModel>());
+        var vm = result.Model as EventDateAndTimeViewModel;
         vm!.PostLink.Should().Be(PostUrl);
     }
 
@@ -47,13 +47,13 @@ public class DateAndTimeControllerTests
         var dateOfEvent = DateTime.Today.AddDays(1);
 
         var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<DateAndTimeViewModel>>();
+        var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
 
         var sessionModel = new EventSessionModel();
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new DateAndTimeViewModel
+        var submitModel = new EventDateAndTimeViewModel
         {
             DateOfEvent = dateOfEvent,
             StartHour = startHour,
@@ -65,7 +65,7 @@ public class DateAndTimeControllerTests
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
 
-        var sut = new DateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
+        var sut = new EventDateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
@@ -84,17 +84,17 @@ public class DateAndTimeControllerTests
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventDateTime_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] DateAndTimeController sut)
+        [Greedy] EventDateAndTimeController sut)
     {
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new DateAndTimeViewModel { CancelLink = NetworkEventsUrl };
+        var submitModel = new EventDateAndTimeViewModel { CancelLink = NetworkEventsUrl };
 
         var result = (ViewResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<DateAndTimeViewModel>());
-        (result.Model as DateAndTimeViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        Assert.That(result.Model, Is.TypeOf<EventDateAndTimeViewModel>());
+        (result.Model as EventDateAndTimeViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

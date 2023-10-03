@@ -15,7 +15,7 @@ using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent;
-public class TypeControllerTests
+public class EventTypeControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
@@ -23,7 +23,7 @@ public class TypeControllerTests
     [Test, MoqAutoData]
     public void Get_ReturnsCreateEventTypeViewModel(
         [Frozen] Mock<IOuterApiClient> outerApiMock,
-        [Frozen] Mock<IValidator<TypeViewModel>> validatorMock)
+        [Frozen] Mock<IValidator<EventTypeViewModel>> validatorMock)
     {
         var sessionServiceMock = new Mock<ISessionService>();
 
@@ -37,7 +37,7 @@ public class TypeControllerTests
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var sut = new TypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+        var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
 
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
@@ -46,16 +46,16 @@ public class TypeControllerTests
 
         outerApiMock.Verify(o => o.GetCalendars(It.IsAny<CancellationToken>()), Times.Once);
         outerApiMock.Verify(o => o.GetRegions(It.IsAny<CancellationToken>()), Times.Once);
-        Assert.That(viewResult.Model, Is.TypeOf<TypeViewModel>());
+        Assert.That(viewResult.Model, Is.TypeOf<EventTypeViewModel>());
 
-        ((TypeViewModel)viewResult.Model!).CancelLink.Should().Be(NetworkEventsUrl);
-        ((TypeViewModel)viewResult.Model!).PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
+        ((EventTypeViewModel)viewResult.Model!).CancelLink.Should().Be(NetworkEventsUrl);
+        ((EventTypeViewModel)viewResult.Model!).PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
     }
 
     [Test, MoqAutoData]
     public void Get_ReturnsExpectedPostLink(
         [Frozen] Mock<IOuterApiClient> outerApiMock,
-        [Frozen] Mock<IValidator<TypeViewModel>> validatorMock)
+        [Frozen] Mock<IValidator<EventTypeViewModel>> validatorMock)
     {
         var sessionServiceMock = new Mock<ISessionService>();
 
@@ -69,13 +69,13 @@ public class TypeControllerTests
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var sut = new TypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+        var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventType, PostUrl);
         var actualResult = sut.Get(new CancellationToken());
         var viewResult = actualResult.Result.As<ViewResult>();
 
-        ((TypeViewModel)viewResult.Model!).PostLink.Should().Be(PostUrl);
+        ((EventTypeViewModel)viewResult.Model!).PostLink.Should().Be(PostUrl);
     }
 
     [Test]
@@ -83,10 +83,10 @@ public class TypeControllerTests
     {
         var eventTitle = "title";
         var sessionServiceMock = new Mock<ISessionService>();
-        var validatorMock = new Mock<IValidator<TypeViewModel>>();
+        var validatorMock = new Mock<IValidator<EventTypeViewModel>>();
         var sessionModel = new EventSessionModel();
 
-        var submitModel = new TypeViewModel { EventTitle = eventTitle };
+        var submitModel = new EventTypeViewModel { EventTitle = eventTitle };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
@@ -97,7 +97,7 @@ public class TypeControllerTests
         outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Calendar>());
         outerApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(new GetRegionsResult());
 
-        var sut = new TypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+        var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
@@ -113,7 +113,7 @@ public class TypeControllerTests
     [Test, MoqAutoData]
     public void Post_WhenValidationErrors_RedirectToEventFormat(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] TypeController sut)
+        [Greedy] EventTypeController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
@@ -122,14 +122,14 @@ public class TypeControllerTests
 
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new TypeViewModel();
+        var submitModel = new EventTypeViewModel();
         var actualResult = sut.Post(submitModel, new CancellationToken());
 
         var result = actualResult.Result.As<ViewResult>();
 
         sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<TypeViewModel>());
-        (result.Model as TypeViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        Assert.That(result.Model, Is.TypeOf<EventTypeViewModel>());
+        (result.Model as EventTypeViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

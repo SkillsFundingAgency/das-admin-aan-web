@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
-public class DateAndTimeViewModel : EventPageEditFields
+public class EventDateAndTimeViewModel : EventPageEditFields
 {
     public DateTime? DateOfEvent { get; set; }
     public int? StartHour { get; set; }

@@ -11,14 +11,14 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
 [Route("events/new/type", Name = RouteNames.ManageEvent.EventType)]
-public class TypeController : Controller
+public class EventTypeController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
     private readonly ISessionService _sessionService;
-    private readonly IValidator<TypeViewModel> _validator;
+    private readonly IValidator<EventTypeViewModel> _validator;
 
     public const string ViewPath = "~/Views/ManageEvent/EventType.cshtml";
-    public TypeController(IOuterApiClient outerApiClient, ISessionService sessionService, IValidator<TypeViewModel> validator)
+    public EventTypeController(IOuterApiClient outerApiClient, ISessionService sessionService, IValidator<EventTypeViewModel> validator)
     {
         _outerApiClient = outerApiClient;
         _sessionService = sessionService;
@@ -33,7 +33,7 @@ public class TypeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(TypeViewModel submitModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> Post(EventTypeViewModel submitModel, CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.EventTitle = submitModel.EventTitle;
@@ -54,7 +54,7 @@ public class TypeController : Controller
         return RedirectToRoute(RouteNames.ManageEvent.Description);
     }
 
-    private async Task<TypeViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
+    private async Task<EventTypeViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
     {
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
         var regionTask = _outerApiClient.GetRegions(cancellationToken);
@@ -71,7 +71,7 @@ public class TypeController : Controller
 
         var regionsWithNational = regionDropdowns.ToList();
         regionsWithNational.Add(new RegionSelection("National", 0));
-        return new TypeViewModel
+        return new EventTypeViewModel
         {
             EventTitle = sessionModel.EventTitle,
             EventTypeId = sessionModel.EventTypeId,

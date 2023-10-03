@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
-public class DescriptionViewModel : EventPageEditFields
+public class EventDescriptionViewModel : EventPageEditFields
 {
     public string? EventOutline { get; set; }
     public string? EventSummary { get; set; }

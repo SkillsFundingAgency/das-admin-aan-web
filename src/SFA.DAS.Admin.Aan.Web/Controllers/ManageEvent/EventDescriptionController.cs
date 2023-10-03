@@ -11,13 +11,13 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
 [Route("events/new/description", Name = RouteNames.ManageEvent.Description)]
-public class DescriptionController : Controller
+public class EventDescriptionController : Controller
 {
     private readonly ISessionService _sessionService;
-    private readonly IValidator<DescriptionViewModel> _validator;
+    private readonly IValidator<EventDescriptionViewModel> _validator;
 
-    public const string ViewPath = "~/Views/ManageEvent/Description.cshtml";
-    public DescriptionController(ISessionService sessionService, IValidator<DescriptionViewModel> validator)
+    public const string ViewPath = "~/Views/ManageEvent/EventDescription.cshtml";
+    public EventDescriptionController(ISessionService sessionService, IValidator<EventDescriptionViewModel> validator)
     {
         _sessionService = sessionService;
         _validator = validator;
@@ -32,7 +32,7 @@ public class DescriptionController : Controller
     }
 
     [HttpPost]
-    public IActionResult Post(DescriptionViewModel submitModel)
+    public IActionResult Post(EventDescriptionViewModel submitModel)
     {
 
         var result = _validator.Validate(submitModel);
@@ -52,9 +52,9 @@ public class DescriptionController : Controller
         return RedirectToRoute(RouteNames.ManageEvent.HasGuestSpeakers);
     }
 
-    private DescriptionViewModel GetViewModel(EventSessionModel sessionModel)
+    private EventDescriptionViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        return new DescriptionViewModel
+        return new EventDescriptionViewModel
         {
             EventOutline = sessionModel.EventOutline,
             EventSummary = sessionModel.EventSummary,

@@ -3,7 +3,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
-public class DescriptionViewModelValidator : AbstractValidator<DescriptionViewModel>
+public class EventDescriptionViewModelValidator : AbstractValidator<EventDescriptionViewModel>
 {
 
     public const string EventOutlineEmpty = "You must include an event outline";
@@ -11,7 +11,7 @@ public class DescriptionViewModelValidator : AbstractValidator<DescriptionViewMo
     public const string EventSummaryEmpty = "You must include an event summary";
     public const string EventSummaryTooLong = "Your event summary must be 2000 characters or less";
 
-    public DescriptionViewModelValidator()
+    public EventDescriptionViewModelValidator()
     {
         RuleFor(x => x.EventOutline)
             .NotEmpty()

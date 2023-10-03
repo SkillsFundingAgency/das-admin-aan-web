@@ -5,19 +5,19 @@ using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
 
-public class DescriptionViewModelValidatorTests
+public class EventDescriptionViewModelValidatorTests
 {
-    [TestCase(0, DescriptionViewModelValidator.EventOutlineEmpty, false)]
+    [TestCase(0, EventDescriptionViewModelValidator.EventOutlineEmpty, false)]
     [TestCase(1, null, true)]
     [TestCase(ManageEventValidation.EventOutlineMaxLength, null, true)]
     [TestCase(ManageEventValidation.EventOutlineMaxLength + 1,
-        DescriptionViewModelValidator.EventOutlineTooLong, false)]
+        EventDescriptionViewModelValidator.EventOutlineTooLong, false)]
     public void Validate_EventOutline(int lengthOfOutline, string? errorMessage, bool isValid)
     {
-        var model = new DescriptionViewModel
+        var model = new EventDescriptionViewModel
         { EventOutline = new string('x', lengthOfOutline), EventSummary = "y" };
 
-        var sut = new DescriptionViewModelValidator();
+        var sut = new EventDescriptionViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
@@ -31,17 +31,17 @@ public class DescriptionViewModelValidatorTests
         }
     }
 
-    [TestCase(0, DescriptionViewModelValidator.EventSummaryEmpty, false)]
+    [TestCase(0, EventDescriptionViewModelValidator.EventSummaryEmpty, false)]
     [TestCase(1, null, true)]
     [TestCase(ManageEventValidation.EventSummaryMaxLength, null, true)]
     [TestCase(ManageEventValidation.EventSummaryMaxLength + 1,
-        DescriptionViewModelValidator.EventSummaryTooLong, false)]
+        EventDescriptionViewModelValidator.EventSummaryTooLong, false)]
     public void Validate_EventSummary(int lengthOfSummary, string? errorMessage, bool isValid)
     {
-        var model = new DescriptionViewModel
+        var model = new EventDescriptionViewModel
         { EventOutline = "x", EventSummary = new string('x', lengthOfSummary) };
 
-        var sut = new DescriptionViewModelValidator();
+        var sut = new EventDescriptionViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
