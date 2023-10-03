@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -20,11 +21,25 @@ public class CheckYourAnswersControllerTests
     [MoqAutoData]
     public void GetCheckYourAnsweers_ReturnsApiResponse(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Greedy] CheckYourAnswersController sut,
-        List<Calendar> calendars)
+        List<Calendar> calendars,
+        GetRegionsResult regionsResult)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
+
         outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
+        outerAPiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
+
+        var sessionServiceMock = new Mock<ISessionService>();
+        var sessionModel = new EventSessionModel
+        {
+            CalendarId = calendars.First().Id,
+            RegionId = regionsResult.Regions.First().Id
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
@@ -32,6 +47,8 @@ public class CheckYourAnswersControllerTests
         var vm = actualResult.Model as CheckYourAnswersViewModel;
         vm!.CancelLink.Should().Be(NetworkEventsUrl);
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
+        vm.EventRegion.Should().Be(regionsResult.Regions.First(x => x.Id == sessionModel.RegionId).Area);
+        vm.EventType.Should().Be(calendars.First(x => x.Id == sessionModel.CalendarId).CalendarName);
     }
 
     [Test, MoqAutoData]
