@@ -1,14 +1,15 @@
 ﻿using FluentValidation.TestHelper;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
-using SFA.DAS.Admin.Aan.Web.Validators;
+using SFA.DAS.Admin.Aan.Application.Constants;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
+using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
 public class OrganiserDetailsViewModelValidatorTests
 {
     [TestCase(0, OrganiserDetailsViewModelValidator.OrganiserNameEmpty, false)]
     [TestCase(1, null, true)]
-    [TestCase(OrganiserDetailsViewModelValidator.OrganiserNameMaximumLength, null, true)]
-    [TestCase(OrganiserDetailsViewModelValidator.OrganiserNameMaximumLength + 1, OrganiserDetailsViewModelValidator.OrganiserNameTooLong, false)]
+    [TestCase(ManageEventValidation.OrganiserNameMaximumLength, null, true)]
+    [TestCase(ManageEventValidation.OrganiserNameMaximumLength + 1, OrganiserDetailsViewModelValidator.OrganiserNameTooLong, false)]
     public void Validate_OrganiserName(int lengthOfOrganiserName, string? errorMessage, bool isValid)
     {
         var model = new OrganiserDetailsViewModel
@@ -29,8 +30,8 @@ public class OrganiserDetailsViewModelValidatorTests
     }
 
     [TestCase(0, OrganiserDetailsViewModelValidator.OrganiserEmailEmpty, false)]
-    [TestCase(OrganiserDetailsViewModelValidator.OrganiserEmailMaximumLength, null, true)]
-    [TestCase(OrganiserDetailsViewModelValidator.OrganiserEmailMaximumLength + 1, OrganiserDetailsViewModelValidator.OrganiserEmailTooLong, false)]
+    [TestCase(ManageEventValidation.OrganiserEmailMaximumLength, null, true)]
+    [TestCase(ManageEventValidation.OrganiserEmailMaximumLength + 1, OrganiserDetailsViewModelValidator.OrganiserEmailTooLong, false)]
     public void Validate_OrganisationEmail_EmptyAndLength(int lengthOfOrganiserEmail, string? errorMessage, bool isValid)
     {
         var organiserEmail = string.Empty;

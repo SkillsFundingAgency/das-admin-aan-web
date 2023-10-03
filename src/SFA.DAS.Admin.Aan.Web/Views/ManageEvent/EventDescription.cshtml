@@ -1,5 +1,5 @@
 ﻿@using SFA.DAS.Admin.Aan.Web.Infrastructure
-@model SFA.DAS.Admin.Aan.Web.Models.NetworkEvent.EventDescriptionViewModel
+@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.EventDescriptionViewModel
 @{
     ViewData["Title"] = "Create Calendar Event";
 }
@@ -14,6 +14,8 @@
             <h1 class="govuk-heading-l">
                 <span class="govuk-caption-l">@Model.PageTitle</span>
             </h1>
+            <input type="hidden" asp-for="@Model.PageTitle" />
+            <input type="hidden" asp-for="@Model.PostLink"/> 
             <input type="hidden" asp-for="@Model.CancelLink"/>
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.EventOutlineMaxCount">
                 <div esfa-validation-marker-for="@Model.EventOutline" class="govuk-form-group"> 

@@ -1,6 +1,7 @@
 ﻿using FluentValidation.TestHelper;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
-using SFA.DAS.Admin.Aan.Web.Validators;
+using SFA.DAS.Admin.Aan.Application.Constants;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
+using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
 
@@ -8,8 +9,8 @@ public class EventDescriptionViewModelValidatorTests
 {
     [TestCase(0, EventDescriptionViewModelValidator.EventOutlineEmpty, false)]
     [TestCase(1, null, true)]
-    [TestCase(EventDescriptionViewModelValidator.EventOutlineMaxLength, null, true)]
-    [TestCase(EventDescriptionViewModelValidator.EventOutlineMaxLength + 1,
+    [TestCase(ManageEventValidation.EventOutlineMaxLength, null, true)]
+    [TestCase(ManageEventValidation.EventOutlineMaxLength + 1,
         EventDescriptionViewModelValidator.EventOutlineTooLong, false)]
     public void Validate_EventOutline(int lengthOfOutline, string? errorMessage, bool isValid)
     {
@@ -32,8 +33,8 @@ public class EventDescriptionViewModelValidatorTests
 
     [TestCase(0, EventDescriptionViewModelValidator.EventSummaryEmpty, false)]
     [TestCase(1, null, true)]
-    [TestCase(EventDescriptionViewModelValidator.EventSummaryMaxLength, null, true)]
-    [TestCase(EventDescriptionViewModelValidator.EventSummaryMaxLength + 1,
+    [TestCase(ManageEventValidation.EventSummaryMaxLength, null, true)]
+    [TestCase(ManageEventValidation.EventSummaryMaxLength + 1,
         EventDescriptionViewModelValidator.EventSummaryTooLong, false)]
     public void Validate_EventSummary(int lengthOfSummary, string? errorMessage, bool isValid)
     {

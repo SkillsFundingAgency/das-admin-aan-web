@@ -1,8 +1,7 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
+﻿using FluentAssertions;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Extensions;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Models;
@@ -28,12 +27,5 @@ public class EventFormatViewModelTests
         vm.EventFormats.Count.Should().Be(3);
         vm.EventFormat.Should().Be(eventFormat);
         vm.EventFormats.Should().BeEquivalentTo(expectedEventFormatChecklistLookup);
-    }
-
-    [Test, AutoData]
-    public void Operator_GivenGetEventFormatRequest_ReturnsViewModel(GetManageEventFormatRequest source)
-    {
-        EventFormatViewModel sut = source;
-        sut.EventFormat.Should().Be(source.EventFormat);
     }
 }

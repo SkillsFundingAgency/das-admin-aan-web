@@ -6,7 +6,7 @@ using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
-using SFA.DAS.Admin.Aan.Web.Models.NetworkEvent;
+using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent.GuestSpeakers;
@@ -137,6 +137,6 @@ public class GuestSpeakerControllerListTests
         var result = actualResult.As<RedirectToRouteResult>();
         sut.ModelState.IsValid.Should().BeTrue();
 
-        result.RouteName.Should().Be(RouteNames.ManageEvent.EventDateTime);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.DateAndTime);
     }
 }
