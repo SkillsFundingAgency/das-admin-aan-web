@@ -4,17 +4,14 @@ namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 public class CheckYourAnswersViewModel : ManageEventViewModelBase
 {
-    public string PreviewLink { get; set; }
+    public string? PreviewLink { get; set; }
     public bool HasSeenPreview { get; set; }
 
     public EventFormat? EventFormat { get; set; }
 
     public string? EventTitle { get; set; }
-    // public int? CalendarId { get; set; }
-    // public int? RegionId { get; set; }
-
     public string? EventType { get; set; }
-    public string EventRegion { get; set; }
+    public string? EventRegion { get; set; }
 
     public string? EventOutline { get; set; }
     public string? EventSummary { get; set; }

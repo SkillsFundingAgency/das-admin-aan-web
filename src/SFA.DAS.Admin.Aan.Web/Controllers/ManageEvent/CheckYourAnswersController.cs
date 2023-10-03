@@ -28,51 +28,12 @@ public class CheckYourAnswersController : Controller
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
-
-        // // MFCMFC remove after dev
-        // var sessionModel = new EventSessionModel();
-        //
-        // sessionModel.EventFormat = EventFormat.Online;
-        // sessionModel.EventTitle = "event title 1";
-        // sessionModel.CalendarId = 3;
-        // sessionModel.RegionId = 0;
-        // sessionModel.EventOutline = "event outline";
-        // sessionModel.EventSummary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sit amet bibendum arcu. Aenean tristique ut elit a euismod. Praesent vitae eros vel quam accumsan finibus. Phasellus cursus purus ut elit imperdiet, lacinia rutrum eros sagittis. Nunc commodo velit hendrerit semper ornare. Maecenas ornare neque vitae commodo vehicula. Integer nec congue libero. Phasellus dignissim efficitur massa id vestibulum. Praesent vulputate, enim non varius gravida, nunc purus bibendum nisl, sed iaculis augue augue nec purus. Vestibulum eu diam tincidunt, sagittis risus in, maximus ante.\r\n\r\n*   _first_\r\n*   second\r\n*   **third**\r\n\r\nsecond list\r\n\r\n1.  tenth\r\n2.  eleventh\r\n3.  12";
-        //
-        // sessionModel.HasGuestSpeakers = true;
-        //
-        // sessionModel.GuestSpeakers = new List<GuestSpeaker>
-        // {
-        //     new GuestSpeaker("Dr Herbert West", "Head of Research and Development for Alternate Life States, Miskatonic University",1 ),
-        //     new GuestSpeaker("Mark C","Senior Dev",2)
-        // };
-        //
-        // sessionModel.DateOfEvent = DateTime.Today.AddDays(1);
-        // sessionModel.StartHour = 11;
-        // sessionModel.StartMinutes = 0;
-        // sessionModel.EndHour = 13;
-        // sessionModel.EndMinutes = 30;
-        //
-        //
-        // sessionModel.Location = "event location";
-        // sessionModel.EventLink = "http://www.google.com";
-        // //sessionModel.EventLink = null;
-        //
-        // sessionModel.IsAtSchool = true;
-        // sessionModel.SchoolName = "Broadwater school etc etc";
-        //
-        // sessionModel.ContactName = "organiser name";
-        // sessionModel.ContactEmail = "organiserEmail@test.com";
-        //
-        // sessionModel.PlannedAttendees = 5;
-
-
         var model = await GetViewModel(sessionModel, cancellationToken);
         return View(ViewPath, model);
     }
 
     [HttpPost]
-    public IActionResult Post(CheckYourAnswersViewModel submitModel)
+    public IActionResult Post()
     {
         return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
     }
