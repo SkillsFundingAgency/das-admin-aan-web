@@ -73,7 +73,7 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
         }
         else
         {
-            result.RouteName.Should().Be(RouteNames.ManageEvent.DateTime);
+            result.RouteName.Should().Be(RouteNames.ManageEvent.DateAndTime);
         }
     }
 

@@ -34,7 +34,7 @@ public class EventDateAndTimeControllerTests
     public void Get_ReturnsExpectedPostLink(
         [Greedy] EventDateAndTimeController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.DateTime, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.DateAndTime, PostUrl);
         var result = (ViewResult)sut.Get();
         Assert.That(result.Model, Is.TypeOf<EventDateAndTimeViewModel>());
         var vm = result.Model as EventDateAndTimeViewModel;

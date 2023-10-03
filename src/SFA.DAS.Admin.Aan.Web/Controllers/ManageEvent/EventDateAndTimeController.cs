@@ -11,7 +11,7 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/dateandtime", Name = RouteNames.ManageEvent.DateTime)]
+[Route("events/new/dateandtime", Name = RouteNames.ManageEvent.DateAndTime)]
 public class EventDateAndTimeController : Controller
 {
     private readonly ISessionService _sessionService;
@@ -65,7 +65,7 @@ public class EventDateAndTimeController : Controller
             EndHour = sessionModel.EndHour,
             EndMinutes = sessionModel.EndMinutes,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.DateTime)!,
+            PostLink = Url.RouteUrl(RouteNames.ManageEvent.DateAndTime)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }

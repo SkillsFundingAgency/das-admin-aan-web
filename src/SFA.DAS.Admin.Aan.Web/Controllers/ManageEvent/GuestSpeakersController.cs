@@ -51,7 +51,7 @@ public class GuestSpeakersController : Controller
         _sessionService.Set(sessionModel);
 
         if (sessionModel.HasGuestSpeakers == true) return RedirectToRoute(RouteNames.ManageEvent.GuestSpeakerList);
-        return RedirectToRoute(RouteNames.ManageEvent.DateTime);
+        return RedirectToRoute(RouteNames.ManageEvent.DateAndTime);
     }
 
     [HttpGet]
@@ -123,7 +123,7 @@ public class GuestSpeakersController : Controller
     [Route("", Name = RouteNames.ManageEvent.GuestSpeakerList)]
     public IActionResult PostGuestSpeakerList()
     {
-        return RedirectToRoute(RouteNames.ManageEvent.DateTime);
+        return RedirectToRoute(RouteNames.ManageEvent.DateAndTime);
     }
 
     private HasGuestSpeakersViewModel GetViewModelHasGuestSpeakers(EventSessionModel sessionModel)

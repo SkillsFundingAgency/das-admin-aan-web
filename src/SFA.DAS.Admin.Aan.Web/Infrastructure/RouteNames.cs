@@ -18,7 +18,7 @@ public static class RouteNames
         public const string GuestSpeakerAdd = nameof(GuestSpeakerAdd);
         public const string GuestSpeakerDelete = nameof(GuestSpeakerDelete);
         public const string CreateEvent = nameof(CreateEvent);
-        public const string DateTime = nameof(DateTime);
+        public const string DateAndTime = nameof(DateAndTime);
         public const string Location = nameof(Location);
         public const string IsAtSchool = nameof(IsAtSchool);
         public const string SchoolName = nameof(SchoolName);
