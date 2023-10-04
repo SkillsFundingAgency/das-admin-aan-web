@@ -88,7 +88,8 @@ public class CheckYourAnswersController : Controller
 
     private Guid GetMemberId()
     {
-        var id = new Guid();
+        var id = Guid.Empty;
+
         var memberId = _sessionService.Get(SessionKeys.MemberId);
 
         if (Guid.TryParse(memberId, out var newGuid))

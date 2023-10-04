@@ -78,6 +78,18 @@ public class EventSessionModel
             guestSpeakers.AddRange(source.GuestSpeakers.Select(guest => new Guest(guest.GuestName, guest.GuestJobTitle)));
         }
 
+        DateTime? startDate = null;
+        if (source.Start.HasValue)
+        {
+            startDate = source.Start.Value.ToUniversalTime();
+        }
+
+        DateTime? endDate = null;
+        if (source.End.HasValue)
+        {
+            endDate = source.End.Value.ToUniversalTime();
+        }
+
         return new()
         {
             CalendarTypeId = source.CalendarId,
@@ -87,17 +99,17 @@ public class EventSessionModel
             Summary = source.EventSummary,
             RegionId = source.RegionId,
             Guests = guestSpeakers,
-            StartDate = source.Start.Value.ToUniversalTime(),
-            EndDate = source?.End.Value.ToUniversalTime(),
-            Location = source?.Location,
-            EventLink = source?.EventLink,
+            StartDate = startDate,
+            EndDate = endDate,
+            Location = source.Location,
+            EventLink = source.EventLink,
             Urn = urn,
-            ContactName = source?.ContactName,
-            ContactEmail = source?.ContactEmail,
-            PlannedAttendees = source?.PlannedAttendees,
-            Postcode = source?.Postcode,
-            Latitude = source?.Latitude,
-            Longitude = source?.Longitude
+            ContactName = source.ContactName,
+            ContactEmail = source.ContactEmail,
+            PlannedAttendees = source.PlannedAttendees,
+            Postcode = source.Postcode,
+            Latitude = source.Latitude,
+            Longitude = source.Longitude
         };
     }
 }

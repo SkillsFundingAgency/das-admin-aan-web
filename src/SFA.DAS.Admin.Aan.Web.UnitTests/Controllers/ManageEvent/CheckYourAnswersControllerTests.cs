@@ -2,7 +2,6 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
@@ -10,6 +9,7 @@ using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using Calendar = SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Calendar;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent;
 public class CheckYourAnswersControllerTests
@@ -17,9 +17,8 @@ public class CheckYourAnswersControllerTests
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
 
-    [Test]
-    [MoqAutoData]
-    public void GetCheckYourAnsweers_ReturnsApiResponse(
+    [Test, MoqAutoData]
+    public void GetCheckYourAnswers_ReturnsApiResponse(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
@@ -86,5 +85,20 @@ public class CheckYourAnswersControllerTests
         var result = response.Result as RedirectToRouteResult;
         sut.ModelState.IsValid.Should().BeTrue();
         result!.RouteName.Should().Be(RouteNames.ManageEvent.EventPublished);
+    }
+
+    [Test, MoqAutoData]
+    public void GetPublishEvent(
+        [Greedy] CheckYourAnswersController sut,
+        Guid eventId)
+
+    {
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
+        var result = sut.EventPublished(eventId);
+        var actualResult = result as ViewResult;
+
+        Assert.That(actualResult!.Model, Is.TypeOf<EventPublishedViewModel>());
+        var vm = actualResult.Model as EventPublishedViewModel;
+        vm!.ManageEventsLink.Should().Be(NetworkEventsUrl);
     }
 }
