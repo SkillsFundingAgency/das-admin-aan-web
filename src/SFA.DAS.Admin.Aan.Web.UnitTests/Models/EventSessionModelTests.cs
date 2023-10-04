@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using SFA.DAS.Admin.Aan.Application.Constants;
+using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Models;
@@ -60,6 +61,34 @@ public class EventSessionModelTests
             var expectedDate = new DateTime(dateTime!.Value.Year, dateTime.Value.Month, dateTime.Value.Day, hour!.Value,
                 minutes!.Value, 0);
             vm.End.Should().Be(expectedDate);
+        }
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public void Operator_CreateEventRequest_CheckGuestSpeakers(bool hasGuestSpeakers)
+    {
+        var guestSpeakers = new List<GuestSpeaker>
+        {
+            new GuestSpeaker("name1", "jobTitle1", 1),
+            new GuestSpeaker("name2", "jobTitle2", 2)
+        };
+
+        var model = new EventSessionModel
+        {
+            HasGuestSpeakers = hasGuestSpeakers,
+            GuestSpeakers = guestSpeakers
+        };
+
+        var request = (CreateEventRequest)model;
+
+        if (hasGuestSpeakers)
+        {
+            request.Guests.Count.Should().Be(2);
+        }
+        else
+        {
+            request.Guests.Any().Should().BeFalse();
         }
     }
 }

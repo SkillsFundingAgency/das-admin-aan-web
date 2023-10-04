@@ -69,7 +69,9 @@ public class EventSessionModel
 
     public static implicit operator CreateEventRequest(EventSessionModel source)
     {
-        long.TryParse(source.Urn, out var urn);
+        var urnToUse = (long?)null;
+
+        if (long.TryParse(source.Urn, out var urn)) urnToUse = urn;
 
         var guestSpeakers = new List<Guest>();
 
@@ -103,7 +105,7 @@ public class EventSessionModel
             EndDate = endDate,
             Location = source.Location,
             EventLink = source.EventLink,
-            Urn = urn,
+            Urn = urnToUse,
             ContactName = source.ContactName,
             ContactEmail = source.ContactEmail,
             PlannedAttendees = source.PlannedAttendees,
