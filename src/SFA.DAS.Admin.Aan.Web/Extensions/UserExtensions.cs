@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using SFA.DAS.Admin.Aan.Web.Authentication;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
-using SFA.DAS.Admin.Aan.Web.Authentication;
 
 namespace SFA.DAS.Admin.Aan.Web.Extensions;
 
