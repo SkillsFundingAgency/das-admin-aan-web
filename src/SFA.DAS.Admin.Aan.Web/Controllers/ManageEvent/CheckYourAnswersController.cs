@@ -38,11 +38,8 @@ public class CheckYourAnswersController : Controller
         return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
     }
 
-
     private async Task<CheckYourAnswersViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
     {
-
-
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
         var regionTask = _outerApiClient.GetRegions(cancellationToken);
 

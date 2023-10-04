@@ -43,13 +43,9 @@ public class CheckYourAnswersViewModel : ManageEventViewModelBase
     {
         if (Start == null || End == null) return "";
 
-        var startDateTimeFormatted = Start.Value.Minute == 0
-            ? Start.Value.ToString("htt").ToLower()
-            : Start.Value.ToString("h:mmtt").ToLower();
+        var startDateTimeFormatted = Start.Value.ToString("h:mmtt").ToLower();
 
-        var endDateTimeFormatted = End.Value.Minute == 0
-            ? End.Value.ToString("htt").ToLower()
-            : End.Value.ToString("h:mmtt").ToLower();
+        var endDateTimeFormatted = End.Value.ToString("h:mmtt").ToLower();
 
         return Start.Value.ToString("d MMMM yyyy") + ", " + startDateTimeFormatted + " to " + endDateTimeFormatted;
     }
