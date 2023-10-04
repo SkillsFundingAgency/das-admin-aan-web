@@ -200,7 +200,7 @@
                         @foreach (var speaker in Model.GuestSpeakers)
                         {
                             <li>
-                                @speaker.Name.Trim(), @speaker.JobRoleAndOrganisation.Trim()
+                                @speaker.GuestName.Trim(), @speaker.GuestJobTitle.Trim()
                             </li>
                         }
                     </ol>
