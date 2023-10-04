@@ -73,7 +73,7 @@ public class EventTypeController : Controller
         regionsWithNational.Add(new RegionSelection("National", 0));
         return new EventTypeViewModel
         {
-            EventTitle = sessionModel.EventTitle,
+            EventTitle = sessionModel.EventTitle?.Trim(),
             EventTypeId = sessionModel.CalendarId,
             EventRegionId = sessionModel.RegionId,
             EventTypes = eventTypeDropdown.ToList(),

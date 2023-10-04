@@ -44,11 +44,11 @@ public class LocationController : Controller
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
-        sessionModel.Location = submitModel.EventLocation;
-        sessionModel.EventLink = submitModel.OnlineEventLink;
+        sessionModel.Location = submitModel.EventLocation?.Trim();
+        sessionModel.EventLink = submitModel.OnlineEventLink?.Trim();
         sessionModel.Latitude = submitModel.Latitude;
         sessionModel.Longitude = submitModel.Longitude;
-        sessionModel.Postcode = submitModel.Postcode;
+        sessionModel.Postcode = submitModel.Postcode?.Trim();
         _sessionService.Set(sessionModel);
 
         return RedirectToRoute(submitModel.ShowLocationDropdown ? RouteNames.ManageEvent.IsAtSchool : RouteNames.ManageEvent.OrganiserDetails);

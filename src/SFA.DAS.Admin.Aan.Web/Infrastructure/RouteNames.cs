@@ -25,5 +25,6 @@ public static class RouteNames
         public const string OrganiserDetails = nameof(OrganiserDetails);
         public const string NumberOfAttendees = nameof(NumberOfAttendees);
         public const string CheckYourAnswers = nameof(CheckYourAnswers);
+        public const string EventPublished = nameof(EventPublished);
     }
 }

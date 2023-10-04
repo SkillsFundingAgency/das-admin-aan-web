@@ -1,6 +1,6 @@
 ﻿using SFA.DAS.Admin.Aan.Application.Constants;
 
-namespace SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
+namespace SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 public class CreateEventRequest
 {
     public Guid RequestedByMemberId { get; set; }
@@ -34,6 +34,7 @@ public class Guest
 
     public string GuestName { get; set; }
     public string GuestJobTitle { get; set; }
-
-
 }
+
+
+

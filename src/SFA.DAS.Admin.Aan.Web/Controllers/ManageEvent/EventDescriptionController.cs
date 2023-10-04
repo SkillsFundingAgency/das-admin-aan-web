@@ -45,8 +45,8 @@ public class EventDescriptionController : Controller
         }
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
-        sessionModel.EventOutline = submitModel.EventOutline;
-        sessionModel.EventSummary = submitModel.EventSummary;
+        sessionModel.EventOutline = submitModel.EventOutline?.Trim();
+        sessionModel.EventSummary = submitModel.EventSummary?.Trim();
         _sessionService.Set(sessionModel);
 
         return RedirectToRoute(RouteNames.ManageEvent.HasGuestSpeakers);
@@ -56,8 +56,8 @@ public class EventDescriptionController : Controller
     {
         return new EventDescriptionViewModel
         {
-            EventOutline = sessionModel.EventOutline,
-            EventSummary = sessionModel.EventSummary,
+            EventOutline = sessionModel.EventOutline?.Trim(),
+            EventSummary = sessionModel.EventSummary?.Trim(),
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle

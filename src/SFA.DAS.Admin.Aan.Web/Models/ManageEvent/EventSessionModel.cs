@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Admin.Aan.Application.Constants;
+using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
@@ -63,5 +64,40 @@ public class EventSessionModel
             return new DateTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, EndHour.Value,
                 EndMinutes.Value, 0, DateTimeKind.Unspecified);
         }
+    }
+
+
+    public static implicit operator CreateEventRequest(EventSessionModel source)
+    {
+        long.TryParse(source.Urn, out var urn);
+
+        var guestSpeakers = new List<Guest>();
+
+        if (source.HasGuestSpeakers.HasValue && source.HasGuestSpeakers.Value && source.GuestSpeakers.Any())
+        {
+            guestSpeakers.AddRange(source.GuestSpeakers.Select(guest => new Guest(guest.GuestName, guest.GuestJobTitle)));
+        }
+
+        return new()
+        {
+            CalendarTypeId = source.CalendarId,
+            EventFormat = source.EventFormat,
+            Title = source.EventTitle,
+            Description = source.EventOutline,
+            Summary = source.EventSummary,
+            RegionId = source.RegionId,
+            Guests = guestSpeakers,
+            StartDate = source.Start.Value.ToUniversalTime(),
+            EndDate = source?.End.Value.ToUniversalTime(),
+            Location = source?.Location,
+            EventLink = source?.EventLink,
+            Urn = urn,
+            ContactName = source?.ContactName,
+            ContactEmail = source?.ContactEmail,
+            PlannedAttendees = source?.PlannedAttendees,
+            Postcode = source?.Postcode,
+            Latitude = source?.Latitude,
+            Longitude = source?.Longitude
+        };
     }
 }
