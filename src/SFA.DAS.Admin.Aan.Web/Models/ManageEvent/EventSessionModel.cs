@@ -120,7 +120,7 @@ public class EventSessionModel
 
         return new()
         {
-            CalendarTypeId = source.CalendarId,
+            CalendarId = source.CalendarId,
             EventFormat = source.EventFormat,
             Title = source.EventTitle,
             Description = source.EventOutline,

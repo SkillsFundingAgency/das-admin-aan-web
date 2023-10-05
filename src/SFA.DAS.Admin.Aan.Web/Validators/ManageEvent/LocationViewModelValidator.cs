@@ -7,7 +7,7 @@ namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 public class LocationViewModelValidator : AbstractValidator<LocationViewModel>
 {
     public const string EventLocationEmpty = "You must include an in person event location";
-    public const string EventLinkMustBeValid = "The event link must be a valid url eg https://www.test.com";
+    public const string EventLinkMustBeValid = "The event link must be a valid URL, for example https://www.test.com";
     public LocationViewModelValidator()
     {
         RuleFor(e => e.SearchTerm)

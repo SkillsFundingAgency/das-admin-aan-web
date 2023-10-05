@@ -3,7 +3,7 @@
 namespace SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 public class CreateEventRequest
 {
-    public int? CalendarTypeId { get; set; }
+    public int? CalendarId { get; set; }
     public EventFormat? EventFormat { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
