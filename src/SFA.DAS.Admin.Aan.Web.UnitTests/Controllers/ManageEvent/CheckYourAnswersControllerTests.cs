@@ -85,6 +85,7 @@ public class CheckYourAnswersControllerTests
         var result = response.Result as RedirectToRouteResult;
         sut.ModelState.IsValid.Should().BeTrue();
         result!.RouteName.Should().Be(RouteNames.ManageEvent.EventPublished);
+        sessionServiceMock.Verify(s => s.Delete(nameof(EventSessionModel)));
     }
 
     [Test, MoqAutoData]
