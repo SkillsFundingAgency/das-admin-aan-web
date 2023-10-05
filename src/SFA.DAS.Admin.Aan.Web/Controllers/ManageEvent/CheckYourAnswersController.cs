@@ -10,6 +10,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
+[Route("events/new/check-your-answers", Name = RouteNames.ManageEvent.CheckYourAnswers)]
 public class CheckYourAnswersController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
@@ -24,7 +25,6 @@ public class CheckYourAnswersController : Controller
     }
 
     [HttpGet]
-    [Route("events/new/check-your-answers", Name = RouteNames.ManageEvent.CheckYourAnswers)]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -33,34 +33,18 @@ public class CheckYourAnswersController : Controller
     }
 
     [HttpPost]
-    [Route("events/new/check-your-answers", Name = RouteNames.ManageEvent.CheckYourAnswers)]
     public async Task<IActionResult> Post(CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
         var request = (CreateEventRequest)sessionModel;
 
-        request.RequestedByMemberId = GetMemberId();
-        var calendarEventResponse = await _outerApiClient.PostCalendarEvent(request, cancellationToken);
-
-        return RedirectToRoute(RouteNames.ManageEvent.EventPublished, new { eventId = calendarEventResponse.CalendarEventId });
-    }
-
-    [HttpGet]
-    [Route("events/{eventId}/published", Name = RouteNames.ManageEvent.EventPublished)]
-    public IActionResult EventPublished(Guid eventId)
-    {
-        var model = new EventPublishedViewModel
-        {
-            ManageEventsLink = Url.RouteUrl(RouteNames.NetworkEvents)!
-        };
+        var calendarEventResponse = await _outerApiClient.PostCalendarEvent(GetMemberId(), request, cancellationToken);
 
         _sessionService.Delete(nameof(EventSessionModel));
 
-        var viewPathSuccessfullyPublishedEvent = "~/Views/ManageEvent/EventPublished.cshtml";
-        return View(viewPathSuccessfullyPublishedEvent, model);
+        return RedirectToRoute(RouteNames.ManageEvent.EventPublished, new { eventId = calendarEventResponse.CalendarEventId });
     }
-
 
     private async Task<CheckYourAnswersViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
     {
