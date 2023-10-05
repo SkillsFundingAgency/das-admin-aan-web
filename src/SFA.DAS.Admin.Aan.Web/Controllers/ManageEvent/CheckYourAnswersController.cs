@@ -43,8 +43,6 @@ public class CheckYourAnswersController : Controller
         request.RequestedByMemberId = GetMemberId();
         var calendarEventResponse = await _outerApiClient.PostCalendarEvent(request, cancellationToken);
 
-        _sessionService.Delete(nameof(EventSessionModel));
-
         return RedirectToRoute(RouteNames.ManageEvent.EventPublished, new { eventId = calendarEventResponse.CalendarEventId });
     }
 
@@ -56,6 +54,8 @@ public class CheckYourAnswersController : Controller
         {
             ManageEventsLink = Url.RouteUrl(RouteNames.NetworkEvents)!
         };
+
+        _sessionService.Delete(nameof(EventSessionModel));
 
         var viewPathSuccessfullyPublishedEvent = "~/Views/ManageEvent/EventPublished.cshtml";
         return View(viewPathSuccessfullyPublishedEvent, model);
