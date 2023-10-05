@@ -85,15 +85,13 @@ public class CheckYourAnswersControllerTests
         var result = response.Result as RedirectToRouteResult;
         sut.ModelState.IsValid.Should().BeTrue();
         result!.RouteName.Should().Be(RouteNames.ManageEvent.EventPublished);
-        sessionServiceMock.Verify(s => s.Delete(nameof(EventSessionModel)));
     }
 
     [Test, MoqAutoData]
-    public void GetPublishEvent(
-        [Greedy] CheckYourAnswersController sut,
-        Guid eventId)
-
+    public void GetPublishEvent([Frozen] Mock<IOuterApiClient> outerAPiMock, Guid eventId)
     {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object);
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var result = sut.EventPublished(eventId);
         var actualResult = result as ViewResult;
@@ -101,5 +99,6 @@ public class CheckYourAnswersControllerTests
         Assert.That(actualResult!.Model, Is.TypeOf<EventPublishedViewModel>());
         var vm = actualResult.Model as EventPublishedViewModel;
         vm!.ManageEventsLink.Should().Be(NetworkEventsUrl);
+        sessionServiceMock.Verify(s => s.Delete(nameof(EventSessionModel)));
     }
 }
