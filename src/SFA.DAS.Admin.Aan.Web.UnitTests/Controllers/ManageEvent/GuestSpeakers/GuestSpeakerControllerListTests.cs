@@ -23,8 +23,8 @@ public class GuestSpeakerControllerListTests
         var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
-            EventTypeId = 1,
-            EventRegionId = 2,
+            CalendarId = 1,
+            RegionId = 2,
             EventFormat = EventFormat.Hybrid,
             GuestSpeakers = new List<GuestSpeaker>()
         };
@@ -51,8 +51,8 @@ public class GuestSpeakerControllerListTests
         var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
-            EventTypeId = 1,
-            EventRegionId = 2,
+            CalendarId = 1,
+            RegionId = 2,
             EventFormat = EventFormat.Hybrid,
             GuestSpeakers = new List<GuestSpeaker>()
         };
@@ -76,8 +76,8 @@ public class GuestSpeakerControllerListTests
         var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
-            EventTypeId = 1,
-            EventRegionId = 2,
+            CalendarId = 1,
+            RegionId = 2,
             EventFormat = EventFormat.Hybrid,
             GuestSpeakers = new List<GuestSpeaker>()
         };
@@ -102,8 +102,8 @@ public class GuestSpeakerControllerListTests
         var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
-            EventTypeId = 1,
-            EventRegionId = 2,
+            CalendarId = 1,
+            RegionId = 2,
             EventFormat = EventFormat.Hybrid,
             GuestSpeakers = new List<GuestSpeaker>()
         };

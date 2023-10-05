@@ -68,7 +68,7 @@ public class LocationControllerTests
         var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventLocation == eventLocation && m.OnlineEventLink == eventOnlineLink)));
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.Location == eventLocation && m.EventLink == eventOnlineLink)));
         result.RouteName.Should().Be(submitModel.EventFormat == null
             ? RouteNames.ManageEvent.OrganiserDetails
             : RouteNames.ManageEvent.IsAtSchool);

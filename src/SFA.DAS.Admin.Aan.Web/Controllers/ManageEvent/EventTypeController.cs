@@ -37,8 +37,8 @@ public class EventTypeController : Controller
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.EventTitle = submitModel.EventTitle;
-        sessionModel.EventTypeId = submitModel.EventTypeId;
-        sessionModel.EventRegionId = submitModel.EventRegionId;
+        sessionModel.CalendarId = submitModel.EventTypeId;
+        sessionModel.RegionId = submitModel.EventRegionId;
 
         var result = await _validator.ValidateAsync(submitModel, cancellationToken);
 
@@ -74,8 +74,8 @@ public class EventTypeController : Controller
         return new EventTypeViewModel
         {
             EventTitle = sessionModel.EventTitle,
-            EventTypeId = sessionModel.EventTypeId,
-            EventRegionId = sessionModel.EventRegionId,
+            EventTypeId = sessionModel.CalendarId,
+            EventRegionId = sessionModel.RegionId,
             EventTypes = eventTypeDropdown.ToList(),
             EventRegions = regionsWithNational,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,

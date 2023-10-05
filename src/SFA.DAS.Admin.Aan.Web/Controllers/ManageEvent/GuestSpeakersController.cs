@@ -86,7 +86,7 @@ public class GuestSpeakersController : Controller
 
         var id = currentGuestList.Any() ? currentGuestList.Max(x => x.Id) + 1 : 1;
 
-        currentGuestList.Add(new GuestSpeaker(submitModel.Name!, submitModel.JobRoleAndOrganisation!, id));
+        currentGuestList.Add(new GuestSpeaker(submitModel.Name!.Trim(), submitModel.JobRoleAndOrganisation!.Trim(), id));
         sessionModel.GuestSpeakers = currentGuestList;
 
         _sessionService.Set(sessionModel);

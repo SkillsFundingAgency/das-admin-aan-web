@@ -1,0 +1,267 @@
+﻿@using SFA.DAS.Admin.Aan.Web.Extensions
+@using SFA.DAS.Admin.Aan.Application.Extensions
+@using SFA.DAS.Admin.Aan.Web.Models.ManageEvent
+@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.CheckYourAnswersViewModel
+@{
+    ViewData["Title"] = "Create Calendar Event";
+    var onlineLinkDescription = string.IsNullOrEmpty(Model.OnlineEventLink) 
+        ? "-" 
+        : "Provided";
+
+    var hideDetails = "  govuk-!-display-none";
+}
+<partial name="_validationSummary" />
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <form asp-route="@Model.PostLink" method="POST">
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-l">@Model.PageTitle</span>
+            </h1>
+            <input type="hidden" asp-for="@Model.PageTitle" />
+            <input type="hidden" asp-for="@Model.PostLink"/> 
+            <input type="hidden" asp-for="@Model.CancelLink"/>
+            
+            <h1 class="govuk-heading-l">Check your event before publishing</h1>
+
+            <div id="previewlink" class="govuk-body govuk-!-display-none">
+                You can <a href="@Model.PreviewLink" target="_blank">preview the event here</a>
+            </div>
+            
+            <h2 class="govuk-heading-m">
+                Details
+            </h2>
+
+            <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Format
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EventFormat.GetDescription()
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Type
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EventType
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Name
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EventTitle
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Region
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EventRegion
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Date and time
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.GetDateAndTimeFormatted()
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                    </dd>
+                </div>
+                @if (Model.ShowLocation)
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            In person event location
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.EventLocation
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                        </dd>
+                    </div>
+                }
+                @if (Model.ShowOnlineEventLink)
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Online link
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @onlineLinkDescription
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                        </dd>
+                    </div>
+                }
+            </dl>
+            
+            <h2 class="govuk-heading-m">
+                Description
+            </h2>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Event outline
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.EventOutline
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Event summary
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @if (!string.IsNullOrEmpty(Model.EventSummary))
+                    {
+                        @Html.MarkdownToHtml(@Model.EventSummary)
+                    }
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Does this event include guest speakers?
+                </dt>
+                <dd class="govuk-summary-list__value">
+                @{
+                    var hasGuestSpeakersText= @Model.HasGuestSpeakers.HasValue && @Model.HasGuestSpeakers.Value ? "Yes" : "No";
+                }
+                    @hasGuestSpeakersText
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Organiser name
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.OrganiserName
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Organiser email address
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.OrganiserEmail
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                </dd>
+            </div>
+        </dl>
+        
+        
+        @if (Model.HasGuestSpeakers.HasValue && Model.HasGuestSpeakers.Value)
+        {
+            <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        <h2 class="govuk-heading-m">
+                            Guest speakers
+                        </h2>
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                    <ol class="govuk-list govuk-list--number">
+                        @foreach (var speaker in Model.GuestSpeakers)
+                        {
+                            <li>
+                                @speaker.GuestName, @speaker.GuestJobTitle
+                            </li>
+                        }
+                    </ol>
+                </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                    </dd>
+                    </div>
+            </dl>
+
+        }
+        
+        <h2 class="govuk-heading-m">
+            Stats
+        </h2>
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                        Is this a school event?
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @{
+                        var isSchoolEventText= @Model.IsAtSchool.HasValue && @Model.IsAtSchool.Value ? "Yes" : "No";
+                    }
+                    @isSchoolEventText
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                </dd>
+            </div>
+                @if (Model.IsAtSchool.HasValue && Model.IsAtSchool.Value)
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Name of the school
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.SchoolName
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                        </dd>
+                    </div>
+                }
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Number of attendees expected
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.NumberOfAttendees
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                    </dd>
+                    </div>
+        </dl>
+        @* <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"> *@
+            <div class="govuk-button-group">
+                <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>
+                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

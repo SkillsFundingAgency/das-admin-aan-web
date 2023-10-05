@@ -46,17 +46,17 @@ public class NumberOfAttendeesController : Controller
         }
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
-        sessionModel.NumberOfAttendees = submitModel.NumberOfAttendees;
+        sessionModel.PlannedAttendees = submitModel.NumberOfAttendees;
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(RouteNames.ManageEvent.NumberOfAttendees);
+        return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
     }
 
     private NumberOfAttendeesViewModel GetViewModel(EventSessionModel sessionModel)
     {
         return new NumberOfAttendeesViewModel
         {
-            NumberOfAttendees = sessionModel.NumberOfAttendees,
+            NumberOfAttendees = sessionModel.PlannedAttendees,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.NumberOfAttendees)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle

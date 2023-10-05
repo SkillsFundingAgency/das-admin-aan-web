@@ -9,8 +9,8 @@ public class EventSessionModel
     public EventFormat? EventFormat { get; set; }
 
     public string? EventTitle { get; set; }
-    public int? EventTypeId { get; set; }
-    public int? EventRegionId { get; set; }
+    public int? CalendarId { get; set; }
+    public int? RegionId { get; set; }
 
     public string? EventOutline { get; set; }
     public string? EventSummary { get; set; }
@@ -23,15 +23,45 @@ public class EventSessionModel
     public int? EndHour { get; set; }
     public int? EndMinutes { get; set; }
 
-    public string? EventLocation { get; set; }
-    public string? OnlineEventLink { get; set; }
+    public string? Location { get; set; }
+    public string? EventLink { get; set; }
+
+    public double? Longitude { get; set; }
+    public double? Latitude { get; set; }
+    public string? Postcode { get; set; }
 
     public string? SchoolName { get; set; }
     public string? Urn { get; set; }
     public bool? IsAtSchool { get; set; }
 
-    public string? OrganiserName { get; set; }
-    public string? OrganiserEmail { get; set; }
+    public string? ContactName { get; set; }
+    public string? ContactEmail { get; set; }
 
-    public int? NumberOfAttendees { get; set; }
+    public int? PlannedAttendees { get; set; }
+
+    public DateTime? Start
+    {
+        get
+        {
+            if (DateOfEvent == null || !StartHour.HasValue || !StartMinutes.HasValue) return null;
+
+            var dateOfEventToUse = DateOfEvent.Value;
+
+            return new DateTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, StartHour.Value,
+                StartMinutes.Value, 0, DateTimeKind.Unspecified);
+        }
+    }
+
+    public DateTime? End
+    {
+        get
+        {
+            if (DateOfEvent == null || !EndHour.HasValue || !EndMinutes.HasValue) return null;
+
+            var dateOfEventToUse = DateOfEvent.Value;
+
+            return new DateTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, EndHour.Value,
+                EndMinutes.Value, 0, DateTimeKind.Unspecified);
+        }
+    }
 }

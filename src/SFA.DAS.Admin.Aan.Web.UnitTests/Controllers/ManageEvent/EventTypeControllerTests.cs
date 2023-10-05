@@ -30,8 +30,8 @@ public class EventTypeControllerTests
         var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
-            EventTypeId = 1,
-            EventRegionId = 2,
+            CalendarId = 1,
+            RegionId = 2,
             EventFormat = EventFormat.Hybrid
         };
 
@@ -62,8 +62,8 @@ public class EventTypeControllerTests
         var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
-            EventTypeId = 1,
-            EventRegionId = 2,
+            CalendarId = 1,
+            RegionId = 2,
             EventFormat = EventFormat.Hybrid
         };
 

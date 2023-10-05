@@ -27,8 +27,8 @@ public class GuestSpeakersControllerAddDeleteTests
         var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
-            EventTypeId = 1,
-            EventRegionId = 2,
+            CalendarId = 1,
+            RegionId = 2,
             EventFormat = EventFormat.Hybrid
         };
 
@@ -54,8 +54,8 @@ public class GuestSpeakersControllerAddDeleteTests
         var sessionModel = new EventSessionModel
         {
             EventTitle = "title",
-            EventTypeId = 1,
-            EventRegionId = 2,
+            CalendarId = 1,
+            RegionId = 2,
             EventFormat = EventFormat.Hybrid
         };
 
