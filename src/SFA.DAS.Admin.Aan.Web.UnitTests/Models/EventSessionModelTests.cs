@@ -91,4 +91,103 @@ public class EventSessionModelTests
             request.Guests.Any().Should().BeFalse();
         }
     }
+
+    [TestCase(null, null, null)]
+    [TestCase(null, true, null)]
+    [TestCase(null, false, null)]
+    [TestCase("abc", true, null)]
+    [TestCase("123", false, null)]
+    [TestCase("123", true, 123)]
+    public void Operator_CreateEventRequest_CheckUrn(string? urn, bool? isAtSchool, long? expectedUrn)
+    {
+        var model = new EventSessionModel
+        {
+            Urn = urn,
+            IsAtSchool = isAtSchool
+        };
+
+        var request = (CreateEventRequest)model;
+
+        request.Urn.Should().Be(expectedUrn);
+    }
+
+    [TestCase(EventFormat.InPerson, "location", "location")]
+    [TestCase(EventFormat.Hybrid, "location", "location")]
+    [TestCase(EventFormat.Online, "location", null)]
+    public void Operator_CreateEventRequest_CheckLocationAgainstEventFormat(EventFormat eventFormat, string? location, string? expectedLocation)
+    {
+        var model = new EventSessionModel
+        {
+            EventFormat = eventFormat,
+            Location = location
+        };
+
+        var request = (CreateEventRequest)model;
+
+        request.Location.Should().Be(expectedLocation);
+    }
+
+    [TestCase(EventFormat.InPerson, "location", "location")]
+    [TestCase(EventFormat.Hybrid, "location", "location")]
+    [TestCase(EventFormat.Online, "location", null)]
+    public void Operator_CreateEventRequest_CheckPostcodeAgainstEventFormat(EventFormat eventFormat, string? postcode, string? expected)
+    {
+        var model = new EventSessionModel
+        {
+            EventFormat = eventFormat,
+            Postcode = postcode
+        };
+
+        var request = (CreateEventRequest)model;
+
+        request.Postcode.Should().Be(expected);
+    }
+
+    [TestCase(EventFormat.InPerson, 12, 12)]
+    [TestCase(EventFormat.Hybrid, 13, 13)]
+    [TestCase(EventFormat.Online, 14, null)]
+    public void Operator_CreateEventRequest_CheckLatitudeAgainstEventFormat(EventFormat eventFormat, double? latitude, double? expected)
+    {
+        var model = new EventSessionModel
+        {
+            EventFormat = eventFormat,
+            Latitude = latitude
+        };
+
+        var request = (CreateEventRequest)model;
+
+        request.Latitude.Should().Be(expected);
+    }
+
+    [TestCase(EventFormat.InPerson, 12, 12)]
+    [TestCase(EventFormat.Hybrid, 13, 13)]
+    [TestCase(EventFormat.Online, 14, null)]
+    public void Operator_CreateEventRequest_CheckLongitudeAgainstEventFormat(EventFormat eventFormat, double? longitude, double? expected)
+    {
+        var model = new EventSessionModel
+        {
+            EventFormat = eventFormat,
+            Longitude = longitude
+        };
+
+        var request = (CreateEventRequest)model;
+
+        request.Longitude.Should().Be(expected);
+    }
+
+    [TestCase(EventFormat.InPerson, "link", null)]
+    [TestCase(EventFormat.Hybrid, "link", "link")]
+    [TestCase(EventFormat.Online, "link", "link")]
+    public void Operator_CreateEventRequest_CheckEventLinkAgainstEventFormat(EventFormat eventFormat, string? link, string? expected)
+    {
+        var model = new EventSessionModel
+        {
+            EventFormat = eventFormat,
+            EventLink = link
+        };
+
+        var request = (CreateEventRequest)model;
+
+        request.EventLink.Should().Be(expected);
+    }
 }
