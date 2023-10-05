@@ -22,5 +22,4 @@ public class EventPublishedController : Controller
 
         return View(ViewPath, model);
     }
-
 }

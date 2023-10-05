@@ -71,11 +71,18 @@ public class EventSessionModel
     {
         var urnToUse = (long?)null;
 
-        if (long.TryParse(source.Urn, out var urn)) urnToUse = urn;
+        if (long.TryParse(source.Urn, out var urn)
+            && source.IsAtSchool.HasValue
+            && source.IsAtSchool.Value)
+        {
+            urnToUse = urn;
+        }
 
         var guestSpeakers = new List<Guest>();
 
-        if (source.HasGuestSpeakers.HasValue && source.HasGuestSpeakers.Value && source.GuestSpeakers.Any())
+        if (source.HasGuestSpeakers.HasValue
+            && source.HasGuestSpeakers.Value
+            && source.GuestSpeakers.Any())
         {
             guestSpeakers.AddRange(source.GuestSpeakers.Select(guest => new Guest(guest.GuestName, guest.GuestJobTitle)));
         }
@@ -92,6 +99,25 @@ public class EventSessionModel
             endDate = source.End.Value.ToUniversalTime();
         }
 
+        var location = source.Location;
+        var postcode = source.Postcode;
+        var eventLink = source.EventLink;
+        var latitude = source.Latitude;
+        var longitude = source.Longitude;
+
+        if (source.EventFormat == Application.Constants.EventFormat.Online)
+        {
+            location = null;
+            postcode = null;
+            latitude = null;
+            longitude = null;
+        }
+
+        if (source.EventFormat == Application.Constants.EventFormat.InPerson)
+        {
+            eventLink = null;
+        }
+
         return new()
         {
             CalendarTypeId = source.CalendarId,
@@ -103,15 +129,15 @@ public class EventSessionModel
             Guests = guestSpeakers,
             StartDate = startDate,
             EndDate = endDate,
-            Location = source.Location,
-            EventLink = source.EventLink,
+            Location = location,
+            EventLink = eventLink,
             Urn = urnToUse,
             ContactName = source.ContactName,
             ContactEmail = source.ContactEmail,
             PlannedAttendees = source.PlannedAttendees,
-            Postcode = source.Postcode,
-            Latitude = source.Latitude,
-            Longitude = source.Longitude
+            Postcode = postcode,
+            Latitude = latitude,
+            Longitude = longitude
         };
     }
 }

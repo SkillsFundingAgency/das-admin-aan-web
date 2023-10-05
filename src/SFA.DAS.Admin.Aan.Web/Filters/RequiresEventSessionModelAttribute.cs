@@ -32,8 +32,8 @@ public class RequiresEventSessionModelAttribute : ActionFilterAttribute
 
     private static bool BypassEventCheck(ControllerActionDescriptor controllerActionDescriptor)
     {
-        var controllersToByPass = new[] { nameof(EventPublishedController) };
-        if (controllersToByPass.Any(controller => controllerActionDescriptor.ControllerTypeInfo.FullName!.Contains(controller)))
+        var controllersToByPass = new List<string> { nameof(EventPublishedController) };
+        if (controllersToByPass.Exists(controller => controllerActionDescriptor.ControllerTypeInfo.FullName!.Contains(controller)))
         {
             return true;
         }

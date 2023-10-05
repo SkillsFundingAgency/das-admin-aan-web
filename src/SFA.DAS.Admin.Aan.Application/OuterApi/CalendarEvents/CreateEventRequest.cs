@@ -34,6 +34,3 @@ public class Guest
     public string GuestName { get; set; }
     public string GuestJobTitle { get; set; }
 }
-
-
-

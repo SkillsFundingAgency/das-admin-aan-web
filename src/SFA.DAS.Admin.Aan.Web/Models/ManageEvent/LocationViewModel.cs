@@ -5,8 +5,9 @@ namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 public class LocationViewModel : ManageEventViewModelBase
 {
     public EventFormat? EventFormat { get; set; }
-    public string? OnlineEventLink { get; set; }
     public string? SearchResult { get; set; }
+    public string? SearchTerm { get; set; }
+    public string? OnlineEventLink { get; set; }
     public string? EventLocation => BuildLocationName();
     public int EventOnlineLinkMaxLength => ManageEventValidation.EventOnlineLinkMaxLength;
 
@@ -33,8 +34,6 @@ public class LocationViewModel : ManageEventViewModelBase
         return string.Join(", ", locationDetails);
     }
 
-
-    public string? SearchTerm { get; set; }
     public string? OrganisationName { get; set; }
     public string? Town { get; set; }
     public string? County { get; set; }
