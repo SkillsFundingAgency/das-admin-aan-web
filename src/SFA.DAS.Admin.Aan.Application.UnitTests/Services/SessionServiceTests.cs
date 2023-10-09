@@ -161,11 +161,12 @@ public class SessionServiceTests
     }
 
     [Test]
-    public void GetMemberId()
+    public void GetMemberId_ReturnsExpectedMemberId()
     {
         var expectedMemberId = Guid.NewGuid();
         var keyValue = Encoding.UTF8.GetBytes(expectedMemberId.ToString());
         _sessionMock.Setup(s => s.TryGetValue(SessionKeys.MemberId, out keyValue)).Returns(true);
+
         var actualMemberId = _sut.GetMemberId();
 
         actualMemberId.Should().Be(expectedMemberId);
