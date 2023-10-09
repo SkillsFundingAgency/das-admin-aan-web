@@ -56,7 +56,8 @@ public class LocationViewModelValidatorTests
     [TestCase("httPs://secureurl.com", EventFormat.Hybrid, true)]
     [TestCase("httpS://secureurl.com", EventFormat.Hybrid, true)]
     [TestCase("https://www.secureurl.com", EventFormat.Hybrid, true)]
-    [TestCase("https://WWW.SECUREURL.COM", EventFormat.Hybrid, true)]
+    [TestCase("tts://w.something", EventFormat.Hybrid, false)]
+
     public void Validate_EventLocation(string? url, EventFormat? eventFormat, bool isValid)
     {
         var model = new LocationViewModel
