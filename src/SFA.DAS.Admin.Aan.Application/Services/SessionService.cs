@@ -1,5 +1,6 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using SFA.DAS.Admin.Aan.Application.Constants;
+using System.Text.Json;
 
 namespace SFA.DAS.Admin.Aan.Application.Services;
 
@@ -37,4 +38,19 @@ public class SessionService : ISessionService
         var result = _httpContextAccessor.HttpContext?.Session.Keys.Any(k => k == typeof(T).Name);
         return result.GetValueOrDefault();
     }
+
+    public Guid GetMemberId()
+    {
+        var id = Guid.Empty;
+
+        var memberId = Get(SessionKeys.MemberId);
+
+        if (Guid.TryParse(memberId, out var newGuid))
+        {
+            id = newGuid;
+        }
+
+        return id;
+    }
+
 }

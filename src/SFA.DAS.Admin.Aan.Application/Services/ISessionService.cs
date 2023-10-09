@@ -10,4 +10,6 @@ public interface ISessionService
     void Delete<T>(T model);
     void Clear();
     bool Contains<T>();
+
+    Guid GetMemberId();
 }

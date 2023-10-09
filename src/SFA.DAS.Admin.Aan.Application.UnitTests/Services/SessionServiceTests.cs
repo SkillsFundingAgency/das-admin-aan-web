@@ -1,10 +1,11 @@
-﻿using System.Text;
-using System.Text.Json;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
+using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
+using System.Text;
+using System.Text.Json;
 
 namespace SFA.DAS.Admin.Aan.Application.UnitTests.Services;
 
@@ -159,9 +160,23 @@ public class SessionServiceTests
         _sessionMock.Verify(s => s.Clear());
     }
 
+    [Test]
+    public void GetMemberId()
+    {
+        var expectedMemberId = Guid.NewGuid();
+        var keyValue = Encoding.UTF8.GetBytes(expectedMemberId.ToString());
+        _sessionMock.Setup(s => s.TryGetValue(SessionKeys.MemberId, out keyValue)).Returns(true);
+        var actualMemberId = _sut.GetMemberId();
+
+        actualMemberId.Should().Be(expectedMemberId);
+    }
+
+
     public class Person
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
     }
+
+
 }

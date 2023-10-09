@@ -17,7 +17,7 @@ public class LocationViewModelValidator : AbstractValidator<LocationViewModel>
         RuleFor(e => e.OnlineEventLink)
             .Matches(RegularExpressions.UrlRegex)
             .WithMessage(EventLinkMustBeValid)
-            .When(l => !string.IsNullOrEmpty(l.OnlineEventLink));
+            .When(l => !string.IsNullOrEmpty(l.OnlineEventLink) && l.ShowOnlineEventLink);
 
     }
 

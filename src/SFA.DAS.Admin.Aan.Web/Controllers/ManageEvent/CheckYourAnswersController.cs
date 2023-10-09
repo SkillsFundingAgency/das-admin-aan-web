@@ -39,7 +39,7 @@ public class CheckYourAnswersController : Controller
 
         var request = (CreateEventRequest)sessionModel;
 
-        var calendarEventResponse = await _outerApiClient.PostCalendarEvent(GetMemberId(), request, cancellationToken);
+        var calendarEventResponse = await _outerApiClient.PostCalendarEvent(_sessionService.GetMemberId(), request, cancellationToken);
 
         _sessionService.Delete(nameof(EventSessionModel));
 
@@ -68,19 +68,5 @@ public class CheckYourAnswersController : Controller
         model.EventRegion = regions.First(x => x.RegionId == sessionModel.RegionId).Name;
 
         return model;
-    }
-
-    private Guid GetMemberId()
-    {
-        var id = Guid.Empty;
-
-        var memberId = _sessionService.Get(SessionKeys.MemberId);
-
-        if (Guid.TryParse(memberId, out var newGuid))
-        {
-            id = newGuid;
-        }
-
-        return id;
     }
 }
