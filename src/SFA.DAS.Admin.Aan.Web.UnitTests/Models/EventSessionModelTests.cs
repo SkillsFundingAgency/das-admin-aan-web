@@ -190,4 +190,22 @@ public class EventSessionModelTests
 
         request.EventLink.Should().Be(expected);
     }
+
+    [TestCase("event summary 1")]
+    [TestCase("event summary 2")]
+    public void SessionModel_Summary_MapsToDescription(string eventSummary)
+    {
+        var model = new EventSessionModel { EventSummary = eventSummary };
+        var request = (CreateEventRequest)model;
+        request.Description.Should().Be(eventSummary);
+    }
+
+    [TestCase("event outline 1")]
+    [TestCase("event outline 2")]
+    public void SessionModel_Outline_MapsToSummary(string outline)
+    {
+        var model = new EventSessionModel { EventOutline = outline };
+        var request = (CreateEventRequest)model;
+        request.Summary.Should().Be(outline);
+    }
 }
