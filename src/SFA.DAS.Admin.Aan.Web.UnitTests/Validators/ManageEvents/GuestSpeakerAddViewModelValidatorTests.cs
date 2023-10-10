@@ -4,7 +4,7 @@ using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManagerEvents;
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManageEvents;
 
 internal class GuestSpeakerAddViewModelValidatorTests
 {

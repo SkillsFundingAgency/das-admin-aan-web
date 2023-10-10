@@ -58,8 +58,8 @@ public class OrganiserDetailsController : Controller
     {
         return new OrganiserDetailsViewModel
         {
-            OrganiserName = sessionModel.ContactName,
-            OrganiserEmail = sessionModel.ContactEmail,
+            OrganiserName = sessionModel.ContactName?.Trim(),
+            OrganiserEmail = sessionModel.ContactEmail?.Trim(),
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.OrganiserDetails)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle

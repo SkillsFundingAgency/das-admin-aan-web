@@ -2,6 +2,7 @@
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Admins;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
+using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Locations;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Schools;
@@ -19,6 +20,9 @@ public interface IOuterApiClient
 
     [Get("calendarEvents")]
     Task<GetCalendarEventsQueryResult> GetCalendarEvents([Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [QueryMap] IDictionary<string, string[]> parameters, CancellationToken cancellationToken);
+
+    [Post("calendarEvents")]
+    Task<PostCalendarEventResult> PostCalendarEvent([Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [Body] CreateEventRequest request, CancellationToken cancellationToken);
 
     [Get("/locations")]
     Task<GetAddressesResult> GetAddresses([Query] string query, CancellationToken cancellationToken);

@@ -43,8 +43,8 @@ public class EventDescriptionControllerTests
         vm!.PostLink.Should().Be(PostUrl);
     }
 
-    [TestCase("outline 1", "summary 1")]
-    [TestCase("outline 2", "summary 2")]
+    [TestCase("outline 1 ", " summary 1")]
+    [TestCase(" outline 2", "summary 2 ")]
     public void Post_SetEventDetailsOnSessionModel(string eventOutline, string eventSummary)
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -66,7 +66,7 @@ public class EventDescriptionControllerTests
         var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventOutline == eventOutline && m.EventSummary == eventSummary)));
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventOutline == eventOutline.Trim() && m.EventSummary == eventSummary.Trim())));
         result.RouteName.Should().Be(RouteNames.ManageEvent.HasGuestSpeakers);
     }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.Constants;
+using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -23,7 +24,6 @@ public class CheckYourAnswersController : Controller
         _outerApiClient = outerApiClient;
     }
 
-    [Authorize(Roles = Roles.ManageEventsRole)]
     [HttpGet]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
@@ -33,9 +33,17 @@ public class CheckYourAnswersController : Controller
     }
 
     [HttpPost]
-    public IActionResult Post()
+    public async Task<IActionResult> Post(CancellationToken cancellationToken)
     {
-        return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+        var sessionModel = _sessionService.Get<EventSessionModel>();
+
+        var request = (CreateEventRequest)sessionModel;
+
+        var calendarEventResponse = await _outerApiClient.PostCalendarEvent(_sessionService.GetMemberId(), request, cancellationToken);
+
+        _sessionService.Delete(nameof(EventSessionModel));
+
+        return RedirectToRoute(RouteNames.ManageEvent.EventPublished, new { eventId = calendarEventResponse.CalendarEventId });
     }
 
     private async Task<CheckYourAnswersViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
@@ -49,7 +57,6 @@ public class CheckYourAnswersController : Controller
         var eventTypes = calendarTask.Result;
         var regions = regionTask.Result.Regions.Select(reg => new RegionSelection(reg.Area, reg.Id)).ToList();
         regions.Add(new RegionSelection("National", 0));
-
 
         var model = (CheckYourAnswersViewModel)sessionModel;
         model.HasSeenPreview = true;

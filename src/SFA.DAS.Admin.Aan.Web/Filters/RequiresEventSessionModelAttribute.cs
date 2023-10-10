@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SFA.DAS.Admin.Aan.Application.Services;
+using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using System.Diagnostics.CodeAnalysis;
 
@@ -31,6 +32,12 @@ public class RequiresEventSessionModelAttribute : ActionFilterAttribute
 
     private static bool BypassEventCheck(ControllerActionDescriptor controllerActionDescriptor)
     {
-        return !controllerActionDescriptor.ControllerTypeInfo.FullName!.Contains("ManageEventValidation");
+        var controllersToByPass = new List<string> { nameof(EventPublishedController) };
+        if (controllersToByPass.Exists(controller => controllerActionDescriptor.ControllerTypeInfo.FullName!.Contains(controller)))
+        {
+            return true;
+        }
+
+        return !controllerActionDescriptor.ControllerTypeInfo.FullName!.Contains("ManageEvent");
     }
 }
