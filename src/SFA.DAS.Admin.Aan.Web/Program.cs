@@ -1,9 +1,12 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SFA.DAS.Admin.Aan.Web.AppStart;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Configuration;
 using SFA.DAS.Admin.Aan.Web.Filters;
+using SFA.DAS.Admin.Aan.Web.HealthCheck;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +33,10 @@ builder.Services
     })
     .AddSessionStateTempDataProvider();
 
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddCheck<AdminAanOuterApiHealthCheck>(AdminAanOuterApiHealthCheck.HealthCheckResultDescription,
+        failureStatus: HealthStatus.Unhealthy,
+        tags: new[] { "ready" });
 
 #if DEBUG
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
@@ -58,7 +64,16 @@ app
     .UseAuthentication()
     .UseAuthorization()
     .UseSession()
-    .UseHealthChecks("/health");
+    .UseHealthChecks("/health")
+    .UseHealthChecks("/ping", new HealthCheckOptions
+    {
+        Predicate = (_) => false,
+        ResponseWriter = (context, report) =>
+        {
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync("");
+        }
+    });
 
 app.MapControllerRoute(
     name: "default",
