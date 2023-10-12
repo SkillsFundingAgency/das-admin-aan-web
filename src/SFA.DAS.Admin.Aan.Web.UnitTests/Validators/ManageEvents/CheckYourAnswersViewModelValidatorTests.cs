@@ -18,20 +18,36 @@ public class CheckYourAnswersViewModelValidatorTests
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    [TestCase(null)]
-    [TestCase("")]
-    [TestCase(" ")]
-    public void Validate_InPersonEventHasNoLocation_Error(string? eventLocation)
+    [TestCase(EventFormat.InPerson, null, false)]
+    [TestCase(EventFormat.InPerson, "", false)]
+    [TestCase(EventFormat.InPerson, " ", false)]
+    [TestCase(EventFormat.Hybrid, null, false)]
+    [TestCase(EventFormat.Hybrid, "", false)]
+    [TestCase(EventFormat.Hybrid, " ", false)]
+    [TestCase(EventFormat.Online, null, true)]
+    [TestCase(EventFormat.Online, "", true)]
+    [TestCase(EventFormat.Online, " ", true)]
+    [TestCase(EventFormat.InPerson, "location", true)]
+    [TestCase(EventFormat.Hybrid, "location", true)]
+    [TestCase(EventFormat.Online, "location", true)]
+    public void Validate_InPersonEventHasNoLocation_Error(EventFormat eventFormat, string? eventLocation, bool isValid)
     {
         var model = GetHydratedModel();
-        model.EventFormat = EventFormat.InPerson;
+        model.EventFormat = eventFormat;
         model.EventLocation = eventLocation;
 
         var sut = new CheckYourAnswersViewModelValidator();
         var result = sut.TestValidate(model);
 
-        result.ShouldHaveValidationErrorFor(c => c.EventLocation)
-            .WithErrorMessage(CheckYourAnswersViewModelValidator.EventFormatHasLocationAndLocationEmpty);
+        if (!isValid)
+        {
+            result.ShouldHaveValidationErrorFor(c => c.EventLocation)
+                .WithErrorMessage(CheckYourAnswersViewModelValidator.EventFormatHasLocationAndLocationEmpty);
+        }
+        else
+        {
+            result.ShouldNotHaveValidationErrorFor(c => c.EventLocation);
+        }
     }
 
     private static CheckYourAnswersViewModel GetHydratedModel()

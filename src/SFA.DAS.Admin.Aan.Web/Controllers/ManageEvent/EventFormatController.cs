@@ -59,16 +59,16 @@ public class EventFormatController : Controller
     {
         var model = new EventFormatViewModel
         {
+            EventFormat = sessionModel.EventFormat,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PageTitle = CreateEvent.PageTitle
         };
 
-        if (sessionModel.HasSeenPreview)
+        if (sessionModel!.HasSeenPreview)
         {
             model.CancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
         }
 
-        model.EventFormat = sessionModel?.EventFormat;
         model.PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!;
         return model;
     }
