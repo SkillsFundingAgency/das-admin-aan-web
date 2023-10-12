@@ -33,6 +33,8 @@ public class CheckYourAnswersViewModel : ManageEventViewModelBase
 
     public int? NumberOfAttendees { get; set; }
 
+    public string? EventFormatLink { get; set; }
+
     public bool ShowLocation =>
         EventFormat is Application.Constants.EventFormat.InPerson or Application.Constants.EventFormat.Hybrid;
 
