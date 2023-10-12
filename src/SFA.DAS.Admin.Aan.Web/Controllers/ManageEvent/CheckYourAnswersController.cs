@@ -89,7 +89,7 @@ public class CheckYourAnswersController : Controller
 
         model.EventFormatLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!;
         model.EventLocationLink = Url.RouteUrl(RouteNames.ManageEvent.Location)!;
-
+        model.EventTypeLink = Url.RouteUrl(RouteNames.ManageEvent.EventType)!;
         return model;
     }
 }
