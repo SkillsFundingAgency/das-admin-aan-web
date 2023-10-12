@@ -88,6 +88,8 @@ public class CheckYourAnswersController : Controller
         model.EventRegion = regions.First(x => x.RegionId == sessionModel.RegionId).Name;
 
         model.EventFormatLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!;
+        model.EventLocationLink = Url.RouteUrl(RouteNames.ManageEvent.Location)!;
+
         return model;
     }
 }

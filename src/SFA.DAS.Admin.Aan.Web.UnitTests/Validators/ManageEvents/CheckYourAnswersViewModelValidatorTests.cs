@@ -76,8 +76,7 @@ public class CheckYourAnswersViewModelValidatorTests
             IsAtSchool = true,
             OrganiserEmail = "organiser@test.com",
             OrganiserName = "organiser name",
-            NumberOfAttendees = 42,
-            EventFormatLink = ""
+            NumberOfAttendees = 42
         };
 
         return vm;
