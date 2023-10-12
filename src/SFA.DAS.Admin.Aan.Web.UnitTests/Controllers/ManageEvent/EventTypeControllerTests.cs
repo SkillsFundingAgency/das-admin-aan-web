@@ -33,13 +33,13 @@ public class EventTypeControllerTests
             EventTitle = "title",
             CalendarId = 1,
             RegionId = 2,
-            EventFormat = EventFormat.Hybrid
+            EventFormat = EventFormat.Hybrid,
+            HasSeenPreview = false
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
         var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
-
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var actualResult = sut.Get(new CancellationToken());
@@ -51,6 +51,34 @@ public class EventTypeControllerTests
 
         ((EventTypeViewModel)viewResult.Model!).CancelLink.Should().Be(NetworkEventsUrl);
         ((EventTypeViewModel)viewResult.Model!).PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_HasSeenPreviewTrue_CancelLinkIsCheckYourAnswers([Frozen] Mock<IOuterApiClient> outerApiMock)
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventTypeViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            EventTitle = "title",
+            CalendarId = 1,
+            RegionId = 2,
+            EventFormat = EventFormat.Hybrid,
+            HasSeenPreview = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var actualResult = sut.Get(new CancellationToken());
+        var result = actualResult.Result.As<ViewResult>();
+
+        Assert.That(result.Model, Is.TypeOf<EventTypeViewModel>());
+        var vm = result.Model as EventTypeViewModel;
+        vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
     [Test, MoqAutoData]
