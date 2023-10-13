@@ -29,6 +29,36 @@ public class OrganiserDetailsViewModelValidatorTests
         }
     }
 
+    [TestCase("outline 1", true, null)]
+    [TestCase("outline @", false, OrganiserDetailsViewModelValidator.OrganiserNameExcludedCharacter)]
+    [TestCase("outline #", false, OrganiserDetailsViewModelValidator.OrganiserNameExcludedCharacter)]
+    [TestCase("outline $", false, OrganiserDetailsViewModelValidator.OrganiserNameExcludedCharacter)]
+    [TestCase("outline ^", false, OrganiserDetailsViewModelValidator.OrganiserNameExcludedCharacter)]
+    [TestCase("outline =", false, OrganiserDetailsViewModelValidator.OrganiserNameExcludedCharacter)]
+    [TestCase("outline +", false, OrganiserDetailsViewModelValidator.OrganiserNameExcludedCharacter)]
+    [TestCase("outline \\", false, OrganiserDetailsViewModelValidator.OrganiserNameExcludedCharacter)]
+    [TestCase("outline /", false, OrganiserDetailsViewModelValidator.OrganiserNameExcludedCharacter)]
+    [TestCase("outline <", false, OrganiserDetailsViewModelValidator.OrganiserNameExcludedCharacter)]
+    [TestCase("outline >", false, OrganiserDetailsViewModelValidator.OrganiserNameExcludedCharacter)]
+    public void Validate_OrganiserName_Check(string? organiserName, bool isValid, string? errorMessage)
+    {
+        var model = new OrganiserDetailsViewModel { OrganiserName = organiserName, OrganiserEmail = "test@test.com" };
+
+        var sut = new OrganiserDetailsViewModelValidator();
+        var result = sut.TestValidate(model);
+
+        if (!isValid)
+        {
+            result.ShouldHaveValidationErrorFor(c => c.OrganiserName)
+                .WithErrorMessage(errorMessage);
+        }
+        else
+        {
+            result.ShouldNotHaveAnyValidationErrors();
+        }
+    }
+
+
     [TestCase(0, OrganiserDetailsViewModelValidator.OrganiserEmailEmpty, false)]
     [TestCase(ManageEventValidation.OrganiserEmailMaximumLength, null, true)]
     [TestCase(ManageEventValidation.OrganiserEmailMaximumLength + 1, OrganiserDetailsViewModelValidator.OrganiserEmailTooLong, false)]

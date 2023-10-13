@@ -31,6 +31,58 @@ public class EventDescriptionViewModelValidatorTests
         }
     }
 
+    [TestCase("outline 1", true, null)]
+    [TestCase("outline @", false, EventDescriptionViewModelValidator.EventOutlineHasExcludedCharacter)]
+    [TestCase("outline #", false, EventDescriptionViewModelValidator.EventOutlineHasExcludedCharacter)]
+    [TestCase("outline $", false, EventDescriptionViewModelValidator.EventOutlineHasExcludedCharacter)]
+    [TestCase("outline ^", false, EventDescriptionViewModelValidator.EventOutlineHasExcludedCharacter)]
+    [TestCase("outline =", false, EventDescriptionViewModelValidator.EventOutlineHasExcludedCharacter)]
+    [TestCase("outline +", false, EventDescriptionViewModelValidator.EventOutlineHasExcludedCharacter)]
+    [TestCase("outline \\", false, EventDescriptionViewModelValidator.EventOutlineHasExcludedCharacter)]
+    [TestCase("outline /", false, EventDescriptionViewModelValidator.EventOutlineHasExcludedCharacter)]
+    [TestCase("outline <", false, EventDescriptionViewModelValidator.EventOutlineHasExcludedCharacter)]
+    [TestCase("outline >", false, EventDescriptionViewModelValidator.EventOutlineHasExcludedCharacter)]
+    public void Validate_EventOutline_Check(string? outline, bool isValid, string? errorMessage)
+    {
+        var model = new EventDescriptionViewModel { EventOutline = outline, EventSummary = "summary" };
+
+        var sut = new EventDescriptionViewModelValidator();
+        var result = sut.TestValidate(model);
+
+        if (!isValid)
+        {
+            result.ShouldHaveValidationErrorFor(c => c.EventOutline)
+                .WithErrorMessage(errorMessage);
+        }
+        else
+        {
+            result.ShouldNotHaveAnyValidationErrors();
+        }
+    }
+
+    [TestCase("outline 1", true, null)]
+    [TestCase("<outline> test", false, EventDescriptionViewModelValidator.EventSummaryHasExcludedCharacter)]
+    [TestCase("outline <>", false, EventDescriptionViewModelValidator.EventSummaryHasExcludedCharacter)]
+    [TestCase("outline <", false, EventDescriptionViewModelValidator.EventSummaryHasExcludedCharacter)]
+    [TestCase("outline >", false, EventDescriptionViewModelValidator.EventSummaryHasExcludedCharacter)]
+    public void Validate_EventSummary_Check(string? summary, bool isValid, string? errorMessage)
+    {
+        var model = new EventDescriptionViewModel { EventOutline = "outline", EventSummary = summary };
+
+        var sut = new EventDescriptionViewModelValidator();
+        var result = sut.TestValidate(model);
+
+        if (!isValid)
+        {
+            result.ShouldHaveValidationErrorFor(c => c.EventSummary)
+                .WithErrorMessage(errorMessage);
+        }
+        else
+        {
+            result.ShouldNotHaveAnyValidationErrors();
+        }
+    }
+
     [TestCase(0, EventDescriptionViewModelValidator.EventSummaryEmpty, false)]
     [TestCase(1, null, true)]
     [TestCase(ManageEventValidation.EventSummaryMaxLength, null, true)]

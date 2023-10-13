@@ -8,6 +8,7 @@ public class OrganiserDetailsViewModelValidator : AbstractValidator<OrganiserDet
 {
     public const string OrganiserNameEmpty = "You must include an event organiser name";
     public const string OrganiserNameTooLong = "The name of your event organiser must be 200 characters or less";
+    public const string OrganiserNameExcludedCharacter = "The name of your event organiser must not include any special characters: @, #, $, ^, =, +, \\, /, <, >, %";
 
     public const string OrganiserEmailEmpty = "You must include an event organiser email address";
     public const string OrganiserEmailTooLong = "The email address of your event organiser must be 256 characters or less";
@@ -19,7 +20,9 @@ public class OrganiserDetailsViewModelValidator : AbstractValidator<OrganiserDet
             .NotEmpty()
             .WithMessage(OrganiserNameEmpty)
             .MaximumLength(ManageEventValidation.OrganiserNameMaximumLength)
-            .WithMessage(OrganiserNameTooLong);
+            .WithMessage(OrganiserNameTooLong)
+            .Matches(RegularExpressions.ExcludedCharactersRegex)
+            .WithMessage(OrganiserNameExcludedCharacter);
 
         RuleFor(x => x.OrganiserEmail)
             .NotEmpty()
