@@ -52,11 +52,22 @@ public class EventDateAndTimeController : Controller
         sessionModel.EndMinutes = submitModel.EndMinutes;
         _sessionService.Set(sessionModel);
 
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+        }
+
         return RedirectToRoute(RouteNames.ManageEvent.Location);
     }
 
     private EventDateAndTimeViewModel GetViewModel(EventSessionModel sessionModel)
     {
+        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+
+        if (sessionModel.HasSeenPreview)
+        {
+            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        }
         return new EventDateAndTimeViewModel
         {
             DateOfEvent = sessionModel.DateOfEvent,
@@ -64,7 +75,7 @@ public class EventDateAndTimeController : Controller
             StartMinutes = sessionModel.StartMinutes,
             EndHour = sessionModel.EndHour,
             EndMinutes = sessionModel.EndMinutes,
-            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.DateAndTime)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };

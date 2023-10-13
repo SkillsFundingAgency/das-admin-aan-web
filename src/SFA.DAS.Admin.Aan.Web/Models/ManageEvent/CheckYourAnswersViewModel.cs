@@ -38,6 +38,7 @@ public class CheckYourAnswersViewModel : ManageEventViewModelBase
     public string? EventLocationLink { get; set; }
 
     public string? EventTypeLink { get; set; }
+    public string? EventDateTimeLink { get; set; }
 
     public bool ShowLocation =>
         EventFormat is Application.Constants.EventFormat.InPerson or Application.Constants.EventFormat.Hybrid;

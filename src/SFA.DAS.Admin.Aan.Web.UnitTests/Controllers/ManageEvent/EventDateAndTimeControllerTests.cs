@@ -4,6 +4,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -16,6 +17,7 @@ public class EventDateAndTimeControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
+    private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsCreateEventDateTimeViewModel(
@@ -39,6 +41,102 @@ public class EventDateAndTimeControllerTests
         Assert.That(result.Model, Is.TypeOf<EventDateAndTimeViewModel>());
         var vm = result.Model as EventDateAndTimeViewModel;
         vm!.PostLink.Should().Be(PostUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_HasSeenPreviewTrue_CancelLinkIsCheckYourAnswers()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            EventTitle = "title",
+            CalendarId = 1,
+            RegionId = 2,
+            EventFormat = EventFormat.Hybrid,
+            HasSeenPreview = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new EventDateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var actualResult = sut.Get();
+        var result = actualResult.As<ViewResult>();
+
+        Assert.That(result.Model, Is.TypeOf<EventDateAndTimeViewModel>());
+        var vm = result.Model as EventDateAndTimeViewModel;
+        vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void Post_HasSeenPreview_False_RedirectsToLocation()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            HasSeenPreview = false
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventDateAndTimeViewModel
+        {
+            DateOfEvent = DateTime.Today.AddDays(1),
+            StartHour = 12,
+            StartMinutes = 0,
+            EndHour = 13,
+            EndMinutes = 30
+        };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new EventDateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var actualResult = sut.Post(submitModel);
+        var result = actualResult.As<RedirectToRouteResult>();
+
+        result.RouteName.Should().Be(RouteNames.ManageEvent.Location);
+    }
+
+    [Test, MoqAutoData]
+    public void Post_HasSeenPreview_True_RedirectsToCheckYourAnswers()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            HasSeenPreview = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventDateAndTimeViewModel
+        {
+            DateOfEvent = DateTime.Today.AddDays(1),
+            StartHour = 12,
+            StartMinutes = 0,
+            EndHour = 13,
+            EndMinutes = 30
+        };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new EventDateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var actualResult = sut.Post(submitModel);
+        var result = actualResult.As<RedirectToRouteResult>();
+
+        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
     }
 
     [TestCase(12, 0, 13, 0)]
