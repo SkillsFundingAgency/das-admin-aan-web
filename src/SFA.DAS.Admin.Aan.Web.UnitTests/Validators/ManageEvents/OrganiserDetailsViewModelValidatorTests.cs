@@ -74,8 +74,6 @@ public class OrganiserDetailsViewModelValidatorTests
         var model = new OrganiserDetailsViewModel
         { OrganiserName = "test", OrganiserEmail = organiserEmail };
 
-        var z = organiserEmail.Length;
-
         var sut = new OrganiserDetailsViewModelValidator();
         var result = sut.TestValidate(model);
 
