@@ -17,6 +17,7 @@ public class EventDescriptionControllerTests
 {
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
+    private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsDescriptionViewModel(
@@ -43,6 +44,33 @@ public class EventDescriptionControllerTests
         vm!.PostLink.Should().Be(PostUrl);
     }
 
+    [Test, MoqAutoData]
+    public void Get_ReturnsExpectedCancelLink_WhenHasSeenPreviewTrue()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventDescriptionViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            EventSummary = "summary",
+            EventOutline = "outline",
+            HasSeenPreview = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new EventDescriptionController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var actualResult = sut.Get();
+        var result = actualResult.As<ViewResult>();
+
+        Assert.That(result.Model, Is.TypeOf<EventDescriptionViewModel>());
+        var vm = result.Model as EventDescriptionViewModel;
+        vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
+    }
+
+
     [TestCase("outline 1 ", " summary 1")]
     [TestCase(" outline 2", "summary 2 ")]
     public void Post_SetEventDetailsOnSessionModel(string eventOutline, string eventSummary)
@@ -67,7 +95,52 @@ public class EventDescriptionControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventOutline == eventOutline.Trim() && m.EventSummary == eventSummary.Trim())));
+    }
+
+    [Test]
+    public void Post_HasSeenPreview_False_RedirectsToHasGuestSpeakers()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventDescriptionViewModel>>();
+
+        var sessionModel = new EventSessionModel();
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventDescriptionViewModel { EventOutline = "outline", EventSummary = "summary" };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new EventDescriptionController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
         result.RouteName.Should().Be(RouteNames.ManageEvent.HasGuestSpeakers);
+    }
+
+    [Test]
+    public void Post_HasSeenPreview_True_RedirectsToCheckYourAnswers()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventDescriptionViewModel>>();
+
+        var sessionModel = new EventSessionModel { HasSeenPreview = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventDescriptionViewModel { EventOutline = "outline", EventSummary = "summary" };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new EventDescriptionController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
     }
 
     [Test, MoqAutoData]
