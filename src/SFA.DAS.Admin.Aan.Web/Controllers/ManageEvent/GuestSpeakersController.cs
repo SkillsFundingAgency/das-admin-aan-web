@@ -51,6 +51,12 @@ public class GuestSpeakersController : Controller
         _sessionService.Set(sessionModel);
 
         if (sessionModel.HasGuestSpeakers == true) return RedirectToRoute(RouteNames.ManageEvent.GuestSpeakerList);
+
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+        }
+
         return RedirectToRoute(RouteNames.ManageEvent.DateAndTime);
     }
 
@@ -123,15 +129,27 @@ public class GuestSpeakersController : Controller
     [Route("", Name = RouteNames.ManageEvent.GuestSpeakerList)]
     public IActionResult PostGuestSpeakerList()
     {
+        var sessionModel = _sessionService.Get<EventSessionModel>();
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+        }
         return RedirectToRoute(RouteNames.ManageEvent.DateAndTime);
     }
 
     private HasGuestSpeakersViewModel GetViewModelHasGuestSpeakers(EventSessionModel sessionModel)
     {
+        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+
+        if (sessionModel.HasSeenPreview)
+        {
+            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        }
+
         return new HasGuestSpeakersViewModel
         {
             HasGuestSpeakers = sessionModel?.HasGuestSpeakers,
-            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.HasGuestSpeakers)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
@@ -139,10 +157,17 @@ public class GuestSpeakersController : Controller
 
     private GuestSpeakerListViewModel GetGuestSpeakerListViewModel(EventSessionModel sessionModel)
     {
+        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+
+        if (sessionModel.HasSeenPreview)
+        {
+            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        }
+
         return new GuestSpeakerListViewModel
         {
             GuestSpeakers = sessionModel.GuestSpeakers,
-            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.GuestSpeakerList)!,
             AddGuestSpeakerLink = Url.RouteUrl(RouteNames.ManageEvent.GuestSpeakerAdd)!,
             DeleteSpeakerLink = Url.RouteUrl(RouteNames.ManageEvent.GuestSpeakerDelete)!,

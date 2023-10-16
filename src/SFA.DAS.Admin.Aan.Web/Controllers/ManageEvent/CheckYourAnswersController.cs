@@ -92,6 +92,7 @@ public class CheckYourAnswersController : Controller
         model.EventTypeLink = Url.RouteUrl(RouteNames.ManageEvent.EventType)!;
         model.EventDateTimeLink = Url.RouteUrl(RouteNames.ManageEvent.DateAndTime)!;
         model.EventDescriptionLink = Url.RouteUrl(RouteNames.ManageEvent.Description)!;
+        model.HasGuestSpeakersLink = Url.RouteUrl(RouteNames.ManageEvent.HasGuestSpeakers)!;
         return model;
     }
 }
