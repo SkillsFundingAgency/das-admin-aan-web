@@ -150,7 +150,7 @@ public class GuestSpeakersController : Controller
 
         return new HasGuestSpeakersViewModel
         {
-            HasGuestSpeakers = sessionModel?.HasGuestSpeakers,
+            HasGuestSpeakers = sessionModel.HasGuestSpeakers,
             CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.HasGuestSpeakers)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
