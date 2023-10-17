@@ -90,13 +90,26 @@ public class CheckYourAnswersControllerTests
         sessionServiceMock.Verify(x => x.Set(It.Is<EventSessionModel>(s => s.HasSeenPreview == true)), Times.Once());
     }
 
-    [Test, MoqAutoData]
-    public void GetCheckYourAnswers_HasSeenPreviewTrue_NoUpdateToSessionModel(
-        [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
-        List<Calendar> calendars,
-        GetRegionsResult regionsResult)
+    [TestCase(true, true, false)]
+    [TestCase(true, false, true)]
+    [TestCase(false, true, true)]
+    [TestCase(false, false, true)]
+    public void GetCheckYourAnswers_SeenPreviewAndDirectCallSettings_CheckUpdateToSessionModel(bool hasSeenPreview, bool directCallFromCheckYourAnswers, bool callsToSetEventSessionModel)
     {
+        var outerAPiMock = new Mock<IOuterApiClient>();
+        var validatorMock = new Mock<IValidator<CheckYourAnswersViewModel>>();
+        var calendars = new List<Calendar>
+        {
+            new Calendar {CalendarName = "cal 1", Id = 1}
+        };
+
+        var regionsResult = new GetRegionsResult
+        {
+            Regions = new List<Region>
+            {
+                new Region(1, "London", 1)
+            }
+        };
 
         outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
         outerAPiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
@@ -106,7 +119,8 @@ public class CheckYourAnswersControllerTests
         {
             CalendarId = calendars.First().Id,
             RegionId = regionsResult.Regions.First().Id,
-            HasSeenPreview = true
+            HasSeenPreview = hasSeenPreview,
+            DirectCallFromCheckYourAnswers = directCallFromCheckYourAnswers
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -115,8 +129,14 @@ public class CheckYourAnswersControllerTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var result = sut.Get(new CancellationToken());
-
-        sessionServiceMock.Verify(x => x.Set(It.IsAny<EventSessionModel>()), Times.Never());
+        if (callsToSetEventSessionModel)
+        {
+            sessionServiceMock.Verify(x => x.Set(It.IsAny<EventSessionModel>()), Times.Once());
+        }
+        else
+        {
+            sessionServiceMock.Verify(x => x.Set(It.IsAny<EventSessionModel>()), Times.Never());
+        }
     }
 
     [Test, MoqAutoData]
