@@ -51,16 +51,28 @@ public class OrganiserDetailsController : Controller
         sessionModel.ContactEmail = submitModel.OrganiserEmail;
 
         _sessionService.Set(sessionModel);
+
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+        }
+
         return RedirectToRoute(RouteNames.ManageEvent.NumberOfAttendees);
     }
 
     private OrganiserDetailsViewModel GetOrganiserNameViewModel(EventSessionModel sessionModel)
     {
+        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+
+        if (sessionModel.HasSeenPreview)
+        {
+            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        }
         return new OrganiserDetailsViewModel
         {
             OrganiserName = sessionModel.ContactName?.Trim(),
             OrganiserEmail = sessionModel.ContactEmail?.Trim(),
-            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.OrganiserDetails)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
