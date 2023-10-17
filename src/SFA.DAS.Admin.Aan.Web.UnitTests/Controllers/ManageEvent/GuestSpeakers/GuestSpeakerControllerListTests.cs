@@ -14,6 +14,8 @@ public class GuestSpeakerControllerListTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
+    private static readonly string CancelUrl = Guid.NewGuid().ToString();
+    private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
 
     [Test]
     public void Get_ReturnsEventGuestSpeakerListViewModel()
@@ -66,6 +68,58 @@ public class GuestSpeakerControllerListTests
         var viewResult = actualResult.As<ViewResult>();
 
         ((GuestSpeakerListViewModel)viewResult.Model!).PostLink.Should().Be(PostUrl);
+    }
+
+    [Test]
+    public void Get_ReturnsExpectedCancelLink()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+
+        var sessionModel = new EventSessionModel
+        {
+            EventTitle = "title",
+            CalendarId = 1,
+            RegionId = 2,
+            EventFormat = EventFormat.Hybrid,
+            GuestSpeakers = new List<GuestSpeaker>(),
+            HasSeenPreview = false
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, CancelUrl);
+        var actualResult = sut.GetSpeakerList();
+        var viewResult = actualResult.As<ViewResult>();
+
+        ((GuestSpeakerListViewModel)viewResult.Model!).CancelLink.Should().Be(CancelUrl);
+    }
+
+    [Test]
+    public void Get_ReturnsExpectedCancelLinkToBeCheckYourAnswers_HasSeenPreviewIsTrue()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+
+        var sessionModel = new EventSessionModel
+        {
+            EventTitle = "title",
+            CalendarId = 1,
+            RegionId = 2,
+            EventFormat = EventFormat.Hybrid,
+            GuestSpeakers = new List<GuestSpeaker>(),
+            HasSeenPreview = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var actualResult = sut.GetSpeakerList();
+        var viewResult = actualResult.As<ViewResult>();
+
+        ((GuestSpeakerListViewModel)viewResult.Model!).CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
     [Test]
@@ -126,7 +180,7 @@ public class GuestSpeakerControllerListTests
         var sessionServiceMock = new Mock<ISessionService>();
         var guestSpeakers = new List<GuestSpeaker>();
 
-        var sessionModel = new EventSessionModel { GuestSpeakers = guestSpeakers };
+        var sessionModel = new EventSessionModel { GuestSpeakers = guestSpeakers, HasSeenPreview = false };
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
         var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
@@ -138,5 +192,25 @@ public class GuestSpeakerControllerListTests
         sut.ModelState.IsValid.Should().BeTrue();
 
         result.RouteName.Should().Be(RouteNames.ManageEvent.DateAndTime);
+    }
+
+    [Test]
+    public void Post_HasSeenPreview_RerouteToCheckYourAnswers()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var guestSpeakers = new List<GuestSpeaker>();
+
+        var sessionModel = new EventSessionModel { GuestSpeakers = guestSpeakers, HasSeenPreview = true };
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+
+        var actualResult = sut.PostGuestSpeakerList();
+        var result = actualResult.As<RedirectToRouteResult>();
+        sut.ModelState.IsValid.Should().BeTrue();
+
+        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
     }
 }

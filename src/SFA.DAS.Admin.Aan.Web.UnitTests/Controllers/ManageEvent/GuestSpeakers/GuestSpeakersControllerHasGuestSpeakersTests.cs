@@ -16,6 +16,7 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
+    private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsEventGuestSpeakerViewModel(
@@ -41,15 +42,41 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
         vm!.PostLink.Should().Be(PostUrl);
     }
 
-    [TestCase(true)]
-    [TestCase(false)]
-    [TestCase(null)]
-    public void Post_SetHasGuestSpeakersOnSessionModel(bool? hasGuestSpeakers)
+    [Test, MoqAutoData]
+    public void Get_ReturnsExpectedCancelLink_WhenHasSeenPreviewTrue()
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<HasGuestSpeakersViewModel>>();
 
-        var sessionModel = new EventSessionModel();
+        var sessionModel = new EventSessionModel
+        {
+            HasSeenPreview = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var actualResult = sut.GetHasGuestSpeakers();
+        var result = actualResult.As<ViewResult>();
+
+        Assert.That(result.Model, Is.TypeOf<HasGuestSpeakersViewModel>());
+        var vm = result.Model as HasGuestSpeakersViewModel;
+        vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
+    }
+
+    [TestCase(true, false)]
+    [TestCase(false, false)]
+    [TestCase(null, false)]
+    [TestCase(true, true)]
+    [TestCase(false, true)]
+    public void Post_SetHasGuestSpeakersOnSessionModel(bool? hasGuestSpeakers, bool hasSeenPreview)
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<HasGuestSpeakersViewModel>>();
+
+        var sessionModel = new EventSessionModel { HasSeenPreview = hasSeenPreview };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
@@ -73,7 +100,9 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
         }
         else
         {
-            result.RouteName.Should().Be(RouteNames.ManageEvent.DateAndTime);
+            result.RouteName.Should().Be(hasSeenPreview
+                ? RouteNames.ManageEvent.CheckYourAnswers
+                : RouteNames.ManageEvent.DateAndTime);
         }
     }
 
