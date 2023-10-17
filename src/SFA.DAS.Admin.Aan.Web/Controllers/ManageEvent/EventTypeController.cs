@@ -51,6 +51,12 @@ public class EventTypeController : Controller
 
         sessionModel.EventTitle = submitModel.EventTitle;
         _sessionService.Set(sessionModel);
+
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+        }
+
         return RedirectToRoute(RouteNames.ManageEvent.Description);
     }
 
@@ -70,6 +76,14 @@ public class EventTypeController : Controller
         var regionDropdowns = regions.Select(reg => new RegionSelection(reg.Area, reg.Id));
 
         var regionsWithNational = regionDropdowns.ToList();
+
+        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+
+        if (sessionModel.HasSeenPreview)
+        {
+            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        }
+
         regionsWithNational.Add(new RegionSelection("National", 0));
         return new EventTypeViewModel
         {
@@ -78,7 +92,7 @@ public class EventTypeController : Controller
             EventRegionId = sessionModel.RegionId,
             EventTypes = eventTypeDropdown.ToList(),
             EventRegions = regionsWithNational,
-            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventType)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };

@@ -49,16 +49,28 @@ public class EventDescriptionController : Controller
         sessionModel.EventSummary = submitModel.EventSummary?.Trim();
         _sessionService.Set(sessionModel);
 
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+        }
+
         return RedirectToRoute(RouteNames.ManageEvent.HasGuestSpeakers);
     }
 
     private EventDescriptionViewModel GetViewModel(EventSessionModel sessionModel)
     {
+        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+
+        if (sessionModel.HasSeenPreview)
+        {
+            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        }
+
         return new EventDescriptionViewModel
         {
             EventOutline = sessionModel.EventOutline?.Trim(),
             EventSummary = sessionModel.EventSummary?.Trim(),
-            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };

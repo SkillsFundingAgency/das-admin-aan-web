@@ -143,8 +143,6 @@ public class EventFormatControllerTests
         result.RouteName.Should().Be(RouteNames.ManageEvent.Location);
     }
 
-
-
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventFormat_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,

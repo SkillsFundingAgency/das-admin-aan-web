@@ -19,6 +19,7 @@ public class EventTypeControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
+    private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsCreateEventTypeViewModel(
@@ -32,13 +33,13 @@ public class EventTypeControllerTests
             EventTitle = "title",
             CalendarId = 1,
             RegionId = 2,
-            EventFormat = EventFormat.Hybrid
+            EventFormat = EventFormat.Hybrid,
+            HasSeenPreview = false
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
         var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
-
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var actualResult = sut.Get(new CancellationToken());
@@ -50,6 +51,34 @@ public class EventTypeControllerTests
 
         ((EventTypeViewModel)viewResult.Model!).CancelLink.Should().Be(NetworkEventsUrl);
         ((EventTypeViewModel)viewResult.Model!).PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_HasSeenPreviewTrue_CancelLinkIsCheckYourAnswers([Frozen] Mock<IOuterApiClient> outerApiMock)
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventTypeViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            EventTitle = "title",
+            CalendarId = 1,
+            RegionId = 2,
+            EventFormat = EventFormat.Hybrid,
+            HasSeenPreview = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var actualResult = sut.Get(new CancellationToken());
+        var result = actualResult.Result.As<ViewResult>();
+
+        Assert.That(result.Model, Is.TypeOf<EventTypeViewModel>());
+        var vm = result.Model as EventTypeViewModel;
+        vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
     [Test, MoqAutoData]
@@ -108,6 +137,78 @@ public class EventTypeControllerTests
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventTitle == eventTitle)));
         result.RouteName.Should().Be(RouteNames.ManageEvent.Description);
+    }
+
+    [Test]
+    public void Post_EventFormat_HasSeenPreview_False_RedirectsToDescription()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventTypeViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            HasSeenPreview = false
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventTypeViewModel { EventTitle = "title" };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.ValidateAsync(submitModel, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
+
+        var outerApiMock = new Mock<IOuterApiClient>();
+        outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Calendar>());
+        outerApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(new GetRegionsResult());
+
+        var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
+
+
+
+        var actualResult = sut.Post(submitModel, new CancellationToken());
+        var result = actualResult.Result.As<RedirectToRouteResult>();
+
+        result.RouteName.Should().Be(RouteNames.ManageEvent.Description);
+    }
+
+    [Test]
+    public void Post_EventType_HasSeenPreview_True_RedirectsToCheckYourAnswers()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventTypeViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            HasSeenPreview = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventTypeViewModel { EventTitle = "title" };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.ValidateAsync(submitModel, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
+
+        var outerApiMock = new Mock<IOuterApiClient>();
+        outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Calendar>());
+        outerApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(new GetRegionsResult());
+
+        var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
+
+
+
+        var actualResult = sut.Post(submitModel, new CancellationToken());
+        var result = actualResult.Result.As<RedirectToRouteResult>();
+
+        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
     }
 
     [Test, MoqAutoData]
