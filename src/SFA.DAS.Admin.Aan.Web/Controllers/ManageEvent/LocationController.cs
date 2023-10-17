@@ -45,24 +45,37 @@ public class LocationController : Controller
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
         sessionModel.Location = submitModel.EventLocation?.Trim();
-        sessionModel.EventLink = submitModel.OnlineEventLink?.Trim();
         sessionModel.Latitude = submitModel.Latitude;
         sessionModel.Longitude = submitModel.Longitude;
         sessionModel.Postcode = submitModel.Postcode?.Trim();
+
+        sessionModel.EventLink = submitModel.OnlineEventLink?.Trim();
+
         _sessionService.Set(sessionModel);
+
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+        }
 
         return RedirectToRoute(submitModel.ShowLocationDropdown ? RouteNames.ManageEvent.IsAtSchool : RouteNames.ManageEvent.OrganiserDetails);
     }
 
     private LocationViewModel GetViewModel(EventSessionModel sessionModel)
     {
+        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+
+        if (sessionModel.HasSeenPreview)
+        {
+            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        }
 
         return new LocationViewModel
         {
             EventFormat = sessionModel.EventFormat,
             SearchResult = sessionModel.Location,
             OnlineEventLink = sessionModel.EventLink,
-            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.Location)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };

@@ -40,7 +40,7 @@
                         @Model.EventFormat.GetDescription()
                     </dd>
                     <dd class="govuk-summary-list__actions">
-                        <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                        <a href="@Model.EventFormatLink" class="govuk-link govuk-link--no-visited-state">Change</a>
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -91,7 +91,9 @@
                 {
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            In person event location
+                            <div esfa-validation-marker-for="@Model.EventLocation"  id="EventLocation">
+                                In person event location
+                            </div>
                         </dt>
                         <dd class="govuk-summary-list__value">
                             @Model.EventLocation
@@ -100,6 +102,7 @@
                             <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
                         </dd>
                     </div>
+
                 }
                 @if (Model.ShowOnlineEventLink)
                 {

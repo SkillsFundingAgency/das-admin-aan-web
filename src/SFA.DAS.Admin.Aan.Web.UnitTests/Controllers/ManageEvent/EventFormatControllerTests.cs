@@ -16,6 +16,7 @@ namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent;
 public class EventFormatControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
+    private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
@@ -29,6 +30,27 @@ public class EventFormatControllerTests
         var vm = result.Model as EventFormatViewModel;
         vm!.CancelLink.Should().Be(NetworkEventsUrl);
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_HasSeenPreviewTrue_CancelLinkIsCheckYourAnswers()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventFormatViewModel>>();
+
+        var sessionModel = new EventSessionModel { HasSeenPreview = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new EventFormatController(sessionServiceMock.Object, validatorMock.Object);
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var result = (ViewResult)sut.Get();
+
+        Assert.That(result.Model, Is.TypeOf<EventFormatViewModel>());
+        var vm = result.Model as EventFormatViewModel;
+        vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
     [Test, MoqAutoData]
@@ -70,6 +92,58 @@ public class EventFormatControllerTests
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventFormat == eventFormat)));
         result.RouteName.Should().Be(RouteNames.ManageEvent.EventType);
     }
+
+    [Test]
+    public void Post_EventFormat_HasSeenPreview_False_RedirectsToEventType()
+    {
+        var eventFormat = EventFormat.Hybrid;
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventFormatViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            HasSeenPreview = false
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventFormatViewModel { EventFormat = eventFormat };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new EventFormatController(sessionServiceMock.Object, validatorMock.Object);
+
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.EventType);
+    }
+
+    [Test]
+    public void Post_EventFormat_HasSeenPreview_True_RedirectsToLocation()
+    {
+        var eventFormat = EventFormat.Hybrid;
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventFormatViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            HasSeenPreview = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventFormatViewModel { EventFormat = eventFormat };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new EventFormatController(sessionServiceMock.Object, validatorMock.Object);
+
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.Location);
+    }
+
+
 
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventFormat_Errors(

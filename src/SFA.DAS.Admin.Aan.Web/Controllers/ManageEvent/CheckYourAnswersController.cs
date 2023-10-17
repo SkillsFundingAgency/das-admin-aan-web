@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
@@ -15,19 +17,29 @@ public class CheckYourAnswersController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
     private readonly ISessionService _sessionService;
+    private readonly IValidator<CheckYourAnswersViewModel> _validator;
+
 
     public const string ViewPath = "~/Views/ManageEvent/CheckYourAnswers.cshtml";
 
-    public CheckYourAnswersController(ISessionService sessionService, IOuterApiClient outerApiClient)
+    public CheckYourAnswersController(ISessionService sessionService, IOuterApiClient outerApiClient, IValidator<CheckYourAnswersViewModel> validator)
     {
         _sessionService = sessionService;
         _outerApiClient = outerApiClient;
+        _validator = validator;
     }
 
     [HttpGet]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
+
+        if (!sessionModel.HasSeenPreview)
+        {
+            sessionModel.HasSeenPreview = true;
+            _sessionService.Set(sessionModel);
+        }
+
         var model = await GetViewModel(sessionModel, cancellationToken);
         return View(ViewPath, model);
     }
@@ -36,6 +48,15 @@ public class CheckYourAnswersController : Controller
     public async Task<IActionResult> Post(CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
+        var submitModel = await GetViewModel(sessionModel, cancellationToken);
+
+        var result = await _validator.ValidateAsync(submitModel, cancellationToken);
+
+        if (!result.IsValid)
+        {
+            result.AddToModelState(ModelState);
+            return View(ViewPath, submitModel);
+        }
 
         var request = (CreateEventRequest)sessionModel;
 
@@ -59,7 +80,6 @@ public class CheckYourAnswersController : Controller
         regions.Add(new RegionSelection("National", 0));
 
         var model = (CheckYourAnswersViewModel)sessionModel;
-        model.HasSeenPreview = true;
         model.PageTitle = CreateEvent.PageTitle;
         model.CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
         model.PostLink = "#";
@@ -67,6 +87,7 @@ public class CheckYourAnswersController : Controller
         model.EventType = eventTypes.First(x => x.Id == sessionModel.CalendarId).CalendarName;
         model.EventRegion = regions.First(x => x.RegionId == sessionModel.RegionId).Name;
 
+        model.EventFormatLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!;
         return model;
     }
 }

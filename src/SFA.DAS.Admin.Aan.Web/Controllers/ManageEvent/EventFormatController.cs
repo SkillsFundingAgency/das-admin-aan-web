@@ -45,7 +45,13 @@ public class EventFormatController : Controller
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.EventFormat = submitModel.EventFormat;
+
         _sessionService.Set(sessionModel);
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.ManageEvent.Location);
+        }
+
         return RedirectToRoute(RouteNames.ManageEvent.EventType);
     }
 
@@ -53,11 +59,16 @@ public class EventFormatController : Controller
     {
         var model = new EventFormatViewModel
         {
+            EventFormat = sessionModel.EventFormat,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
             PageTitle = CreateEvent.PageTitle
         };
 
-        model.EventFormat = sessionModel?.EventFormat;
+        if (sessionModel!.HasSeenPreview)
+        {
+            model.CancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        }
+
         model.PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!;
         return model;
     }
