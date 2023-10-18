@@ -68,7 +68,7 @@ public class SchoolEventControllerIsAtSchoolTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
-        var result = (RedirectToRouteResult)sut.PostHasGuestSpeakers(submitModel);
+        var result = (RedirectToRouteResult)sut.PostIsAtSchool(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s =>
@@ -92,7 +92,7 @@ public class SchoolEventControllerIsAtSchoolTests
 
         var submitModel = new IsAtSchoolViewModel { CancelLink = NetworkEventsUrl };
 
-        var result = (ViewResult)sut.PostHasGuestSpeakers(submitModel);
+        var result = (ViewResult)sut.PostIsAtSchool(submitModel);
 
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<IsAtSchoolViewModel>());

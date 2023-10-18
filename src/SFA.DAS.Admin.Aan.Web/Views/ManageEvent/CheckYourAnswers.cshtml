@@ -230,7 +230,7 @@
                 @isSchoolEventText
             </dd>
             <dd class="govuk-summary-list__actions">
-                <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                <a href="@Model.IsAtSchoolLink" class="govuk-link govuk-link--no-visited-state">Change</a>
             </dd>
         </div>
         @if (Model.IsAtSchool.HasValue && Model.IsAtSchool.Value)
@@ -243,7 +243,7 @@
                     @Model.SchoolName
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                    <a href="@Model.SchoolNameLink" class="govuk-link govuk-link--no-visited-state">Change</a>
                 </dd>
             </div>
         }
