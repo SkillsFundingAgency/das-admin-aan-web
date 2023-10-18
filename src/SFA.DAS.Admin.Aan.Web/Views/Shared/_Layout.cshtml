@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.AdminService.Common.Extensions;
+﻿@using SFA.DAS.Admin.Aan.Web.Extensions;
 <!DOCTYPE html>
 <html lang="en" class="govuk-template ">
 
@@ -73,7 +73,7 @@
                     <div class="govuk-grid-column-one-half">
                         <p class="govuk-body-l app-user-header__name">
                             <span class="govuk-visually-hidden">Signed in as </span>
-                            <span>@User.UserDisplayName()</span>&nbsp;
+                            <span>@User.GetDisplayName()</span>&nbsp;
                         </p>
                     </div>
                     <div class="govuk-grid-column-one-half">

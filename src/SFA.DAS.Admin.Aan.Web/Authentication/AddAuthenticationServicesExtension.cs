@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using SFA.DAS.Admin.Aan.Web.Configuration;
+using SFA.DAS.DfESignIn.Auth.AppStart;
 
 namespace SFA.DAS.Admin.Aan.Web.Authentication;
 
@@ -11,32 +12,48 @@ public static class AddAuthenticationServicesExtension
 {
     public static IServiceCollection AddAuthenticationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var authConfig = configuration.GetSection(nameof(StaffAuthenticationConfiguration)).Get<StaffAuthenticationConfiguration>();
+        var applicationConfiguration = configuration.GetSection(nameof(ApplicationConfiguration)).Get<ApplicationConfiguration>();
 
-        var cookieOptions = new Action<CookieAuthenticationOptions>(options =>
+        if (applicationConfiguration is { UseDfESignIn: true })
         {
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        });
+            services.AddAndConfigureDfESignInAuthentication(
+                configuration,
+                $"{typeof(AddAuthenticationServicesExtension).Assembly.GetName().Name}.Auth",
+                typeof(CustomServiceRole),
+                DfESignIn.Auth.Enums.ClientName.ServiceAdmin,
+                "/SignOut",
+                "");
+        }
+        else
+        {
+            var authConfig = configuration.GetSection(nameof(StaffAuthenticationConfiguration))
+                .Get<StaffAuthenticationConfiguration>();
 
-        services
-            .AddAuthentication(sharedOptions =>
+            var cookieOptions = new Action<CookieAuthenticationOptions>(options =>
             {
-                sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
-                sharedOptions.DefaultSignOutScheme = WsFederationDefaults.AuthenticationScheme;
-            })
-            .AddWsFederation(options =>
-            {
-                options.Wtrealm = authConfig.WtRealm;
-                options.MetadataAddress = authConfig.MetadataAddress;
-                options.TokenValidationParameters.RoleClaimType = Roles.RoleClaimType;
-                options.Events.OnSecurityTokenValidated = async (ctx) =>
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
+
+            services
+                .AddAuthentication(sharedOptions =>
                 {
-                    await PopulateProviderClaims(ctx.HttpContext, ctx.Principal!);
-                };
-            })
-            .AddCookie(cookieOptions);
+                    sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
+                    sharedOptions.DefaultSignOutScheme = WsFederationDefaults.AuthenticationScheme;
+                })
+                .AddWsFederation(options =>
+                {
+                    options.Wtrealm = authConfig.WtRealm;
+                    options.MetadataAddress = authConfig.MetadataAddress;
+                    options.TokenValidationParameters.RoleClaimType = Roles.RoleClaimType;
+                    options.Events.OnSecurityTokenValidated = async (ctx) =>
+                    {
+                        await PopulateProviderClaims(ctx.HttpContext, ctx.Principal!);
+                    };
+                })
+                .AddCookie(cookieOptions);
+        }
 
         return services;
     }

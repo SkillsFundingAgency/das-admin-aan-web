@@ -5,16 +5,21 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Extensions;
 using System.Security.Claims;
+using Microsoft.Extensions.Options;
+using SFA.DAS.Admin.Aan.Web.Configuration;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers;
 
 public class AccountController : Controller
 {
     private readonly ILogger<AccountController> _logger;
+    private readonly ApplicationConfiguration _applicationConfiguration;
 
-    public AccountController(ILogger<AccountController> logger)
+    public AccountController(ILogger<AccountController> logger, IOptions<ApplicationConfiguration> applicationConfiguration)
     {
         _logger = logger;
+        _applicationConfiguration = applicationConfiguration.Value;
     }
 
     [HttpGet]
@@ -22,9 +27,15 @@ public class AccountController : Controller
     {
         _logger.LogInformation("Start of Sign In");
         var redirectUrl = Url.Action("PostSignIn", "Account");
+
+        // Get the AuthScheme based on the DfeSignIn config/property.
+        var authScheme = _applicationConfiguration.UseDfESignIn
+            ? OpenIdConnectDefaults.AuthenticationScheme
+            : WsFederationDefaults.AuthenticationScheme;
+
         return Challenge(
             new AuthenticationProperties { RedirectUri = redirectUrl },
-            WsFederationDefaults.AuthenticationScheme);
+            authScheme);
     }
 
     [HttpGet]
@@ -47,10 +58,15 @@ public class AccountController : Controller
             Response.Cookies.Delete(cookie);
         }
 
+        // Get the AuthScheme based on the DfeSignIn config/property.
+        var authScheme = _applicationConfiguration.UseDfESignIn
+            ? OpenIdConnectDefaults.AuthenticationScheme
+            : WsFederationDefaults.AuthenticationScheme;
+
         return SignOut(
             new AuthenticationProperties { RedirectUri = callbackUrl },
             CookieAuthenticationDefaults.AuthenticationScheme,
-            WsFederationDefaults.AuthenticationScheme);
+            authScheme);
     }
 
     [HttpGet]

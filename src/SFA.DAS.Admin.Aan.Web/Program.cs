@@ -11,7 +11,6 @@ using SFA.DAS.Admin.Aan.Web.HealthCheck;
 var builder = WebApplication.CreateBuilder(args);
 
 var rootConfiguration = builder.Configuration.LoadConfiguration();
-
 var applicationConfiguration = rootConfiguration.Get<ApplicationConfiguration>();
 builder.Services.AddSingleton(applicationConfiguration);
 
@@ -32,7 +31,7 @@ builder.Services
         options.Filters.Add<RequiresMemberActionAttribute>();
     })
     .AddSessionStateTempDataProvider();
-
+builder.Services.Configure<ApplicationConfiguration>(rootConfiguration.GetSection(nameof(applicationConfiguration)));
 builder.Services.AddHealthChecks()
     .AddCheck<AdminAanOuterApiHealthCheck>(AdminAanOuterApiHealthCheck.HealthCheckResultDescription,
         failureStatus: HealthStatus.Unhealthy,
