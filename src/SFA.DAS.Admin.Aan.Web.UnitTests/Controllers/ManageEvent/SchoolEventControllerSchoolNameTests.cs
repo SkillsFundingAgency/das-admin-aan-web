@@ -59,10 +59,10 @@ public class SchoolEventControllerSchoolNameTests
         var sut = new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<IsAtSchoolViewModel>>(), validatorMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
-        var result = (ViewResult)sut.GetEventIsAtSchool();
+        var result = (ViewResult)sut.GetSchoolName();
 
-        Assert.That(result.Model, Is.TypeOf<IsAtSchoolViewModel>());
-        var vm = result.Model as IsAtSchoolViewModel;
+        Assert.That(result.Model, Is.TypeOf<SchoolNameViewModel>());
+        var vm = result.Model as SchoolNameViewModel;
         vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
