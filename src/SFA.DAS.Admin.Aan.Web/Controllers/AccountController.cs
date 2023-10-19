@@ -8,6 +8,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Admin.Aan.Web.Configuration;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using SFA.DAS.Admin.Aan.Web.Models.Account;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers;
 
@@ -15,10 +16,15 @@ public class AccountController : Controller
 {
     private readonly ILogger<AccountController> _logger;
     private readonly ApplicationConfiguration _applicationConfiguration;
+    private readonly IConfiguration _configuration;
 
-    public AccountController(ILogger<AccountController> logger, IOptions<ApplicationConfiguration> applicationConfiguration)
+    public AccountController(
+        ILogger<AccountController> logger,
+        IOptions<ApplicationConfiguration> applicationConfiguration,
+        IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
         _applicationConfiguration = applicationConfiguration.Value;
     }
 
@@ -76,6 +82,7 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [Route("~/error/403")]
     public IActionResult AccessDenied()
     {
         if (HttpContext.User != null)
@@ -86,6 +93,6 @@ public class AccountController : Controller
             _logger.LogError("AccessDenied - User '{userName}' does not have a valid role. They have the following roles: {roles}", userName, string.Join(",", roles));
         }
 
-        return View("AccessDenied");
+        return View("AccessDenied", new Error403ViewModel(_configuration["ResourceEnvironmentName"]) { UseDfESignIn = _applicationConfiguration.UseDfESignIn });
     }
 }
