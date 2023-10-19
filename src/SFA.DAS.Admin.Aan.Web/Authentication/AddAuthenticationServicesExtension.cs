@@ -44,8 +44,8 @@ public static class AddAuthenticationServicesExtension
                 })
                 .AddWsFederation(options =>
                 {
-                    options.Wtrealm = authConfig.WtRealm;
-                    options.MetadataAddress = authConfig.MetadataAddress;
+                    options.Wtrealm = authConfig?.WtRealm;
+                    options.MetadataAddress = authConfig?.MetadataAddress;
                     options.TokenValidationParameters.RoleClaimType = Roles.RoleClaimType;
                     options.Events.OnSecurityTokenValidated = async (ctx) =>
                     {

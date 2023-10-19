@@ -93,6 +93,6 @@ public class AccountController : Controller
             _logger.LogError("AccessDenied - User '{userName}' does not have a valid role. They have the following roles: {roles}", userName, string.Join(",", roles));
         }
 
-        return View("AccessDenied", new Error403ViewModel(_configuration["ResourceEnvironmentName"]) { UseDfESignIn = _applicationConfiguration.UseDfESignIn });
+        return View("AccessDenied", new Error403ViewModel(_configuration["ResourceEnvironmentName"] ?? string.Empty) { UseDfESignIn = _applicationConfiguration.UseDfESignIn });
     }
 }
