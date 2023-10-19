@@ -47,6 +47,27 @@ public class SchoolEventControllerSchoolNameTests
     }
 
     [Test, MoqAutoData]
+    public void Get_HasSeenPreviewTrue_CancelLinkIsCheckYourAnswers()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<SchoolNameViewModel>>();
+
+        var sessionModel = new EventSessionModel { HasSeenPreview = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<IsAtSchoolViewModel>>(), validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var result = (ViewResult)sut.GetEventIsAtSchool();
+
+        Assert.That(result.Model, Is.TypeOf<IsAtSchoolViewModel>());
+        var vm = result.Model as IsAtSchoolViewModel;
+        vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
+    }
+
+
+    [Test, MoqAutoData]
     public void Get_HasSeenPreviewFalse_CancelLinkIsManageEvents()
     {
         var sessionServiceMock = new Mock<ISessionService>();
