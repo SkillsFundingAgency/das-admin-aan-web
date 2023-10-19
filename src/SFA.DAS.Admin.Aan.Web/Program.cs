@@ -11,6 +11,7 @@ using SFA.DAS.Admin.Aan.Web.HealthCheck;
 var builder = WebApplication.CreateBuilder(args);
 
 var rootConfiguration = builder.Configuration.LoadConfiguration();
+
 var applicationConfiguration = rootConfiguration.Get<ApplicationConfiguration>();
 builder.Services.AddSingleton(applicationConfiguration);
 
