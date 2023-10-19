@@ -34,10 +34,10 @@ public class CheckYourAnswersController : Controller
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
-        if (!sessionModel.HasSeenPreview || !sessionModel.DirectCallFromCheckYourAnswers)
+        if (!sessionModel.HasSeenPreview || !sessionModel.IsDirectCallFromCheckYourAnswers)
         {
             sessionModel.HasSeenPreview = true;
-            sessionModel.DirectCallFromCheckYourAnswers = true;
+            sessionModel.IsDirectCallFromCheckYourAnswers = true;
             _sessionService.Set(sessionModel);
         }
 

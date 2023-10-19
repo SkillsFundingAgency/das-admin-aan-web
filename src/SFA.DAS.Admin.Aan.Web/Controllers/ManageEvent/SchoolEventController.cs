@@ -51,7 +51,7 @@ public class SchoolEventController : Controller
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
         sessionModel.IsAtSchool = submitModel.IsAtSchool;
-        sessionModel.DirectCallFromCheckYourAnswers = false;
+        sessionModel.IsDirectCallFromCheckYourAnswers = false;
         _sessionService.Set(sessionModel);
 
         if (sessionModel.IsAtSchool == true) return RedirectToRoute(RouteNames.ManageEvent.SchoolName);
@@ -134,7 +134,7 @@ public class SchoolEventController : Controller
             CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.SchoolName)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle,
-            DirectCallFromCheckYourAnswers = sessionModel.DirectCallFromCheckYourAnswers,
+            DirectCallFromCheckYourAnswers = sessionModel.IsDirectCallFromCheckYourAnswers,
             HasSeenPreview = sessionModel.HasSeenPreview
         };
     }

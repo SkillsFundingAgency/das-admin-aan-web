@@ -97,7 +97,7 @@ public class CheckYourAnswersControllerTests
     [TestCase(true, false, true)]
     [TestCase(false, true, true)]
     [TestCase(false, false, true)]
-    public void GetCheckYourAnswers_SeenPreviewAndDirectCallSettings_CheckUpdateToSessionModel(bool hasSeenPreview, bool directCallFromCheckYourAnswers, bool callsToSetEventSessionModel)
+    public void GetCheckYourAnswers_SeenPreviewAndDirectCallFromCheckYourAnswersSettings_CheckUpdateToSessionModel(bool hasSeenPreview, bool directCallFromCheckYourAnswers, bool callsToSetEventSessionModel)
     {
         var outerAPiMock = new Mock<IOuterApiClient>();
         var validatorMock = new Mock<IValidator<CheckYourAnswersViewModel>>();
@@ -123,7 +123,7 @@ public class CheckYourAnswersControllerTests
             CalendarId = calendars.First().Id,
             RegionId = regionsResult.Regions.First().Id,
             HasSeenPreview = hasSeenPreview,
-            DirectCallFromCheckYourAnswers = directCallFromCheckYourAnswers
+            IsDirectCallFromCheckYourAnswers = directCallFromCheckYourAnswers
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
