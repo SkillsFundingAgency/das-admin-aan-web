@@ -45,7 +45,10 @@
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
                 <div class="govuk-button-group">
                     <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>
-                    <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+                    @if (!Model.DirectCallFromCheckYourAnswers)
+                    {
+                        <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+                    }
                 </div>
             </div>
         </form>
