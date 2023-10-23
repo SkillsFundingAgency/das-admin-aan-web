@@ -83,6 +83,7 @@ public class AccountController : Controller
 
     [HttpGet]
     [Route("~/error/403")]
+    [Route("~/Account/AccessDenied")]
     public IActionResult AccessDenied()
     {
         if (HttpContext.User != null)
