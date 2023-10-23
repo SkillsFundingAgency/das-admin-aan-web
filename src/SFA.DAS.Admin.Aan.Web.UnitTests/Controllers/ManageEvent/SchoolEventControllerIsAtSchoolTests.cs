@@ -16,6 +16,7 @@ public class SchoolEventControllerIsAtSchoolTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
+    private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void GetEventIsAtSchool_ReturnsEventAtSchoolViewModel(
@@ -47,6 +48,48 @@ public class SchoolEventControllerIsAtSchoolTests
         vm!.PostLink.Should().Be(PostUrl);
     }
 
+    [Test, MoqAutoData]
+    public void Get_HasSeenPreviewFalse_CancelLinkIsManageEvents()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<IsAtSchoolViewModel>>();
+
+        var sessionModel = new EventSessionModel { HasSeenPreview = false };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new SchoolEventController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<SchoolNameViewModel>>());
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
+        var result = (ViewResult)sut.GetEventIsAtSchool();
+
+        Assert.That(result.Model, Is.TypeOf<IsAtSchoolViewModel>());
+        var vm = result.Model as IsAtSchoolViewModel;
+        vm!.CancelLink.Should().Be(NetworkEventsUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_HasSeenPreviewTrue_CancelLinkIsCheckYourAnswers()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<IsAtSchoolViewModel>>();
+
+        var sessionModel = new EventSessionModel { HasSeenPreview = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new SchoolEventController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<SchoolNameViewModel>>());
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var result = (ViewResult)sut.GetEventIsAtSchool();
+
+        Assert.That(result.Model, Is.TypeOf<IsAtSchoolViewModel>());
+        var vm = result.Model as IsAtSchoolViewModel;
+        vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
+    }
+
     [TestCase(true)]
     [TestCase(false)]
     [TestCase(null)]
@@ -68,7 +111,7 @@ public class SchoolEventControllerIsAtSchoolTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
-        var result = (RedirectToRouteResult)sut.PostHasGuestSpeakers(submitModel);
+        var result = (RedirectToRouteResult)sut.PostIsAtSchool(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s =>
@@ -83,6 +126,34 @@ public class SchoolEventControllerIsAtSchoolTests
         }
     }
 
+    [Test]
+    public void Post_HasSeenPreviewTrue_IsAtSchoolFalse_RedirectToCheckYourAnswers()
+    {
+        var isAtSchool = false;
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<IsAtSchoolViewModel>>();
+
+        var sessionModel = new EventSessionModel { HasSeenPreview = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new IsAtSchoolViewModel { IsAtSchool = isAtSchool };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new SchoolEventController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<SchoolNameViewModel>>());
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+
+        var result = (RedirectToRouteResult)sut.PostIsAtSchool(submitModel);
+
+        sut.ModelState.IsValid.Should().BeTrue();
+        sessionServiceMock.Verify(s =>
+            s.Set(It.Is<EventSessionModel>(m => m.IsAtSchool == isAtSchool)));
+        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
+    }
+
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventIsAtSchool_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -92,7 +163,7 @@ public class SchoolEventControllerIsAtSchoolTests
 
         var submitModel = new IsAtSchoolViewModel { CancelLink = NetworkEventsUrl };
 
-        var result = (ViewResult)sut.PostHasGuestSpeakers(submitModel);
+        var result = (ViewResult)sut.PostIsAtSchool(submitModel);
 
         sut.ModelState.IsValid.Should().BeFalse();
         Assert.That(result.Model, Is.TypeOf<IsAtSchoolViewModel>());
