@@ -98,6 +98,7 @@ public class CheckYourAnswersController : Controller
         model.OrganiserDetailsLink = Url.RouteUrl(RouteNames.ManageEvent.OrganiserDetails)!;
         model.IsAtSchoolLink = Url.RouteUrl(RouteNames.ManageEvent.IsAtSchool)!;
         model.SchoolNameLink = Url.RouteUrl(RouteNames.ManageEvent.SchoolName)!;
+        model.NumberOfAttendeesLink = Url.RouteUrl(RouteNames.ManageEvent.NumberOfAttendees)!;
         return model;
     }
 }

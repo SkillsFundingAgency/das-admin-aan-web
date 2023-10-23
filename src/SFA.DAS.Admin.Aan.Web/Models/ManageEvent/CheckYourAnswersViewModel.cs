@@ -45,6 +45,7 @@ public class CheckYourAnswersViewModel : ManageEventViewModelBase
     public string? OrganiserDetailsLink { get; set; }
     public string? IsAtSchoolLink { get; set; }
     public string? SchoolNameLink { get; set; }
+    public string? NumberOfAttendeesLink { get; set; }
 
     public bool ShowLocation =>
         EventFormat is Application.Constants.EventFormat.InPerson or Application.Constants.EventFormat.Hybrid;
