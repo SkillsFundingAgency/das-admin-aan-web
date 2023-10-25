@@ -50,6 +50,33 @@ public class CheckYourAnswersViewModelValidatorTests
         }
     }
 
+    [TestCase(true, "school name", true)]
+    [TestCase(true, "", false)]
+    [TestCase(true, null, false)]
+    [TestCase(false, null, true)]
+    [TestCase(false, "", true)]
+    [TestCase(false, "school name", true)]
+    public void Validate_InPersonEventHasNoLocation_Error(bool isAtSchool, string? schoolName, bool isValid)
+    {
+        var model = GetHydratedModel();
+        model.IsAtSchool = isAtSchool;
+        model.SchoolName = schoolName;
+
+        var sut = new CheckYourAnswersViewModelValidator();
+        var result = sut.TestValidate(model);
+
+        if (!isValid)
+        {
+            result.ShouldHaveValidationErrorFor(c => c.SchoolName)
+                .WithErrorMessage(CheckYourAnswersViewModelValidator.EventSchoolNameEmpty);
+        }
+        else
+        {
+            result.ShouldNotHaveValidationErrorFor(c => c.SchoolName);
+        }
+    }
+
+
     private static CheckYourAnswersViewModel GetHydratedModel()
     {
         var vm = new CheckYourAnswersViewModel

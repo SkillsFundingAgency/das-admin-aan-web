@@ -15,13 +15,14 @@ public class CheckYourAnswersViewModelValidator : AbstractValidator<CheckYourAns
             .WithMessage(EventFormatHasLocationAndLocationEmpty);
 
         RuleFor(e => e.SchoolName)
-            .Must(SchoolNameEntered)
+            .Must(SchoolNameRequired)
             .WithMessage(EventSchoolNameEmpty);
     }
 
-    private static bool SchoolNameEntered(CheckYourAnswersViewModel model, string? schoolName)
+    private static bool SchoolNameRequired(CheckYourAnswersViewModel model, string? schoolName)
     {
-        return !string.IsNullOrEmpty(schoolName);
+        if (model.IsAtSchool.GetValueOrDefault()) return !string.IsNullOrEmpty(schoolName);
+        return true;
     }
 
     private static bool EventFormatRequiredAndPresent(CheckYourAnswersViewModel model, string? eventLocation)
