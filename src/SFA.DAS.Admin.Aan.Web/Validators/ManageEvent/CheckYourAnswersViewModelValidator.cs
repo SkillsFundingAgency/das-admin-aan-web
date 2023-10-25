@@ -21,9 +21,7 @@ public class CheckYourAnswersViewModelValidator : AbstractValidator<CheckYourAns
 
     private static bool SchoolNameRequired(CheckYourAnswersViewModel model, string? schoolName)
     {
-        if (model.IsAtSchool.HasValue && model.IsAtSchool.Value)
-            return !string.IsNullOrEmpty(schoolName);
-
+        if (model.IsAtSchool.GetValueOrDefault()) return !string.IsNullOrEmpty(schoolName);
         return true;
     }
 
