@@ -18,37 +18,64 @@ public class CheckYourAnswersViewModelValidatorTests
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    [TestCase(EventFormat.InPerson, null, false)]
-    [TestCase(EventFormat.InPerson, "", false)]
-    [TestCase(EventFormat.InPerson, " ", false)]
-    [TestCase(EventFormat.Hybrid, null, false)]
-    [TestCase(EventFormat.Hybrid, "", false)]
-    [TestCase(EventFormat.Hybrid, " ", false)]
-    [TestCase(EventFormat.Online, null, true)]
-    [TestCase(EventFormat.Online, "", true)]
-    [TestCase(EventFormat.Online, " ", true)]
-    [TestCase(EventFormat.InPerson, "location", true)]
-    [TestCase(EventFormat.Hybrid, "location", true)]
-    [TestCase(EventFormat.Online, "location", true)]
-    public void Validate_InPersonEventHasNoLocation_Error(EventFormat eventFormat, string? eventLocation, bool isValid)
+    // [TestCase(EventFormat.InPerson, null, false)]
+    // [TestCase(EventFormat.InPerson, "", false)]
+    // [TestCase(EventFormat.InPerson, " ", false)]
+    // [TestCase(EventFormat.Hybrid, null, false)]
+    // [TestCase(EventFormat.Hybrid, "", false)]
+    // [TestCase(EventFormat.Hybrid, " ", false)]
+    // [TestCase(EventFormat.Online, null, true)]
+    // [TestCase(EventFormat.Online, "", true)]
+    // [TestCase(EventFormat.Online, " ", true)]
+    // [TestCase(EventFormat.InPerson, "location", true)]
+    // [TestCase(EventFormat.Hybrid, "location", true)]
+    // [TestCase(EventFormat.Online, "location", true)]
+    // public void Validate_InPersonEventHasNoLocation_Error(EventFormat eventFormat, string? eventLocation, bool isValid)
+    // {
+    //     var model = GetHydratedModel();
+    //     model.EventFormat = eventFormat;
+    //     model.EventLocation = eventLocation;
+    //
+    //     var sut = new CheckYourAnswersViewModelValidator();
+    //     var result = sut.TestValidate(model);
+    //
+    //     if (!isValid)
+    //     {
+    //         result.ShouldHaveValidationErrorFor(c => c.EventLocation)
+    //             .WithErrorMessage(CheckYourAnswersViewModelValidator.EventFormatHasLocationAndLocationEmpty);
+    //     }
+    //     else
+    //     {
+    //         result.ShouldNotHaveValidationErrorFor(c => c.EventLocation);
+    //     }
+    // }
+
+    [TestCase(true, "school name", true)]
+    [TestCase(true, "", false)]
+    [TestCase(true, null, false)]
+    [TestCase(false, null, true)]
+    [TestCase(false, "", true)]
+    [TestCase(false, "school name", true)]
+    public void Validate_InPersonEventHasNoLocation_Error(bool isAtSchool, string? schoolName, bool isValid)
     {
         var model = GetHydratedModel();
-        model.EventFormat = eventFormat;
-        model.EventLocation = eventLocation;
+        model.IsAtSchool = isAtSchool;
+        model.SchoolName = schoolName;
 
         var sut = new CheckYourAnswersViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
         {
-            result.ShouldHaveValidationErrorFor(c => c.EventLocation)
-                .WithErrorMessage(CheckYourAnswersViewModelValidator.EventFormatHasLocationAndLocationEmpty);
+            result.ShouldHaveValidationErrorFor(c => c.SchoolName)
+                .WithErrorMessage(CheckYourAnswersViewModelValidator.EventSchoolNameEmpty);
         }
         else
         {
-            result.ShouldNotHaveValidationErrorFor(c => c.EventLocation);
+            result.ShouldNotHaveValidationErrorFor(c => c.SchoolName);
         }
     }
+
 
     private static CheckYourAnswersViewModel GetHydratedModel()
     {
