@@ -45,7 +45,10 @@
                 <button id="continue" type="submit" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
                     Continue
                 </button>
+            @if (Model.DirectCallFromCheckYourAnswers || !Model.HasSeenPreview)
+            {
                 <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            }
             </div>
         </form>
     </div>

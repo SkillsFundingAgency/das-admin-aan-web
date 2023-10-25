@@ -10,11 +10,11 @@ public class SchoolNameViewModelValidator : AbstractValidator<SchoolNameViewMode
     public SchoolNameViewModelValidator()
     {
         RuleFor(e => e.SearchTerm)
-            .Must(SchoolNameEntered)
+            .Must(IsSchoolNameProvided)
                 .WithMessage(EventSchoolNameEmpty);
     }
 
-    private static bool SchoolNameEntered(SchoolNameViewModel model, string? searchTerm)
+    private static bool IsSchoolNameProvided(SchoolNameViewModel model, string? searchTerm)
     {
         return !string.IsNullOrEmpty(model.Urn);
     }

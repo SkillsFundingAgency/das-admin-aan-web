@@ -54,10 +54,17 @@ public class NumberOfAttendeesController : Controller
 
     private NumberOfAttendeesViewModel GetViewModel(EventSessionModel sessionModel)
     {
+        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+
+        if (sessionModel.HasSeenPreview)
+        {
+            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        }
+
         return new NumberOfAttendeesViewModel
         {
             NumberOfAttendees = sessionModel.PlannedAttendees,
-            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.NumberOfAttendees)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };

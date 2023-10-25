@@ -172,7 +172,7 @@
                 @Model.OrganiserName
             </dd>
             <dd class="govuk-summary-list__actions">
-                <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                <a href="@Model.OrganiserDetailsLink" class="govuk-link govuk-link--no-visited-state">Change</a>
             </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -183,7 +183,7 @@
                 @Model.OrganiserEmail
             </dd>
             <dd class="govuk-summary-list__actions">
-                <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                <a href="@Model.OrganiserDetailsLink" class="govuk-link govuk-link--no-visited-state">Change</a>
             </dd>
         </div>
     </dl>
@@ -209,7 +209,7 @@
                     </ol>
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                    <a href="@Model.GuestSpeakersListLink" class="govuk-link govuk-link--no-visited-state">Change</a>
                 </dd>
             </div>
         </dl>
@@ -230,20 +230,22 @@
                 @isSchoolEventText
             </dd>
             <dd class="govuk-summary-list__actions">
-                <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                <a href="@Model.IsAtSchoolLink" class="govuk-link govuk-link--no-visited-state">Change</a>
             </dd>
         </div>
         @if (Model.IsAtSchool.HasValue && Model.IsAtSchool.Value)
         {
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
+                    <div esfa-validation-marker-for="@Model.SchoolName"  id="SchoolName">
                     Name of the school
+                    </div>
                 </dt>
                 <dd class="govuk-summary-list__value">
                     @Model.SchoolName
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                    <a href="@Model.SchoolNameLink" class="govuk-link govuk-link--no-visited-state">Change</a>
                 </dd>
             </div>
         }
@@ -255,7 +257,7 @@
                 @Model.NumberOfAttendees
             </dd>
             <dd class="govuk-summary-list__actions">
-                <a href="#" class="govuk-link govuk-link--no-visited-state @hideDetails">Change</a>
+                <a href="@Model.NumberOfAttendeesLink" class="govuk-link govuk-link--no-visited-state">Change</a>
             </dd>
         </div>
     </dl>

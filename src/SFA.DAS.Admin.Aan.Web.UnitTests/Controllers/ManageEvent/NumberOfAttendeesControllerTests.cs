@@ -16,6 +16,7 @@ public class NumberOfAttendeesControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
+    private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsNumberOfAttendeesViewModel(
@@ -39,6 +40,30 @@ public class NumberOfAttendeesControllerTests
         Assert.That(result.Model, Is.TypeOf<NumberOfAttendeesViewModel>());
         var vm = result.Model as NumberOfAttendeesViewModel;
         vm!.PostLink.Should().Be(PostUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_ReturnsExpectedCancelLink_WhenHasSeenPreviewTrue()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<NumberOfAttendeesViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            HasSeenPreview = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new NumberOfAttendeesController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var actualResult = sut.Get();
+        var result = actualResult.As<ViewResult>();
+
+        Assert.That(result.Model, Is.TypeOf<NumberOfAttendeesViewModel>());
+        var vm = result.Model as NumberOfAttendeesViewModel;
+        vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
     [TestCase(1)]

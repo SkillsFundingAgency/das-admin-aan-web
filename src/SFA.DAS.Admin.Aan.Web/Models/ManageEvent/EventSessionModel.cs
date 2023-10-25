@@ -6,7 +6,7 @@ namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 public class EventSessionModel
 {
     public bool HasSeenPreview { get; set; }
-
+    public bool IsDirectCallFromCheckYourAnswers { get; set; }
     public EventFormat? EventFormat { get; set; }
 
     public string? EventTitle { get; set; }

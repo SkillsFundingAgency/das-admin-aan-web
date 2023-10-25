@@ -18,6 +18,7 @@ public class OrganiserDetailsControllerTests
 {
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
+    private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsCreateEventDetailsViewModel(
@@ -43,6 +44,30 @@ public class OrganiserDetailsControllerTests
         var vm = result.Model as OrganiserDetailsViewModel;
         vm!.PostLink.Should().Be(PostUrl);
     }
+    [Test, MoqAutoData]
+    public void Get_ReturnsExpectedCancelLink_WhenHasSeenPreviewTrue()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<OrganiserDetailsViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            HasSeenPreview = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new OrganiserDetailsController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        var actualResult = sut.Get();
+        var result = actualResult.As<ViewResult>();
+
+        Assert.That(result.Model, Is.TypeOf<OrganiserDetailsViewModel>());
+        var vm = result.Model as OrganiserDetailsViewModel;
+        vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
+    }
+
 
     [TestCase("location 1", null)]
     [TestCase("location 2", "event online link")]
@@ -70,6 +95,45 @@ public class OrganiserDetailsControllerTests
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.ContactName == organiserName && m.ContactEmail == organiserEmail)));
         result.RouteName.Should().Be(RouteNames.ManageEvent.NumberOfAttendees);
+    }
+
+    [Test]
+    public void Post_HasSeenPreview_False_RedirectsToNumberOfAttendees()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<OrganiserDetailsViewModel>>();
+
+        var sessionModel = new EventSessionModel();
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new OrganiserDetailsViewModel { OrganiserName = "org name", OrganiserEmail = "org@test.com" };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new OrganiserDetailsController(sessionServiceMock.Object, validatorMock.Object);
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.NumberOfAttendees);
+    }
+
+    [Test]
+    public void Post_HasSeenPreview_True_RedirectsToCheckYourAnswers()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<OrganiserDetailsViewModel>>();
+
+        var sessionModel = new EventSessionModel { HasSeenPreview = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+        var submitModel = new OrganiserDetailsViewModel { OrganiserName = "org name", OrganiserEmail = "org@test.com" };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new OrganiserDetailsController(sessionServiceMock.Object, validatorMock.Object);
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
+        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
     }
 
     [Test, MoqAutoData]

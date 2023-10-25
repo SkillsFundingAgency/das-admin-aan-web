@@ -25,6 +25,9 @@ public class CheckYourAnswersControllerTests
     private static readonly string EventDateAndTimeUrl = Guid.NewGuid().ToString();
     private static readonly string EventDescriptionUrl = Guid.NewGuid().ToString();
     private static readonly string EventHasGuestSpeakersUrl = Guid.NewGuid().ToString();
+    private static readonly string OrganiserDetailsUrl = Guid.NewGuid().ToString();
+    private static readonly string IsAtSchoolUrl = Guid.NewGuid().ToString();
+    private static readonly string SchoolNameUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_ReturnsApiResponse(
@@ -90,13 +93,26 @@ public class CheckYourAnswersControllerTests
         sessionServiceMock.Verify(x => x.Set(It.Is<EventSessionModel>(s => s.HasSeenPreview == true)), Times.Once());
     }
 
-    [Test, MoqAutoData]
-    public void GetCheckYourAnswers_HasSeenPreviewTrue_NoUpdateToSessionModel(
-        [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
-        List<Calendar> calendars,
-        GetRegionsResult regionsResult)
+    [TestCase(true, true, false)]
+    [TestCase(true, false, true)]
+    [TestCase(false, true, true)]
+    [TestCase(false, false, true)]
+    public void GetCheckYourAnswers_SeenPreviewAndDirectCallFromCheckYourAnswersSettings_CheckUpdateToSessionModel(bool hasSeenPreview, bool directCallFromCheckYourAnswers, bool callsToSetEventSessionModel)
     {
+        var outerAPiMock = new Mock<IOuterApiClient>();
+        var validatorMock = new Mock<IValidator<CheckYourAnswersViewModel>>();
+        var calendars = new List<Calendar>
+        {
+            new Calendar {CalendarName = "cal 1", Id = 1}
+        };
+
+        var regionsResult = new GetRegionsResult
+        {
+            Regions = new List<Region>
+            {
+                new Region(1, "London", 1)
+            }
+        };
 
         outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
         outerAPiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
@@ -106,7 +122,8 @@ public class CheckYourAnswersControllerTests
         {
             CalendarId = calendars.First().Id,
             RegionId = regionsResult.Regions.First().Id,
-            HasSeenPreview = true
+            HasSeenPreview = hasSeenPreview,
+            IsDirectCallFromCheckYourAnswers = directCallFromCheckYourAnswers
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -115,8 +132,14 @@ public class CheckYourAnswersControllerTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         var result = sut.Get(new CancellationToken());
-
-        sessionServiceMock.Verify(x => x.Set(It.IsAny<EventSessionModel>()), Times.Never());
+        if (callsToSetEventSessionModel)
+        {
+            sessionServiceMock.Verify(x => x.Set(It.IsAny<EventSessionModel>()), Times.Once());
+        }
+        else
+        {
+            sessionServiceMock.Verify(x => x.Set(It.IsAny<EventSessionModel>()), Times.Never());
+        }
     }
 
     [Test, MoqAutoData]
@@ -345,6 +368,97 @@ public class CheckYourAnswersControllerTests
         Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
         var vm = actualResult.Model as CheckYourAnswersViewModel;
         vm!.HasGuestSpeakersLink.Should().Be(EventHasGuestSpeakersUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void GetCheckYourAnswers_ReturnsExpectedOrganiserDetailsLink(
+        [Frozen] Mock<IOuterApiClient> outerAPiMock,
+        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        List<Calendar> calendars,
+        GetRegionsResult regionsResult)
+    {
+        outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
+        outerAPiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
+        var sessionServiceMock = new Mock<ISessionService>();
+        var sessionModel = new EventSessionModel
+        {
+            CalendarId = calendars.First().Id,
+            RegionId = regionsResult.Regions.First().Id
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.OrganiserDetails, OrganiserDetailsUrl);
+
+        var result = sut.Get(new CancellationToken());
+        var actualResult = result.Result as ViewResult;
+
+        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
+        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        vm!.OrganiserDetailsLink.Should().Be(OrganiserDetailsUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void GetCheckYourAnswers_ReturnsExpectedIsAtSchoolLink(
+        [Frozen] Mock<IOuterApiClient> outerAPiMock,
+        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        List<Calendar> calendars,
+        GetRegionsResult regionsResult)
+    {
+        outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
+        outerAPiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
+        var sessionServiceMock = new Mock<ISessionService>();
+        var sessionModel = new EventSessionModel
+        {
+            CalendarId = calendars.First().Id,
+            RegionId = regionsResult.Regions.First().Id
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.IsAtSchool, IsAtSchoolUrl);
+
+        var result = sut.Get(new CancellationToken());
+        var actualResult = result.Result as ViewResult;
+
+        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
+        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        vm!.IsAtSchoolLink.Should().Be(IsAtSchoolUrl);
+    }
+
+
+    [Test, MoqAutoData]
+    public void GetCheckYourAnswers_ReturnsExpectedSchoolNameLink(
+        [Frozen] Mock<IOuterApiClient> outerAPiMock,
+        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        List<Calendar> calendars,
+        GetRegionsResult regionsResult)
+    {
+        outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
+        outerAPiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
+        var sessionServiceMock = new Mock<ISessionService>();
+        var sessionModel = new EventSessionModel
+        {
+            CalendarId = calendars.First().Id,
+            RegionId = regionsResult.Regions.First().Id
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.SchoolName, SchoolNameUrl);
+
+        var result = sut.Get(new CancellationToken());
+        var actualResult = result.Result as ViewResult;
+
+        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
+        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        vm!.SchoolNameLink.Should().Be(SchoolNameUrl);
     }
 
     [Test, MoqAutoData]

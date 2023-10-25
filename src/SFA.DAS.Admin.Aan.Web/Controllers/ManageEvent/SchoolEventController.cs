@@ -38,7 +38,7 @@ public class SchoolEventController : Controller
 
     [HttpPost]
     [Route("question", Name = RouteNames.ManageEvent.IsAtSchool)]
-    public IActionResult PostHasGuestSpeakers(IsAtSchoolViewModel submitModel)
+    public IActionResult PostIsAtSchool(IsAtSchoolViewModel submitModel)
     {
         var result = _eventAtSchoolValidator.Validate(submitModel);
 
@@ -51,9 +51,16 @@ public class SchoolEventController : Controller
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
         sessionModel.IsAtSchool = submitModel.IsAtSchool;
+        sessionModel.IsDirectCallFromCheckYourAnswers = false;
         _sessionService.Set(sessionModel);
 
         if (sessionModel.IsAtSchool == true) return RedirectToRoute(RouteNames.ManageEvent.SchoolName);
+
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+        }
+
         return RedirectToRoute(RouteNames.ManageEvent.OrganiserDetails);
     }
 
@@ -84,15 +91,27 @@ public class SchoolEventController : Controller
         sessionModel.Urn = submitModel.Urn;
         _sessionService.Set(sessionModel);
 
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+        }
+
         return RedirectToRoute(RouteNames.ManageEvent.OrganiserDetails);
     }
 
     private IsAtSchoolViewModel GetViewModelEventIsAtSchool(EventSessionModel sessionModel)
     {
+        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+
+        if (sessionModel.HasSeenPreview)
+        {
+            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        }
+
         return new IsAtSchoolViewModel
         {
             IsAtSchool = sessionModel?.IsAtSchool,
-            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.IsAtSchool)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
@@ -102,12 +121,21 @@ public class SchoolEventController : Controller
     {
         var searchResult = $"{sessionModel?.SchoolName} (URN: {sessionModel?.Urn})";
 
+        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+
+        if (sessionModel!.HasSeenPreview)
+        {
+            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        }
+
         return new SchoolNameViewModel
         {
             SearchResult = searchResult,
-            CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
+            CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.SchoolName)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle
+            PageTitle = Application.Constants.CreateEvent.PageTitle,
+            DirectCallFromCheckYourAnswers = sessionModel.IsDirectCallFromCheckYourAnswers,
+            HasSeenPreview = sessionModel.HasSeenPreview
         };
     }
 }

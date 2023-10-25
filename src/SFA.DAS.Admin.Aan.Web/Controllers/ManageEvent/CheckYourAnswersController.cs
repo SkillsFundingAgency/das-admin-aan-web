@@ -34,9 +34,10 @@ public class CheckYourAnswersController : Controller
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
-        if (!sessionModel.HasSeenPreview)
+        if (!sessionModel.HasSeenPreview || !sessionModel.IsDirectCallFromCheckYourAnswers)
         {
             sessionModel.HasSeenPreview = true;
+            sessionModel.IsDirectCallFromCheckYourAnswers = true;
             _sessionService.Set(sessionModel);
         }
 
@@ -93,6 +94,11 @@ public class CheckYourAnswersController : Controller
         model.EventDateTimeLink = Url.RouteUrl(RouteNames.ManageEvent.DateAndTime)!;
         model.EventDescriptionLink = Url.RouteUrl(RouteNames.ManageEvent.Description)!;
         model.HasGuestSpeakersLink = Url.RouteUrl(RouteNames.ManageEvent.HasGuestSpeakers)!;
+        model.GuestSpeakersListLink = Url.RouteUrl(RouteNames.ManageEvent.GuestSpeakerList)!;
+        model.OrganiserDetailsLink = Url.RouteUrl(RouteNames.ManageEvent.OrganiserDetails)!;
+        model.IsAtSchoolLink = Url.RouteUrl(RouteNames.ManageEvent.IsAtSchool)!;
+        model.SchoolNameLink = Url.RouteUrl(RouteNames.ManageEvent.SchoolName)!;
+        model.NumberOfAttendeesLink = Url.RouteUrl(RouteNames.ManageEvent.NumberOfAttendees)!;
         return model;
     }
 }

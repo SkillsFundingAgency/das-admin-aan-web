@@ -48,6 +48,8 @@ public class GuestSpeakersController : Controller
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.HasGuestSpeakers = submitModel.HasGuestSpeakers;
+        sessionModel.IsDirectCallFromCheckYourAnswers = false;
+
         _sessionService.Set(sessionModel);
 
         if (sessionModel.HasGuestSpeakers == true) return RedirectToRoute(RouteNames.ManageEvent.GuestSpeakerList);
@@ -148,7 +150,7 @@ public class GuestSpeakersController : Controller
 
         return new HasGuestSpeakersViewModel
         {
-            HasGuestSpeakers = sessionModel?.HasGuestSpeakers,
+            HasGuestSpeakers = sessionModel.HasGuestSpeakers,
             CancelLink = cancelLink,
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.HasGuestSpeakers)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
@@ -171,7 +173,8 @@ public class GuestSpeakersController : Controller
             PostLink = Url.RouteUrl(RouteNames.ManageEvent.GuestSpeakerList)!,
             AddGuestSpeakerLink = Url.RouteUrl(RouteNames.ManageEvent.GuestSpeakerAdd)!,
             DeleteSpeakerLink = Url.RouteUrl(RouteNames.ManageEvent.GuestSpeakerDelete)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle
+            PageTitle = Application.Constants.CreateEvent.PageTitle,
+            DirectCallFromCheckYourAnswers = sessionModel.IsDirectCallFromCheckYourAnswers
         };
     }
 }
