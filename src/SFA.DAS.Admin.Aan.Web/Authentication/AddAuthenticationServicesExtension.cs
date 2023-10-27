@@ -10,6 +10,8 @@ namespace SFA.DAS.Admin.Aan.Web.Authentication;
 [ExcludeFromCodeCoverage]
 public static class AddAuthenticationServicesExtension
 {
+    private const string CookieAuthName = "SFA.DAS.AdminService.Web.Auth";
+
     public static IServiceCollection AddAuthenticationServices(this IServiceCollection services, IConfiguration configuration)
     {
         var applicationConfiguration = configuration.GetSection(nameof(ApplicationConfiguration)).Get<ApplicationConfiguration>();
@@ -18,7 +20,7 @@ public static class AddAuthenticationServicesExtension
         {
             services.AddAndConfigureDfESignInAuthentication(
                 configuration,
-                $"{typeof(AddAuthenticationServicesExtension).Assembly.GetName().Name}.Auth",
+                CookieAuthName,
                 typeof(CustomServiceRole),
                 DfESignIn.Auth.Enums.ClientName.ServiceAdmin,
                 "/SignOut",
