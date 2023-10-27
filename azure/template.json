@@ -198,7 +198,7 @@
                                     "value": "[parameters('loggingRedisKey')]"
                                 },
                                 {
-                                    "name": "cdn:url",
+                                    "name": "Cdn:Url",
                                     "value": "[parameters('cdnUrl')]"
                                 }
                             ]
