@@ -64,8 +64,11 @@
             "type": "string"
         },
         "utcValue": {
-            "type": "string",
-            "defaultValue": "[utcNow()]"
+          "type": "string",
+          "defaultValue": "[utcNow()]"
+        },
+        "cdnUrl": {
+          "type": "string"
         }
     },
     "variables": {
@@ -193,6 +196,10 @@
                                 {
                                     "name": "LoggingRedisKey",
                                     "value": "[parameters('loggingRedisKey')]"
+                                },
+                                {
+                                    "name": "cdn:url",
+                                    "value": "[parameters('cdnUrl')]"
                                 }
                             ]
                         }
