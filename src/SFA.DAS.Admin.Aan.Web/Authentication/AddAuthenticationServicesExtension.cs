@@ -22,7 +22,7 @@ public static class AddAuthenticationServicesExtension
                 configuration,
                 CookieAuthName,
                 typeof(CustomServiceRole),
-                DfESignIn.Auth.Enums.ClientName.ServiceAdmin,
+                DfESignIn.Auth.Enums.ClientName.ServiceAdminAan,
                 "/SignOut",
                 "");
         }
