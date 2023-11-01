@@ -32,7 +32,7 @@ builder.Services
         options.Filters.Add<RequiresMemberActionAttribute>();
     })
     .AddSessionStateTempDataProvider();
-
+builder.Services.Configure<ApplicationConfiguration>(rootConfiguration.GetSection(nameof(applicationConfiguration)));
 builder.Services.AddHealthChecks()
     .AddCheck<AdminAanOuterApiHealthCheck>(AdminAanOuterApiHealthCheck.HealthCheckResultDescription,
         failureStatus: HealthStatus.Unhealthy,

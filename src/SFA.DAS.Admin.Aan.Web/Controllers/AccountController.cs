@@ -5,16 +5,27 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Extensions;
 using System.Security.Claims;
+using Microsoft.Extensions.Options;
+using SFA.DAS.Admin.Aan.Web.Configuration;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using SFA.DAS.Admin.Aan.Web.Models.Account;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers;
 
 public class AccountController : Controller
 {
     private readonly ILogger<AccountController> _logger;
+    private readonly ApplicationConfiguration _applicationConfiguration;
+    private readonly IConfiguration _configuration;
 
-    public AccountController(ILogger<AccountController> logger)
+    public AccountController(
+        ILogger<AccountController> logger,
+        IOptions<ApplicationConfiguration> applicationConfiguration,
+        IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
+        _applicationConfiguration = applicationConfiguration.Value;
     }
 
     [HttpGet]
@@ -22,9 +33,15 @@ public class AccountController : Controller
     {
         _logger.LogInformation("Start of Sign In");
         var redirectUrl = Url.Action("PostSignIn", "Account");
+
+        // Get the AuthScheme based on the DfeSignIn config/property.
+        var authScheme = _applicationConfiguration.UseDfESignIn
+            ? OpenIdConnectDefaults.AuthenticationScheme
+            : WsFederationDefaults.AuthenticationScheme;
+
         return Challenge(
             new AuthenticationProperties { RedirectUri = redirectUrl },
-            WsFederationDefaults.AuthenticationScheme);
+            authScheme);
     }
 
     [HttpGet]
@@ -47,10 +64,15 @@ public class AccountController : Controller
             Response.Cookies.Delete(cookie);
         }
 
+        // Get the AuthScheme based on the DfeSignIn config/property.
+        var authScheme = _applicationConfiguration.UseDfESignIn
+            ? OpenIdConnectDefaults.AuthenticationScheme
+            : WsFederationDefaults.AuthenticationScheme;
+
         return SignOut(
             new AuthenticationProperties { RedirectUri = callbackUrl },
             CookieAuthenticationDefaults.AuthenticationScheme,
-            WsFederationDefaults.AuthenticationScheme);
+            authScheme);
     }
 
     [HttpGet]
@@ -60,6 +82,8 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [Route("~/error/403")]
+    [Route("~/Account/AccessDenied")]
     public IActionResult AccessDenied()
     {
         if (HttpContext.User != null)
@@ -70,6 +94,6 @@ public class AccountController : Controller
             _logger.LogError("AccessDenied - User '{userName}' does not have a valid role. They have the following roles: {roles}", userName, string.Join(",", roles));
         }
 
-        return View("AccessDenied");
+        return View("AccessDenied", new Error403ViewModel(_configuration["ResourceEnvironmentName"] ?? string.Empty) { UseDfESignIn = _applicationConfiguration.UseDfESignIn });
     }
 }

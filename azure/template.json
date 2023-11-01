@@ -64,8 +64,11 @@
             "type": "string"
         },
         "utcValue": {
-            "type": "string",
-            "defaultValue": "[utcNow()]"
+          "type": "string",
+          "defaultValue": "[utcNow()]"
+        },
+        "cdnUrl": {
+          "type": "string"
         }
     },
     "variables": {
@@ -73,7 +76,7 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
-        "configNames": "SFA.DAS.AdminAan.Web"
+        "configNames": "SFA.DAS.AdminAan.Web,SFA.DAS.Provider.DfeSignIn"
     },
     "resources": [
         {
@@ -193,6 +196,10 @@
                                 {
                                     "name": "LoggingRedisKey",
                                     "value": "[parameters('loggingRedisKey')]"
+                                },
+                                {
+                                    "name": "Cdn:Url",
+                                    "value": "[parameters('cdnUrl')]"
                                 }
                             ]
                         }
