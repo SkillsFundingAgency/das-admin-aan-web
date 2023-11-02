@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
@@ -7,6 +9,7 @@ using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models;
+using SFA.DAS.Admin.Aan.Web.Models.DeleteEvent;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 using SFA.DAS.Admin.Aan.Web.Services;
@@ -20,10 +23,12 @@ public class NetworkEventsController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
     private readonly ISessionService _sessionService;
-    public NetworkEventsController(IOuterApiClient outerApiClient, ISessionService sessionService)
+    private readonly IValidator<DeleteEventViewModel> _validator;
+    public NetworkEventsController(IOuterApiClient outerApiClient, ISessionService sessionService, IValidator<DeleteEventViewModel> validator)
     {
         _outerApiClient = outerApiClient;
         _sessionService = sessionService;
+        _validator = validator;
     }
 
     [HttpGet]
@@ -63,6 +68,56 @@ public class NetworkEventsController : Controller
         return RedirectToRoute(RouteNames.ManageEvent.EventFormat);
     }
 
+    [HttpGet]
+    [Route("delete-event/{calendarEventId}", Name = RouteNames.DeleteEvent)]
+    public async Task<IActionResult> DeleteEvent(Guid calendarEventId, CancellationToken cancellationToken)
+    {
+        var calendarEvent =
+            await _outerApiClient.GetCalendarEvent(_sessionService.GetMemberId(), calendarEventId, cancellationToken);
+
+        var model = new DeleteEventViewModel
+        {
+            CalendarEventId = calendarEventId,
+            Title = calendarEvent.Title,
+            PostLink = Url.RouteUrl(RouteNames.DeleteEvent)!,
+            ManageEventsLink = Url.RouteUrl(RouteNames.NetworkEvents)
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [Route("delete-event/{calendarEventId}", Name = RouteNames.DeleteEvent)]
+    public async Task<IActionResult> DeleteEvent(DeleteEventViewModel submitModel, CancellationToken cancellationToken)
+    {
+
+        var result = _validator.Validate(submitModel);
+
+        if (!result.IsValid)
+        {
+
+            result.AddToModelState(ModelState);
+            return View(submitModel);
+        }
+
+        await _outerApiClient.DeleteCalendarEvent(_sessionService.GetMemberId(), submitModel.CalendarEventId, cancellationToken);
+
+        return RedirectToRoute(RouteNames.DeleteEventConfirmation);
+    }
+
+    [HttpGet]
+    [Route("delete-event-confirmation", Name = RouteNames.DeleteEventConfirmation)]
+    public IActionResult DeleteEventConfirmation()
+    {
+        var viewPath = "~/Views/NetworkEvents/DeleteEventConfirmation.cshtml";
+        var model = new DeleteEventConfirmationViewModel
+        {
+            ManageEventsLink = Url.RouteUrl(RouteNames.NetworkEvents)
+        };
+
+        return View(viewPath, model);
+    }
+
     private NetworkEventsViewModel InitialiseViewModel(GetCalendarEventsQueryResult result)
     {
         var model = new NetworkEventsViewModel
@@ -74,6 +129,8 @@ public class NetworkEventsController : Controller
         foreach (var calendarEvent in result.CalendarEvents)
         {
             CalendarEventViewModel vm = calendarEvent;
+            //MFCMFC
+            vm.CancelEventLink = Url.RouteUrl(RouteNames.DeleteEvent, new { calendarEvent.CalendarEventId })!;
             model.CalendarEvents.Add(vm);
         }
         return model;

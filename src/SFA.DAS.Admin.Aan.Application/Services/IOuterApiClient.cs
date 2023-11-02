@@ -21,8 +21,18 @@ public interface IOuterApiClient
     [Get("calendarEvents")]
     Task<GetCalendarEventsQueryResult> GetCalendarEvents([Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [QueryMap] IDictionary<string, string[]> parameters, CancellationToken cancellationToken);
 
+    [Get("calendarEvents/{calendarEventId}")]
+    Task<GetCalendarEventQueryResult> GetCalendarEvent([Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [Path("calendarEventId")] Guid calendarEventId, CancellationToken cancellationToken);
+
     [Post("calendarEvents")]
     Task<PostCalendarEventResult> PostCalendarEvent([Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [Body] CreateEventRequest request, CancellationToken cancellationToken);
+
+    [Delete("/calendarEvents/{calendarEventId}")]
+    [AllowAnyStatusCode]
+    Task DeleteCalendarEvent(
+        [Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId,
+        [Path("calendarEventId")] Guid calendarEventId,
+        CancellationToken cancellationToken);
 
     [Get("/locations")]
     Task<GetAddressesResult> GetAddresses([Query] string query, CancellationToken cancellationToken);

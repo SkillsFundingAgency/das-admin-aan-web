@@ -20,6 +20,7 @@ public class CalendarEventViewModel
 
     public int NumberOfAttendees { get; set; }
 
+    public string? CancelEventLink { get; set; }
 
     public static implicit operator CalendarEventViewModel(CalendarEventSummary source)
         => new()
@@ -30,6 +31,6 @@ public class CalendarEventViewModel
             Title = source.Title,
             EventFormat = source.EventFormat,
             IsActive = source.IsActive,
-            NumberOfAttendees = source.NumberOfAttendees,
+            NumberOfAttendees = source.NumberOfAttendees
         };
 }
