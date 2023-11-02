@@ -129,7 +129,6 @@ public class NetworkEventsController : Controller
         foreach (var calendarEvent in result.CalendarEvents)
         {
             CalendarEventViewModel vm = calendarEvent;
-            //MFCMFC
             vm.CancelEventLink = Url.RouteUrl(RouteNames.DeleteEvent, new { calendarEvent.CalendarEventId })!;
             model.CalendarEvents.Add(vm);
         }
