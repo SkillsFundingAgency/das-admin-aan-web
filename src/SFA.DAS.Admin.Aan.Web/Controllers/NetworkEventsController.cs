@@ -80,7 +80,7 @@ public class NetworkEventsController : Controller
             CalendarEventId = calendarEventId,
             Title = calendarEvent.Title,
             PostLink = Url.RouteUrl(RouteNames.DeleteEvent)!,
-            ManageEventsLink = Url.RouteUrl(RouteNames.NetworkEvents)
+            ManageEventsLink = Url.RouteUrl(RouteNames.NetworkEvents)!
         };
 
         return View(model);
@@ -88,7 +88,7 @@ public class NetworkEventsController : Controller
 
     [HttpPost]
     [Route("delete-event/{calendarEventId}", Name = RouteNames.DeleteEvent)]
-    public async Task<IActionResult> DeleteEvent(DeleteEventViewModel submitModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> PostDeleteEvent(DeleteEventViewModel submitModel, CancellationToken cancellationToken)
     {
 
         var result = _validator.Validate(submitModel);
