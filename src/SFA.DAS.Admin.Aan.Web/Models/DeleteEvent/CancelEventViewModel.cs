@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Admin.Aan.Web.Models.DeleteEvent;
 
-public class DeleteEventViewModel
+public class CancelEventViewModel
 {
     public Guid CalendarEventId { get; set; }
     public string Title { get; set; } = null!;

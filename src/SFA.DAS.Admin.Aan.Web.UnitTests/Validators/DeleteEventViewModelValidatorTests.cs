@@ -10,7 +10,7 @@ public class DeleteEventViewModelValidatorTests
     [TestCase(false, false)]
     public void Validate_GuestSpeaker_Check(bool isCancelConfirmed, bool isValid)
     {
-        var model = new DeleteEventViewModel { IsCancelConfirmed = isCancelConfirmed };
+        var model = new CancelEventViewModel { IsCancelConfirmed = isCancelConfirmed };
 
         var sut = new DeleteEventViewModelValidator();
         var result = sut.TestValidate(model);

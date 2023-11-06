@@ -12,16 +12,16 @@ using SFA.DAS.Admin.Aan.Web.Models.DeleteEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.NetworkEventsDelete;
-public class NetworkEventsControllerDeleteTests
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.NetworkEvents;
+public class NetworkEventsControllerCancelEventTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string DeleteEventUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
-    public void Get_ReturnsDeleteEventViewModel(
+    public void Get_ReturnsCancelEventViewModel(
         [Frozen] Mock<IOuterApiClient> outerApiMock,
-        [Frozen] Mock<IValidator<DeleteEventViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<CancelEventViewModel>> validatorMock,
         GetCalendarEventQueryResult result,
         Guid calendarEventId,
         Guid memberId)
@@ -35,19 +35,19 @@ public class NetworkEventsControllerDeleteTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.DeleteEvent, DeleteEventUrl);
 
-        var actualResult = sut.DeleteEvent(calendarEventId, new CancellationToken());
+        var actualResult = sut.CancelEvent(calendarEventId, new CancellationToken());
         var viewResult = actualResult.Result.As<ViewResult>();
 
         outerApiMock.Verify(o => o.GetCalendarEvent(memberId, calendarEventId, It.IsAny<CancellationToken>()), Times.Once);
-        Assert.That(viewResult.Model, Is.TypeOf<DeleteEventViewModel>());
+        Assert.That(viewResult.Model, Is.TypeOf<CancelEventViewModel>());
 
-        ((DeleteEventViewModel)viewResult.Model!).PostLink.Should().Be(DeleteEventUrl);
+        ((CancelEventViewModel)viewResult.Model!).PostLink.Should().Be(DeleteEventUrl);
     }
 
     [Test, MoqAutoData]
-    public void Get_ReturnsDeleteEventViewModel_WithNetworkEventsUrlSet(
+    public void Get_ReturnsCancelEventViewModel_WithNetworkEventsUrlSet(
         [Frozen] Mock<IOuterApiClient> outerApiMock,
-        [Frozen] Mock<IValidator<DeleteEventViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<CancelEventViewModel>> validatorMock,
         GetCalendarEventQueryResult result,
         Guid calendarEventId,
         Guid memberId)
@@ -61,19 +61,19 @@ public class NetworkEventsControllerDeleteTests
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
-        var actualResult = sut.DeleteEvent(calendarEventId, new CancellationToken());
+        var actualResult = sut.CancelEvent(calendarEventId, new CancellationToken());
         var viewResult = actualResult.Result.As<ViewResult>();
 
         outerApiMock.Verify(o => o.GetCalendarEvent(memberId, calendarEventId, It.IsAny<CancellationToken>()), Times.Once);
-        Assert.That(viewResult.Model, Is.TypeOf<DeleteEventViewModel>());
+        Assert.That(viewResult.Model, Is.TypeOf<CancelEventViewModel>());
 
-        ((DeleteEventViewModel)viewResult.Model!).ManageEventsLink.Should().Be(NetworkEventsUrl);
+        ((CancelEventViewModel)viewResult.Model!).ManageEventsLink.Should().Be(NetworkEventsUrl);
     }
 
     [Test, MoqAutoData]
-    public void Post_IsCancelConfirmed_True_RedirectsToDeleteEventConfirmation(
+    public void Post_IsCancelConfirmed_True_RedirectsToCancelEventConfirmation(
         [Frozen] Mock<IOuterApiClient> outerApiMock,
-        [Frozen] Mock<IValidator<DeleteEventViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<CancelEventViewModel>> validatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         Guid calendarEventId,
         Guid memberId,
@@ -81,7 +81,7 @@ public class NetworkEventsControllerDeleteTests
     {
         sessionServiceMock.Setup(s => s.GetMemberId()).Returns(memberId);
 
-        var submitModel = new DeleteEventViewModel
+        var submitModel = new CancelEventViewModel
         {
             CalendarEventId = calendarEventId,
             Title = title,
@@ -95,16 +95,16 @@ public class NetworkEventsControllerDeleteTests
 
         var sut = new NetworkEventsController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
 
-        var actualResult = sut.PostDeleteEvent(submitModel, new CancellationToken());
+        var actualResult = sut.PostCancelEvent(submitModel, new CancellationToken());
         var result = actualResult.Result.As<RedirectToRouteResult>();
         result.RouteName.Should().Be(RouteNames.DeleteEventConfirmation);
         outerApiMock.Verify(o => o.DeleteCalendarEvent(memberId, calendarEventId, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public void Post_IsCancelConfirmed_False_RedirectsBackToDeleteEventPage(
+    public void Post_IsCancelConfirmed_False_RedirectsBackToCancelEventPage(
         [Frozen] Mock<IOuterApiClient> outerApiMock,
-        [Frozen] Mock<IValidator<DeleteEventViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<CancelEventViewModel>> validatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         Guid calendarEventId,
         Guid memberId,
@@ -112,7 +112,7 @@ public class NetworkEventsControllerDeleteTests
     {
         sessionServiceMock.Setup(s => s.GetMemberId()).Returns(memberId);
 
-        var submitModel = new DeleteEventViewModel
+        var submitModel = new CancelEventViewModel
         {
             CalendarEventId = calendarEventId,
             Title = title,
@@ -124,23 +124,23 @@ public class NetworkEventsControllerDeleteTests
         var sut = new NetworkEventsController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
         sut.ModelState.AddModelError("key", "message");
         sut.ModelState.IsValid.Should().BeFalse();
-        var actualResult = sut.PostDeleteEvent(submitModel, new CancellationToken());
+        var actualResult = sut.PostCancelEvent(submitModel, new CancellationToken());
         var viewResult = actualResult.Result.As<ViewResult>();
 
-        Assert.That(viewResult.Model, Is.TypeOf<DeleteEventViewModel>());
+        Assert.That(viewResult.Model, Is.TypeOf<CancelEventViewModel>());
         outerApiMock.Verify(o => o.DeleteCalendarEvent(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Test]
     public void GetDeleteEventConfirmation_ReturnsDeleteEventConfirmationViewModel()
     {
-        var sut = new NetworkEventsController(Mock.Of<IOuterApiClient>(), Mock.Of<ISessionService>(), Mock.Of<IValidator<DeleteEventViewModel>>());
+        var sut = new NetworkEventsController(Mock.Of<IOuterApiClient>(), Mock.Of<ISessionService>(), Mock.Of<IValidator<CancelEventViewModel>>());
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-        var result = sut.DeleteEventConfirmation();
+        var result = sut.DeleteEventConfirmation(Guid.NewGuid());
         var viewResult = result.As<ViewResult>();
 
-        Assert.That(viewResult.Model, Is.TypeOf<DeleteEventConfirmationViewModel>());
+        Assert.That(viewResult.Model, Is.TypeOf<CancelEventConfirmationViewModel>());
 
-        ((DeleteEventConfirmationViewModel)viewResult.Model!).ManageEventsLink.Should().Be(NetworkEventsUrl);
+        ((CancelEventConfirmationViewModel)viewResult.Model!).ManageEventsLink.Should().Be(NetworkEventsUrl);
     }
 }
