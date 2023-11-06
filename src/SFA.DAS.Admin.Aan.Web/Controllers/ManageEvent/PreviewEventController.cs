@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Aan.SharedUi.Constants;
+using SFA.DAS.Aan.SharedUi.Models;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -21,48 +23,63 @@ public class PreviewEventController : Controller
     }
 
 
-    public const string ViewPath = "~/Views/ManageEvent/PreviewEvent.cshtml";
+    //public const string ViewPath = "~/Views/PreviewEvent/PreviewEvent.cshtml";
+    public const string DetailsViewPath = "~/Views/NetworkEventDetails/Detail.cshtml";
+
 
     [HttpGet]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
-        var sessionModel = _sessionService.Get<EventSessionModel>();
+        // var sessionModel = _sessionService.Get<EventSessionModel>();
+        var sessionModel = new EventSessionModel();
+        sessionModel.CalendarId = 6;
+        sessionModel.ContactEmail = "rtyrtyrt@test.com";
+        sessionModel.ContactName = "Joey";
+        sessionModel.DateOfEvent = new DateTime(2023, 11, 25, 0, 0, 0);
+        //sessionModel.End -- calculated
+        sessionModel.EndHour = 13;
+        sessionModel.EndMinutes = 30;
+        sessionModel.EventFormat = EventFormat.InPerson;
+        sessionModel.EventLink = "https://www.google.com";
+        sessionModel.EventOutline = "ghgfg outline";
+        sessionModel.EventSummary = "event summary";
+        sessionModel.EventTitle = "event title";
+        sessionModel.GuestSpeakers = new List<GuestSpeaker>
+        {
+            new GuestSpeaker("joe cool", "feelin cool", 1),
+            new GuestSpeaker("Emma Smith", "Head of AI", 2)
+        };
+        sessionModel.HasGuestSpeakers = true;
+        sessionModel.HasSeenPreview = true; // not needed
+        sessionModel.IsAtSchool = true;
+        sessionModel.IsDirectCallFromCheckYourAnswers = true; // not needed
+        sessionModel.Latitude = 51.8138119;
+        sessionModel.Location = "Delfryn, Caerfyrddin";
+        sessionModel.Longitude = 4.279403;
+        sessionModel.PlannedAttendees = 3;
+        sessionModel.Postcode = "SA32 8EB";
+        sessionModel.RegionId = 1; // deal with 0
+        sessionModel.SchoolName = "Ryde Children's Centre";
+        // sessionModel.Start -- calculated
+        sessionModel.StartHour = 12;
+        sessionModel.StartMinutes = 0;
+        sessionModel.Urn = "20004";
 
         var model = await GetViewModel(sessionModel, cancellationToken);
-        return View(ViewPath, model);
+        return View(DetailsViewPath, model);
     }
 
-    private async Task<PreviewEventViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
+    private async Task<NetworkEventDetailsViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
     {
-        var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
-        var regionTask = _outerApiClient.GetRegions(cancellationToken);
+        var calendars = await _outerApiClient.GetCalendars(cancellationToken);
 
-        List<Task> tasks = new() { calendarTask, regionTask };
-        await Task.WhenAll(tasks);
+        var eventTypes = calendars;
 
-        var eventTypes = calendarTask.Result;
-        var regions = regionTask.Result.Regions.Select(reg => new RegionSelection(reg.Area, reg.Id)).ToList();
-        regions.Add(new RegionSelection("National", 0));
+        sessionModel.CalendarName = eventTypes.First(x => x.Id == sessionModel.CalendarId).CalendarName;
+        var model = (NetworkEventDetailsViewModel)sessionModel;
 
-        var model = (PreviewEventViewModel)sessionModel;
-        // model.PageTitle = CreateEvent.PageTitle;
-        // model.CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
-        // model.PostLink = "#";
-        // model.PreviewLink = "#";
-        model.EventType = eventTypes.First(x => x.Id == sessionModel.CalendarId).CalendarName;
-        //   model.EventRegion = regions.First(x => x.RegionId == sessionModel.RegionId).Name;
+        model.CheckYourAnswersUrl = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
 
-        // model.EventFormatLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!;
-        // model.EventLocationLink = Url.RouteUrl(RouteNames.ManageEvent.Location)!;
-        // model.EventTypeLink = Url.RouteUrl(RouteNames.ManageEvent.EventType)!;
-        // model.EventDateTimeLink = Url.RouteUrl(RouteNames.ManageEvent.DateAndTime)!;
-        // model.EventDescriptionLink = Url.RouteUrl(RouteNames.ManageEvent.Description)!;
-        // model.HasGuestSpeakersLink = Url.RouteUrl(RouteNames.ManageEvent.HasGuestSpeakers)!;
-        // model.GuestSpeakersListLink = Url.RouteUrl(RouteNames.ManageEvent.GuestSpeakerList)!;
-        // model.OrganiserDetailsLink = Url.RouteUrl(RouteNames.ManageEvent.OrganiserDetails)!;
-        // model.IsAtSchoolLink = Url.RouteUrl(RouteNames.ManageEvent.IsAtSchool)!;
-        // model.SchoolNameLink = Url.RouteUrl(RouteNames.ManageEvent.SchoolName)!;
-        // model.NumberOfAttendeesLink = Url.RouteUrl(RouteNames.ManageEvent.NumberOfAttendees)!;
         return model;
     }
 }

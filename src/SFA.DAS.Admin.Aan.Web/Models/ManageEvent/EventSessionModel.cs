@@ -1,4 +1,6 @@
-﻿using SFA.DAS.Admin.Aan.Application.Constants;
+﻿using SFA.DAS.Aan.SharedUi.Constants;
+using SFA.DAS.Aan.SharedUi.Models;
+using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
@@ -11,6 +13,8 @@ public class EventSessionModel
 
     public string? EventTitle { get; set; }
     public int? CalendarId { get; set; }
+    public string CalendarName { get; set; } = string.Empty;
+
     public int? RegionId { get; set; }
 
     public string? EventOutline { get; set; }
@@ -84,7 +88,8 @@ public class EventSessionModel
             && source.HasGuestSpeakers.Value
             && source.GuestSpeakers.Any())
         {
-            guestSpeakers.AddRange(source.GuestSpeakers.Select(guest => new Guest(guest.GuestName, guest.GuestJobTitle)));
+            guestSpeakers.AddRange(
+                source.GuestSpeakers.Select(guest => new Guest(guest.GuestName, guest.GuestJobTitle)));
         }
 
         DateTime? startDate = null;
@@ -105,7 +110,7 @@ public class EventSessionModel
         var latitude = source.Latitude;
         var longitude = source.Longitude;
 
-        if (source.EventFormat == Application.Constants.EventFormat.Online)
+        if (source.EventFormat == DAS.Aan.SharedUi.Constants.EventFormat.Online)
         {
             location = null;
             postcode = null;
@@ -113,7 +118,7 @@ public class EventSessionModel
             longitude = null;
         }
 
-        if (source.EventFormat == Application.Constants.EventFormat.InPerson)
+        if (source.EventFormat == DAS.Aan.SharedUi.Constants.EventFormat.InPerson)
         {
             eventLink = null;
         }
@@ -139,5 +144,25 @@ public class EventSessionModel
             Latitude = latitude,
             Longitude = longitude
         };
+    }
+
+    public static implicit operator NetworkEventDetailsViewModel(EventSessionModel source)
+    {
+        var model = new NetworkEventDetailsViewModel(
+            source.CalendarName,
+            source.Start.GetValueOrDefault(),
+            source.End.GetValueOrDefault(),
+            source.EventTitle!,
+            source.EventSummary!,
+            source.ContactName!,
+            source.ContactEmail!)
+        {
+            EventFormat = source.EventFormat.GetValueOrDefault(),
+            LocationDetails = new LocationDetails(source.Location, source.Postcode, source.Latitude, source.Longitude, null),
+            EventGuests = source.GuestSpeakers.Select(guest => new EventGuest(guest.GuestName, guest.GuestJobTitle)).ToList(),
+            IsPreview = true
+        };
+
+        return model;
     }
 }

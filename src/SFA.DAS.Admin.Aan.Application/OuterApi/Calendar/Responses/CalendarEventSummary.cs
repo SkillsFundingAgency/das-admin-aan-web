@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Admin.Aan.Application.Constants;
+﻿using SFA.DAS.Aan.SharedUi.Constants;
 
 namespace SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 
