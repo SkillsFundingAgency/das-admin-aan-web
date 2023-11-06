@@ -3,11 +3,11 @@ using SFA.DAS.Admin.Aan.Web.Models.DeleteEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.Validators;
 
-public class DeleteEventViewModelValidator : AbstractValidator<CancelEventViewModel>
+public class CancelEventViewModelValidator : AbstractValidator<CancelEventViewModel>
 {
     public const string ConfirmCancelEventNotPicked = "You must confirm you want to cancel this event";
 
-    public DeleteEventViewModelValidator()
+    public CancelEventViewModelValidator()
     {
         RuleFor(x => x.IsCancelConfirmed)
             .Equal(true)

@@ -3,7 +3,7 @@ using SFA.DAS.Admin.Aan.Web.Models.DeleteEvent;
 using SFA.DAS.Admin.Aan.Web.Validators;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators;
-public class DeleteEventViewModelValidatorTests
+public class CancelEventViewModelValidatorTests
 {
 
     [TestCase(true, true)]
@@ -12,13 +12,13 @@ public class DeleteEventViewModelValidatorTests
     {
         var model = new CancelEventViewModel { IsCancelConfirmed = isCancelConfirmed };
 
-        var sut = new DeleteEventViewModelValidator();
+        var sut = new CancelEventViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
         {
             result.ShouldHaveValidationErrorFor(c => c.IsCancelConfirmed)
-                .WithErrorMessage(DeleteEventViewModelValidator.ConfirmCancelEventNotPicked);
+                .WithErrorMessage(CancelEventViewModelValidator.ConfirmCancelEventNotPicked);
         }
         else
         {
