@@ -1,5 +1,5 @@
 ﻿using FluentValidation.TestHelper;
-using SFA.DAS.Admin.Aan.Application.Constants;
+using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
