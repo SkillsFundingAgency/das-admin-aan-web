@@ -22,7 +22,6 @@ public class PreviewEventController : Controller
         _sessionService = sessionService;
     }
 
-
     [HttpGet]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
