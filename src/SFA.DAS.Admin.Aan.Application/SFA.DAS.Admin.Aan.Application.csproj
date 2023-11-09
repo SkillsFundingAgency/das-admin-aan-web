@@ -11,7 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
     <PackageReference Include="RestEase" Version="1.6.4" />
-    <PackageReference Include="SFA.DAS.Aan.SharedUi" Version="0.1.65-prerelease-6" />
+    <PackageReference Include="SFA.DAS.Aan.SharedUi" Version="0.1.66-prerelease-8" />
   </ItemGroup>
 
 </Project>

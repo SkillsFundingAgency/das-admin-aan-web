@@ -40,7 +40,7 @@ public class PreviewEventController : Controller
         var model = (NetworkEventDetailsViewModel)sessionModel;
 
         model.IsPreview = true;
-        model.CheckYourAnswersUrl = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        model.BackLinkUrl = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
 
         return model;
     }

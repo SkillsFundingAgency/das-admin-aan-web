@@ -229,5 +229,4 @@ public class EventSessionModelTests
             .Select(guest => new EventGuest(guest.GuestName, guest.GuestJobTitle)).ToList());
         vm.IsPreview.Should().BeTrue();
     }
-
 }

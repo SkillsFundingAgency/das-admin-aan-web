@@ -47,7 +47,7 @@ internal class PreviewEventControllerTests
 
         Assert.That(actualResult!.Model, Is.TypeOf<NetworkEventDetailsViewModel>());
         var vm = actualResult.Model as NetworkEventDetailsViewModel;
-        vm!.CheckYourAnswersUrl.Should().Be(CheckYourAnswersUrl);
+        vm!.BackLinkUrl.Should().Be(CheckYourAnswersUrl);
         vm.IsPreview.Should().BeTrue();
         vm.EventGuests.Count.Should().Be(sessionModel.GuestSpeakers.Count);
 
