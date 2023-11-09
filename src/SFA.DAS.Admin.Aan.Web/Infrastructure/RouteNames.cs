@@ -7,6 +7,8 @@ public static class RouteNames
 {
     public const string AdministratorHub = nameof(AdministratorHub);
     public const string NetworkEvents = nameof(NetworkEvents);
+    public const string DeleteEvent = nameof(DeleteEvent);
+    public const string DeleteEventConfirmation = nameof(DeleteEventConfirmation);
 
     public static class ManageEvent
     {

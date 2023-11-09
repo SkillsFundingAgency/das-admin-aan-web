@@ -1,5 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
@@ -9,14 +10,15 @@ using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers;
 using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
+using SFA.DAS.Admin.Aan.Web.Models.DeleteEvent;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.NetworkEvents;
 
-public class NetworkEventsControllerTests
+public class NetworkEventsControllerGetTests
 {
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
 
@@ -82,7 +84,7 @@ public class NetworkEventsControllerTests
 
         var expectedResult = new GetCalendarEventsQueryResult();
 
-        var outerApiMock = new Moq.Mock<IOuterApiClient>();
+        var outerApiMock = new Mock<IOuterApiClient>();
         var sessionServiceMock = new Mock<ISessionService>();
         outerApiMock
             .Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
@@ -90,7 +92,7 @@ public class NetworkEventsControllerTests
         outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Calendar>());
         outerApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(new GetRegionsResult());
 
-        var sut = new NetworkEventsController(outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new NetworkEventsController(outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<CancelEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
@@ -133,7 +135,7 @@ public class NetworkEventsControllerTests
     {
         var sessionServiceMock = new Mock<ISessionService>();
 
-        var sut = new NetworkEventsController(Mock.Of<IOuterApiClient>(), sessionServiceMock.Object);
+        var sut = new NetworkEventsController(Mock.Of<IOuterApiClient>(), sessionServiceMock.Object, Mock.Of<IValidator<CancelEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CreateEvent, AllNetworksUrl);
 

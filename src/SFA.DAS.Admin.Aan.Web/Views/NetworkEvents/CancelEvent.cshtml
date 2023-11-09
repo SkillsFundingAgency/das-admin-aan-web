@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.Admin.Aan.Web.TagHelpers
+@model SFA.DAS.Admin.Aan.Web.Models.DeleteEvent.CancelEventViewModel 
+@{
+    ViewData["Title"] = "Delete Network Event";
+}
+<partial name="_validationSummary" />
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form asp-route="@Model.PostLink" method="POST">
+            <div class="govuk-form-group">
+                <h1 class="govuk-heading-m">
+                    <span class="govuk-caption-l">Cancel event</span>
+                    You are about to cancel '@Model.Title'
+                </h1>
+                <p class="govuk-body">Upon cancelling this event, all attendees will be notified by email.</p>
+                <h1 class="govuk-heading-m">
+                    Are you sure you want to cancel this event?
+                </h1>
+                <input type="hidden" asp-for="@Model.ManageEventsLink" />
+                <input type="hidden" asp-for="@Model.Title" />
+                <div esfa-validation-marker-for="@Model.IsCancelConfirmed" class="govuk-form-group">
+                    <span asp-validation-for="IsCancelConfirmed" class="govuk-error-message"></span>
+                    <div class="govuk-checkboxes govuk-checkboxes--small">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" type="checkbox" id="IsCancelConfirmed" asp-for="@Model.IsCancelConfirmed">
+                            <label class="govuk-label govuk-checkboxes__label" for="IsCancelConfirmed">
+                                Yes
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+                <div class="govuk-button-group">
+                    <button type="submit" id="continue" class="govuk-button govuk-button--warning" data-disable-on-submit="true">Cancel event</button>
+                    <a href="@Model.ManageEventsLink" class="govuk-link">Back to manage events</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -22,7 +22,7 @@
                     @if(calendarEvent.IsEditable)
                     {
                         <a href="#" class="govuk-link">Make changes</a>
-                        <a href="#" class="govuk-link">Cancel event</a>
+                        <a href="@calendarEvent.CancelEventLink" class="govuk-link">Cancel event</a>
                     }
                     else
                     {
