@@ -1,5 +1,8 @@
-﻿using FluentAssertions;
+﻿using AutoFixture.NUnit3;
+using FluentAssertions;
 using SFA.DAS.Aan.SharedUi.Constants;
+using SFA.DAS.Aan.SharedUi.Models;
+using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
@@ -208,4 +211,23 @@ public class EventSessionModelTests
         var request = (CreateEventRequest)model;
         request.Summary.Should().Be(outline);
     }
+
+    [Test, AutoData]
+    public void Operator_MapsToNetworkEventDetailsViewModel(EventSessionModel source)
+    {
+        source.DateOfEvent = DateTime.Today.AddDays(1);
+        source.StartHour = 12;
+        source.StartMinutes = 40;
+        source.EndHour = 14;
+        source.EndMinutes = 10;
+        var vm = (NetworkEventDetailsViewModel)source;
+        vm.EventFormat.Should().Be(source.EventFormat);
+        vm.LocationDetails.Should().BeEquivalentTo(new LocationDetails(source.Location, source.Postcode,
+            source.Latitude, source.Longitude, null));
+        vm.EventGuests.Count.Should().Be(source.GuestSpeakers.Count);
+        vm.EventGuests.Should().BeEquivalentTo(source.GuestSpeakers
+            .Select(guest => new EventGuest(guest.GuestName, guest.GuestJobTitle)).ToList());
+        vm.IsPreview.Should().BeTrue();
+    }
+
 }
