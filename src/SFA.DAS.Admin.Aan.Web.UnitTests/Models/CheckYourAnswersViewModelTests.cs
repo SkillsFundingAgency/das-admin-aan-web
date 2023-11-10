@@ -18,10 +18,30 @@ public class CheckYourAnswersViewModelTests
         sut.Should().BeEquivalentTo(source, options => options.ExcludingMissingMembers());
     }
 
+    [TestCase("location 1", "AB1 CTX", "location 1, AB1 CTX")]
+    [TestCase("location 1", "", "location 1")]
+    [TestCase("location 1", null, "location 1")]
+    public void Operator_GetFullLocation_CheckResult(string location, string? postcode, string expected)
+    {
+        var source = new EventSessionModel
+        {
+            Location = location,
+            Postcode = postcode,
+            StartHour = 12,
+            StartMinutes = 25,
+            EndHour = 13,
+            EndMinutes = 30
+        };
+
+        var vm = (CheckYourAnswersViewModel)source;
+        var result = vm.EventLocation;
+        result.Should().Be(expected);
+    }
+
     [TestCase(EventFormat.InPerson, true)]
     [TestCase(EventFormat.Hybrid, true)]
     [TestCase(EventFormat.Online, false)]
-    public void ViewModel_ShowLocationCheck(EventFormat eventFormat, bool expectedShowLocation)
+    public void ViewModel_ShowEventFormatCheck(EventFormat eventFormat, bool expectedShowLocation)
     {
         var vm = new CheckYourAnswersViewModel { EventFormat = eventFormat };
         vm.ShowLocation.Should().Be(expectedShowLocation);

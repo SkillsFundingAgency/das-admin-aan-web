@@ -76,7 +76,7 @@ public class CheckYourAnswersViewModel : ManageEventViewModelBase
             GuestSpeakers = source.GuestSpeakers,
             Start = source.Start,
             End = source.End,
-            EventLocation = source.Location,
+            EventLocation = source.Location + (!string.IsNullOrEmpty(source.Postcode) ? $", {source.Postcode}" : string.Empty),
             OnlineEventLink = source.EventLink,
             SchoolName = source.SchoolName,
             IsAtSchool = source.IsAtSchool,
