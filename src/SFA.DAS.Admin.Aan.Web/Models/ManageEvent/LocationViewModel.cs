@@ -30,7 +30,6 @@ public class LocationViewModel : ManageEventViewModelBase
             locationDetails.Add(AddressLine2);
         if (!string.IsNullOrWhiteSpace(Town)) locationDetails.Add(Town);
         if (!string.IsNullOrWhiteSpace(County)) locationDetails.Add(County);
-        if (!string.IsNullOrWhiteSpace(Postcode)) locationDetails.Add(Postcode);
 
         return string.Join(", ", locationDetails);
     }
