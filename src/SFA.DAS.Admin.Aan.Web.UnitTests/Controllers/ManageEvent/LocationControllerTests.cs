@@ -67,10 +67,10 @@ public class LocationControllerTests
         vm!.PostLink.Should().Be(PostUrl);
     }
 
-    [TestCase("location 1", null, null)]
-    [TestCase("location 2", "event online link", null)]
+    [TestCase("AB1 CTX", null, null)]
+    [TestCase("AB2 CTX", "event online link", null)]
     [TestCase(null, "event online link", EventFormat.Hybrid)]
-    public void Post_SetEventDetailsOnSessionModel(string eventLocation, string? eventOnlineLink, EventFormat? eventFormat)
+    public void Post_SetEventDetailsOnSessionModel(string postcode, string? eventOnlineLink, EventFormat? eventFormat)
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<LocationViewModel>>();
@@ -82,7 +82,7 @@ public class LocationControllerTests
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new LocationViewModel { Postcode = eventLocation, OnlineEventLink = eventOnlineLink, EventFormat = eventFormat };
+        var submitModel = new LocationViewModel { Postcode = postcode, OnlineEventLink = eventOnlineLink, EventFormat = eventFormat };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -94,7 +94,7 @@ public class LocationControllerTests
         var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.Location == eventLocation && m.EventLink == eventOnlineLink)));
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.Postcode == postcode && m.EventLink == eventOnlineLink)));
         result.RouteName.Should().Be(submitModel.EventFormat == null
             ? RouteNames.ManageEvent.OrganiserDetails
             : RouteNames.ManageEvent.IsAtSchool);
