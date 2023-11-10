@@ -7,8 +7,6 @@
     var onlineLinkDescription = string.IsNullOrEmpty(Model.OnlineEventLink) 
         ? "-" 
         : "Provided";
-
-    var hideDetails = "  govuk-!-display-none";
 }
 
 <div class="govuk-grid-row">
@@ -24,8 +22,8 @@
 
     <h1 class="govuk-heading-l">Check your event before publishing</h1>
 
-    <div id="previewlink" class="govuk-body govuk-!-display-none">
-        You can <a href="@Model.PreviewLink" target="_blank">preview the event here</a>
+    <div id="previewlink" class="govuk-body">
+        You can <a href="@Model.PreviewLink">preview the event here</a>.
     </div>
 
     <h2 class="govuk-heading-m">

@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Admin.Aan.Application.Constants;
+﻿using SFA.DAS.Aan.SharedUi.Constants;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
@@ -48,10 +48,10 @@ public class CheckYourAnswersViewModel : ManageEventViewModelBase
     public string? NumberOfAttendeesLink { get; set; }
 
     public bool ShowLocation =>
-        EventFormat is Application.Constants.EventFormat.InPerson or Application.Constants.EventFormat.Hybrid;
+        EventFormat is DAS.Aan.SharedUi.Constants.EventFormat.InPerson or DAS.Aan.SharedUi.Constants.EventFormat.Hybrid;
 
     public bool ShowOnlineEventLink =>
-        EventFormat is Application.Constants.EventFormat.Online or Application.Constants.EventFormat.Hybrid;
+        EventFormat is DAS.Aan.SharedUi.Constants.EventFormat.Online or DAS.Aan.SharedUi.Constants.EventFormat.Hybrid;
 
     public string GetDateAndTimeFormatted()
     {

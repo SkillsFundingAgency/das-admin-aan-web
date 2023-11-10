@@ -84,7 +84,7 @@ public class CheckYourAnswersController : Controller
         model.PageTitle = CreateEvent.PageTitle;
         model.CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
         model.PostLink = "#";
-        model.PreviewLink = "#";
+        model.PreviewLink = Url.RouteUrl(RouteNames.ManageEvent.PreviewEvent)!;
         model.EventType = eventTypes.First(x => x.Id == sessionModel.CalendarId).CalendarName;
         model.EventRegion = regions.First(x => x.RegionId == sessionModel.RegionId).Name;
 
