@@ -5,6 +5,7 @@ using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Locations;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Members;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Schools;
 
@@ -42,4 +43,7 @@ public interface IOuterApiClient
 
     [Get("/Schools/find/{searchTerm}")]
     Task<GetSchoolsResult> GetSchools([Path("searchTerm")] string searchTerm, CancellationToken cancellationToken);
+
+    [Get("members/")]
+    Task<GetMembersResponse> GetMembers([QueryMap] IDictionary<string, string[]> parameters, CancellationToken cancellationToken);
 }
