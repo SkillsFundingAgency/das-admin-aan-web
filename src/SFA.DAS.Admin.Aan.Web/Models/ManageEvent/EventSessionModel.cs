@@ -260,7 +260,7 @@ public class EventSessionModel
             i++;
         }
 
-        var regionName = source.RegionId == null ? "National" : source.RegionName;
+        var regionName = source.RegionId == null ? NationalRegionName : source.RegionName;
 
         var model = new EventSessionModel
         {
