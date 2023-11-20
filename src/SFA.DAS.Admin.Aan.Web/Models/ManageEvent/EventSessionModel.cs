@@ -13,8 +13,6 @@ public class EventSessionModel
     public bool HasSeenPreview { get; set; }
     public bool IsDirectCallFromCheckYourAnswers { get; set; }
 
-
-
     public EventFormat? EventFormat { get; set; }
     public string? EventTitle { get; set; }
     public int? CalendarId { get; set; }
@@ -298,5 +296,4 @@ public class EventSessionModel
 
         return model;
     }
-
 }
