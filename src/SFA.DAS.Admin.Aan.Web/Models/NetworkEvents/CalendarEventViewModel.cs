@@ -24,6 +24,9 @@ public class CalendarEventViewModel
     public string? CancelEventLink { get; set; }
     public string? EditEventLink { get; set; }
 
+    //MFCMFC
+    public string? EditEventLink { get; set; }
+
     public static implicit operator CalendarEventViewModel(CalendarEventSummary source)
         => new()
         {
