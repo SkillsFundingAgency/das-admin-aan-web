@@ -14,7 +14,7 @@ public class CheckYourAnswersViewModelTests
         source.StartMinutes = 25;
         source.EndHour = 13;
         source.EndMinutes = 30;
-        CheckYourAnswersViewModel sut = source;
+        ReviewEventViewModel sut = source;
         sut.Should().BeEquivalentTo(source, options => options.ExcludingMissingMembers());
     }
 
@@ -33,7 +33,7 @@ public class CheckYourAnswersViewModelTests
             EndMinutes = 30
         };
 
-        var vm = (CheckYourAnswersViewModel)source;
+        var vm = (ReviewEventViewModel)source;
         var result = vm.EventLocation;
         result.Should().Be(expected);
     }
@@ -43,7 +43,7 @@ public class CheckYourAnswersViewModelTests
     [TestCase(EventFormat.Online, false)]
     public void ViewModel_ShowEventFormatCheck(EventFormat eventFormat, bool expectedShowLocation)
     {
-        var vm = new CheckYourAnswersViewModel { EventFormat = eventFormat };
+        var vm = new ReviewEventViewModel { EventFormat = eventFormat };
         vm.ShowLocation.Should().Be(expectedShowLocation);
     }
 
@@ -52,7 +52,7 @@ public class CheckYourAnswersViewModelTests
     [TestCase(EventFormat.Online, true)]
     public void ViewModel_ShowEventLinkCheck(EventFormat eventFormat, bool expectedShowEventLink)
     {
-        var vm = new CheckYourAnswersViewModel { EventFormat = eventFormat };
+        var vm = new ReviewEventViewModel { EventFormat = eventFormat };
         vm.ShowOnlineEventLink.Should().Be(expectedShowEventLink);
     }
 
@@ -71,7 +71,7 @@ public class CheckYourAnswersViewModelTests
     [TestCase("2025-12-5 12:01:00", "2025-12-5 17:30:00", "5 December 2025, 12:01pm to 5:30pm")]
     public void GetDateAndTimeFormatted_CheckResult(DateTime? start, DateTime? end, string expectedResult)
     {
-        var vm = new CheckYourAnswersViewModel { Start = start, End = end };
+        var vm = new ReviewEventViewModel { Start = start, End = end };
         var result = vm.GetDateAndTimeFormatted();
         result.Should().Be(expectedResult);
     }

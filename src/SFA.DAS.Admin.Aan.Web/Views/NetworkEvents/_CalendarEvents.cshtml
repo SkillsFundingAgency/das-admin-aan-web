@@ -21,7 +21,7 @@
                 <div class="govuk-button-group govuk-!-margin-bottom-0">
                     @if(calendarEvent.IsEditable)
                     {
-                        <a href="#" class="govuk-link">Make changes</a>
+                        <a href="@calendarEvent.EditEventLink" class="govuk-link">Make changes</a>
                         <a href="@calendarEvent.CancelEventLink" class="govuk-link">Cancel event</a>
                     }
                     else

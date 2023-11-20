@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
-public class CheckYourAnswersViewModel : ManageEventViewModelBase
+public class ReviewEventViewModel : ManageEventViewModelBase
 {
     public string? PreviewLink { get; set; }
     public bool HasSeenPreview { get; set; }
@@ -46,7 +46,7 @@ public class CheckYourAnswersViewModel : ManageEventViewModelBase
     public string? IsAtSchoolLink { get; set; }
     public string? SchoolNameLink { get; set; }
     public string? NumberOfAttendeesLink { get; set; }
-
+    public DateTime LastUpdatedDate { get; set; }
     public bool ShowLocation =>
         EventFormat is DAS.Aan.SharedUi.Constants.EventFormat.InPerson or DAS.Aan.SharedUi.Constants.EventFormat.Hybrid;
 
@@ -64,7 +64,7 @@ public class CheckYourAnswersViewModel : ManageEventViewModelBase
         return Start.Value.ToString("d MMMM yyyy") + ", " + startDateTimeFormatted + " to " + endDateTimeFormatted;
     }
 
-    public static implicit operator CheckYourAnswersViewModel(EventSessionModel source)
+    public static implicit operator ReviewEventViewModel(EventSessionModel source)
         => new()
         {
             HasSeenPreview = source.HasSeenPreview,
@@ -82,6 +82,7 @@ public class CheckYourAnswersViewModel : ManageEventViewModelBase
             IsAtSchool = source.IsAtSchool,
             OrganiserName = source.ContactName,
             OrganiserEmail = source.ContactEmail,
-            NumberOfAttendees = source.PlannedAttendees
+            NumberOfAttendees = source.PlannedAttendees,
+            LastUpdatedDate = source.LastUpdatedDate.GetValueOrDefault()
         };
 }

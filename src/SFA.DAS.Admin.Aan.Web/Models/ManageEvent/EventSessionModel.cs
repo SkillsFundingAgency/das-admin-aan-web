@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Aan.SharedUi.Models;
 using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
@@ -9,6 +10,12 @@ public class EventSessionModel
 {
     public bool HasSeenPreview { get; set; }
     public bool IsDirectCallFromCheckYourAnswers { get; set; }
+
+    //MFCMFC added 2 items
+
+    public Guid? CalendarEventId { get; set; }
+    public bool IsAlreadyPublished { get; set; }
+
     public EventFormat? EventFormat { get; set; }
 
     public string? EventTitle { get; set; }
@@ -16,7 +23,7 @@ public class EventSessionModel
     public string CalendarName { get; set; } = string.Empty;
 
     public int? RegionId { get; set; }
-
+    public string? RegionName { get; set; }
     public string? EventOutline { get; set; }
     public string? EventSummary { get; set; }
     public bool? HasGuestSpeakers { get; set; }
@@ -43,6 +50,9 @@ public class EventSessionModel
     public string? ContactEmail { get; set; }
 
     public int? PlannedAttendees { get; set; }
+    public DateTime? CreatedDate { get; set; }
+
+    public DateTime? LastUpdatedDate { get; set; }
 
     public DateTime? Start
     {
@@ -165,4 +175,73 @@ public class EventSessionModel
 
         return model;
     }
+
+    public static implicit operator EventSessionModel(GetCalendarEventQueryResult source)
+    {
+        var eventFormat = new EventFormat();
+
+        if (source.EventFormat == DAS.Aan.SharedUi.Constants.EventFormat.Hybrid.ToString())
+            eventFormat = DAS.Aan.SharedUi.Constants.EventFormat.Hybrid;
+
+        if (source.EventFormat == DAS.Aan.SharedUi.Constants.EventFormat.InPerson.ToString())
+            eventFormat = DAS.Aan.SharedUi.Constants.EventFormat.InPerson;
+
+        if (source.EventFormat == DAS.Aan.SharedUi.Constants.EventFormat.Online.ToString())
+            eventFormat = DAS.Aan.SharedUi.Constants.EventFormat.Online;
+
+        var guestSpeakers = new List<GuestSpeaker>();
+
+        var i = 1;
+        foreach (var guest in source.EventGuests)
+        {
+            guestSpeakers.Add(new GuestSpeaker(guest.GuestName, guest.GuestJobTitle, i));
+            i++;
+        }
+
+        var regionName = source.RegionId == null ? "National" : source.RegionName;
+
+        var model = new EventSessionModel
+        {
+            EventFormat = eventFormat,
+            EventTitle = source.Title,
+            CalendarId = source.CalendarId,
+            CalendarName = source.CalendarName!,
+            RegionId = source.RegionId,
+            EventOutline = source.Summary,
+            EventSummary = source.Description,
+            HasGuestSpeakers = source.EventGuests.Any(),
+            GuestSpeakers = guestSpeakers,
+            DateOfEvent = source.StartDate.Date,
+            StartHour = source.StartDate.ToLocalTime().Hour,
+            StartMinutes = source.StartDate.ToLocalTime().Minute,
+            EndHour = source.EndDate.ToLocalTime().Hour,
+            EndMinutes = source.EndDate.ToLocalTime().Minute,
+            Location = source.Location,
+            EventLink = source.EventLink,
+            Longitude = source.Longitude,
+            Latitude = source.Latitude,
+            Postcode = source.Postcode,
+            SchoolName = source.SchoolName,
+            Urn = source.Urn,
+            IsAtSchool = !string.IsNullOrEmpty(source.Urn),
+            ContactName = source.ContactName,
+            ContactEmail = source.ContactEmail,
+            PlannedAttendees = source.PlannedAttendees,
+            CreatedDate = source.CreatedDate,
+            LastUpdatedDate = source.LastUpdatedDate,
+            RegionName = regionName,
+            CalendarEventId = source.CalendarEventId,
+            IsDirectCallFromCheckYourAnswers = true
+        };
+
+
+
+        // public bool HasSeenPreview { get; set; }
+        // public bool IsDirectCallFromCheckYourAnswers { get; set; 
+        //     IsPreview = true
+        // 
+
+        return model;
+    }
+
 }
