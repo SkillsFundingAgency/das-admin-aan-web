@@ -48,6 +48,7 @@ public class NetworkEventsController : Controller
         var calendars = calendarTask.Result;
         var regions = regionTask.Result.Regions;
 
+        regions.Add(new Region(0, Application.Constants.Region.National, 100));
         var model = InitialiseViewModel(calendarEventsTask.Result);
 
         model.PaginationViewModel = SetupPagination(calendarEventsTask.Result, filterUrl!);
