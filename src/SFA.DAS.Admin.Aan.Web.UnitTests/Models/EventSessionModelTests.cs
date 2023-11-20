@@ -314,5 +314,6 @@ public class EventSessionModelTests
 
         var result = (EventSessionModel)source;
         result.RegionName.Should().Be(expectedRegionName);
+        res.RegionName.Should().Be(expectedRegionName);
     }
 }
