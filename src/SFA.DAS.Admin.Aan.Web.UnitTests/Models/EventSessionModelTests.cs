@@ -3,10 +3,12 @@ using FluentAssertions;
 using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Aan.SharedUi.Models;
 using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Models;
+
 public class EventSessionModelTests
 {
     [TestCase(EventFormat.InPerson)]
@@ -26,7 +28,8 @@ public class EventSessionModelTests
     [TestCase(null, 12, 0, true)]
     [TestCase("2035-12-01", null, 0, true)]
     [TestCase("2035-12-01", 12, null, true)]
-    public void SessionModel_ContainsExpectedStartValues(string? datetimeDescriptor, int? hour, int? minutes, bool isNullValue)
+    public void SessionModel_ContainsExpectedStartValues(string? datetimeDescriptor, int? hour, int? minutes,
+        bool isNullValue)
     {
         var dateTime = (DateTime?)null;
 
@@ -49,7 +52,8 @@ public class EventSessionModelTests
     [TestCase(null, 12, 0, true)]
     [TestCase("2035-12-01", null, 0, true)]
     [TestCase("2035-12-01", 12, null, true)]
-    public void SessionModel_ContainsExpectedEndValues(string? datetimeDescriptor, int? hour, int? minutes, bool isNullValue)
+    public void SessionModel_ContainsExpectedEndValues(string? datetimeDescriptor, int? hour, int? minutes,
+        bool isNullValue)
     {
         var dateTime = (DateTime?)null;
 
@@ -117,7 +121,8 @@ public class EventSessionModelTests
     [TestCase(EventFormat.InPerson, "location", "location")]
     [TestCase(EventFormat.Hybrid, "location", "location")]
     [TestCase(EventFormat.Online, "location", null)]
-    public void Operator_CreateEventRequest_CheckLocationAgainstEventFormat(EventFormat eventFormat, string? location, string? expectedLocation)
+    public void Operator_CreateEventRequest_CheckLocationAgainstEventFormat(EventFormat eventFormat, string? location,
+        string? expectedLocation)
     {
         var model = new EventSessionModel
         {
@@ -133,7 +138,8 @@ public class EventSessionModelTests
     [TestCase(EventFormat.InPerson, "location", "location")]
     [TestCase(EventFormat.Hybrid, "location", "location")]
     [TestCase(EventFormat.Online, "location", null)]
-    public void Operator_CreateEventRequest_CheckPostcodeAgainstEventFormat(EventFormat eventFormat, string? postcode, string? expected)
+    public void Operator_CreateEventRequest_CheckPostcodeAgainstEventFormat(EventFormat eventFormat, string? postcode,
+        string? expected)
     {
         var model = new EventSessionModel
         {
@@ -149,7 +155,8 @@ public class EventSessionModelTests
     [TestCase(EventFormat.InPerson, 12, 12)]
     [TestCase(EventFormat.Hybrid, 13, 13)]
     [TestCase(EventFormat.Online, 14, null)]
-    public void Operator_CreateEventRequest_CheckLatitudeAgainstEventFormat(EventFormat eventFormat, double? latitude, double? expected)
+    public void Operator_CreateEventRequest_CheckLatitudeAgainstEventFormat(EventFormat eventFormat, double? latitude,
+        double? expected)
     {
         var model = new EventSessionModel
         {
@@ -165,7 +172,8 @@ public class EventSessionModelTests
     [TestCase(EventFormat.InPerson, 12, 12)]
     [TestCase(EventFormat.Hybrid, 13, 13)]
     [TestCase(EventFormat.Online, 14, null)]
-    public void Operator_CreateEventRequest_CheckLongitudeAgainstEventFormat(EventFormat eventFormat, double? longitude, double? expected)
+    public void Operator_CreateEventRequest_CheckLongitudeAgainstEventFormat(EventFormat eventFormat, double? longitude,
+        double? expected)
     {
         var model = new EventSessionModel
         {
@@ -181,7 +189,8 @@ public class EventSessionModelTests
     [TestCase(EventFormat.InPerson, "link", null)]
     [TestCase(EventFormat.Hybrid, "link", "link")]
     [TestCase(EventFormat.Online, "link", "link")]
-    public void Operator_CreateEventRequest_CheckEventLinkAgainstEventFormat(EventFormat eventFormat, string? link, string? expected)
+    public void Operator_CreateEventRequest_CheckEventLinkAgainstEventFormat(EventFormat eventFormat, string? link,
+        string? expected)
     {
         var model = new EventSessionModel
         {
@@ -228,5 +237,65 @@ public class EventSessionModelTests
         vm.EventGuests.Should().BeEquivalentTo(source.GuestSpeakers
             .Select(guest => new EventGuest(guest.GuestName, guest.GuestJobTitle)).ToList());
         vm.IsPreview.Should().BeTrue();
+    }
+
+    [TestCase("Hybrid", EventFormat.Hybrid)]
+    public void Operator_MappingGetCalendarEventQueryResult_EventFormat(string eventFormatString, EventFormat expected)
+    {
+        var source = new GetCalendarEventQueryResult
+        {
+            EventFormat = eventFormatString,
+            EventGuests = new List<EventGuestModel>()
+        };
+        var res = (EventSessionModel)source;
+
+        res.EventFormat.Should().Be(expected);
+    }
+
+    [Test]
+    public void Operator_MappingGetCalendarEventQueryResult_GuestSpeakers()
+    {
+        var guestSpeakerName1 = "guest speaker 1";
+        var guestSpeakerJobTitle1 = "guest speaker job 1";
+        var expectedId1 = 1;
+        var guestSpeakerName2 = "guest speaker 2";
+        var guestSpeakerJobTitle2 = "guest speaker job 2";
+
+        var eventGuests = new List<EventGuestModel>
+        {
+            new(guestSpeakerName1, guestSpeakerJobTitle1),
+            new(guestSpeakerName2, guestSpeakerJobTitle2)
+        };
+
+        var source = new GetCalendarEventQueryResult
+        {
+            EventGuests = eventGuests
+        };
+
+
+        var res = (EventSessionModel)source;
+
+        res.GuestSpeakers.FirstOrDefault().Should()
+            .BeEquivalentTo(new GuestSpeaker(guestSpeakerName1, guestSpeakerJobTitle1, expectedId1));
+
+        res.GuestSpeakers.Count.Should().Be(2);
+    }
+
+    [TestCase(null, "anything", EventSessionModel.NationalRegionName)]
+    [TestCase(1, "East Midlands", "East Midlands")]
+    public void Operator_MappingGetCalendarEventQueryResult_RegionName(int? regionId, string inputRegionName, string expectedRegionName)
+    {
+
+        var source = new GetCalendarEventQueryResult
+        {
+            EventGuests = new List<EventGuestModel>(),
+            RegionId = regionId,
+            RegionName = inputRegionName
+        };
+
+
+        var res = (EventSessionModel)source;
+
+        res.RegionName.Should().Be(expectedRegionName);
     }
 }

@@ -8,6 +8,8 @@ namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 public class EventSessionModel
 {
+    public const string NationalRegionName = "National";
+
     public bool HasSeenPreview { get; set; }
     public bool IsDirectCallFromCheckYourAnswers { get; set; }
 
@@ -197,7 +199,7 @@ public class EventSessionModel
             i++;
         }
 
-        var regionName = source.RegionId == null ? "National" : source.RegionName;
+        var regionName = source.RegionId == null ? NationalRegionName : source.RegionName;
 
         var model = new EventSessionModel
         {
