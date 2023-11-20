@@ -24,7 +24,6 @@ public class CalendarEventController : Controller
     [Route("/events/{calendarEventId}", Name = RouteNames.CalendarEvent)]
     public async Task<IActionResult> Get(Guid calendarEventId, CancellationToken cancellationToken)
     {
-        var regionName = string.Empty;
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
         if (sessionModel == null! || sessionModel.CalendarEventId != calendarEventId)
