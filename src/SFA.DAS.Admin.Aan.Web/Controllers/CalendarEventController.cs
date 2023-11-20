@@ -24,7 +24,6 @@ public class CalendarEventController : Controller
     [Route("/events/{calendarEventId}", Name = RouteNames.CalendarEvent)]
     public async Task<IActionResult> Get(Guid calendarEventId, CancellationToken cancellationToken)
     {
-        var regionName = string.Empty;
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
         if (sessionModel == null!)
@@ -42,12 +41,12 @@ public class CalendarEventController : Controller
 
         _sessionService.Set(sessionModel);
 
-        var model = GetViewModel(sessionModel, cancellationToken);
+        var model = GetViewModel(sessionModel);
 
         return View(ViewPath, model);
     }
 
-    private ReviewEventViewModel GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
+    private ReviewEventViewModel GetViewModel(EventSessionModel sessionModel)
     {
         var model = (ReviewEventViewModel)sessionModel;
         model.PageTitle = string.Empty;
