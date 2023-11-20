@@ -240,6 +240,8 @@ public class EventSessionModelTests
     }
 
     [TestCase("Hybrid", EventFormat.Hybrid)]
+    [TestCase("InPerson", EventFormat.InPerson)]
+    [TestCase("Online", EventFormat.Online)]
     public void Operator_MappingGetCalendarEventQueryResult_EventFormat(string eventFormatString, EventFormat expected)
     {
         var source = new GetCalendarEventQueryResult
@@ -247,9 +249,8 @@ public class EventSessionModelTests
             EventFormat = eventFormatString,
             EventGuests = new List<EventGuestModel>()
         };
-        var res = (EventSessionModel)source;
-
-        res.EventFormat.Should().Be(expected);
+        var result = (EventSessionModel)source;
+        result.EventFormat.Should().Be(expected);
     }
 
     [Test]
@@ -273,12 +274,12 @@ public class EventSessionModelTests
         };
 
 
-        var res = (EventSessionModel)source;
+        var result = (EventSessionModel)source;
 
-        res.GuestSpeakers.FirstOrDefault().Should()
+        result.GuestSpeakers.FirstOrDefault().Should()
             .BeEquivalentTo(new GuestSpeaker(guestSpeakerName1, guestSpeakerJobTitle1, expectedId1));
 
-        res.GuestSpeakers.Count.Should().Be(2);
+        result.GuestSpeakers.Count.Should().Be(2);
     }
 
     [TestCase(null, "anything", EventSessionModel.NationalRegionName)]
@@ -293,9 +294,7 @@ public class EventSessionModelTests
             RegionName = inputRegionName
         };
 
-
-        var res = (EventSessionModel)source;
-
-        res.RegionName.Should().Be(expectedRegionName);
+        var result = (EventSessionModel)source;
+        result.RegionName.Should().Be(expectedRegionName);
     }
 }
