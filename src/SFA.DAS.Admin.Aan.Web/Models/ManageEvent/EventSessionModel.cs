@@ -13,10 +13,6 @@ public class EventSessionModel
     public bool HasSeenPreview { get; set; }
     public bool IsDirectCallFromCheckYourAnswers { get; set; }
 
-    //MFCMFC added 2 items
-
-    public Guid? CalendarEventId { get; set; }
-    public bool IsAlreadyPublished { get; set; }
 
 
     public EventFormat? EventFormat { get; set; }
@@ -309,13 +305,6 @@ public class EventSessionModel
             CalendarEventId = source.CalendarEventId,
             IsDirectCallFromCheckYourAnswers = true
         };
-
-
-
-        // public bool HasSeenPreview { get; set; }
-        // public bool IsDirectCallFromCheckYourAnswers { get; set; 
-        //     IsPreview = true
-        // 
 
         return model;
     }
