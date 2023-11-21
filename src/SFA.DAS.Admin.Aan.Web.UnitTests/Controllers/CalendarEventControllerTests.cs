@@ -15,6 +15,7 @@ namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
 public class CalendarEventControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
+    private static readonly string UpdateEventUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void GetCalendarEvent_SessionModelLoaded_ReturnsExpectedViewAndModel(
@@ -48,7 +49,6 @@ public class CalendarEventControllerTests
         vm.EventRegion.Should().Be(regionName);
         vm.EventType.Should().Be(calendarName);
         vm.PostLink.Should().Be("#");
-        vm.PreviewLink.Should().Be("#");
         vm.EventFormatLink.Should().Be("#");
         vm.EventLocationLink.Should().Be("#");
         vm.EventTypeLink.Should().Be("#");
@@ -97,18 +97,18 @@ public class CalendarEventControllerTests
         var sut = new CalendarEventController(outerAPiMock.Object, sessionServiceMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.PreviewEventUpdate, UpdateEventUrl);
 
         var result = sut.Get(calendarEventId, new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
         Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
         var vm = actualResult.Model as ReviewEventViewModel;
-        vm!.CancelLink.Should().Be(NetworkEventsUrl);
         vm.PageTitle.Should().Be(string.Empty);
         vm.EventRegion.Should().Be(regionName);
         vm.EventType.Should().Be(calendarName);
         vm.PostLink.Should().Be("#");
-        vm.PreviewLink.Should().Be("#");
+        vm.PreviewLink.Should().Be(UpdateEventUrl);
         vm.EventFormatLink.Should().Be("#");
         vm.EventLocationLink.Should().Be("#");
         vm.EventTypeLink.Should().Be("#");

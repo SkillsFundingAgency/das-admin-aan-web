@@ -157,10 +157,16 @@ public class EventSessionModel
 
     public static implicit operator NetworkEventDetailsViewModel(EventSessionModel source)
     {
-        var attendees = source.Attendees.Select(att => new Attendee(att.MemberId, att.UserType, att.MemberName, att.AddedDate, string.Empty)).ToList();
+
+        var attendees = new List<Attendee>();
+        if (source?.Attendees != null && source.Attendees.Any())
+        {
+            attendees = source.Attendees.Select(att =>
+                new Attendee(att.MemberId, att.UserType, att.MemberName, att.AddedDate, string.Empty)).ToList();
+        }
 
         var model = new NetworkEventDetailsViewModel(
-            source.CalendarName,
+            source!.CalendarName,
             source.Start.GetValueOrDefault(),
             source.End.GetValueOrDefault(),
             source.EventTitle!,
