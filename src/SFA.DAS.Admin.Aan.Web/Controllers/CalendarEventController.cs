@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Aan.SharedUi.Models;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -13,6 +14,7 @@ public class CalendarEventController : Controller
     private readonly IOuterApiClient _outerApiClient;
     private readonly ISessionService _sessionService;
     public const string ViewPath = "~/Views/ManageEvent/ReviewEvent.cshtml";
+    public const string PreviewViewPath = "~/Views/NetworkEventDetails/Detail.cshtml";
 
     public CalendarEventController(IOuterApiClient outerApiClient, ISessionService sessionService)
     {
@@ -46,13 +48,25 @@ public class CalendarEventController : Controller
         return View(ViewPath, model);
     }
 
+
+    [HttpGet]
+    [Route("events/{calendarEventId}/preview", Name = RouteNames.PreviewEventUpdate)]
+    public IActionResult GetPreview()
+    {
+        var sessionModel = _sessionService.Get<EventSessionModel>();
+        var model = GetPreviewModel(sessionModel);
+        return View(PreviewViewPath, model);
+    }
+
+
     private ReviewEventViewModel GetViewModel(EventSessionModel sessionModel)
     {
         var model = (ReviewEventViewModel)sessionModel;
         model.PageTitle = string.Empty;
         model.CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
         model.PostLink = "#";
-        model.PreviewLink = "#";
+        model.PreviewLink = Url.RouteUrl(RouteNames.PreviewEventUpdate, new { sessionModel.CalendarEventId })!;
+
         model.EventType = sessionModel.CalendarName;
         model.EventRegion = sessionModel.RegionName;
 
@@ -67,6 +81,16 @@ public class CalendarEventController : Controller
         model.IsAtSchoolLink = "#";
         model.SchoolNameLink = "#";
         model.NumberOfAttendeesLink = "#";
+        return model;
+    }
+
+    private NetworkEventDetailsViewModel GetPreviewModel(EventSessionModel sessionModel)
+    {
+        var model = (NetworkEventDetailsViewModel)sessionModel;
+
+        model.IsPreview = true;
+        model.BackLinkUrl = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId })!;
+
         return model;
     }
 

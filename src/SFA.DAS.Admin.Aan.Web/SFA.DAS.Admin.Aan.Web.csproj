@@ -15,7 +15,7 @@
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
-		<PackageReference Include="SFA.DAS.Aan.SharedUi" Version="0.1.67" />
+		<PackageReference Include="SFA.DAS.Aan.SharedUi" Version="2.0.22" />
 		<PackageReference Include="SFA.DAS.AdminService.Common" Version="0.1.75" />
 		<PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84" />
 		<PackageReference Include="SFA.DAS.DfESignIn.Auth" Version="17.1.74" />
