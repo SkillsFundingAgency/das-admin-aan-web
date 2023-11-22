@@ -105,7 +105,7 @@ public class CalendarEventControllerTests
 
         Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
         var vm = actualResult.Model as ReviewEventViewModel;
-        vm.PageTitle.Should().Be(string.Empty);
+        vm!.PageTitle.Should().Be(string.Empty);
         vm.EventRegion.Should().Be(regionName);
         vm.EventType.Should().Be(calendarName);
         vm.PostLink.Should().Be("#");

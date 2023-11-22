@@ -62,9 +62,12 @@ public class LocationController : Controller
             return RedirectToRoute(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
         }
 
-        return sessionModel.HasSeenPreview ?
-            RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers) :
-            RedirectToRoute(submitModel.ShowLocationDropdown
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+        }
+
+        return RedirectToRoute(submitModel.ShowLocationDropdown
                 ? RouteNames.ManageEvent.IsAtSchool
                 : RouteNames.ManageEvent.OrganiserDetails);
     }
