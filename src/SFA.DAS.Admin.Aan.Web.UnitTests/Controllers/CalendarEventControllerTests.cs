@@ -51,7 +51,6 @@ public class CalendarEventControllerTests
         vm.EventRegion.Should().Be(regionName);
         vm.EventType.Should().Be(calendarName);
         vm.PostLink.Should().Be("#");
-        vm.EventFormatLink.Should().Be("#");
         vm.EventLocationLink.Should().Be("#");
         vm.EventTypeLink.Should().Be("#");
         vm.EventDateTimeLink.Should().Be("#");
@@ -111,7 +110,6 @@ public class CalendarEventControllerTests
         vm.EventType.Should().Be(calendarName);
         vm.PostLink.Should().Be("#");
         vm.PreviewLink.Should().Be(UpdateEventUrl);
-        vm.EventFormatLink.Should().Be("#");
         vm.EventLocationLink.Should().Be("#");
         vm.EventTypeLink.Should().Be("#");
         vm.EventDateTimeLink.Should().Be("#");

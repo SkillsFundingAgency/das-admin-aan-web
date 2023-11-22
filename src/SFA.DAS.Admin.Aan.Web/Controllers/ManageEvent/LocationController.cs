@@ -73,23 +73,21 @@ public class LocationController : Controller
     {
         var pageTitle = sessionModel.IsAlreadyPublished ? UpdateEvent.PageTitle : CreateEvent.PageTitle;
 
-        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents);
+        string cancelLink;
+        string postLink;
 
-        if (sessionModel!.HasSeenPreview)
+        if (sessionModel.IsAlreadyPublished)
         {
-            cancelLink = sessionModel.IsAlreadyPublished
-                ? Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId })
-                : Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers);
+            cancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId })!;
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateLocation, new { sessionModel.CalendarEventId })!;
         }
-
-        var postLink = sessionModel.IsAlreadyPublished
-            ? Url.RouteUrl(RouteNames.UpdateEvent.UpdateLocation, new { sessionModel.CalendarEventId })
-            : Url.RouteUrl(RouteNames.ManageEvent.Location)!;
-
-
-        if (sessionModel.HasSeenPreview)
+        else
         {
-            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(sessionModel!.HasSeenPreview
+                ? RouteNames.ManageEvent.CheckYourAnswers
+                : RouteNames.NetworkEvents)!;
+
+            postLink = Url.RouteUrl(RouteNames.ManageEvent.Location)!;
         }
 
         return new LocationViewModel

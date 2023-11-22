@@ -51,16 +51,14 @@ public class EventFormatController : Controller
 
         _sessionService.Set(sessionModel);
 
-        if (sessionModel.HasSeenPreview)
-        {
-            return sessionModel.IsAlreadyPublished
-                ? RedirectToRoute(RouteNames.UpdateEvent.UpdateLocation, new { sessionModel.CalendarEventId })
-                : RedirectToRoute(RouteNames.ManageEvent.Location);
-        }
-
         if (sessionModel.IsAlreadyPublished)
         {
-            return RedirectToRoute(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+            return RedirectToRoute(RouteNames.UpdateEvent.UpdateLocation, new { sessionModel.CalendarEventId });
+        }
+
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.ManageEvent.Location);
         }
 
         return RedirectToRoute(RouteNames.ManageEvent.EventType);
@@ -77,16 +75,22 @@ public class EventFormatController : Controller
             PageTitle = pageTitle
         };
 
-        if (sessionModel!.HasSeenPreview)
-        {
-            model.CancelLink = sessionModel.IsAlreadyPublished
-                ? Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId })
-                : Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
-        }
 
-        model.PostLink = sessionModel.IsAlreadyPublished
-            ? Url.RouteUrl(RouteNames.UpdateEvent.UpdateEventFormat, new { sessionModel.CalendarEventId })
-            : Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!;
+        if (sessionModel.IsAlreadyPublished)
+        {
+            model.CancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+            model.PostLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateEventFormat,
+                new { sessionModel.CalendarEventId });
+        }
+        else
+        {
+            if (sessionModel!.HasSeenPreview)
+            {
+                model.CancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+            }
+
+            model.PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!;
+        }
 
         return model;
     }
