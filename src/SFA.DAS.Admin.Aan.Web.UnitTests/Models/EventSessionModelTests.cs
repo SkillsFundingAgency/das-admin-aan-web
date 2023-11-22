@@ -242,6 +242,21 @@ public class EventSessionModelTests
         vm.Attendees.First().MemberId.Should().Be(source.Attendees.First().MemberId);
     }
 
+    [Test, AutoData]
+    public void Operator_MapsToNetworkEventDetailsViewModel_NoAttendees(EventSessionModel source)
+    {
+        source.DateOfEvent = DateTime.Today.AddDays(1);
+        source.StartHour = 12;
+        source.StartMinutes = 40;
+        source.EndHour = 14;
+        source.EndMinutes = 10;
+        source.Attendees = new List<AttendeeModel>();
+        var vm = (NetworkEventDetailsViewModel)source;
+        vm.IsPreview.Should().BeTrue();
+        vm.Attendees.Count.Should().Be(0);
+        vm.AttendeeCount.Should().Be(0);
+    }
+
     [TestCase("Hybrid", EventFormat.Hybrid)]
     [TestCase("InPerson", EventFormat.InPerson)]
     [TestCase("Online", EventFormat.Online)]

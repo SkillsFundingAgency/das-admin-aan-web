@@ -159,7 +159,7 @@ public class EventSessionModel
     {
 
         var attendees = new List<Attendee>();
-        if (source?.Attendees != null && source.Attendees.Any())
+        if (source.Attendees.Any())
         {
             attendees = source.Attendees.Select(att =>
                 new Attendee(att.MemberId, att.UserType, att.MemberName, att.AddedDate, string.Empty)).ToList();
