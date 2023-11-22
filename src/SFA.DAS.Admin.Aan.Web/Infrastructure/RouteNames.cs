@@ -10,7 +10,7 @@ public static class RouteNames
     public const string DeleteEvent = nameof(DeleteEvent);
     public const string DeleteEventConfirmation = nameof(DeleteEventConfirmation);
     public const string CalendarEvent = nameof(CalendarEvent);
-    public const string PreviewEventUpdate = nameof(PreviewEventUpdate);
+
 
 
     public static class ManageEvent
