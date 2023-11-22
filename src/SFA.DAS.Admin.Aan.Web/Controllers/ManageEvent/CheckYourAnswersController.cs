@@ -17,12 +17,12 @@ public class CheckYourAnswersController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
     private readonly ISessionService _sessionService;
-    private readonly IValidator<CheckYourAnswersViewModel> _validator;
+    private readonly IValidator<ReviewEventViewModel> _validator;
 
 
     public const string ViewPath = "~/Views/ManageEvent/CheckYourAnswers.cshtml";
 
-    public CheckYourAnswersController(ISessionService sessionService, IOuterApiClient outerApiClient, IValidator<CheckYourAnswersViewModel> validator)
+    public CheckYourAnswersController(ISessionService sessionService, IOuterApiClient outerApiClient, IValidator<ReviewEventViewModel> validator)
     {
         _sessionService = sessionService;
         _outerApiClient = outerApiClient;
@@ -68,7 +68,7 @@ public class CheckYourAnswersController : Controller
         return RedirectToRoute(RouteNames.ManageEvent.EventPublished, new { eventId = calendarEventResponse.CalendarEventId });
     }
 
-    private async Task<CheckYourAnswersViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
+    private async Task<ReviewEventViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
     {
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
         var regionTask = _outerApiClient.GetRegions(cancellationToken);
@@ -80,7 +80,7 @@ public class CheckYourAnswersController : Controller
         var regions = regionTask.Result.Regions.Select(reg => new RegionSelection(reg.Area, reg.Id)).ToList();
         regions.Add(new RegionSelection("National", 0));
 
-        var model = (CheckYourAnswersViewModel)sessionModel;
+        var model = (ReviewEventViewModel)sessionModel;
         model.PageTitle = CreateEvent.PageTitle;
         model.CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
         model.PostLink = "#";

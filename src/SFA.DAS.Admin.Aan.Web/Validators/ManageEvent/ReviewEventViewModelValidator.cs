@@ -3,12 +3,12 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
-public class CheckYourAnswersViewModelValidator : AbstractValidator<CheckYourAnswersViewModel>
+public class ReviewEventViewModelValidator : AbstractValidator<ReviewEventViewModel>
 {
     public const string EventFormatHasLocationAndLocationEmpty = "You must include an in person event location";
     public const string EventSchoolNameEmpty = "You must include the name of the school";
 
-    public CheckYourAnswersViewModelValidator()
+    public ReviewEventViewModelValidator()
     {
         RuleFor(e => e.EventLocation)
             .Must(EventFormatRequiredAndPresent)
@@ -19,13 +19,13 @@ public class CheckYourAnswersViewModelValidator : AbstractValidator<CheckYourAns
             .WithMessage(EventSchoolNameEmpty);
     }
 
-    private static bool SchoolNameRequired(CheckYourAnswersViewModel model, string? schoolName)
+    private static bool SchoolNameRequired(ReviewEventViewModel model, string? schoolName)
     {
         if (model.IsAtSchool.GetValueOrDefault()) return !string.IsNullOrEmpty(schoolName);
         return true;
     }
 
-    private static bool EventFormatRequiredAndPresent(CheckYourAnswersViewModel model, string? eventLocation)
+    private static bool EventFormatRequiredAndPresent(ReviewEventViewModel model, string? eventLocation)
     {
         return !(model.ShowLocation && string.IsNullOrEmpty(eventLocation?.Trim()));
     }

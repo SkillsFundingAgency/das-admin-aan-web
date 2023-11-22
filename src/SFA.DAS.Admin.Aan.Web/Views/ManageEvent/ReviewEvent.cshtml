@@ -3,22 +3,23 @@
 @using SFA.DAS.Admin.Aan.Web.Models.ManageEvent
 @model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.ReviewEventViewModel
 @{
-    ViewData["Title"] = "Create Calendar Event";
+    ViewData["Title"] = "Make changes to calendar event";
 }
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
     <partial name="_validationSummary" />
     <form asp-route="@Model.PostLink" method="POST">
-    <h1 class="govuk-heading-l">
-        <span class="govuk-caption-l">@Model.PageTitle</span>
-    </h1>
-    <input type="hidden" asp-for="@Model.PageTitle"/>
+        <strong class="govuk-tag app-tag--Published govuk-!-margin-bottom-2">
+            Published
+        </strong>
     <input type="hidden" asp-for="@Model.PostLink"/>
     <input type="hidden" asp-for="@Model.CancelLink"/>
 
-    <h1 class="govuk-heading-l">Check your event before publishing</h1>
-
+    <h1 class="govuk-heading-l">@Model.EventTitle</h1>
+    
+    <p class="govuk-">
+        Last updated on @Model.LastUpdatedDate.ToString("dd MMMM yyyy") at @Model.LastUpdatedDate.ToString("h:mmtt").ToLower()
+    </p>
     <div id="previewlink" class="govuk-body">
         You can <a href="@Model.PreviewLink">preview the event here</a>.
     </div>

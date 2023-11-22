@@ -33,7 +33,7 @@ public class CheckYourAnswersControllerTests
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_ReturnsApiResponse(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -57,8 +57,8 @@ public class CheckYourAnswersControllerTests
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
-        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
-        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
         vm!.CancelLink.Should().Be(NetworkEventsUrl);
         vm.PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
         vm.EventRegion.Should().Be(regionsResult.Regions.First(x => x.Id == sessionModel.RegionId).Area);
@@ -68,7 +68,7 @@ public class CheckYourAnswersControllerTests
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_HasSeenPreviewFalse_SettingToTrue(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -101,7 +101,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_SeenPreviewAndDirectCallFromCheckYourAnswersSettings_CheckUpdateToSessionModel(bool hasSeenPreview, bool directCallFromCheckYourAnswers, bool callsToSetEventSessionModel)
     {
         var outerAPiMock = new Mock<IOuterApiClient>();
-        var validatorMock = new Mock<IValidator<CheckYourAnswersViewModel>>();
+        var validatorMock = new Mock<IValidator<ReviewEventViewModel>>();
         var calendars = new List<Calendar>
         {
             new Calendar {CalendarName = "cal 1", Id = 1}
@@ -146,7 +146,7 @@ public class CheckYourAnswersControllerTests
     [Test, MoqAutoData]
     public void Post_ReturnsExpectedPostLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -155,7 +155,7 @@ public class CheckYourAnswersControllerTests
         outerAPiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
 
         var validationResult = new ValidationResult();
-        validatorMock.Setup(v => v.ValidateAsync(It.IsAny<CheckYourAnswersViewModel>(), It.IsAny<CancellationToken>()))
+        validatorMock.Setup(v => v.ValidateAsync(It.IsAny<ReviewEventViewModel>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(validationResult);
 
         var sessionServiceMock = new Mock<ISessionService>();
@@ -189,7 +189,7 @@ public class CheckYourAnswersControllerTests
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_ReturnsExpectedEventFormatLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -212,15 +212,15 @@ public class CheckYourAnswersControllerTests
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
-        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
-        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
         vm!.EventFormatLink.Should().Be(EventFormatUrl);
     }
 
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_ReturnsExpectedEventLocationLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -243,15 +243,15 @@ public class CheckYourAnswersControllerTests
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
-        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
-        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
         vm!.EventLocationLink.Should().Be(EventLocationUrl);
     }
 
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_ReturnsExpectedEventTypeLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -274,15 +274,15 @@ public class CheckYourAnswersControllerTests
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
-        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
-        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
         vm!.EventTypeLink.Should().Be(EventTypeUrl);
     }
 
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_ReturnsExpectedEventDateAndTimeLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -305,15 +305,15 @@ public class CheckYourAnswersControllerTests
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
-        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
-        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
         vm!.EventDateTimeLink.Should().Be(EventDateAndTimeUrl);
     }
 
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_ReturnsExpectedEventDescriptionLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -336,15 +336,15 @@ public class CheckYourAnswersControllerTests
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
-        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
-        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
         vm!.EventDescriptionLink.Should().Be(EventDescriptionUrl);
     }
 
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_ReturnsExpectedPreviewLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -367,15 +367,15 @@ public class CheckYourAnswersControllerTests
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
-        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
-        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
         vm!.PreviewLink.Should().Be(PreviewUrl);
     }
 
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_ReturnsExpectedHasGuestSpeakersLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -397,15 +397,15 @@ public class CheckYourAnswersControllerTests
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
-        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
-        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
         vm!.HasGuestSpeakersLink.Should().Be(EventHasGuestSpeakersUrl);
     }
 
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_ReturnsExpectedOrganiserDetailsLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -427,15 +427,15 @@ public class CheckYourAnswersControllerTests
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
-        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
-        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
         vm!.OrganiserDetailsLink.Should().Be(OrganiserDetailsUrl);
     }
 
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_ReturnsExpectedIsAtSchoolLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -457,8 +457,8 @@ public class CheckYourAnswersControllerTests
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
-        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
-        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
         vm!.IsAtSchoolLink.Should().Be(IsAtSchoolUrl);
     }
 
@@ -466,7 +466,7 @@ public class CheckYourAnswersControllerTests
     [Test, MoqAutoData]
     public void GetCheckYourAnswers_ReturnsExpectedSchoolNameLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
     {
@@ -488,15 +488,15 @@ public class CheckYourAnswersControllerTests
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
 
-        Assert.That(actualResult!.Model, Is.TypeOf<CheckYourAnswersViewModel>());
-        var vm = actualResult.Model as CheckYourAnswersViewModel;
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
         vm!.SchoolNameLink.Should().Be(SchoolNameUrl);
     }
 
     [Test, MoqAutoData]
     public async Task Post_ValidationErrors(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<CheckYourAnswersViewModel>> validatorMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         List<Calendar> calendars,
         GetRegionsResult regionsResult)
@@ -517,15 +517,15 @@ public class CheckYourAnswersControllerTests
 
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new CheckYourAnswersViewModel { CancelLink = NetworkEventsUrl };
+        var submitModel = new ReviewEventViewModel { CancelLink = NetworkEventsUrl };
 
         var actualResult = await sut.Post(new CancellationToken());
 
         var result = (ViewResult)actualResult;
 
         sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<CheckYourAnswersViewModel>());
-        (result.Model as CheckYourAnswersViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+        Assert.That(result.Model, Is.TypeOf<ReviewEventViewModel>());
+        (result.Model as ReviewEventViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
     }
 }

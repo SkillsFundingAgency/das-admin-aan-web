@@ -5,15 +5,14 @@ using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Validators.ManageEvents;
 
-public class CheckYourAnswersViewModelValidatorTests
-
+public class ReviewEventViewModelValidatorTests
 {
     [Test]
     public void Validate_AllDetailsAreValid()
     {
         var model = GetHydratedModel();
 
-        var sut = new CheckYourAnswersViewModelValidator();
+        var sut = new ReviewEventViewModelValidator();
         var result = sut.TestValidate(model);
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -36,13 +35,13 @@ public class CheckYourAnswersViewModelValidatorTests
         model.EventFormat = eventFormat;
         model.EventLocation = eventLocation;
 
-        var sut = new CheckYourAnswersViewModelValidator();
+        var sut = new ReviewEventViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
         {
             result.ShouldHaveValidationErrorFor(c => c.EventLocation)
-                .WithErrorMessage(CheckYourAnswersViewModelValidator.EventFormatHasLocationAndLocationEmpty);
+                .WithErrorMessage(ReviewEventViewModelValidator.EventFormatHasLocationAndLocationEmpty);
         }
         else
         {
@@ -62,13 +61,13 @@ public class CheckYourAnswersViewModelValidatorTests
         model.IsAtSchool = isAtSchool;
         model.SchoolName = schoolName;
 
-        var sut = new CheckYourAnswersViewModelValidator();
+        var sut = new ReviewEventViewModelValidator();
         var result = sut.TestValidate(model);
 
         if (!isValid)
         {
             result.ShouldHaveValidationErrorFor(c => c.SchoolName)
-                .WithErrorMessage(CheckYourAnswersViewModelValidator.EventSchoolNameEmpty);
+                .WithErrorMessage(ReviewEventViewModelValidator.EventSchoolNameEmpty);
         }
         else
         {
@@ -77,9 +76,9 @@ public class CheckYourAnswersViewModelValidatorTests
     }
 
 
-    private static CheckYourAnswersViewModel GetHydratedModel()
+    private static ReviewEventViewModel GetHydratedModel()
     {
-        var vm = new CheckYourAnswersViewModel
+        var vm = new ReviewEventViewModel
         {
             PreviewLink = "",
             HasSeenPreview = false,
