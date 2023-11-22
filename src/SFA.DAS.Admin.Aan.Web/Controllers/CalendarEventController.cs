@@ -49,8 +49,15 @@ public class CalendarEventController : Controller
     }
 
 
+    [HttpPost]
+    [Route("events/{calendarEventId}", Name = RouteNames.CalendarEvent)]
+    public IActionResult Post()
+    {
+        return RedirectToRoute(RouteNames.NetworkEvents);
+    }
+
     [HttpGet]
-    [Route("events/{calendarEventId}/preview", Name = RouteNames.PreviewEventUpdate)]
+    [Route("events/{calendarEventId}/preview", Name = RouteNames.UpdateEvent.UpdatePreviewEvent)]
     public IActionResult GetPreview()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -58,14 +65,13 @@ public class CalendarEventController : Controller
         return View(PreviewViewPath, model);
     }
 
-
     private ReviewEventViewModel GetViewModel(EventSessionModel sessionModel)
     {
         var model = (ReviewEventViewModel)sessionModel;
         model.PageTitle = string.Empty;
         model.CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
         model.PostLink = "#";
-        model.PreviewLink = Url.RouteUrl(RouteNames.PreviewEventUpdate, new { sessionModel.CalendarEventId })!;
+        model.PreviewLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdatePreviewEvent, new { sessionModel.CalendarEventId })!;
 
         model.EventType = sessionModel.CalendarName;
         model.EventRegion = sessionModel.RegionName;

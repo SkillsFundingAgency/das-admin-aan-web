@@ -237,6 +237,9 @@ public class EventSessionModelTests
         vm.EventGuests.Should().BeEquivalentTo(source.GuestSpeakers
             .Select(guest => new EventGuest(guest.GuestName, guest.GuestJobTitle)).ToList());
         vm.IsPreview.Should().BeTrue();
+        vm.Attendees.Count.Should().Be(source.Attendees.Count());
+        vm.AttendeeCount.Should().Be(source.Attendees.Count());
+        vm.Attendees.First().MemberId.Should().Be(source.Attendees.First().MemberId);
     }
 
     [TestCase("Hybrid", EventFormat.Hybrid)]

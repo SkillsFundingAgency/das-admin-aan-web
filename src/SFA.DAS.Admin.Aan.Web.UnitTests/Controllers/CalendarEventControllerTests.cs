@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SFA.DAS.Aan.SharedUi.Models;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers;
@@ -16,6 +17,7 @@ public class CalendarEventControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string UpdateEventUrl = Guid.NewGuid().ToString();
+    private static readonly string CalendarEventUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void GetCalendarEvent_SessionModelLoaded_ReturnsExpectedViewAndModel(
@@ -97,7 +99,7 @@ public class CalendarEventControllerTests
         var sut = new CalendarEventController(outerAPiMock.Object, sessionServiceMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.PreviewEventUpdate, UpdateEventUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdatePreviewEvent, UpdateEventUrl);
 
         var result = sut.Get(calendarEventId, new CancellationToken());
         var actualResult = result.Result as ViewResult;
@@ -124,5 +126,47 @@ public class CalendarEventControllerTests
         outerAPiMock.Verify(x => x.GetCalendarEvent(memberId, calendarEventId, It.IsAny<CancellationToken>()), Times.Once);
         sessionServiceMock.Verify(x => x.Get<EventSessionModel>(), Times.Once);
         sessionServiceMock.Verify(x => x.Set(It.IsAny<EventSessionModel>()), Times.Once);
+    }
+
+    [Test]
+    public void PostCalendarEvent_RedirectToManageEvents()
+    {
+        var sut = new CalendarEventController(Mock.Of<IOuterApiClient>(), Mock.Of<ISessionService>());
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
+        var result = (RedirectToRouteResult)sut.Post();
+
+        sut.ModelState.IsValid.Should().BeTrue();
+        result.RouteName.Should().Be(RouteNames.NetworkEvents);
+    }
+
+    [Test, MoqAutoData]
+    public void GetCalendarEventPreview_SessionModelLoaded_ReturnsExpectedViewAndModel(
+        [Frozen] Mock<IOuterApiClient> outerAPiMock,
+        Guid calendarEventId)
+    {
+        var calendarName = "cal name";
+        var regionName = "London";
+
+        var sessionServiceMock = new Mock<ISessionService>();
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            CalendarName = calendarName,
+            RegionName = regionName
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new CalendarEventController(outerAPiMock.Object, sessionServiceMock.Object);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
+
+        var result = sut.GetPreview();
+        var actualResult = result as ViewResult;
+
+        Assert.That(actualResult!.Model, Is.TypeOf<NetworkEventDetailsViewModel>());
+        var vm = actualResult.Model as NetworkEventDetailsViewModel;
+        vm!.BackLinkUrl.Should().Be(CalendarEventUrl);
+        sessionServiceMock.Verify(x => x.Get<EventSessionModel>(), Times.Once);
     }
 }
