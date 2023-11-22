@@ -52,7 +52,7 @@ public class EventSessionModel
 
     public Guid? CalendarEventId { get; set; }
     public bool IsAlreadyPublished { get; set; }
-    public IEnumerable<AttendeeModel> Attendees { get; set; } = null!;
+    public IEnumerable<AttendeeModel> Attendees { get; set; } = new List<AttendeeModel>();
     public DateTime? Start
     {
         get
