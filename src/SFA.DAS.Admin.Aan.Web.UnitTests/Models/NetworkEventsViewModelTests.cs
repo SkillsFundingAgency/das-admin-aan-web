@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using SFA.DAS.Admin.Aan.Web.Models;
+using SFA.DAS.Aan.SharedUi.Models;
 using SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Models;
