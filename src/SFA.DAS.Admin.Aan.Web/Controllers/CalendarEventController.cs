@@ -26,7 +26,7 @@ public class CalendarEventController : Controller
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
-        if (sessionModel == null!)
+        if (sessionModel == null! || sessionModel.CalendarEventId != calendarEventId)
         {
             var calendarEvent =
                 await _outerApiClient.GetCalendarEvent(_sessionService.GetMemberId(), calendarEventId,
