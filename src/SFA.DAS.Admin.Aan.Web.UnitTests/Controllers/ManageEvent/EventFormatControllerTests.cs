@@ -118,7 +118,7 @@ public class EventFormatControllerTests
     public void Get_ReturnsExpectedPageTitle(EventFormat eventFormat, bool isAlreadyPublished, string pageTitle)
     {
         var sessionServiceMock = new Mock<ISessionService>();
-        var sessionModel = new EventSessionModel { IsAlreadyPublished = isAlreadyPublished, EventFormat = eventFormat };
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = isAlreadyPublished, EventFormat = eventFormat, CalendarEventId = Guid.NewGuid() };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
