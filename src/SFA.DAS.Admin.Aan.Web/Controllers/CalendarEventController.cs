@@ -77,7 +77,7 @@ public class CalendarEventController : Controller
         model.EventRegion = sessionModel.RegionName;
 
         model.EventFormatLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateEventFormat, new { sessionModel.CalendarEventId })!;
-        model.EventLocationLink = "#";
+        model.EventLocationLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateLocation, new { sessionModel.CalendarEventId })!;
         model.EventTypeLink = "#";
         model.EventDateTimeLink = "#";
         model.EventDescriptionLink = "#";
