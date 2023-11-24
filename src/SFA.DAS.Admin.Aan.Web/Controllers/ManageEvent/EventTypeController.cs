@@ -10,7 +10,6 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/type", Name = RouteNames.ManageEvent.EventType)]
 public class EventTypeController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
@@ -25,6 +24,8 @@ public class EventTypeController : Controller
         _validator = validator;
     }
     [HttpGet]
+    [Route("events/new/type", Name = RouteNames.ManageEvent.EventType)]
+    [Route("events/{calendarEventId}/type", Name = RouteNames.UpdateEvent.UpdateEventType)]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -33,6 +34,8 @@ public class EventTypeController : Controller
     }
 
     [HttpPost]
+    [Route("events/new/type", Name = RouteNames.ManageEvent.EventType)]
+    [Route("events/{calendarEventId}/type", Name = RouteNames.UpdateEvent.UpdateEventType)]
     public async Task<IActionResult> Post(EventTypeViewModel submitModel, CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -44,13 +47,18 @@ public class EventTypeController : Controller
 
         if (!result.IsValid)
         {
-
             result.AddToModelState(ModelState);
             return View(ViewPath, await GetViewModel(sessionModel, cancellationToken));
         }
 
         sessionModel.EventTitle = submitModel.EventTitle;
+
         _sessionService.Set(sessionModel);
+
+        if (sessionModel.IsAlreadyPublished)
+        {
+            return RedirectToRoute(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+        }
 
         if (sessionModel.HasSeenPreview)
         {
@@ -76,15 +84,25 @@ public class EventTypeController : Controller
         var regionDropdowns = regions.Select(reg => new RegionSelection(reg.Area, reg.Id));
 
         var regionsWithNational = regionDropdowns.ToList();
+        regionsWithNational.Add(new RegionSelection("National", 0));
 
         var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+        var postLink = Url.RouteUrl(RouteNames.ManageEvent.EventType)!;
 
-        if (sessionModel.HasSeenPreview)
+        if (sessionModel.IsAlreadyPublished)
         {
-            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateEventFormat,
+                new { sessionModel.CalendarEventId });
+        }
+        else
+        {
+            if (sessionModel.HasSeenPreview)
+            {
+                cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+            }
         }
 
-        regionsWithNational.Add(new RegionSelection("National", 0));
         return new EventTypeViewModel
         {
             EventTitle = sessionModel.EventTitle?.Trim(),
@@ -93,8 +111,8 @@ public class EventTypeController : Controller
             EventTypes = eventTypeDropdown.ToList(),
             EventRegions = regionsWithNational,
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventType)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle
+            PostLink = postLink,
+            PageTitle = sessionModel.PageTitle,
         };
     }
 }

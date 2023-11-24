@@ -43,7 +43,7 @@ public class CalendarEventController : Controller
 
         _sessionService.Set(sessionModel);
 
-        var model = GetViewModel(sessionModel);
+        var model = await GetViewModel(sessionModel, cancellationToken);
 
         return View(ViewPath, model);
     }
@@ -65,20 +65,30 @@ public class CalendarEventController : Controller
         return View(PreviewViewPath, model);
     }
 
-    private ReviewEventViewModel GetViewModel(EventSessionModel sessionModel)
+    private async Task<ReviewEventViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
     {
+        var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
+        var regionTask = _outerApiClient.GetRegions(cancellationToken);
+
+        List<Task> tasks = new() { calendarTask, regionTask };
+        await Task.WhenAll(tasks);
+
+        var eventTypes = calendarTask.Result;
+        var regions = regionTask.Result.Regions.Select(reg => new RegionSelection(reg.Area, reg.Id)).ToList();
+        regions.Add(new RegionSelection("National", 0));
+
         var model = (ReviewEventViewModel)sessionModel;
         model.PageTitle = string.Empty;
         model.CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
         model.PostLink = "#";
         model.PreviewLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdatePreviewEvent, new { sessionModel.CalendarEventId })!;
 
-        model.EventType = sessionModel.CalendarName;
-        model.EventRegion = sessionModel.RegionName;
+        model.EventType = eventTypes.First(x => x.Id == sessionModel.CalendarId).CalendarName;
+        model.EventRegion = regions.First(x => x.RegionId == sessionModel.RegionId).Name;
 
         model.EventFormatLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateEventFormat, new { sessionModel.CalendarEventId })!;
         model.EventLocationLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateLocation, new { sessionModel.CalendarEventId })!;
-        model.EventTypeLink = "#";
+        model.EventTypeLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateEventType, new { sessionModel.CalendarEventId })!;
         model.EventDateTimeLink = "#";
         model.EventDescriptionLink = "#";
         model.HasGuestSpeakersLink = "#";
