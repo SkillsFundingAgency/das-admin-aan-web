@@ -20,6 +20,8 @@ public class EventTypeControllerTests
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
     private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
+    private static readonly string CalendarEventUrl = Guid.NewGuid().ToString();
+    private static readonly string UpdateEventTypeUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsCreateEventTypeViewModel(
@@ -51,6 +53,47 @@ public class EventTypeControllerTests
 
         ((EventTypeViewModel)viewResult.Model!).CancelLink.Should().Be(NetworkEventsUrl);
         ((EventTypeViewModel)viewResult.Model!).PageTitle.Should().Be(Application.Constants.CreateEvent.PageTitle);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_IsAlreadyPublishedTrue_CancelLinkIsCalendarEvent([Frozen] Mock<IOuterApiClient> outerApiMock)
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventTypeViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
+        var result = sut.Get(new CancellationToken());
+        var actualResult = result.Result as ViewResult;
+
+        var vm = actualResult!.Model as EventTypeViewModel;
+        vm!.PageTitle.Should().Be(Application.Constants.UpdateEvent.PageTitle);
+        vm.CancelLink.Should().Be(CalendarEventUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_IsAlreadyPublishedTrue_PostLinkIsUpdateEventType([Frozen] Mock<IOuterApiClient> outerApiMock)
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventTypeViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateEventFormat, UpdateEventTypeUrl);
+        var result = sut.Get(new CancellationToken());
+        var actualResult = result.Result as ViewResult;
+
+        var vm = actualResult!.Model as EventTypeViewModel;
+        vm!.PostLink.Should().Be(UpdateEventTypeUrl);
     }
 
     [Test, MoqAutoData]
@@ -173,6 +216,35 @@ public class EventTypeControllerTests
         var result = actualResult.Result.As<RedirectToRouteResult>();
 
         result.RouteName.Should().Be(RouteNames.ManageEvent.Description);
+    }
+
+    [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrue_RedirectsToCalendarEvent([Frozen] Mock<IOuterApiClient> outerApiMock)
+    {
+        var calendarEventId = Guid.NewGuid();
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventTypeViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventTypeViewModel();
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.ValidateAsync(It.IsAny<EventTypeViewModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
+
+        var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+
+        var actualResult = sut.Post(submitModel, new CancellationToken());
+
+        var result = actualResult.Result.As<RedirectToRouteResult>();
+        result.RouteName.Should().Be(RouteNames.CalendarEvent);
+        result.RouteValues!["CalendarEventId"].Should().Be(calendarEventId);
     }
 
     [Test]
