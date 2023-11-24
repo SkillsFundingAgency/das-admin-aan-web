@@ -2,7 +2,6 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -74,8 +73,6 @@ public class LocationController : Controller
 
     private LocationViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        var pageTitle = sessionModel.IsAlreadyPublished ? UpdateEvent.PageTitle : CreateEvent.PageTitle;
-
         string cancelLink;
         string postLink;
 
@@ -100,7 +97,7 @@ public class LocationController : Controller
             OnlineEventLink = sessionModel.EventLink,
             CancelLink = cancelLink,
             PostLink = postLink,
-            PageTitle = pageTitle
+            PageTitle = sessionModel.PageTitle
         };
     }
 }

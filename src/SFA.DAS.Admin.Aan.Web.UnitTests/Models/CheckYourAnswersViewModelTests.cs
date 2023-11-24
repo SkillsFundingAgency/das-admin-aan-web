@@ -14,6 +14,7 @@ public class CheckYourAnswersViewModelTests
         source.StartMinutes = 25;
         source.EndHour = 13;
         source.EndMinutes = 30;
+        source.IsAlreadyPublished = false;
         ReviewEventViewModel sut = source;
         sut.Should().BeEquivalentTo(source, options => options.ExcludingMissingMembers());
     }

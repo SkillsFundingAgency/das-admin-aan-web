@@ -2,7 +2,6 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -66,13 +65,11 @@ public class EventFormatController : Controller
 
     private EventFormatViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        var pageTitle = sessionModel.IsAlreadyPublished ? UpdateEvent.PageTitle : CreateEvent.PageTitle;
-
         var model = new EventFormatViewModel
         {
             EventFormat = sessionModel.EventFormat,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
-            PageTitle = pageTitle
+            PageTitle = sessionModel.PageTitle,
         };
 
 

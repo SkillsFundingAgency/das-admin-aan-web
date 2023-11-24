@@ -83,6 +83,7 @@ public class ReviewEventViewModel : ManageEventViewModelBase
             OrganiserName = source.ContactName,
             OrganiserEmail = source.ContactEmail,
             NumberOfAttendees = source.PlannedAttendees,
-            LastUpdatedDate = source.LastUpdatedDate.GetValueOrDefault()
+            LastUpdatedDate = source.LastUpdatedDate.GetValueOrDefault(),
+            PageTitle = source.PageTitle
         };
 }
