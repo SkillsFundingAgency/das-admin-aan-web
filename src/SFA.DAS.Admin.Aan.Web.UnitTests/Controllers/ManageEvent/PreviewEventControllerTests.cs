@@ -18,7 +18,7 @@ internal class PreviewEventControllerTests
     private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
-    public void Get_ReturnsNwtworkEventDetailsViewModel(
+    public void Get_ReturnsNetworkEventDetailsViewModel(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         List<Calendar> calendars)
     {

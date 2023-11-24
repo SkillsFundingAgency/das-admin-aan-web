@@ -9,7 +9,6 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/preview", Name = RouteNames.ManageEvent.PreviewEvent)]
 public class PreviewEventController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
@@ -23,6 +22,7 @@ public class PreviewEventController : Controller
     }
 
     [HttpGet]
+    [Route("events/new/preview", Name = RouteNames.ManageEvent.PreviewEvent)]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -33,10 +33,7 @@ public class PreviewEventController : Controller
     private async Task<NetworkEventDetailsViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
     {
         var calendars = await _outerApiClient.GetCalendars(cancellationToken);
-
-        var eventTypes = calendars;
-
-        sessionModel.CalendarName = eventTypes.First(x => x.Id == sessionModel.CalendarId).CalendarName;
+        sessionModel.CalendarName = calendars.First(x => x.Id == sessionModel.CalendarId).CalendarName;
         var model = (NetworkEventDetailsViewModel)sessionModel;
 
         model.IsPreview = true;

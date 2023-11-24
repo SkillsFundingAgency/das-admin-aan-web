@@ -11,6 +11,7 @@ public static class RouteNames
     public const string DeleteEventConfirmation = nameof(DeleteEventConfirmation);
     public const string CalendarEvent = nameof(CalendarEvent);
 
+
     public static class ManageEvent
     {
         public const string EventFormat = nameof(EventFormat);
@@ -30,5 +31,10 @@ public static class RouteNames
         public const string CheckYourAnswers = nameof(CheckYourAnswers);
         public const string EventPublished = nameof(EventPublished);
         public const string PreviewEvent = nameof(PreviewEvent);
+    }
+
+    public static class UpdateEvent
+    {
+        public const string UpdatePreviewEvent = nameof(UpdatePreviewEvent);
     }
 }
