@@ -48,7 +48,7 @@ public class EventFormatControllerTests
         var sut = new EventFormatController(sessionServiceMock.Object, validatorMock.Object);
 
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
         var result = (ViewResult)sut.Get();
 
         Assert.That(result.Model, Is.TypeOf<EventFormatViewModel>());
@@ -81,7 +81,7 @@ public class EventFormatControllerTests
     public void Get_ReturnsExpectedPostLink(
         [Greedy] EventFormatController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventFormat, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.EventFormat, PostUrl);
         var result = (ViewResult)sut.Get();
         Assert.That(result.Model, Is.TypeOf<EventFormatViewModel>());
         var vm = result.Model as EventFormatViewModel;
@@ -158,7 +158,7 @@ public class EventFormatControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventFormat == eventFormat)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.EventType);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.EventType);
     }
 
     [Test, MoqAutoData]
@@ -211,7 +211,7 @@ public class EventFormatControllerTests
         var sut = new EventFormatController(sessionServiceMock.Object, validatorMock.Object);
 
         var result = (RedirectToRouteResult)sut.Post(submitModel);
-        result.RouteName.Should().Be(RouteNames.ManageEvent.EventType);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.EventType);
     }
 
     [Test]
@@ -236,7 +236,7 @@ public class EventFormatControllerTests
         var sut = new EventFormatController(sessionServiceMock.Object, validatorMock.Object);
 
         var result = (RedirectToRouteResult)sut.Post(submitModel);
-        result.RouteName.Should().Be(RouteNames.ManageEvent.Location);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.Location);
     }
 
     [Test, MoqAutoData]

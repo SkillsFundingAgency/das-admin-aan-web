@@ -1,5 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using SFA.DAS.Admin.Aan.Web.Configuration;
+﻿using SFA.DAS.Admin.Aan.Web.Configuration;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Admin.Aan.Web.AppStart;
 

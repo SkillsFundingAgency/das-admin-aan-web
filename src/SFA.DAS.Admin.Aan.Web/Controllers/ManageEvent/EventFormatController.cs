@@ -23,7 +23,7 @@ public class EventFormatController : Controller
     }
 
     [HttpGet]
-    [Route("events/new/format", Name = RouteNames.ManageEvent.EventFormat)]
+    [Route("events/new/format", Name = RouteNames.CreateEvent.EventFormat)]
     [Route("events/{calendarEventId}/format", Name = RouteNames.UpdateEvent.UpdateEventFormat)]
     public IActionResult Get()
     {
@@ -33,7 +33,7 @@ public class EventFormatController : Controller
     }
 
     [HttpPost]
-    [Route("events/new/format", Name = RouteNames.ManageEvent.EventFormat)]
+    [Route("events/new/format", Name = RouteNames.CreateEvent.EventFormat)]
     [Route("events/{calendarEventId}/format", Name = RouteNames.UpdateEvent.UpdateEventFormat)]
     public IActionResult Post(EventFormatViewModel submitModel)
     {
@@ -57,10 +57,10 @@ public class EventFormatController : Controller
 
         if (sessionModel.HasSeenPreview)
         {
-            return RedirectToRoute(RouteNames.ManageEvent.Location);
+            return RedirectToRoute(RouteNames.CreateEvent.Location);
         }
 
-        return RedirectToRoute(RouteNames.ManageEvent.EventType);
+        return RedirectToRoute(RouteNames.CreateEvent.EventType);
     }
 
     private EventFormatViewModel GetViewModel(EventSessionModel sessionModel)
@@ -82,10 +82,10 @@ public class EventFormatController : Controller
         {
             if (sessionModel!.HasSeenPreview)
             {
-                model.CancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+                model.CancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
             }
 
-            model.PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!;
+            model.PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!;
         }
 
         return model;

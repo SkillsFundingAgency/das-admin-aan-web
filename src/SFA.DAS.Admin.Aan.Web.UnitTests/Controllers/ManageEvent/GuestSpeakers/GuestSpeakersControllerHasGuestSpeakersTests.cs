@@ -35,7 +35,7 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
     public void Get_ReturnsExpectedPostLink(
         [Greedy] GuestSpeakersController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.HasGuestSpeakers, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.HasGuestSpeakers, PostUrl);
         var result = (ViewResult)sut.GetHasGuestSpeakers();
         Assert.That(result.Model, Is.TypeOf<HasGuestSpeakersViewModel>());
         var vm = result.Model as HasGuestSpeakersViewModel;
@@ -57,7 +57,7 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
 
         var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
         var actualResult = sut.GetHasGuestSpeakers();
         var result = actualResult.As<ViewResult>();
 
@@ -96,13 +96,13 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
             s.Set(It.Is<EventSessionModel>(m => m.HasGuestSpeakers == hasGuestSpeakers)));
         if (hasGuestSpeakers == true)
         {
-            result.RouteName.Should().Be(RouteNames.ManageEvent.GuestSpeakerList);
+            result.RouteName.Should().Be(RouteNames.CreateEvent.GuestSpeakerList);
         }
         else
         {
             result.RouteName.Should().Be(hasSeenPreview
-                ? RouteNames.ManageEvent.CheckYourAnswers
-                : RouteNames.ManageEvent.DateAndTime);
+                ? RouteNames.CreateEvent.CheckYourAnswers
+                : RouteNames.CreateEvent.DateAndTime);
         }
     }
 

@@ -61,12 +61,12 @@ public class NetworkEventsController : Controller
     }
 
     [HttpGet]
-    [Route("create-event", Name = RouteNames.ManageEvent.CreateEvent)]
+    [Route("create-event", Name = RouteNames.CreateEvent.CreateNewEvent)]
     public IActionResult CreateEvent()
     {
         var sessionModel = new EventSessionModel();
         _sessionService.Set(sessionModel);
-        return RedirectToRoute(RouteNames.ManageEvent.EventFormat);
+        return RedirectToRoute(RouteNames.CreateEvent.EventFormat);
     }
 
     [HttpGet]
@@ -124,7 +124,7 @@ public class NetworkEventsController : Controller
         var model = new NetworkEventsViewModel
         {
             TotalCount = result.TotalCount,
-            CreateEventLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!
+            CreateEventLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!
         };
 
         foreach (var calendarEvent in result.CalendarEvents)

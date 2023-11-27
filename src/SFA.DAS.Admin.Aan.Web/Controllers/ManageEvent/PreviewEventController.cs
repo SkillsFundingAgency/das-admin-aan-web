@@ -22,7 +22,7 @@ public class PreviewEventController : Controller
     }
 
     [HttpGet]
-    [Route("events/new/preview", Name = RouteNames.ManageEvent.PreviewEvent)]
+    [Route("events/new/preview", Name = RouteNames.CreateEvent.PreviewEvent)]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -37,7 +37,7 @@ public class PreviewEventController : Controller
         var model = (NetworkEventDetailsViewModel)sessionModel;
 
         model.IsPreview = true;
-        model.BackLinkUrl = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+        model.BackLinkUrl = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
 
         return model;
     }

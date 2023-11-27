@@ -36,7 +36,7 @@ public class EventDescriptionControllerTests
     public void Get_ReturnsExpectedPostLink(
         [Greedy] EventDescriptionController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventFormat, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.EventFormat, PostUrl);
         var result = (ViewResult)sut.Get();
 
         Assert.That(result.Model, Is.TypeOf<EventDescriptionViewModel>());
@@ -61,7 +61,7 @@ public class EventDescriptionControllerTests
 
         var sut = new EventDescriptionController(sessionServiceMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
         var actualResult = sut.Get();
         var result = actualResult.As<ViewResult>();
 
@@ -117,7 +117,7 @@ public class EventDescriptionControllerTests
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
         var result = (RedirectToRouteResult)sut.Post(submitModel);
-        result.RouteName.Should().Be(RouteNames.ManageEvent.HasGuestSpeakers);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.HasGuestSpeakers);
     }
 
     [Test]
@@ -140,7 +140,7 @@ public class EventDescriptionControllerTests
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
         var result = (RedirectToRouteResult)sut.Post(submitModel);
-        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
     [Test, MoqAutoData]

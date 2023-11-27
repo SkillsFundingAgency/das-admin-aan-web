@@ -12,7 +12,7 @@ public class EventPublishedController : Controller
     public const string ViewPath = "~/Views/ManageEvent/EventPublished.cshtml";
 
     [HttpGet]
-    [Route("events/{eventId}/published", Name = RouteNames.ManageEvent.EventPublished)]
+    [Route("events/{eventId}/published", Name = RouteNames.CreateEvent.EventPublished)]
     public IActionResult Get(Guid eventId)
     {
         var model = new EventPublishedViewModel

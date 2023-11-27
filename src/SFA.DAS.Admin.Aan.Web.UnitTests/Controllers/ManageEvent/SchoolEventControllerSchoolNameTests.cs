@@ -38,7 +38,7 @@ public class SchoolEventControllerSchoolNameTests
     public void Get_ReturnsExpectedPostLink(
         [Greedy] SchoolEventController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.SchoolName, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.SchoolName, PostUrl);
         var result = (ViewResult)sut.GetSchoolName();
 
         Assert.That(result.Model, Is.TypeOf<SchoolNameViewModel>());
@@ -58,7 +58,7 @@ public class SchoolEventControllerSchoolNameTests
 
         var sut = new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<IsAtSchoolViewModel>>(), validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
         var result = (ViewResult)sut.GetSchoolName();
 
         Assert.That(result.Model, Is.TypeOf<SchoolNameViewModel>());
@@ -100,7 +100,7 @@ public class SchoolEventControllerSchoolNameTests
 
         var sut = new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<IsAtSchoolViewModel>>(), Mock.Of<IValidator<SchoolNameViewModel>>());
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.SchoolName, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.SchoolName, PostUrl);
         var result = (ViewResult)sut.GetSchoolName();
 
         Assert.That(result.Model, Is.TypeOf<SchoolNameViewModel>());
@@ -134,7 +134,7 @@ public class SchoolEventControllerSchoolNameTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.Urn == urn)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.OrganiserDetails);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.OrganiserDetails);
     }
 
     [Test]
@@ -156,14 +156,14 @@ public class SchoolEventControllerSchoolNameTests
 
         var sut = new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<IsAtSchoolViewModel>>(), validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
 
         var result = (RedirectToRouteResult)sut.PostSchoolName(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s =>
             s.Set(It.Is<EventSessionModel>(m => m.SchoolName == schoolName && m.Urn == urn)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
     [Test, MoqAutoData]

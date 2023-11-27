@@ -49,7 +49,7 @@ public class LocationControllerTests
         var sut = new LocationController(sessionServiceMock.Object, validatorMock.Object);
 
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
         var result = (ViewResult)sut.Get();
 
         Assert.That(result.Model, Is.TypeOf<LocationViewModel>());
@@ -82,7 +82,7 @@ public class LocationControllerTests
     public void Get_ReturnsExpectedPostLink(
         [Greedy] LocationController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.Location, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.Location, PostUrl);
         var result = (ViewResult)sut.Get();
 
         Assert.That(result.Model, Is.TypeOf<LocationViewModel>());
@@ -186,8 +186,8 @@ public class LocationControllerTests
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.Postcode == postcode && m.EventLink == eventOnlineLink)));
         result.RouteName.Should().Be(submitModel.EventFormat == null
-            ? RouteNames.ManageEvent.OrganiserDetails
-            : RouteNames.ManageEvent.IsAtSchool);
+            ? RouteNames.CreateEvent.OrganiserDetails
+            : RouteNames.CreateEvent.IsAtSchool);
     }
 
 
@@ -216,7 +216,7 @@ public class LocationControllerTests
         var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
-        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
     [Test, MoqAutoData]
@@ -271,6 +271,6 @@ public class LocationControllerTests
                && m.EventLink == null
         )));
 
-        result.RouteName.Should().Be(RouteNames.ManageEvent.IsAtSchool);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.IsAtSchool);
     }
 }

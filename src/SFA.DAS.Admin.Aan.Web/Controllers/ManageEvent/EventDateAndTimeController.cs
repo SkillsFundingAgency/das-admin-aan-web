@@ -11,7 +11,7 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/dateandtime", Name = RouteNames.ManageEvent.DateAndTime)]
+[Route("events/new/dateandtime", Name = RouteNames.CreateEvent.DateAndTime)]
 public class EventDateAndTimeController : Controller
 {
     private readonly ISessionService _sessionService;
@@ -54,10 +54,10 @@ public class EventDateAndTimeController : Controller
 
         if (sessionModel.HasSeenPreview)
         {
-            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+            return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
         }
 
-        return RedirectToRoute(RouteNames.ManageEvent.Location);
+        return RedirectToRoute(RouteNames.CreateEvent.Location);
     }
 
     private EventDateAndTimeViewModel GetViewModel(EventSessionModel sessionModel)
@@ -66,7 +66,7 @@ public class EventDateAndTimeController : Controller
 
         if (sessionModel.HasSeenPreview)
         {
-            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
         }
         return new EventDateAndTimeViewModel
         {
@@ -76,7 +76,7 @@ public class EventDateAndTimeController : Controller
             EndHour = sessionModel.EndHour,
             EndMinutes = sessionModel.EndMinutes,
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.DateAndTime)!,
+            PostLink = Url.RouteUrl(RouteNames.CreateEvent.DateAndTime)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }

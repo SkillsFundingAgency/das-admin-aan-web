@@ -23,7 +23,7 @@ public class LocationController : Controller
     }
 
     [HttpGet]
-    [Route("events/new/location", Name = RouteNames.ManageEvent.Location)]
+    [Route("events/new/location", Name = RouteNames.CreateEvent.Location)]
     [Route("events/{calendarEventId}/location", Name = RouteNames.UpdateEvent.UpdateLocation)]
     public IActionResult Get()
     {
@@ -33,7 +33,7 @@ public class LocationController : Controller
     }
 
     [HttpPost]
-    [Route("events/new/location", Name = RouteNames.ManageEvent.Location)]
+    [Route("events/new/location", Name = RouteNames.CreateEvent.Location)]
     [Route("events/{calendarEventId}/location", Name = RouteNames.UpdateEvent.UpdateLocation)]
     public IActionResult Post(LocationViewModel submitModel)
     {
@@ -63,12 +63,12 @@ public class LocationController : Controller
 
         if (sessionModel.HasSeenPreview)
         {
-            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+            return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
         }
 
         return RedirectToRoute(submitModel.ShowLocationDropdown
-                ? RouteNames.ManageEvent.IsAtSchool
-                : RouteNames.ManageEvent.OrganiserDetails);
+                ? RouteNames.CreateEvent.IsAtSchool
+                : RouteNames.CreateEvent.OrganiserDetails);
     }
 
     private LocationViewModel GetViewModel(EventSessionModel sessionModel)
@@ -84,10 +84,10 @@ public class LocationController : Controller
         else
         {
             cancelLink = Url.RouteUrl(sessionModel!.HasSeenPreview
-                ? RouteNames.ManageEvent.CheckYourAnswers
+                ? RouteNames.CreateEvent.CheckYourAnswers
                 : RouteNames.NetworkEvents)!;
 
-            postLink = Url.RouteUrl(RouteNames.ManageEvent.Location)!;
+            postLink = Url.RouteUrl(RouteNames.CreateEvent.Location)!;
         }
 
         return new LocationViewModel
