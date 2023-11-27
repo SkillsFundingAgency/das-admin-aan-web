@@ -537,3 +537,16 @@ a.das-show-hide__button {
   position: relative;
   font-size: 19px;
 }
+
+.app-tag--Apprentice {
+  background-color: #00703c;
+}
+
+.app-tag--Employer {
+  background-color: #4c2c92;
+}
+
+.app-tag--RegionalChair {
+  background-color: #5694ca;
+}
+
