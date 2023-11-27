@@ -24,6 +24,7 @@ public class CalendarEventControllerTests
     private static readonly string CalendarEventUrl = Guid.NewGuid().ToString();
     private static readonly string EventFormatUrl = Guid.NewGuid().ToString();
     private static readonly string EventLocationUrl = Guid.NewGuid().ToString();
+    private static readonly string EventDateAndTimeUrl = Guid.NewGuid().ToString();
 
     private Mock<IOuterApiClient> _outerApiMock = null!;
     private readonly Guid _calendarEventId = Guid.NewGuid();
@@ -97,7 +98,6 @@ public class CalendarEventControllerTests
         vm.EventRegion.Should().Be(regionName);
         vm.EventType.Should().Be(calendarName);
         vm.PostLink.Should().Be("#");
-        vm.EventDateTimeLink.Should().Be("#");
         vm.EventDescriptionLink.Should().Be("#");
         vm.HasGuestSpeakersLink.Should().Be("#");
         vm.GuestSpeakersListLink.Should().Be("#");
@@ -167,7 +167,6 @@ public class CalendarEventControllerTests
         vm.EventType.Should().Be(CalendarName);
         vm.PostLink.Should().Be("#");
         vm.PreviewLink.Should().Be(UpdateEventUrl);
-        vm.EventDateTimeLink.Should().Be("#");
         vm.EventDescriptionLink.Should().Be("#");
         vm.HasGuestSpeakersLink.Should().Be("#");
         vm.GuestSpeakersListLink.Should().Be("#");
@@ -217,6 +216,25 @@ public class CalendarEventControllerTests
         Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
         var vm = actualResult.Model as ReviewEventViewModel;
         vm!.EventLocationLink.Should().Be(EventLocationUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void GetCalendarEvent_EventDateAndTimeLink_ReturnsExpectedLink(Guid memberId)
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
+        sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
+
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateDateAndTime, EventDateAndTimeUrl);
+
+        var result = sut.Get(_calendarEventId, new CancellationToken());
+        var actualResult = result.Result as ViewResult;
+
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
+        vm!.EventDateTimeLink.Should().Be(EventDateAndTimeUrl);
     }
 
     [Test]

@@ -11,7 +11,6 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/dateandtime", Name = RouteNames.CreateEvent.DateAndTime)]
 public class EventDateAndTimeController : Controller
 {
     private readonly ISessionService _sessionService;
@@ -26,6 +25,8 @@ public class EventDateAndTimeController : Controller
 
     [Authorize(Roles = Roles.ManageEventsRole)]
     [HttpGet]
+    [Route("events/new/dateandtime", Name = RouteNames.CreateEvent.DateAndTime)]
+    [Route("events/{calendarEventId}/dateandtime", Name = RouteNames.UpdateEvent.UpdateDateAndTime)]
     public IActionResult Get()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -34,6 +35,8 @@ public class EventDateAndTimeController : Controller
     }
 
     [HttpPost]
+    [Route("events/new/dateandtime", Name = RouteNames.CreateEvent.DateAndTime)]
+    [Route("events/{calendarEventId}/dateandtime", Name = RouteNames.UpdateEvent.UpdateDateAndTime)]
     public IActionResult Post(EventDateAndTimeViewModel submitModel)
     {
         var result = _validator.Validate(submitModel);
@@ -52,6 +55,11 @@ public class EventDateAndTimeController : Controller
         sessionModel.EndMinutes = submitModel.EndMinutes;
         _sessionService.Set(sessionModel);
 
+        if (sessionModel.IsAlreadyPublished)
+        {
+            return RedirectToRoute(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+        }
+
         if (sessionModel.HasSeenPreview)
         {
             return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
@@ -62,12 +70,23 @@ public class EventDateAndTimeController : Controller
 
     private EventDateAndTimeViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+        string cancelLink;
+        string postLink;
 
-        if (sessionModel.HasSeenPreview)
+        if (sessionModel.IsAlreadyPublished)
         {
-            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId })!;
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateDateAndTime, new { sessionModel.CalendarEventId })!;
         }
+        else
+        {
+            cancelLink = Url.RouteUrl(sessionModel!.HasSeenPreview
+                ? RouteNames.CreateEvent.CheckYourAnswers
+                : RouteNames.NetworkEvents)!;
+
+            postLink = Url.RouteUrl(RouteNames.CreateEvent.DateAndTime)!;
+        }
+
         return new EventDateAndTimeViewModel
         {
             DateOfEvent = sessionModel.DateOfEvent,
@@ -76,8 +95,8 @@ public class EventDateAndTimeController : Controller
             EndHour = sessionModel.EndHour,
             EndMinutes = sessionModel.EndMinutes,
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.CreateEvent.DateAndTime)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle
+            PostLink = postLink,
+            PageTitle = sessionModel.PageTitle
         };
     }
 }

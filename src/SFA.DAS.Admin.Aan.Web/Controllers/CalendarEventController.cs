@@ -90,7 +90,7 @@ public class CalendarEventController : Controller
         model.EventFormatLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateEventFormat, new { sessionModel.CalendarEventId })!;
         model.EventLocationLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateLocation, new { sessionModel.CalendarEventId })!;
         model.EventTypeLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateEventType, new { sessionModel.CalendarEventId })!;
-        model.EventDateTimeLink = "#";
+        model.EventDateTimeLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateDateAndTime, new { sessionModel.CalendarEventId })!;
         model.EventDescriptionLink = "#";
         model.HasGuestSpeakersLink = "#";
         model.GuestSpeakersListLink = "#";
