@@ -189,6 +189,34 @@ public class EventFormatControllerTests
         result.RouteValues!["CalendarEventId"].Should().Be(calendarEventId);
     }
 
+    [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrue_RedirectsToUpdateLocation()
+    {
+        var calendarEventId = Guid.NewGuid();
+        var eventFormat = EventFormat.Hybrid;
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventFormatViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventFormatViewModel { EventFormat = eventFormat };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new EventFormatController(sessionServiceMock.Object, validatorMock.Object);
+
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
+        result.RouteName.Should().Be(RouteNames.UpdateEvent.UpdateLocation);
+        result.RouteValues!["CalendarEventId"].Should().Be(calendarEventId);
+    }
+
     [Test]
     public void Post_EventFormat_HasSeenPreview_False_RedirectsToEventType()
     {
