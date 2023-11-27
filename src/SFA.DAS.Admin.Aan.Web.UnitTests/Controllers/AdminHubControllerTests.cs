@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Aan.SharedUi.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Controllers;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -11,6 +12,7 @@ namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
 public class AdminHubControllerTests
 {
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
+    private static readonly string NetworkDirectoryUrl = Guid.NewGuid().ToString();
     private AdminHubViewModel _viewModel = null!;
 
     [SetUp]
@@ -20,7 +22,8 @@ public class AdminHubControllerTests
         sut
             .AddControllerContextWithAllRoles()
             .AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+            .AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl)
+            .AddUrlForRoute(SharedRouteNames.NetworkDirectory, NetworkDirectoryUrl);
 
         //action
         var actualResult = sut.Index();
@@ -36,7 +39,7 @@ public class AdminHubControllerTests
     [Test]
     public void GetAdminHub_HasManageAmbassadorsUrl()
     {
-        _viewModel.ManageAmbassadorsUrl.Should().Be("#");
+        _viewModel.ManageAmbassadorsUrl.Should().Be(NetworkDirectoryUrl);
     }
 
     [Test]
