@@ -3,6 +3,7 @@ using FluentAssertions;
 using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Aan.SharedUi.Models;
 using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
+using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
@@ -69,6 +70,14 @@ public class EventSessionModelTests
                 minutes!.Value, 0);
             vm.End.Should().Be(expectedDate);
         }
+    }
+
+    [TestCase(false, CreateEvent.PageTitle)]
+    [TestCase(true, UpdateEvent.PageTitle)]
+    public void SessionModel_ContainsExpectedPageTitle(bool isAlreadyPublished, string pageTitle)
+    {
+        var vm = new EventSessionModel { IsAlreadyPublished = isAlreadyPublished };
+        vm.PageTitle.Should().Be(pageTitle);
     }
 
     [TestCase(true)]
