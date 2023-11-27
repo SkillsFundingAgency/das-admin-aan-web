@@ -12,6 +12,7 @@ using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using Calendar = SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Calendar;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
 
@@ -40,6 +41,46 @@ public class CalendarEventControllerTests
     public void Setup()
     {
         var calendars = new List<CalendarDetail>
+        {
+            new() {CalendarName= CalendarName,EffectiveFrom = DateTime.MinValue, EffectiveTo = null,Ordering = 1, Id=CalendarId}
+        };
+        var regionsResult = new GetRegionsResult
+        {
+            Regions = new List<Region>
+            {
+                new(RegionId, RegionName, 1)
+            }
+        };
+
+        _outerApiMock = new Mock<IOuterApiClient>();
+        _outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
+        _outerApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
+        _outerApiMock.Setup(x => x.GetCalendarEvent(It.IsAny<Guid>(), _calendarEventId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(
+                new GetCalendarEventQueryResult
+                {
+                    CalendarEventId = _calendarEventId,
+                    RegionName = RegionName,
+                    CalendarName = CalendarName,
+                    EventGuests = new List<EventGuestModel>(),
+                    CalendarId = CalendarId,
+                    RegionId = RegionId
+                });
+    }
+
+    private Mock<IOuterApiClient> _outerApiMock = null!;
+    private readonly Guid _calendarEventId = Guid.NewGuid();
+
+    private static readonly string CalendarName = "cal 1";
+    private static readonly int CalendarId = 1;
+    private static readonly string RegionName = "East Midlands";
+
+    private static readonly int RegionId = 1;
+
+    [SetUp]
+    public void Setup()
+    {
+        var calendars = new List<Calendar>
         {
             new() {CalendarName= CalendarName,EffectiveFrom = DateTime.MinValue, EffectiveTo = null,Ordering = 1, Id=CalendarId}
         };
@@ -254,7 +295,6 @@ public class CalendarEventControllerTests
         var vm = actualResult.Model as ReviewEventViewModel;
         vm!.EventDescriptionLink.Should().Be(EventDescriptionUrl);
     }
-
     [Test]
     public void PostCalendarEvent_RedirectToManageEvents()
     {
