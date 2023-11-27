@@ -36,5 +36,7 @@ public static class RouteNames
     public static class UpdateEvent
     {
         public const string UpdatePreviewEvent = nameof(UpdatePreviewEvent);
+        public const string UpdateEventFormat = nameof(UpdateEventFormat);
+        public const string UpdateLocation = nameof(UpdateLocation);
     }
 }

@@ -2,7 +2,6 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -11,7 +10,6 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/format", Name = RouteNames.ManageEvent.EventFormat)]
 public class EventFormatController : Controller
 {
     public const string ViewPath = "~/Views/ManageEvent/EventFormat.cshtml";
@@ -25,6 +23,8 @@ public class EventFormatController : Controller
     }
 
     [HttpGet]
+    [Route("events/new/format", Name = RouteNames.ManageEvent.EventFormat)]
+    [Route("events/{calendarEventId}/format", Name = RouteNames.UpdateEvent.UpdateEventFormat)]
     public IActionResult Get()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -33,6 +33,8 @@ public class EventFormatController : Controller
     }
 
     [HttpPost]
+    [Route("events/new/format", Name = RouteNames.ManageEvent.EventFormat)]
+    [Route("events/{calendarEventId}/format", Name = RouteNames.UpdateEvent.UpdateEventFormat)]
     public IActionResult Post(EventFormatViewModel submitModel)
     {
         var result = _validator.Validate(submitModel);
@@ -47,6 +49,12 @@ public class EventFormatController : Controller
         sessionModel.EventFormat = submitModel.EventFormat;
 
         _sessionService.Set(sessionModel);
+
+        if (sessionModel.IsAlreadyPublished)
+        {
+            return RedirectToRoute(RouteNames.UpdateEvent.UpdateLocation, new { sessionModel.CalendarEventId });
+        }
+
         if (sessionModel.HasSeenPreview)
         {
             return RedirectToRoute(RouteNames.ManageEvent.Location);
@@ -61,15 +69,25 @@ public class EventFormatController : Controller
         {
             EventFormat = sessionModel.EventFormat,
             CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!,
-            PageTitle = CreateEvent.PageTitle
+            PageTitle = sessionModel.PageTitle,
         };
 
-        if (sessionModel!.HasSeenPreview)
+        if (sessionModel.IsAlreadyPublished)
         {
-            model.CancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+            model.CancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+            model.PostLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateEventFormat,
+                new { sessionModel.CalendarEventId });
+        }
+        else
+        {
+            if (sessionModel!.HasSeenPreview)
+            {
+                model.CancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+            }
+
+            model.PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!;
         }
 
-        model.PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!;
         return model;
     }
 }

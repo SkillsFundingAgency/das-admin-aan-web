@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Aan.SharedUi.Models;
 using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
+using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 
@@ -53,6 +54,9 @@ public class EventSessionModel
     public Guid? CalendarEventId { get; set; }
     public bool IsAlreadyPublished { get; set; }
     public IEnumerable<AttendeeModel> Attendees { get; set; } = new List<AttendeeModel>();
+
+    public string PageTitle => IsAlreadyPublished ? UpdateEvent.PageTitle : CreateEvent.PageTitle;
+
     public DateTime? Start
     {
         get
