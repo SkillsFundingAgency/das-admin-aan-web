@@ -10,7 +10,6 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/description", Name = RouteNames.CreateEvent.Description)]
 public class EventDescriptionController : Controller
 {
     private readonly ISessionService _sessionService;
@@ -24,6 +23,8 @@ public class EventDescriptionController : Controller
     }
 
     [HttpGet]
+    [Route("events/new/description", Name = RouteNames.CreateEvent.Description)]
+    [Route("events/{calendarEventId}/description", Name = RouteNames.UpdateEvent.UpdateDescription)]
     public IActionResult Get()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -32,6 +33,8 @@ public class EventDescriptionController : Controller
     }
 
     [HttpPost]
+    [Route("events/new/description", Name = RouteNames.CreateEvent.Description)]
+    [Route("events/{calendarEventId}/description", Name = RouteNames.UpdateEvent.UpdateDescription)]
     public IActionResult Post(EventDescriptionViewModel submitModel)
     {
 
@@ -47,7 +50,13 @@ public class EventDescriptionController : Controller
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.EventOutline = submitModel.EventOutline?.Trim();
         sessionModel.EventSummary = submitModel.EventSummary?.Trim();
+
         _sessionService.Set(sessionModel);
+
+        if (sessionModel.IsAlreadyPublished)
+        {
+            return RedirectToRoute(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+        }
 
         if (sessionModel.HasSeenPreview)
         {
@@ -59,11 +68,21 @@ public class EventDescriptionController : Controller
 
     private EventDescriptionViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+        string cancelLink;
+        string postLink;
 
-        if (sessionModel.HasSeenPreview)
+        if (sessionModel.IsAlreadyPublished)
         {
-            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId })!;
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateDescription, new { sessionModel.CalendarEventId })!;
+        }
+        else
+        {
+            cancelLink = Url.RouteUrl(sessionModel!.HasSeenPreview
+                ? RouteNames.CreateEvent.CheckYourAnswers
+                : RouteNames.NetworkEvents)!;
+
+            postLink = Url.RouteUrl(RouteNames.CreateEvent.Description)!;
         }
 
         return new EventDescriptionViewModel
@@ -71,8 +90,8 @@ public class EventDescriptionController : Controller
             EventOutline = sessionModel.EventOutline?.Trim(),
             EventSummary = sessionModel.EventSummary?.Trim(),
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle
+            PostLink = postLink,
+            PageTitle = sessionModel.PageTitle
         };
     }
 }

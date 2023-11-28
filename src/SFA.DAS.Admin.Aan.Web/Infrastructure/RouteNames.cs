@@ -40,5 +40,6 @@ public static class RouteNames
         public const string UpdateLocation = nameof(UpdateLocation);
         public const string UpdateEventType = nameof(UpdateEventType);
         public const string UpdateDateAndTime = nameof(UpdateDateAndTime);
+        public const string UpdateDescription = nameof(UpdateDescription);
     }
 }
