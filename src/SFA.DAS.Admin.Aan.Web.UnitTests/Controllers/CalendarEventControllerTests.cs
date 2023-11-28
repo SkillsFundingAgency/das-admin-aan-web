@@ -278,6 +278,25 @@ public class CalendarEventControllerTests
     }
 
     [Test, MoqAutoData]
+    public void GetCalendarEvent_EventDescriptionLink_ReturnsExpectedLink(Guid memberId)
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
+        sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
+
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateDescription, EventDescriptionUrl);
+
+        var result = sut.Get(_calendarEventId, new CancellationToken());
+        var actualResult = result.Result as ViewResult;
+
+        Assert.That(actualResult!.Model, Is.TypeOf<ReviewEventViewModel>());
+        var vm = actualResult.Model as ReviewEventViewModel;
+        vm!.EventDescriptionLink.Should().Be(EventDescriptionUrl);
+    }
+
+    [Test, MoqAutoData]
     public void GetCalendarEvent_EventDateAndTimeLink_ReturnsExpectedLink(Guid memberId)
     {
         var sessionServiceMock = new Mock<ISessionService>();
