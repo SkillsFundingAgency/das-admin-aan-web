@@ -142,7 +142,7 @@ public class NetworkEventsController : Controller
         return new PaginationViewModel(result.Page, result.PageSize, result.TotalPages, filterUrl);
     }
 
-    private static EventFilterChoices PopulateFilterChoices(GetNetworkEventsRequest request, IEnumerable<Calendar> calendars, IEnumerable<Region> regions)
+    private static EventFilterChoices PopulateFilterChoices(GetNetworkEventsRequest request, IEnumerable<CalendarDetail> calendars, IEnumerable<Region> regions)
         => new()
         {
             FromDate = request.FromDate,

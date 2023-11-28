@@ -185,7 +185,7 @@ public class EventDateAndTimeControllerTests
     }
 
     [Test, MoqAutoData]
-    public void Post_IsAlreadyPublishedTrue_RedirectsToUpdateDateAndTime()
+    public void Post_IsAlreadyPublishedTrue_RedirectsToCalendarEvent()
     {
         var calendarEventId = Guid.NewGuid();
         var sessionServiceMock = new Mock<ISessionService>();

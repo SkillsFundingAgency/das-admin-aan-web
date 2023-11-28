@@ -4,6 +4,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
@@ -11,7 +12,6 @@ using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using Calendar = SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Calendar;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent;
 
@@ -34,7 +34,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_ReturnsApiResponse(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
 
@@ -69,7 +69,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_HasSeenPreviewFalse_SettingToTrue(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
 
@@ -102,9 +102,9 @@ public class CheckYourAnswersControllerTests
     {
         var outerAPiMock = new Mock<IOuterApiClient>();
         var validatorMock = new Mock<IValidator<ReviewEventViewModel>>();
-        var calendars = new List<Calendar>
+        var calendars = new List<CalendarDetail>
         {
-            new Calendar {CalendarName = "cal 1", Id = 1}
+            new() {CalendarName = "cal 1", Id = 1}
         };
 
         var regionsResult = new GetRegionsResult
@@ -147,7 +147,7 @@ public class CheckYourAnswersControllerTests
     public void Post_ReturnsExpectedPostLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
 
@@ -190,7 +190,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_ReturnsExpectedEventFormatLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
 
@@ -221,7 +221,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_ReturnsExpectedEventLocationLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
 
@@ -252,7 +252,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_ReturnsExpectedEventTypeLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
 
@@ -283,7 +283,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_ReturnsExpectedEventDateAndTimeLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
 
@@ -314,7 +314,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_ReturnsExpectedEventDescriptionLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
 
@@ -345,7 +345,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_ReturnsExpectedPreviewLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
 
@@ -376,7 +376,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_ReturnsExpectedHasGuestSpeakersLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
         outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
@@ -406,7 +406,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_ReturnsExpectedOrganiserDetailsLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
         outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
@@ -436,7 +436,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_ReturnsExpectedIsAtSchoolLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
         outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
@@ -467,7 +467,7 @@ public class CheckYourAnswersControllerTests
     public void GetCheckYourAnswers_ReturnsExpectedSchoolNameLink(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
         outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
@@ -498,7 +498,7 @@ public class CheckYourAnswersControllerTests
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        List<Calendar> calendars,
+        List<CalendarDetail> calendars,
         GetRegionsResult regionsResult)
     {
         outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);

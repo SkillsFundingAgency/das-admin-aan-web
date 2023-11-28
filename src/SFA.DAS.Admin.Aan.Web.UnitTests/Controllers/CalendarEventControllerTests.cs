@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Aan.SharedUi.Models;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.Services;
@@ -11,7 +12,6 @@ using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using Calendar = SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Calendar;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
 
@@ -39,7 +39,7 @@ public class CalendarEventControllerTests
     [SetUp]
     public void Setup()
     {
-        var calendars = new List<Calendar>
+        var calendars = new List<CalendarDetail>
         {
             new() {CalendarName= CalendarName,EffectiveFrom = DateTime.MinValue, EffectiveTo = null,Ordering = 1, Id=CalendarId}
         };

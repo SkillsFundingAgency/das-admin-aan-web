@@ -191,7 +191,7 @@ public class EventDescriptionControllerTests
     }
 
     [Test, MoqAutoData]
-    public void Post_IsAlreadyPublishedTrue_RedirectsToUpdateDescription()
+    public void Post_IsAlreadyPublishedTrue_RedirectsToCalendarEvent()
     {
         var calendarEventId = Guid.NewGuid();
         var sessionServiceMock = new Mock<ISessionService>();

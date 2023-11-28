@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 
-public class Calendar
+public class CalendarDetail
 {
     public int Id { get; set; }
     public string CalendarName { get; set; } = string.Empty;
