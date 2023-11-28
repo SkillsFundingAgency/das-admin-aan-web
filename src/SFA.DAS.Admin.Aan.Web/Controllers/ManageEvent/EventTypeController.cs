@@ -10,7 +10,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/type", Name = RouteNames.ManageEvent.EventType)]
+[Route("events/new/type", Name = RouteNames.CreateEvent.EventType)]
 public class EventTypeController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
@@ -54,10 +54,10 @@ public class EventTypeController : Controller
 
         if (sessionModel.HasSeenPreview)
         {
-            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+            return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
         }
 
-        return RedirectToRoute(RouteNames.ManageEvent.Description);
+        return RedirectToRoute(RouteNames.CreateEvent.Description);
     }
 
     private async Task<EventTypeViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
@@ -81,7 +81,7 @@ public class EventTypeController : Controller
 
         if (sessionModel.HasSeenPreview)
         {
-            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
         }
 
         regionsWithNational.Add(new RegionSelection("National", 0));
@@ -93,7 +93,7 @@ public class EventTypeController : Controller
             EventTypes = eventTypeDropdown.ToList(),
             EventRegions = regionsWithNational,
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventType)!,
+            PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventType)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }

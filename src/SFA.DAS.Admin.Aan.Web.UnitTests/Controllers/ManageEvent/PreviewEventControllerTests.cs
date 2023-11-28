@@ -40,7 +40,7 @@ internal class PreviewEventControllerTests
 
         var sut = new PreviewEventController(outerAPiMock.Object, sessionServiceMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
 
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;

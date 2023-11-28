@@ -36,7 +36,7 @@ public class GuestSpeakersControllerAddDeleteTests
 
         var sut = new GuestSpeakersController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.GuestSpeakerList, GuestSpeakerListUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.GuestSpeakerList, GuestSpeakerListUrl);
         var actualResult = sut.GetAddGuestSpeaker();
         var viewResult = actualResult.As<ViewResult>();
 
@@ -63,7 +63,7 @@ public class GuestSpeakersControllerAddDeleteTests
 
         var sut = new GuestSpeakersController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.GuestSpeakerAdd, GuestSpeakerAddUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.GuestSpeakerAdd, GuestSpeakerAddUrl);
         var actualResult = sut.GetAddGuestSpeaker();
         var viewResult = actualResult.As<ViewResult>();
 
@@ -100,7 +100,7 @@ public class GuestSpeakersControllerAddDeleteTests
         var sut = new GuestSpeakersController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
 
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.GuestSpeakerList, GuestSpeakerListUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.GuestSpeakerList, GuestSpeakerListUrl);
 
         var result = (RedirectToRouteResult)sut.PostAddGuestSpeaker(submitModel);
 
@@ -120,7 +120,7 @@ public class GuestSpeakersControllerAddDeleteTests
         sessionServiceMock.Verify(s =>
             s.Set(It.Is<EventSessionModel>(x => x.GuestSpeakers.Last().Id == idInCurrentList + 1)));
 
-        result.RouteName.Should().Be(RouteNames.ManageEvent.GuestSpeakerList);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.GuestSpeakerList);
     }
 
     [Test, MoqAutoData]
@@ -156,7 +156,7 @@ public class GuestSpeakersControllerAddDeleteTests
         guestSpeakerList.Add(guestSpeakerToRemove);
         guestSpeakerList.Add(new GuestSpeaker("Charlie Chaplin", "Bottle Washer", idSecond));
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.GuestSpeakerList, GuestSpeakerListUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.GuestSpeakerList, GuestSpeakerListUrl);
 
         var sessionModel = new EventSessionModel { GuestSpeakers = guestSpeakerList };
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -165,7 +165,7 @@ public class GuestSpeakersControllerAddDeleteTests
         var result = actualResult.As<RedirectToRouteResult>();
 
         sut.ModelState.IsValid.Should().BeTrue();
-        result.RouteName.Should().Be(RouteNames.ManageEvent.GuestSpeakerList);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.GuestSpeakerList);
 
         sessionServiceMock.Verify(s =>
             s.Set(It.Is<EventSessionModel>(x => x.GuestSpeakers.Count == 2)));

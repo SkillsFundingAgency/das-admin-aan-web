@@ -10,7 +10,6 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/location", Name = RouteNames.ManageEvent.Location)]
 public class LocationController : Controller
 {
     public const string ViewPath = "~/Views/ManageEvent/Location.cshtml";
@@ -24,6 +23,8 @@ public class LocationController : Controller
     }
 
     [HttpGet]
+    [Route("events/new/location", Name = RouteNames.CreateEvent.Location)]
+    [Route("events/{calendarEventId}/location", Name = RouteNames.UpdateEvent.UpdateLocation)]
     public IActionResult Get()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -32,6 +33,8 @@ public class LocationController : Controller
     }
 
     [HttpPost]
+    [Route("events/new/location", Name = RouteNames.CreateEvent.Location)]
+    [Route("events/{calendarEventId}/location", Name = RouteNames.UpdateEvent.UpdateLocation)]
     public IActionResult Post(LocationViewModel submitModel)
     {
         var result = _validator.Validate(submitModel);
@@ -53,21 +56,38 @@ public class LocationController : Controller
 
         _sessionService.Set(sessionModel);
 
-        if (sessionModel.HasSeenPreview)
+        if (sessionModel.IsAlreadyPublished)
         {
-            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+            return RedirectToRoute(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
         }
 
-        return RedirectToRoute(submitModel.ShowLocationDropdown ? RouteNames.ManageEvent.IsAtSchool : RouteNames.ManageEvent.OrganiserDetails);
+        if (sessionModel.HasSeenPreview)
+        {
+            return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
+        }
+
+        return RedirectToRoute(submitModel.ShowLocationDropdown
+                ? RouteNames.CreateEvent.IsAtSchool
+                : RouteNames.CreateEvent.OrganiserDetails);
     }
 
     private LocationViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+        string cancelLink;
+        string postLink;
 
-        if (sessionModel.HasSeenPreview)
+        if (sessionModel.IsAlreadyPublished)
         {
-            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId })!;
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateLocation, new { sessionModel.CalendarEventId })!;
+        }
+        else
+        {
+            cancelLink = Url.RouteUrl(sessionModel!.HasSeenPreview
+                ? RouteNames.CreateEvent.CheckYourAnswers
+                : RouteNames.NetworkEvents)!;
+
+            postLink = Url.RouteUrl(RouteNames.CreateEvent.Location)!;
         }
 
         return new LocationViewModel
@@ -76,8 +96,8 @@ public class LocationController : Controller
             SearchResult = sessionModel.Location,
             OnlineEventLink = sessionModel.EventLink,
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.Location)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle
+            PostLink = postLink,
+            PageTitle = sessionModel.PageTitle
         };
     }
 }

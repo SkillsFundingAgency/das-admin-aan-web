@@ -28,7 +28,7 @@ public class SchoolEventController : Controller
     }
 
     [HttpGet]
-    [Route("question", Name = RouteNames.ManageEvent.IsAtSchool)]
+    [Route("question", Name = RouteNames.CreateEvent.IsAtSchool)]
     public IActionResult GetEventIsAtSchool()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -37,7 +37,7 @@ public class SchoolEventController : Controller
     }
 
     [HttpPost]
-    [Route("question", Name = RouteNames.ManageEvent.IsAtSchool)]
+    [Route("question", Name = RouteNames.CreateEvent.IsAtSchool)]
     public IActionResult PostIsAtSchool(IsAtSchoolViewModel submitModel)
     {
         var result = _eventAtSchoolValidator.Validate(submitModel);
@@ -54,18 +54,18 @@ public class SchoolEventController : Controller
         sessionModel.IsDirectCallFromCheckYourAnswers = false;
         _sessionService.Set(sessionModel);
 
-        if (sessionModel.IsAtSchool == true) return RedirectToRoute(RouteNames.ManageEvent.SchoolName);
+        if (sessionModel.IsAtSchool == true) return RedirectToRoute(RouteNames.CreateEvent.SchoolName);
 
         if (sessionModel.HasSeenPreview)
         {
-            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+            return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
         }
 
-        return RedirectToRoute(RouteNames.ManageEvent.OrganiserDetails);
+        return RedirectToRoute(RouteNames.CreateEvent.OrganiserDetails);
     }
 
     [HttpGet]
-    [Route("name", Name = RouteNames.ManageEvent.SchoolName)]
+    [Route("name", Name = RouteNames.CreateEvent.SchoolName)]
     public IActionResult GetSchoolName()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -74,7 +74,7 @@ public class SchoolEventController : Controller
     }
 
     [HttpPost]
-    [Route("name", Name = RouteNames.ManageEvent.SchoolName)]
+    [Route("name", Name = RouteNames.CreateEvent.SchoolName)]
     public IActionResult PostSchoolName(SchoolNameViewModel submitModel)
     {
         var result = _eventSchoolNameValidator.Validate(submitModel);
@@ -93,10 +93,10 @@ public class SchoolEventController : Controller
 
         if (sessionModel.HasSeenPreview)
         {
-            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+            return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
         }
 
-        return RedirectToRoute(RouteNames.ManageEvent.OrganiserDetails);
+        return RedirectToRoute(RouteNames.CreateEvent.OrganiserDetails);
     }
 
     private IsAtSchoolViewModel GetViewModelEventIsAtSchool(EventSessionModel sessionModel)
@@ -105,14 +105,14 @@ public class SchoolEventController : Controller
 
         if (sessionModel.HasSeenPreview)
         {
-            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
         }
 
         return new IsAtSchoolViewModel
         {
             IsAtSchool = sessionModel?.IsAtSchool,
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.IsAtSchool)!,
+            PostLink = Url.RouteUrl(RouteNames.CreateEvent.IsAtSchool)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }
@@ -125,14 +125,14 @@ public class SchoolEventController : Controller
 
         if (sessionModel!.HasSeenPreview)
         {
-            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
         }
 
         return new SchoolNameViewModel
         {
             SearchResult = searchResult,
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.SchoolName)!,
+            PostLink = Url.RouteUrl(RouteNames.CreateEvent.SchoolName)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle,
             DirectCallFromCheckYourAnswers = sessionModel.IsDirectCallFromCheckYourAnswers,
             HasSeenPreview = sessionModel.HasSeenPreview

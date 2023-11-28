@@ -35,7 +35,7 @@ public class NumberOfAttendeesControllerTests
     public void Get_ReturnsExpectedPostLink(
         [Greedy] NumberOfAttendeesController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.NumberOfAttendees, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.NumberOfAttendees, PostUrl);
         var result = (ViewResult)sut.Get();
         Assert.That(result.Model, Is.TypeOf<NumberOfAttendeesViewModel>());
         var vm = result.Model as NumberOfAttendeesViewModel;
@@ -57,7 +57,7 @@ public class NumberOfAttendeesControllerTests
 
         var sut = new NumberOfAttendeesController(sessionServiceMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
         var actualResult = sut.Get();
         var result = actualResult.As<ViewResult>();
 
@@ -95,7 +95,7 @@ public class NumberOfAttendeesControllerTests
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m
             => m.PlannedAttendees == numberOfAttendees)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
     [Test, MoqAutoData]

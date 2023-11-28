@@ -12,7 +12,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/check-your-answers", Name = RouteNames.ManageEvent.CheckYourAnswers)]
+[Route("events/new/check-your-answers", Name = RouteNames.CreateEvent.CheckYourAnswers)]
 public class CheckYourAnswersController : Controller
 {
     private readonly IOuterApiClient _outerApiClient;
@@ -65,7 +65,7 @@ public class CheckYourAnswersController : Controller
 
         _sessionService.Delete(nameof(EventSessionModel));
 
-        return RedirectToRoute(RouteNames.ManageEvent.EventPublished, new { eventId = calendarEventResponse.CalendarEventId });
+        return RedirectToRoute(RouteNames.CreateEvent.EventPublished, new { eventId = calendarEventResponse.CalendarEventId });
     }
 
     private async Task<ReviewEventViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
@@ -84,21 +84,21 @@ public class CheckYourAnswersController : Controller
         model.PageTitle = CreateEvent.PageTitle;
         model.CancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
         model.PostLink = "#";
-        model.PreviewLink = Url.RouteUrl(RouteNames.ManageEvent.PreviewEvent)!;
+        model.PreviewLink = Url.RouteUrl(RouteNames.CreateEvent.PreviewEvent)!;
         model.EventType = eventTypes.First(x => x.Id == sessionModel.CalendarId).CalendarName;
         model.EventRegion = regions.First(x => x.RegionId == sessionModel.RegionId).Name;
 
-        model.EventFormatLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!;
-        model.EventLocationLink = Url.RouteUrl(RouteNames.ManageEvent.Location)!;
-        model.EventTypeLink = Url.RouteUrl(RouteNames.ManageEvent.EventType)!;
-        model.EventDateTimeLink = Url.RouteUrl(RouteNames.ManageEvent.DateAndTime)!;
-        model.EventDescriptionLink = Url.RouteUrl(RouteNames.ManageEvent.Description)!;
-        model.HasGuestSpeakersLink = Url.RouteUrl(RouteNames.ManageEvent.HasGuestSpeakers)!;
-        model.GuestSpeakersListLink = Url.RouteUrl(RouteNames.ManageEvent.GuestSpeakerList)!;
-        model.OrganiserDetailsLink = Url.RouteUrl(RouteNames.ManageEvent.OrganiserDetails)!;
-        model.IsAtSchoolLink = Url.RouteUrl(RouteNames.ManageEvent.IsAtSchool)!;
-        model.SchoolNameLink = Url.RouteUrl(RouteNames.ManageEvent.SchoolName)!;
-        model.NumberOfAttendeesLink = Url.RouteUrl(RouteNames.ManageEvent.NumberOfAttendees)!;
+        model.EventFormatLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!;
+        model.EventLocationLink = Url.RouteUrl(RouteNames.CreateEvent.Location)!;
+        model.EventTypeLink = Url.RouteUrl(RouteNames.CreateEvent.EventType)!;
+        model.EventDateTimeLink = Url.RouteUrl(RouteNames.CreateEvent.DateAndTime)!;
+        model.EventDescriptionLink = Url.RouteUrl(RouteNames.CreateEvent.Description)!;
+        model.HasGuestSpeakersLink = Url.RouteUrl(RouteNames.CreateEvent.HasGuestSpeakers)!;
+        model.GuestSpeakersListLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerList)!;
+        model.OrganiserDetailsLink = Url.RouteUrl(RouteNames.CreateEvent.OrganiserDetails)!;
+        model.IsAtSchoolLink = Url.RouteUrl(RouteNames.CreateEvent.IsAtSchool)!;
+        model.SchoolNameLink = Url.RouteUrl(RouteNames.CreateEvent.SchoolName)!;
+        model.NumberOfAttendeesLink = Url.RouteUrl(RouteNames.CreateEvent.NumberOfAttendees)!;
         return model;
     }
 }

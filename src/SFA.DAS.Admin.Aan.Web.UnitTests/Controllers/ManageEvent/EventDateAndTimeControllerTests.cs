@@ -36,7 +36,7 @@ public class EventDateAndTimeControllerTests
     public void Get_ReturnsExpectedPostLink(
         [Greedy] EventDateAndTimeController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.DateAndTime, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.DateAndTime, PostUrl);
         var result = (ViewResult)sut.Get();
         Assert.That(result.Model, Is.TypeOf<EventDateAndTimeViewModel>());
         var vm = result.Model as EventDateAndTimeViewModel;
@@ -62,7 +62,7 @@ public class EventDateAndTimeControllerTests
 
         var sut = new EventDateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
         var actualResult = sut.Get();
         var result = actualResult.As<ViewResult>();
 
@@ -98,11 +98,11 @@ public class EventDateAndTimeControllerTests
 
         var sut = new EventDateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
         var actualResult = sut.Post(submitModel);
         var result = actualResult.As<RedirectToRouteResult>();
 
-        result.RouteName.Should().Be(RouteNames.ManageEvent.Location);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.Location);
     }
 
     [Test, MoqAutoData]
@@ -132,11 +132,11 @@ public class EventDateAndTimeControllerTests
 
         var sut = new EventDateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
         var actualResult = sut.Post(submitModel);
         var result = actualResult.As<RedirectToRouteResult>();
 
-        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
     [TestCase(12, 0, 13, 0)]
@@ -176,7 +176,7 @@ public class EventDateAndTimeControllerTests
                m.StartMinutes == startMinutes &&
                m.EndHour == endHour &&
                m.EndMinutes == endMinutes)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.Location);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.Location);
     }
 
     [Test, MoqAutoData]

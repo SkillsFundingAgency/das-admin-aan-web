@@ -12,7 +12,7 @@ public static class RouteNames
     public const string CalendarEvent = nameof(CalendarEvent);
 
 
-    public static class ManageEvent
+    public static class CreateEvent
     {
         public const string EventFormat = nameof(EventFormat);
         public const string EventType = nameof(EventType);
@@ -21,7 +21,7 @@ public static class RouteNames
         public const string GuestSpeakerList = nameof(GuestSpeakerList);
         public const string GuestSpeakerAdd = nameof(GuestSpeakerAdd);
         public const string GuestSpeakerDelete = nameof(GuestSpeakerDelete);
-        public const string CreateEvent = nameof(CreateEvent);
+        public const string CreateNewEvent = nameof(CreateNewEvent);
         public const string DateAndTime = nameof(DateAndTime);
         public const string Location = nameof(Location);
         public const string IsAtSchool = nameof(IsAtSchool);
@@ -36,5 +36,7 @@ public static class RouteNames
     public static class UpdateEvent
     {
         public const string UpdatePreviewEvent = nameof(UpdatePreviewEvent);
+        public const string UpdateEventFormat = nameof(UpdateEventFormat);
+        public const string UpdateLocation = nameof(UpdateLocation);
     }
 }

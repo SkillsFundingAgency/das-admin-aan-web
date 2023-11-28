@@ -72,7 +72,7 @@ public class EventTypeControllerTests
 
         var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
         var actualResult = sut.Get(new CancellationToken());
         var result = actualResult.Result.As<ViewResult>();
 
@@ -100,7 +100,7 @@ public class EventTypeControllerTests
 
         var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventType, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.EventType, PostUrl);
         var actualResult = sut.Get(new CancellationToken());
         var viewResult = actualResult.Result.As<ViewResult>();
 
@@ -136,7 +136,7 @@ public class EventTypeControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.EventTitle == eventTitle)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.Description);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.Description);
     }
 
     [Test]
@@ -172,7 +172,7 @@ public class EventTypeControllerTests
         var actualResult = sut.Post(submitModel, new CancellationToken());
         var result = actualResult.Result.As<RedirectToRouteResult>();
 
-        result.RouteName.Should().Be(RouteNames.ManageEvent.Description);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.Description);
     }
 
     [Test]
@@ -208,7 +208,7 @@ public class EventTypeControllerTests
         var actualResult = sut.Post(submitModel, new CancellationToken());
         var result = actualResult.Result.As<RedirectToRouteResult>();
 
-        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
     [Test, MoqAutoData]

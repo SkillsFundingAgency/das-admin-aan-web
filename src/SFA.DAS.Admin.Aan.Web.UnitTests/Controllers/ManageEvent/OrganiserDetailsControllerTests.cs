@@ -37,7 +37,7 @@ public class OrganiserDetailsControllerTests
     public void Get_ReturnsExpectedPostLink(
         [Greedy] OrganiserDetailsController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.OrganiserDetails, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.OrganiserDetails, PostUrl);
         var result = (ViewResult)sut.Get();
 
         Assert.That(result.Model, Is.TypeOf<OrganiserDetailsViewModel>());
@@ -59,7 +59,7 @@ public class OrganiserDetailsControllerTests
 
         var sut = new OrganiserDetailsController(sessionServiceMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
         var actualResult = sut.Get();
         var result = actualResult.As<ViewResult>();
 
@@ -94,7 +94,7 @@ public class OrganiserDetailsControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.ContactName == organiserName && m.ContactEmail == organiserEmail)));
-        result.RouteName.Should().Be(RouteNames.ManageEvent.NumberOfAttendees);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.NumberOfAttendees);
     }
 
     [Test]
@@ -114,7 +114,7 @@ public class OrganiserDetailsControllerTests
 
         var sut = new OrganiserDetailsController(sessionServiceMock.Object, validatorMock.Object);
         var result = (RedirectToRouteResult)sut.Post(submitModel);
-        result.RouteName.Should().Be(RouteNames.ManageEvent.NumberOfAttendees);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.NumberOfAttendees);
     }
 
     [Test]
@@ -133,7 +133,7 @@ public class OrganiserDetailsControllerTests
 
         var sut = new OrganiserDetailsController(sessionServiceMock.Object, validatorMock.Object);
         var result = (RedirectToRouteResult)sut.Post(submitModel);
-        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
     [Test, MoqAutoData]

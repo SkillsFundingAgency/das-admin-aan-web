@@ -175,14 +175,14 @@ public class CheckYourAnswersControllerTests
         var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, PostUrl);
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
         var response = sut.Post(new CancellationToken());
 
         var result = response.Result as RedirectToRouteResult;
         sut.ModelState.IsValid.Should().BeTrue();
-        result!.RouteName.Should().Be(RouteNames.ManageEvent.EventPublished);
+        result!.RouteName.Should().Be(RouteNames.CreateEvent.EventPublished);
         sessionServiceMock.Verify(s => s.Delete(nameof(EventSessionModel)));
     }
 
@@ -207,7 +207,7 @@ public class CheckYourAnswersControllerTests
 
         var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventFormat, EventFormatUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.EventFormat, EventFormatUrl);
 
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
@@ -238,7 +238,7 @@ public class CheckYourAnswersControllerTests
 
         var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.Location, EventLocationUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.Location, EventLocationUrl);
 
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
@@ -269,7 +269,7 @@ public class CheckYourAnswersControllerTests
 
         var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.EventType, EventTypeUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.EventType, EventTypeUrl);
 
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
@@ -300,7 +300,7 @@ public class CheckYourAnswersControllerTests
 
         var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.DateAndTime, EventDateAndTimeUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.DateAndTime, EventDateAndTimeUrl);
 
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
@@ -331,7 +331,7 @@ public class CheckYourAnswersControllerTests
 
         var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.Description, EventDescriptionUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.Description, EventDescriptionUrl);
 
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
@@ -362,7 +362,7 @@ public class CheckYourAnswersControllerTests
 
         var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.PreviewEvent, PreviewUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.PreviewEvent, PreviewUrl);
 
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
@@ -392,7 +392,7 @@ public class CheckYourAnswersControllerTests
 
         var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.HasGuestSpeakers, EventHasGuestSpeakersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.HasGuestSpeakers, EventHasGuestSpeakersUrl);
 
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
@@ -422,7 +422,7 @@ public class CheckYourAnswersControllerTests
 
         var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.OrganiserDetails, OrganiserDetailsUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.OrganiserDetails, OrganiserDetailsUrl);
 
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
@@ -452,7 +452,7 @@ public class CheckYourAnswersControllerTests
 
         var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.IsAtSchool, IsAtSchoolUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.IsAtSchool, IsAtSchoolUrl);
 
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;
@@ -483,7 +483,7 @@ public class CheckYourAnswersControllerTests
 
         var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.SchoolName, SchoolNameUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.SchoolName, SchoolNameUrl);
 
         var result = sut.Get(new CancellationToken());
         var actualResult = result.Result as ViewResult;

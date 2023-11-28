@@ -137,13 +137,13 @@ public class NetworkEventsControllerGetTests
 
         var sut = new NetworkEventsController(Mock.Of<IOuterApiClient>(), sessionServiceMock.Object, Mock.Of<IValidator<CancelEventViewModel>>());
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CreateEvent, AllNetworksUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CreateNewEvent, AllNetworksUrl);
 
         var actualResult = sut.CreateEvent();
 
         var result = (RedirectToRouteResult)actualResult;
 
         sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Once());
-        result.RouteName.Should().Be(RouteNames.ManageEvent.EventFormat);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.EventFormat);
     }
 }

@@ -10,7 +10,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/description", Name = RouteNames.ManageEvent.Description)]
+[Route("events/new/description", Name = RouteNames.CreateEvent.Description)]
 public class EventDescriptionController : Controller
 {
     private readonly ISessionService _sessionService;
@@ -51,10 +51,10 @@ public class EventDescriptionController : Controller
 
         if (sessionModel.HasSeenPreview)
         {
-            return RedirectToRoute(RouteNames.ManageEvent.CheckYourAnswers);
+            return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
         }
 
-        return RedirectToRoute(RouteNames.ManageEvent.HasGuestSpeakers);
+        return RedirectToRoute(RouteNames.CreateEvent.HasGuestSpeakers);
     }
 
     private EventDescriptionViewModel GetViewModel(EventSessionModel sessionModel)
@@ -63,7 +63,7 @@ public class EventDescriptionController : Controller
 
         if (sessionModel.HasSeenPreview)
         {
-            cancelLink = Url.RouteUrl(RouteNames.ManageEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
         }
 
         return new EventDescriptionViewModel
@@ -71,7 +71,7 @@ public class EventDescriptionController : Controller
             EventOutline = sessionModel.EventOutline?.Trim(),
             EventSummary = sessionModel.EventSummary?.Trim(),
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.ManageEvent.EventFormat)!,
+            PostLink = Url.RouteUrl(RouteNames.CreateEvent.EventFormat)!,
             PageTitle = Application.Constants.CreateEvent.PageTitle
         };
     }

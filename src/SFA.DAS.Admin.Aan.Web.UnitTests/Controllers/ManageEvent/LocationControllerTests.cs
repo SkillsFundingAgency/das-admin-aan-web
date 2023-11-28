@@ -20,6 +20,8 @@ public class LocationControllerTests
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
     private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
+    private static readonly string CalendarEventUrl = Guid.NewGuid().ToString();
+    private static readonly string UpdateLocationUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsLocationViewModel(
@@ -47,7 +49,7 @@ public class LocationControllerTests
         var sut = new LocationController(sessionServiceMock.Object, validatorMock.Object);
 
 
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.CheckYourAnswers, CheckYourAnswersUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.CheckYourAnswers, CheckYourAnswersUrl);
         var result = (ViewResult)sut.Get();
 
         Assert.That(result.Model, Is.TypeOf<LocationViewModel>());
@@ -56,15 +58,103 @@ public class LocationControllerTests
     }
 
     [Test, MoqAutoData]
+    public void Get_IsAlreadyPublishedTrue_CancelLinkIsCalendarEvent()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<LocationViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new LocationController(sessionServiceMock.Object, validatorMock.Object);
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
+        var result = (ViewResult)sut.Get();
+
+        Assert.That(result.Model, Is.TypeOf<LocationViewModel>());
+        var vm = result.Model as LocationViewModel;
+        vm!.CancelLink.Should().Be(CalendarEventUrl);
+    }
+
+    [Test, MoqAutoData]
     public void Get_ReturnsExpectedPostLink(
         [Greedy] LocationController sut)
     {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.ManageEvent.Location, PostUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.Location, PostUrl);
         var result = (ViewResult)sut.Get();
 
         Assert.That(result.Model, Is.TypeOf<LocationViewModel>());
         var vm = result.Model as LocationViewModel;
         vm!.PostLink.Should().Be(PostUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_IsAlreadyPublishedTrue_PostLinkLinkIsUpdateCalendarEvent()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<LocationViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new LocationController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateLocation, UpdateLocationUrl);
+        var result = (ViewResult)sut.Get();
+
+        Assert.That(result.Model, Is.TypeOf<LocationViewModel>());
+        var vm = result.Model as LocationViewModel;
+        vm!.PostLink.Should().Be(UpdateLocationUrl);
+    }
+    [TestCase(true, UpdateEvent.PageTitle)]
+    [TestCase(false, CreateEvent.PageTitle)]
+    public void Get_ReturnsExpectedPageTitle(bool isAlreadyPublished, string pageTitle)
+    {
+        var calendarEventId = Guid.NewGuid();
+        var sessionServiceMock = new Mock<ISessionService>();
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = isAlreadyPublished, CalendarEventId = calendarEventId };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new LocationController(sessionServiceMock.Object, Mock.Of<IValidator<LocationViewModel>>());
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
+
+        var result = (ViewResult)sut.Get();
+
+        Assert.That(result.Model, Is.TypeOf<LocationViewModel>());
+        var vm = result.Model as LocationViewModel;
+        vm!.PageTitle.Should().Be(pageTitle);
+    }
+
+    [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrue_RedirectsToUpdateLocation()
+    {
+        var calendarEventId = Guid.NewGuid();
+        //var eventFormat = EventFormat.Hybrid;
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<LocationViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new LocationViewModel();
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new LocationController(sessionServiceMock.Object, validatorMock.Object);
+
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
+        result.RouteName.Should().Be(RouteNames.CalendarEvent);
+        result.RouteValues!["CalendarEventId"].Should().Be(calendarEventId);
     }
 
     [TestCase("AB1 CTX", null, null)]
@@ -96,8 +186,8 @@ public class LocationControllerTests
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.Postcode == postcode && m.EventLink == eventOnlineLink)));
         result.RouteName.Should().Be(submitModel.EventFormat == null
-            ? RouteNames.ManageEvent.OrganiserDetails
-            : RouteNames.ManageEvent.IsAtSchool);
+            ? RouteNames.CreateEvent.OrganiserDetails
+            : RouteNames.CreateEvent.IsAtSchool);
     }
 
 
@@ -126,7 +216,7 @@ public class LocationControllerTests
         var result = (RedirectToRouteResult)sut.Post(submitModel);
 
         sut.ModelState.IsValid.Should().BeTrue();
-        result.RouteName.Should().Be(RouteNames.ManageEvent.CheckYourAnswers);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
     [Test, MoqAutoData]
@@ -181,6 +271,6 @@ public class LocationControllerTests
                && m.EventLink == null
         )));
 
-        result.RouteName.Should().Be(RouteNames.ManageEvent.IsAtSchool);
+        result.RouteName.Should().Be(RouteNames.CreateEvent.IsAtSchool);
     }
 }

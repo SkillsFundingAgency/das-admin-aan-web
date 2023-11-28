@@ -1,6 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using SFA.DAS.Aan.SharedUi.Constants;
+using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Models;
@@ -14,6 +15,7 @@ public class CheckYourAnswersViewModelTests
         source.StartMinutes = 25;
         source.EndHour = 13;
         source.EndMinutes = 30;
+        source.IsAlreadyPublished = false;
         ReviewEventViewModel sut = source;
         sut.Should().BeEquivalentTo(source, options => options.ExcludingMissingMembers());
     }
@@ -74,5 +76,13 @@ public class CheckYourAnswersViewModelTests
         var vm = new ReviewEventViewModel { Start = start, End = end };
         var result = vm.GetDateAndTimeFormatted();
         result.Should().Be(expectedResult);
+    }
+
+    [TestCase(false, CreateEvent.PageTitle)]
+    [TestCase(true, UpdateEvent.PageTitle)]
+    public void SessionModel_ContainsExpectedPageTitle(bool isAlreadyPublished, string pageTitle)
+    {
+        var vm = new EventSessionModel { IsAlreadyPublished = isAlreadyPublished };
+        vm.PageTitle.Should().Be(pageTitle);
     }
 }
