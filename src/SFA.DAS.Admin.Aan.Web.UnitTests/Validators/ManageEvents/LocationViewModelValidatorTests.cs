@@ -57,8 +57,9 @@ public class LocationViewModelValidatorTests
     [TestCase("httpS://secureurl.com", EventFormat.Hybrid, true)]
     [TestCase("https://www.secureurl.com", EventFormat.Hybrid, true)]
     [TestCase("tts://w.something", EventFormat.Hybrid, false)]
-
-    public void Validate_EventLocation(string? url, EventFormat? eventFormat, bool isValid)
+    [TestCase("https://teams.microsoft.com", EventFormat.Online, true)]
+    [TestCase("https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZGRmZC00NzlkLWFmZTktOTU4ZmFkMjA2ZDE1%thread.v2/0?context=%7b%22ad277c9-c60a-4da1-b5f3-b3b8Oid%22%3a%2209a4-c6-48-bc-ad60%22%7d", EventFormat.Hybrid, true)]
+    public void Validate_EventLink(string? url, EventFormat? eventFormat, bool isValid)
     {
         var model = new LocationViewModel
         { Postcode = "xyz", EventFormat = eventFormat, OnlineEventLink = url };
