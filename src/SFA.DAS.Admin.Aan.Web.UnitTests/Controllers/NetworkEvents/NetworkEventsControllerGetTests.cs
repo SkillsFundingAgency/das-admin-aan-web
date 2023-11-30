@@ -56,8 +56,6 @@ public class NetworkEventsControllerGetTests
         model.FilterChoices.FromDate?.ToApiString().Should().Be(fromDateFormatted);
         model.FilterChoices.ToDate?.ToApiString().Should().Be(toDateFormatted);
 
-        model.CalendarEvents.Should().Contain(c => c.EditEventLink == "#");
-
         outerApiMock.Verify(
             o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
                 It.IsAny<CancellationToken>()), Times.Once);

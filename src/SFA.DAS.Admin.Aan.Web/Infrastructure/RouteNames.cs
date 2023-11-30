@@ -41,5 +41,9 @@ public static class RouteNames
         public const string UpdateEventType = nameof(UpdateEventType);
         public const string UpdateDateAndTime = nameof(UpdateDateAndTime);
         public const string UpdateDescription = nameof(UpdateDescription);
+        public const string UpdateHasGuestSpeakers = nameof(UpdateHasGuestSpeakers);
+        public const string UpdateGuestSpeakerList = nameof(UpdateGuestSpeakerList);
+        public const string UpdateGuestSpeakerAdd = nameof(UpdateGuestSpeakerAdd);
+        public const string UpdateGuestSpeakerDelete = nameof(UpdateGuestSpeakerDelete);
     }
 }

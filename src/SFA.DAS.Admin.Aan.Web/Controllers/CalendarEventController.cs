@@ -92,8 +92,8 @@ public class CalendarEventController : Controller
         model.EventTypeLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateEventType, new { sessionModel.CalendarEventId })!;
         model.EventDateTimeLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateDateAndTime, new { sessionModel.CalendarEventId })!;
         model.EventDescriptionLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateDescription, new { sessionModel.CalendarEventId })!;
-        model.HasGuestSpeakersLink = "#";
-        model.GuestSpeakersListLink = "#";
+        model.HasGuestSpeakersLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateHasGuestSpeakers, new { sessionModel.CalendarEventId })!;
+        model.GuestSpeakersListLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateGuestSpeakerList, new { sessionModel.CalendarEventId })!;
         model.OrganiserDetailsLink = "#";
         model.IsAtSchoolLink = "#";
         model.SchoolNameLink = "#";

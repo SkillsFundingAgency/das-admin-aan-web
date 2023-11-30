@@ -9,7 +9,6 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/guestspeakers")]
 public class GuestSpeakersController : Controller
 {
     private readonly ISessionService _sessionService;
@@ -26,7 +25,8 @@ public class GuestSpeakersController : Controller
         _hasGuestSpeakersValidator = hasGuestSpeakersValidator;
     }
     [HttpGet]
-    [Route("question", Name = RouteNames.CreateEvent.HasGuestSpeakers)]
+    [Route("events/new/guestspeakers/question", Name = RouteNames.CreateEvent.HasGuestSpeakers)]
+    [Route("events/{calendarEventId}/guestspeakers/question", Name = RouteNames.UpdateEvent.UpdateHasGuestSpeakers)]
     public IActionResult GetHasGuestSpeakers()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -35,7 +35,9 @@ public class GuestSpeakersController : Controller
     }
 
     [HttpPost]
-    [Route("question", Name = RouteNames.CreateEvent.HasGuestSpeakers)]
+    [Route("events/new/guestspeakers/question", Name = RouteNames.CreateEvent.HasGuestSpeakers)]
+    [Route("events/{calendarEventId}/guestspeakers/question", Name = RouteNames.UpdateEvent.UpdateHasGuestSpeakers)]
+
     public IActionResult PostHasGuestSpeakers(HasGuestSpeakersViewModel submitModel)
     {
         var result = _hasGuestSpeakersValidator.Validate(submitModel);
@@ -48,9 +50,25 @@ public class GuestSpeakersController : Controller
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.HasGuestSpeakers = submitModel.HasGuestSpeakers;
+        if (sessionModel.HasGuestSpeakers == false)
+        {
+            sessionModel.GuestSpeakers = new List<GuestSpeaker>();
+        }
+
         sessionModel.IsDirectCallFromCheckYourAnswers = false;
 
         _sessionService.Set(sessionModel);
+
+        if (sessionModel.IsAlreadyPublished)
+        {
+            if (sessionModel.HasGuestSpeakers == true)
+            {
+                return RedirectToRoute(RouteNames.UpdateEvent.UpdateGuestSpeakerList, new { sessionModel.CalendarEventId });
+            }
+
+            return RedirectToRoute(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+        }
+
 
         if (sessionModel.HasGuestSpeakers == true) return RedirectToRoute(RouteNames.CreateEvent.GuestSpeakerList);
 
@@ -63,21 +81,34 @@ public class GuestSpeakersController : Controller
     }
 
     [HttpGet]
-    [Route("add", Name = RouteNames.CreateEvent.GuestSpeakerAdd)]
+    [Route("events/new/guestspeakers/add", Name = RouteNames.CreateEvent.GuestSpeakerAdd)]
+    [Route("events/{calendarEventId}/guestspeakers/add", Name = RouteNames.UpdateEvent.UpdateGuestSpeakerAdd)]
     public IActionResult GetAddGuestSpeaker()
     {
+        var sessionModel = _sessionService.Get<EventSessionModel>();
+
+        var cancelLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerList)!;
+        var postLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerAdd)!;
+
+        if (sessionModel.IsAlreadyPublished)
+        {
+            cancelLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateGuestSpeakerList, new { sessionModel.CalendarEventId })!;
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateGuestSpeakerAdd, new { sessionModel.CalendarEventId })!;
+        }
+
         var augmentedModel = new GuestSpeakerAddViewModel
         {
-            CancelLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerList)!,
-            PostLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerAdd)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle
+            CancelLink = cancelLink,
+            PostLink = postLink,
+            PageTitle = sessionModel.PageTitle
         };
 
         return View(GuestSpeakerAddViewPath, augmentedModel);
     }
 
     [HttpPost]
-    [Route("add", Name = RouteNames.CreateEvent.GuestSpeakerAdd)]
+    [Route("events/new/guestspeakers/add", Name = RouteNames.CreateEvent.GuestSpeakerAdd)]
+    [Route("events/{calendarEventId}/guestspeakers/add", Name = RouteNames.UpdateEvent.UpdateGuestSpeakerAdd)]
     public IActionResult PostAddGuestSpeaker(GuestSpeakerAddViewModel submitModel)
     {
         var result = _addGuestSpeakerValidator.Validate(submitModel);
@@ -98,11 +129,15 @@ public class GuestSpeakersController : Controller
         sessionModel.GuestSpeakers = currentGuestList;
 
         _sessionService.Set(sessionModel);
-        return RedirectToRoute(RouteNames.CreateEvent.GuestSpeakerList);
+
+        return sessionModel.IsAlreadyPublished
+            ? RedirectToRoute(RouteNames.UpdateEvent.UpdateGuestSpeakerList, new { sessionModel.CalendarEventId })!
+            : RedirectToRoute(RouteNames.CreateEvent.GuestSpeakerList);
     }
 
     [HttpGet]
-    [Route("delete", Name = RouteNames.CreateEvent.GuestSpeakerDelete)]
+    [Route("events/new/guestspeakers/delete", Name = RouteNames.CreateEvent.GuestSpeakerDelete)]
+    [Route("events/{calendarEventId}/guestspeakers/delete", Name = RouteNames.UpdateEvent.UpdateGuestSpeakerDelete)]
     public IActionResult DeleteGuestSpeaker(int id)
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -115,11 +150,14 @@ public class GuestSpeakersController : Controller
 
         sessionModel.GuestSpeakers = currentGuestList;
         _sessionService.Set(sessionModel);
-        return RedirectToRoute(RouteNames.CreateEvent.GuestSpeakerList);
+        return sessionModel.IsAlreadyPublished
+            ? RedirectToRoute(RouteNames.UpdateEvent.UpdateGuestSpeakerList, new { sessionModel.CalendarEventId })!
+            : RedirectToRoute(RouteNames.CreateEvent.GuestSpeakerList);
     }
 
     [HttpGet]
-    [Route("", Name = RouteNames.CreateEvent.GuestSpeakerList)]
+    [Route("events/new/guestspeakers", Name = RouteNames.CreateEvent.GuestSpeakerList)]
+    [Route("events/{calendarEventId}/guestspeakers", Name = RouteNames.UpdateEvent.UpdateGuestSpeakerList)]
     public IActionResult GetSpeakerList()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -128,10 +166,16 @@ public class GuestSpeakersController : Controller
     }
 
     [HttpPost]
-    [Route("", Name = RouteNames.CreateEvent.GuestSpeakerList)]
+    [Route("events/new/guestspeakers", Name = RouteNames.CreateEvent.GuestSpeakerList)]
+    [Route("events/{calendarEventId}/guestspeakers", Name = RouteNames.UpdateEvent.UpdateGuestSpeakerList)]
     public IActionResult PostGuestSpeakerList()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
+        if (sessionModel.IsAlreadyPublished)
+        {
+            return RedirectToRoute(RouteNames.CalendarEvent, new { calendarEventId = sessionModel.CalendarEventId });
+        }
+
         if (sessionModel.HasSeenPreview)
         {
             return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
@@ -142,38 +186,61 @@ public class GuestSpeakersController : Controller
     private HasGuestSpeakersViewModel GetViewModelHasGuestSpeakers(EventSessionModel sessionModel)
     {
         var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+        var postLink = Url.RouteUrl(RouteNames.CreateEvent.HasGuestSpeakers)!;
 
-        if (sessionModel.HasSeenPreview)
+        if (sessionModel.IsAlreadyPublished)
         {
-            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateHasGuestSpeakers,
+                new { sessionModel.CalendarEventId });
+        }
+        else
+        {
+            if (sessionModel.HasSeenPreview)
+            {
+                cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            }
         }
 
         return new HasGuestSpeakersViewModel
         {
             HasGuestSpeakers = sessionModel.HasGuestSpeakers,
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.CreateEvent.HasGuestSpeakers)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle
+            PostLink = postLink,
+            PageTitle = sessionModel.PageTitle
         };
     }
 
     private GuestSpeakerListViewModel GetGuestSpeakerListViewModel(EventSessionModel sessionModel)
     {
         var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+        var postLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerList)!;
+        var addGuestSpeakerLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerAdd)!;
+        var deleteSpeakerLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerDelete)!;
 
-        if (sessionModel.HasSeenPreview)
+        if (sessionModel.IsAlreadyPublished)
         {
-            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateGuestSpeakerList, new { sessionModel.CalendarEventId });
+            addGuestSpeakerLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateGuestSpeakerAdd, new { sessionModel.CalendarEventId });
+            deleteSpeakerLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateGuestSpeakerDelete, new { sessionModel.CalendarEventId });
+        }
+        else
+        {
+            if (sessionModel.HasSeenPreview)
+            {
+                cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            }
         }
 
         return new GuestSpeakerListViewModel
         {
             GuestSpeakers = sessionModel.GuestSpeakers,
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerList)!,
-            AddGuestSpeakerLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerAdd)!,
-            DeleteSpeakerLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerDelete)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle,
+            PostLink = postLink,
+            AddGuestSpeakerLink = addGuestSpeakerLink!,
+            DeleteSpeakerLink = deleteSpeakerLink!,
+            PageTitle = sessionModel.PageTitle,
             DirectCallFromCheckYourAnswers = sessionModel.IsDirectCallFromCheckYourAnswers
         };
     }
