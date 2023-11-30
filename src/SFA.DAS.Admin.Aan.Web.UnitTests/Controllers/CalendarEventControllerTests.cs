@@ -363,7 +363,6 @@ public class CalendarEventControllerTests
         var vm = actualResult.Model as ReviewEventViewModel;
         vm!.SchoolNameLink.Should().Be(SchoolNameUrl);
     }
-
     [Test]
     public void PostCalendarEvent_RedirectToManageEvents()
     {
