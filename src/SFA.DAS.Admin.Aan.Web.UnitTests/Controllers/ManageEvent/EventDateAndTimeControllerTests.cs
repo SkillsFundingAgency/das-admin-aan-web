@@ -18,6 +18,8 @@ public class EventDateAndTimeControllerTests
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
     private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
+    private static readonly string CalendarEventUrl = Guid.NewGuid().ToString();
+    private static readonly string UpdateEventDateAndTimeUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsCreateEventDateTimeViewModel(
@@ -72,6 +74,27 @@ public class EventDateAndTimeControllerTests
     }
 
     [Test, MoqAutoData]
+    public void Get_IsAlreadyPublishedTrue_CancelLinkIsCalendarEvent()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new EventDateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
+        var result = (ViewResult)sut.Get();
+
+        Assert.That(result.Model, Is.TypeOf<EventDateAndTimeViewModel>());
+        var vm = result.Model as EventDateAndTimeViewModel;
+        vm!.CancelLink.Should().Be(CalendarEventUrl);
+    }
+
+    [Test, MoqAutoData]
     public void Post_HasSeenPreview_False_RedirectsToLocation()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -79,6 +102,7 @@ public class EventDateAndTimeControllerTests
 
         var sessionModel = new EventSessionModel
         {
+            IsAlreadyPublished = false,
             HasSeenPreview = false
         };
 
@@ -138,6 +162,59 @@ public class EventDateAndTimeControllerTests
 
         result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
+
+    [Test, MoqAutoData]
+    public void Get_IsAlreadyPublishedTrue_PostLinkLinkIsUpdateCalendarEvent()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new EventDateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateDateAndTime, UpdateEventDateAndTimeUrl);
+        var result = (ViewResult)sut.Get();
+
+        Assert.That(result.Model, Is.TypeOf<EventDateAndTimeViewModel>());
+        var vm = result.Model as EventDateAndTimeViewModel;
+        vm!.PostLink.Should().Be(UpdateEventDateAndTimeUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrue_RedirectsToCalendarEvent()
+    {
+        var calendarEventId = Guid.NewGuid();
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true,
+            DateOfEvent = DateTime.Today.AddDays(1),
+            StartHour = 12,
+            StartMinutes = 0,
+            EndHour = 13,
+            EndMinutes = 30
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventDateAndTimeViewModel();
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new EventDateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
+
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
+        result.RouteName.Should().Be(RouteNames.CalendarEvent);
+    }
+
 
     [TestCase(12, 0, 13, 0)]
     public void Post_SetEventDateTimeOnSessionModel(int startHour, int startMinutes, int endHour, int endMinutes)

@@ -1,12 +1,12 @@
 ﻿using RestEase;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Admins;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Locations;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Schools;
-using Calendar = SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Calendar;
 
 namespace SFA.DAS.Admin.Aan.Application.Services;
 
@@ -16,7 +16,7 @@ public interface IOuterApiClient
     Task<GetRegionsResult> GetRegions(CancellationToken cancellationToken);
 
     [Get("/calendars")]
-    Task<List<Calendar>> GetCalendars(CancellationToken cancellationToken);
+    Task<List<CalendarDetail>> GetCalendars(CancellationToken cancellationToken);
 
     [Get("calendarEvents")]
     Task<GetCalendarEventsQueryResult> GetCalendarEvents([Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [QueryMap] IDictionary<string, string[]> parameters, CancellationToken cancellationToken);

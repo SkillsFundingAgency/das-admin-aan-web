@@ -20,7 +20,7 @@ internal class PreviewEventControllerTests
     [Test, MoqAutoData]
     public void Get_ReturnsNetworkEventDetailsViewModel(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        List<Calendar> calendars)
+        List<CalendarDetail> calendars)
     {
         outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
         var sessionServiceMock = new Mock<ISessionService>();
