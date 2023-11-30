@@ -10,7 +10,6 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/school")]
 public class SchoolEventController : Controller
 {
     private readonly ISessionService _sessionService;
@@ -28,7 +27,8 @@ public class SchoolEventController : Controller
     }
 
     [HttpGet]
-    [Route("question", Name = RouteNames.CreateEvent.IsAtSchool)]
+    [Route("events/new/school/question", Name = RouteNames.CreateEvent.IsAtSchool)]
+    [Route("events/{calendarEventId}/school/question", Name = RouteNames.UpdateEvent.UpdateIsAtSchool)]
     public IActionResult GetEventIsAtSchool()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -37,7 +37,8 @@ public class SchoolEventController : Controller
     }
 
     [HttpPost]
-    [Route("question", Name = RouteNames.CreateEvent.IsAtSchool)]
+    [Route("events/new/school/question", Name = RouteNames.CreateEvent.IsAtSchool)]
+    [Route("events/{calendarEventId}/school/question", Name = RouteNames.UpdateEvent.UpdateIsAtSchool)]
     public IActionResult PostIsAtSchool(IsAtSchoolViewModel submitModel)
     {
         var result = _eventAtSchoolValidator.Validate(submitModel);
@@ -54,7 +55,20 @@ public class SchoolEventController : Controller
         sessionModel.IsDirectCallFromCheckYourAnswers = false;
         _sessionService.Set(sessionModel);
 
-        if (sessionModel.IsAtSchool == true) return RedirectToRoute(RouteNames.CreateEvent.SchoolName);
+        if (sessionModel.IsAtSchool == true)
+        {
+            if (sessionModel.IsAlreadyPublished)
+            {
+                return RedirectToRoute(RouteNames.UpdateEvent.UpdateSchoolName, new { sessionModel.CalendarEventId });
+            }
+
+            return RedirectToRoute(RouteNames.CreateEvent.SchoolName);
+        }
+
+        if (sessionModel.IsAlreadyPublished)
+        {
+            return RedirectToRoute(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+        }
 
         if (sessionModel.HasSeenPreview)
         {
@@ -65,7 +79,8 @@ public class SchoolEventController : Controller
     }
 
     [HttpGet]
-    [Route("name", Name = RouteNames.CreateEvent.SchoolName)]
+    [Route("events/new/school/name", Name = RouteNames.CreateEvent.SchoolName)]
+    [Route("events/{calendarEventId}/school/name", Name = RouteNames.UpdateEvent.UpdateSchoolName)]
     public IActionResult GetSchoolName()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -74,7 +89,8 @@ public class SchoolEventController : Controller
     }
 
     [HttpPost]
-    [Route("name", Name = RouteNames.CreateEvent.SchoolName)]
+    [Route("events/new/school/name", Name = RouteNames.CreateEvent.SchoolName)]
+    [Route("events/{calendarEventId}/school/name", Name = RouteNames.UpdateEvent.UpdateSchoolName)]
     public IActionResult PostSchoolName(SchoolNameViewModel submitModel)
     {
         var result = _eventSchoolNameValidator.Validate(submitModel);
@@ -91,6 +107,11 @@ public class SchoolEventController : Controller
         sessionModel.Urn = submitModel.Urn;
         _sessionService.Set(sessionModel);
 
+        if (sessionModel.IsAlreadyPublished)
+        {
+            return RedirectToRoute(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+        }
+
         if (sessionModel.HasSeenPreview)
         {
             return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
@@ -102,38 +123,56 @@ public class SchoolEventController : Controller
     private IsAtSchoolViewModel GetViewModelEventIsAtSchool(EventSessionModel sessionModel)
     {
         var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+        var postLink = Url.RouteUrl(RouteNames.CreateEvent.IsAtSchool)!;
 
-        if (sessionModel.HasSeenPreview)
+        if (sessionModel.IsAlreadyPublished)
         {
-            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateSchoolName, new { sessionModel.CalendarEventId });
+        }
+        else
+        {
+            if (sessionModel.HasSeenPreview)
+            {
+                cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            }
         }
 
         return new IsAtSchoolViewModel
         {
-            IsAtSchool = sessionModel?.IsAtSchool,
+            IsAtSchool = sessionModel!.IsAtSchool,
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.CreateEvent.IsAtSchool)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle
+            PostLink = postLink,
+            PageTitle = sessionModel!.PageTitle
         };
     }
 
     private SchoolNameViewModel GetViewModelEventSchoolName(EventSessionModel sessionModel)
     {
-        var searchResult = $"{sessionModel?.SchoolName} (URN: {sessionModel?.Urn})";
+        var searchResult = $"{sessionModel!.SchoolName} (URN: {sessionModel!.Urn})";
 
         var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+        var postLink = Url.RouteUrl(RouteNames.CreateEvent.SchoolName)!;
 
-        if (sessionModel!.HasSeenPreview)
+        if (sessionModel!.IsAlreadyPublished)
         {
-            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateSchoolName, new { sessionModel.CalendarEventId });
+        }
+        else
+        {
+            if (sessionModel!.HasSeenPreview)
+            {
+                cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            }
         }
 
         return new SchoolNameViewModel
         {
             SearchResult = searchResult,
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.CreateEvent.SchoolName)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle,
+            PostLink = postLink,
+            PageTitle = sessionModel.PageTitle,
             DirectCallFromCheckYourAnswers = sessionModel.IsDirectCallFromCheckYourAnswers,
             HasSeenPreview = sessionModel.HasSeenPreview
         };

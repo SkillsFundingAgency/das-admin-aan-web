@@ -11,7 +11,6 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/attendees", Name = RouteNames.CreateEvent.NumberOfAttendees)]
 public class NumberOfAttendeesController : Controller
 {
     private readonly ISessionService _sessionService;
@@ -24,8 +23,9 @@ public class NumberOfAttendeesController : Controller
         _validator = validator;
     }
 
-    [Authorize(Roles = Roles.ManageEventsRole)]
     [HttpGet]
+    [Route("events/new/attendees", Name = RouteNames.CreateEvent.NumberOfAttendees)]
+    [Route("events/{calendarEventId}/attendees", Name = RouteNames.UpdateEvent.UpdateNumberOfAttendees)]
     public IActionResult Get()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
@@ -34,6 +34,8 @@ public class NumberOfAttendeesController : Controller
     }
 
     [HttpPost]
+    [Route("events/new/attendees", Name = RouteNames.CreateEvent.NumberOfAttendees)]
+    [Route("events/{calendarEventId}/attendees", Name = RouteNames.UpdateEvent.UpdateNumberOfAttendees)]
     public IActionResult Post(NumberOfAttendeesViewModel submitModel)
     {
         var result = _validator.Validate(submitModel);
@@ -49,24 +51,43 @@ public class NumberOfAttendeesController : Controller
         sessionModel.PlannedAttendees = submitModel.NumberOfAttendees;
         _sessionService.Set(sessionModel);
 
+
+        if (sessionModel.IsAlreadyPublished)
+        {
+            return RedirectToRoute(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+        }
+
+
         return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
     private NumberOfAttendeesViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+        string cancelLink;
+        string postLink;
 
-        if (sessionModel.HasSeenPreview)
+        if (sessionModel.IsAlreadyPublished)
         {
-            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId })!;
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateNumberOfAttendees, new { sessionModel.CalendarEventId })!;
+        }
+        else
+        {
+            cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+            postLink = Url.RouteUrl(RouteNames.CreateEvent.NumberOfAttendees)!;
+
+            if (sessionModel.HasSeenPreview)
+            {
+                cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            }
         }
 
         return new NumberOfAttendeesViewModel
         {
             NumberOfAttendees = sessionModel.PlannedAttendees,
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.CreateEvent.NumberOfAttendees)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle
+            PostLink = postLink,
+            PageTitle = sessionModel.PageTitle
         };
     }
 }

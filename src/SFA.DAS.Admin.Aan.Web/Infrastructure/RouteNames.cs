@@ -45,5 +45,9 @@ public static class RouteNames
         public const string UpdateGuestSpeakerList = nameof(UpdateGuestSpeakerList);
         public const string UpdateGuestSpeakerAdd = nameof(UpdateGuestSpeakerAdd);
         public const string UpdateGuestSpeakerDelete = nameof(UpdateGuestSpeakerDelete);
+        public const string UpdateOrganiserDetails = nameof(UpdateOrganiserDetails);
+        public const string UpdateIsAtSchool = nameof(UpdateIsAtSchool);
+        public const string UpdateSchoolName = nameof(UpdateSchoolName);
+        public const string UpdateNumberOfAttendees = nameof(UpdateNumberOfAttendees);
     }
 }

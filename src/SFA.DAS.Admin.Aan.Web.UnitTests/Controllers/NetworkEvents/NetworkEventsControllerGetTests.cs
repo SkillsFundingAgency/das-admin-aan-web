@@ -1,6 +1,6 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
@@ -22,43 +22,127 @@ public class NetworkEventsControllerGetTests
 {
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
 
-    [Test, MoqAutoData]
-    public void GetCalendarEvents_ReturnsApiResponse(
-        [Frozen] Mock<IOuterApiClient> outerApiMock,
-        [Greedy] NetworkEventsController sut,
-        GetCalendarEventsQueryResult expectedResult,
-        DateTime? fromDate,
-        DateTime? toDate)
-    {
-        var fromDateFormatted = fromDate?.ToString("yyyy-MM-dd")!;
-        var toDateFormatted = toDate?.ToString("yyyy-MM-dd")!;
+    private Mock<IOuterApiClient> _outerApiMock = null!;
+    private Mock<ISessionService> _sessionServiceMock = null!;
+    private Mock<IValidator<CancelEventViewModel>> _validatorMock = null!;
+    private GetCalendarEventsQueryResult _result = null!;
+    private DateTime? _fromDate;
+    private DateTime? _toDate;
+    private int CalendarId;
+    private int RegionId;
 
-        var request = new GetNetworkEventsRequest
+    [SetUp, MoqAutoData]
+    public void Setup()
+    {
+        CalendarId = 1;
+        RegionId = 2;
+        _outerApiMock = new Mock<IOuterApiClient>();
+
+        var calendars = new List<CalendarDetail>
         {
-            Page = expectedResult.Page,
-            PageSize = expectedResult.PageSize,
+            new() {CalendarName = "cal 1", Id = CalendarId}
         };
 
-        outerApiMock
-            .Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
-                It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);
+        var regionsResult = new GetRegionsResult
+        {
+            Regions = new List<Region>
+            {
+                new(1, "London", RegionId)
+            }
+        };
 
+        _outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
+        _outerApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
+
+        _sessionServiceMock = new Mock<ISessionService>();
+        var sessionModel = new EventSessionModel();
+
+        _sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        _validatorMock = new Mock<IValidator<CancelEventViewModel>>();
+
+        var validationResult = new ValidationResult();
+        _validatorMock.Setup(v => v.Validate(It.IsAny<CancelEventViewModel>())).Returns(validationResult);
+
+        _result = new GetCalendarEventsQueryResult
+        {
+            CalendarEvents = new List<CalendarEventSummary>(),
+            Page = 1,
+            PageSize = 10,
+            TotalCount = 55,
+            TotalPages = 6
+        };
+
+        _fromDate = DateTime.Now.AddDays(1);
+        _toDate = DateTime.Now.AddDays(2);
+    }
+
+    [Test, MoqAutoData]
+    public void GetCalendarEvents_ReturnsApiResponse()
+    {
+        var request = new GetNetworkEventsRequest
+        {
+            Page = _result.Page,
+            PageSize = _result.PageSize,
+            FromDate = _fromDate,
+            ToDate = _toDate,
+            CalendarId = new List<int> { CalendarId },
+            IsActive = new List<bool> { true }
+        };
+
+        _outerApiMock
+            .Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
+                It.IsAny<CancellationToken>())).ReturnsAsync(_result);
+
+        var sut = new NetworkEventsController(_outerApiMock.Object, _sessionServiceMock.Object, _validatorMock.Object);
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
         var actualResult = sut.Index(request, new CancellationToken());
 
         var viewResult = actualResult.Result.As<ViewResult>();
         var model = viewResult.Model as NetworkEventsViewModel;
-        model!.PaginationViewModel.CurrentPage.Should().Be(expectedResult.Page);
-        model!.PaginationViewModel.PageSize.Should().Be(expectedResult.PageSize);
-        model!.PaginationViewModel.TotalPages.Should().Be(expectedResult.TotalPages);
-        model!.TotalCount.Should().Be(expectedResult.TotalCount);
-        model.FilterChoices.FromDate?.ToApiString().Should().Be(fromDateFormatted);
-        model.FilterChoices.ToDate?.ToApiString().Should().Be(toDateFormatted);
+        model!.PaginationViewModel.CurrentPage.Should().Be(_result.Page);
+        model!.PaginationViewModel.PageSize.Should().Be(_result.PageSize);
+        model!.PaginationViewModel.TotalPages.Should().Be(_result.TotalPages);
+        model!.TotalCount.Should().Be(_result.TotalCount);
 
-        outerApiMock.Verify(
+        model.Should().BeEquivalentTo(_result, options => options.ExcludingMissingMembers());
+
+        _outerApiMock.Verify(
             o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
                 It.IsAny<CancellationToken>()), Times.Once);
+        _outerApiMock.Verify(
+            o => o.GetCalendars(It.IsAny<CancellationToken>()), Times.Once);
+        _outerApiMock.Verify(
+            o => o.GetRegions(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Test, MoqAutoData]
+    public void GetCalendarEvents_ReturnsApiResponse_CheckDateFilterChoices()
+    {
+        var fromDateFormatted = _fromDate?.ToString("yyyy-MM-dd")!;
+        var toDateFormatted = _toDate?.ToString("yyyy-MM-dd")!;
+
+        var request = new GetNetworkEventsRequest
+        {
+            FromDate = _fromDate,
+            ToDate = _toDate
+        };
+
+        _outerApiMock
+            .Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
+                It.IsAny<CancellationToken>())).ReturnsAsync(_result);
+
+        var sut = new NetworkEventsController(_outerApiMock.Object, _sessionServiceMock.Object, _validatorMock.Object);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+
+        var actualResult = sut.Index(request, new CancellationToken());
+
+        var viewResult = actualResult.Result.As<ViewResult>();
+        var model = viewResult.Model as NetworkEventsViewModel;
+
+        model!.FilterChoices.FromDate?.ToApiString().Should().Be(fromDateFormatted);
+        model!.FilterChoices.ToDate?.ToApiString().Should().Be(toDateFormatted);
     }
 
     [TestCase(true, true)]
