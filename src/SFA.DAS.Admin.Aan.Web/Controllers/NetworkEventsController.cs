@@ -131,7 +131,7 @@ public class NetworkEventsController : Controller
         {
             CalendarEventViewModel vm = calendarEvent;
             vm.CancelEventLink = Url.RouteUrl(RouteNames.DeleteEvent, new { calendarEvent.CalendarEventId })!;
-            vm.EditEventLink = Url.RouteUrl(RouteNames.CalendarEvent, new { calendarEvent.CalendarEventId })!;
+            vm.EditEventLink = "#";
             model.CalendarEvents.Add(vm);
         }
         return model;
