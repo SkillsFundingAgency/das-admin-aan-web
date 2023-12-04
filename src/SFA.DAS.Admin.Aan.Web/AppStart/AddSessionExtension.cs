@@ -1,5 +1,5 @@
-﻿using SFA.DAS.Admin.Aan.Web.Configuration;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using SFA.DAS.Admin.Aan.Web.Configuration;
 
 namespace SFA.DAS.Admin.Aan.Web.AppStart;
 
@@ -16,7 +16,7 @@ public static class AddSessionExtension
             options.Cookie.IsEssential = true;
         });
 
-        if (configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+        if (configuration["EnvironmentName"]!.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
         {
             services.AddDistributedMemoryCache();
         }
@@ -24,8 +24,8 @@ public static class AddSessionExtension
         {
             services.AddStackExchangeRedisCache(options =>
             {
-                var applicationCopnfiguration = configuration.GetSection(nameof(ApplicationConfiguration)).Get<ApplicationConfiguration>();
-                options.Configuration = applicationCopnfiguration.RedisConnectionString;
+                var applicationConfiguration = configuration.GetSection(nameof(ApplicationConfiguration)).Get<ApplicationConfiguration>()!;
+                options.Configuration = applicationConfiguration.RedisConnectionString;
             });
         }
 
