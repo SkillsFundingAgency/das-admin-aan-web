@@ -10,7 +10,6 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
-[Route("events/new/organiser", Name = RouteNames.CreateEvent.OrganiserDetails)]
 public class OrganiserDetailsController : Controller
 {
 
@@ -27,15 +26,19 @@ public class OrganiserDetailsController : Controller
 
 
     [HttpGet]
+    [Route("events/new/organiser", Name = RouteNames.CreateEvent.OrganiserDetails)]
+    [Route("events/{calendarEventId}/organiser", Name = RouteNames.UpdateEvent.UpdateOrganiserDetails)]
     public IActionResult Get()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
-        var augmentedModel = GetOrganiserNameViewModel(sessionModel);
+        var augmentedModel = GetViewModel(sessionModel);
 
         return View(OrganiserDetailsViewPath, augmentedModel);
     }
 
     [HttpPost]
+    [Route("events/new/organiser", Name = RouteNames.CreateEvent.OrganiserDetails)]
+    [Route("events/{calendarEventId}/organiser", Name = RouteNames.UpdateEvent.UpdateOrganiserDetails)]
     public IActionResult Post(OrganiserDetailsViewModel submitModel)
     {
         var result = _organiserNameValidator.Validate(submitModel);
@@ -52,6 +55,11 @@ public class OrganiserDetailsController : Controller
 
         _sessionService.Set(sessionModel);
 
+        if (sessionModel.IsAlreadyPublished)
+        {
+            return RedirectToRoute(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
+        }
+
         if (sessionModel.HasSeenPreview)
         {
             return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
@@ -60,21 +68,34 @@ public class OrganiserDetailsController : Controller
         return RedirectToRoute(RouteNames.CreateEvent.NumberOfAttendees);
     }
 
-    private OrganiserDetailsViewModel GetOrganiserNameViewModel(EventSessionModel sessionModel)
+    private OrganiserDetailsViewModel GetViewModel(EventSessionModel sessionModel)
     {
-        var cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+        string cancelLink;
+        string postLink;
 
-        if (sessionModel.HasSeenPreview)
+        if (sessionModel.IsAlreadyPublished)
         {
-            cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            cancelLink = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId })!;
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateOrganiserDetails, new { sessionModel.CalendarEventId })!;
         }
+        else
+        {
+            cancelLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
+            postLink = Url.RouteUrl(RouteNames.CreateEvent.OrganiserDetails)!;
+
+            if (sessionModel.HasSeenPreview)
+            {
+                cancelLink = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
+            }
+        }
+
         return new OrganiserDetailsViewModel
         {
             OrganiserName = sessionModel.ContactName?.Trim(),
             OrganiserEmail = sessionModel.ContactEmail?.Trim(),
             CancelLink = cancelLink,
-            PostLink = Url.RouteUrl(RouteNames.CreateEvent.OrganiserDetails)!,
-            PageTitle = Application.Constants.CreateEvent.PageTitle
+            PostLink = postLink,
+            PageTitle = sessionModel.PageTitle
         };
     }
 }

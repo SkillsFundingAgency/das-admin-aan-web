@@ -17,6 +17,8 @@ public class NumberOfAttendeesControllerTests
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
     private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
+    private static readonly string CalendarEventUrl = Guid.NewGuid().ToString();
+    private static readonly string UpdateNumberOfAttendeesUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsNumberOfAttendeesViewModel(
@@ -66,6 +68,48 @@ public class NumberOfAttendeesControllerTests
         vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
+    [Test, MoqAutoData]
+    public void Get_IsAlreadyPublishedTrue_CancelLinkIsCalendarEvent()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<NumberOfAttendeesViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new NumberOfAttendeesController(sessionServiceMock.Object, validatorMock.Object);
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
+        var result = (ViewResult)sut.Get();
+
+        Assert.That(result.Model, Is.TypeOf<NumberOfAttendeesViewModel>());
+        var vm = result.Model as NumberOfAttendeesViewModel;
+        vm!.CancelLink.Should().Be(CalendarEventUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_IsAlreadyPublishedTrue_PostLinkIsUpdateNumberOfAttendees()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<NumberOfAttendeesViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new NumberOfAttendeesController(sessionServiceMock.Object, validatorMock.Object);
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateNumberOfAttendees, UpdateNumberOfAttendeesUrl);
+        var result = (ViewResult)sut.Get();
+
+        Assert.That(result.Model, Is.TypeOf<NumberOfAttendeesViewModel>());
+        var vm = result.Model as NumberOfAttendeesViewModel;
+        vm!.PostLink.Should().Be(UpdateNumberOfAttendeesUrl);
+    }
+
     [TestCase(1)]
     [TestCase(12)]
     [TestCase(1000000)]
@@ -96,6 +140,32 @@ public class NumberOfAttendeesControllerTests
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m
             => m.PlannedAttendees == numberOfAttendees)));
         result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
+    }
+
+    [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrue_RedirectsToCalendarEvent()
+    {
+        var calendarEventId = Guid.NewGuid();
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<NumberOfAttendeesViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new NumberOfAttendeesViewModel();
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new NumberOfAttendeesController(sessionServiceMock.Object, validatorMock.Object);
+
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
+        result.RouteName.Should().Be(RouteNames.CalendarEvent);
     }
 
     [Test, MoqAutoData]

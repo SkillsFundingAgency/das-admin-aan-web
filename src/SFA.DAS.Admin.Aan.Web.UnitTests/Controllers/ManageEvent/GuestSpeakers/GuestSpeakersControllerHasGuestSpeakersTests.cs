@@ -17,6 +17,8 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
     private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
+    private static readonly string CalendarEventUrl = Guid.NewGuid().ToString();
+    private static readonly string UpdateHasGuestSpeakersUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsEventGuestSpeakerViewModel(
@@ -43,6 +45,27 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
     }
 
     [Test, MoqAutoData]
+    public void Get_PostLinkIsUpdateHasGuestSpeakersLink_WhenIsAlreadyPublishedTrue()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<HasGuestSpeakersViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true, HasGuestSpeakers = false };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), validatorMock.Object);
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateHasGuestSpeakers, UpdateHasGuestSpeakersUrl);
+        var result = (ViewResult)sut.GetHasGuestSpeakers();
+
+        Assert.That(result.Model, Is.TypeOf<HasGuestSpeakersViewModel>());
+        var vm = result.Model as HasGuestSpeakersViewModel;
+        vm!.PostLink.Should().Be(UpdateHasGuestSpeakersUrl);
+    }
+
+    [Test, MoqAutoData]
     public void Get_ReturnsExpectedCancelLink_WhenHasSeenPreviewTrue()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -64,6 +87,32 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
         Assert.That(result.Model, Is.TypeOf<HasGuestSpeakersViewModel>());
         var vm = result.Model as HasGuestSpeakersViewModel;
         vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_ReturnsExpectedCancelLink_WhenIsAlreadyPublished()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<HasGuestSpeakersViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            IsAlreadyPublished = true,
+            HasSeenPreview = true,
+            HasGuestSpeakers = false
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
+        var actualResult = sut.GetHasGuestSpeakers();
+        var result = actualResult.As<ViewResult>();
+
+        Assert.That(result.Model, Is.TypeOf<HasGuestSpeakersViewModel>());
+        var vm = result.Model as HasGuestSpeakersViewModel;
+        vm!.CancelLink.Should().Be(CalendarEventUrl);
     }
 
     [TestCase(true, false)]
@@ -104,6 +153,69 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
                 ? RouteNames.CreateEvent.CheckYourAnswers
                 : RouteNames.CreateEvent.DateAndTime);
         }
+    }
+
+    [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrueHasGuestSpeakersFalse_RedirectsToCalendarEvent()
+    {
+        var calendarEventId = Guid.NewGuid();
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<HasGuestSpeakersViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true,
+            HasGuestSpeakers = false,
+            DateOfEvent = DateTime.Today.AddDays(1),
+            StartHour = 12,
+            StartMinutes = 0,
+            EndHour = 13,
+            EndMinutes = 30
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new HasGuestSpeakersViewModel();
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), validatorMock.Object);
+
+        var result = (RedirectToRouteResult)sut.PostHasGuestSpeakers(submitModel);
+        result.RouteName.Should().Be(RouteNames.CalendarEvent);
+    }
+
+    [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrue_RedirectsToCalendarEvent()
+    {
+        var calendarEventId = Guid.NewGuid();
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<HasGuestSpeakersViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true,
+            DateOfEvent = DateTime.Today.AddDays(1),
+            StartHour = 12,
+            StartMinutes = 0,
+            EndHour = 13,
+            EndMinutes = 30
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new HasGuestSpeakersViewModel { HasGuestSpeakers = true };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), validatorMock.Object);
+
+        var result = (RedirectToRouteResult)sut.PostHasGuestSpeakers(submitModel);
+        result.RouteName.Should().Be(RouteNames.UpdateEvent.UpdateGuestSpeakerList);
     }
 
     [Test, MoqAutoData]

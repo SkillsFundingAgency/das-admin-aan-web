@@ -19,6 +19,8 @@ public class OrganiserDetailsControllerTests
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
     private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
+    private static readonly string CalendarEventUrl = Guid.NewGuid().ToString();
+    private static readonly string UpdateOrganiserDetailsUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsCreateEventDetailsViewModel(
@@ -68,6 +70,26 @@ public class OrganiserDetailsControllerTests
         vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
+    [Test, MoqAutoData]
+    public void Get_IsAlreadyPublishedTrue_CancelLinkIsCalendarEvent()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<OrganiserDetailsViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new OrganiserDetailsController(sessionServiceMock.Object, validatorMock.Object);
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
+        var result = (ViewResult)sut.Get();
+
+        Assert.That(result.Model, Is.TypeOf<OrganiserDetailsViewModel>());
+        var vm = result.Model as OrganiserDetailsViewModel;
+        vm!.CancelLink.Should().Be(CalendarEventUrl);
+    }
 
     [TestCase("location 1", null)]
     [TestCase("location 2", "event online link")]
@@ -134,6 +156,53 @@ public class OrganiserDetailsControllerTests
         var sut = new OrganiserDetailsController(sessionServiceMock.Object, validatorMock.Object);
         var result = (RedirectToRouteResult)sut.Post(submitModel);
         result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_IsAlreadyPublishedTrue_PostLinkIsUpdateCalendarEvent()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<OrganiserDetailsViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new OrganiserDetailsController(sessionServiceMock.Object, validatorMock.Object);
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateOrganiserDetails, UpdateOrganiserDetailsUrl);
+        var result = (ViewResult)sut.Get();
+
+        Assert.That(result.Model, Is.TypeOf<OrganiserDetailsViewModel>());
+        var vm = result.Model as OrganiserDetailsViewModel;
+        vm!.PostLink.Should().Be(UpdateOrganiserDetailsUrl);
+    }
+
+    [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrue_RedirectsToCalendarEvent()
+    {
+        var calendarEventId = Guid.NewGuid();
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<OrganiserDetailsViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new OrganiserDetailsViewModel();
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new OrganiserDetailsController(sessionServiceMock.Object, validatorMock.Object);
+
+        var result = (RedirectToRouteResult)sut.Post(submitModel);
+        result.RouteName.Should().Be(RouteNames.CalendarEvent);
     }
 
     [Test, MoqAutoData]

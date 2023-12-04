@@ -19,6 +19,8 @@ public class SchoolEventControllerSchoolNameTests
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
     private static readonly string PostUrl = Guid.NewGuid().ToString();
     private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
+    private static readonly string CalendarEventUrl = Guid.NewGuid().ToString();
+    private static readonly string SchoolNameUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void Get_ReturnsEventAtSchoolViewModel(
@@ -47,6 +49,27 @@ public class SchoolEventControllerSchoolNameTests
     }
 
     [Test, MoqAutoData]
+    public void Get_ReturnsExpectedPostLink_WhenIsAlreadyPublishedTrue()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<SchoolNameViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<IsAtSchoolViewModel>>(), validatorMock.Object);
+
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateSchoolName, SchoolNameUrl);
+        var result = (ViewResult)sut.GetSchoolName();
+
+        Assert.That(result.Model, Is.TypeOf<SchoolNameViewModel>());
+        var vm = result.Model as SchoolNameViewModel;
+        vm!.PostLink.Should().Be(SchoolNameUrl);
+    }
+
+    [Test, MoqAutoData]
     public void Get_HasSeenPreviewTrue_CancelLinkIsCheckYourAnswers()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -66,6 +89,25 @@ public class SchoolEventControllerSchoolNameTests
         vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
+    [Test, MoqAutoData]
+    public void Get_IsAlreadyPublishedTrue_CancelLinkIsCalendarEvent()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<SchoolNameViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<IsAtSchoolViewModel>>(), validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
+        var result = (ViewResult)sut.GetSchoolName();
+
+        Assert.That(result.Model, Is.TypeOf<SchoolNameViewModel>());
+        var vm = result.Model as SchoolNameViewModel;
+        vm!.CancelLink.Should().Be(CalendarEventUrl);
+    }
 
     [Test, MoqAutoData]
     public void Get_HasSeenPreviewFalse_CancelLinkIsManageEvents()
@@ -108,7 +150,6 @@ public class SchoolEventControllerSchoolNameTests
         vm!.PostLink.Should().Be(PostUrl);
         vm.SearchResult.Should().Be(expectedResult);
     }
-
 
     [TestCase("12345")]
     [TestCase("54321")]
@@ -164,6 +205,35 @@ public class SchoolEventControllerSchoolNameTests
         sessionServiceMock.Verify(s =>
             s.Set(It.Is<EventSessionModel>(m => m.SchoolName == schoolName && m.Urn == urn)));
         result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
+    }
+
+    [Test]
+    public void Post_IsAlreadyPublishedTrue_RedirectToCalendarEvent()
+    {
+        var schoolName = "school name";
+        var urn = "32123";
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<SchoolNameViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new SchoolNameViewModel { Urn = urn, Name = schoolName };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<IsAtSchoolViewModel>>(), validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
+
+        var result = (RedirectToRouteResult)sut.PostSchoolName(submitModel);
+
+        sut.ModelState.IsValid.Should().BeTrue();
+        sessionServiceMock.Verify(s =>
+            s.Set(It.Is<EventSessionModel>(m => m.SchoolName == schoolName && m.Urn == urn)));
+        result.RouteName.Should().Be(RouteNames.CalendarEvent);
     }
 
     [Test, MoqAutoData]
