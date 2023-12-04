@@ -49,6 +49,12 @@ public class NumberOfAttendeesController : Controller
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.PlannedAttendees = submitModel.NumberOfAttendees;
+
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
+
         _sessionService.Set(sessionModel);
 
 

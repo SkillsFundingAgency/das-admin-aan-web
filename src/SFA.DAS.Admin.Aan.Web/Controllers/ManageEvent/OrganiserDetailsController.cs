@@ -52,6 +52,10 @@ public class OrganiserDetailsController : Controller
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.ContactName = submitModel.OrganiserName;
         sessionModel.ContactEmail = submitModel.OrganiserEmail;
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
 
         _sessionService.Set(sessionModel);
 

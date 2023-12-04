@@ -57,6 +57,10 @@ public class GuestSpeakersController : Controller
 
         sessionModel.IsDirectCallFromCheckYourAnswers = false;
 
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
         _sessionService.Set(sessionModel);
 
         if (sessionModel.IsAlreadyPublished)
@@ -127,7 +131,10 @@ public class GuestSpeakersController : Controller
 
         currentGuestList.Add(new GuestSpeaker(submitModel.Name!.Trim(), submitModel.JobRoleAndOrganisation!.Trim(), id));
         sessionModel.GuestSpeakers = currentGuestList;
-
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
         _sessionService.Set(sessionModel);
 
         return sessionModel.IsAlreadyPublished
@@ -149,6 +156,10 @@ public class GuestSpeakersController : Controller
         }
 
         sessionModel.GuestSpeakers = currentGuestList;
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
         _sessionService.Set(sessionModel);
         return sessionModel.IsAlreadyPublished
             ? RedirectToRoute(RouteNames.UpdateEvent.UpdateGuestSpeakerList, new { sessionModel.CalendarEventId })!

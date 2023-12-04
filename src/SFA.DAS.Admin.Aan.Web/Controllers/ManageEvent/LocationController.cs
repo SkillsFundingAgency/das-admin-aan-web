@@ -54,6 +54,11 @@ public class LocationController : Controller
 
         sessionModel.EventLink = submitModel.OnlineEventLink?.Trim();
 
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
+
         _sessionService.Set(sessionModel);
 
         if (sessionModel.IsAlreadyPublished)

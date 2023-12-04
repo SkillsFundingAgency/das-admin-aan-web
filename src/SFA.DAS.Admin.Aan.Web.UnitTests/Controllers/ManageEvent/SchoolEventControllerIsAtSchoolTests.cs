@@ -259,6 +259,30 @@ public class SchoolEventControllerIsAtSchoolTests
         result.RouteName.Should().Be(RouteNames.UpdateEvent.UpdateSchoolName);
     }
 
+    [Test]
+    public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
+    {
+        var isAtSchool = true;
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<IsAtSchoolViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true, HasSeenPreview = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new IsAtSchoolViewModel { IsAtSchool = isAtSchool };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new SchoolEventController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<SchoolNameViewModel>>());
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateSchoolName, SchoolNameUrl);
+
+        sut.PostIsAtSchool(submitModel);
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
+    }
+
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventIsAtSchool_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,

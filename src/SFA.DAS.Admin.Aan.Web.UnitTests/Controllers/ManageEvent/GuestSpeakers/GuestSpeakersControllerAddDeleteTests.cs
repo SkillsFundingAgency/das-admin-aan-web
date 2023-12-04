@@ -204,9 +204,36 @@ public class GuestSpeakersControllerAddDeleteTests
 
         var result = (RedirectToRouteResult)sut.PostAddGuestSpeaker(submitModel);
 
-
         result.RouteName.Should().Be(RouteNames.UpdateEvent.UpdateGuestSpeakerList);
     }
+
+    [Test]
+    public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
+    {
+
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<GuestSpeakerAddViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            GuestSpeakers = new List<GuestSpeaker>(),
+            IsAlreadyPublished = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new GuestSpeakerAddViewModel { Name = "name", JobRoleAndOrganisation = "jobRoleAndOrganisation" };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, validatorMock.Object, Mock.Of<IValidator<HasGuestSpeakersViewModel>>());
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.GuestSpeakerList, GuestSpeakerListUrl);
+
+        sut.PostAddGuestSpeaker(submitModel);
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
+    }
+
 
     [Test, MoqAutoData]
     public void Post_WhenValidationErrors_RedirectBackToPage(
@@ -290,5 +317,29 @@ public class GuestSpeakersControllerAddDeleteTests
 
         sessionServiceMock.Verify(s =>
             s.Set(It.Is<EventSessionModel>(x => x.GuestSpeakers.Count == 2)));
+    }
+
+    [Test, MoqAutoData]
+    public void Delete_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] GuestSpeakersController sut)
+    {
+        var guestSpeakerList = new List<GuestSpeaker>();
+        var idToRemove = 5;
+        var idFirst = 1;
+        var idSecond = 2;
+        var guestSpeakerToRemove = new GuestSpeaker("Aaron Aardvark", "Chief", idToRemove);
+
+        guestSpeakerList.Add(new GuestSpeaker("Betty Boop", "President", idFirst));
+        guestSpeakerList.Add(guestSpeakerToRemove);
+        guestSpeakerList.Add(new GuestSpeaker("Charlie Chaplin", "Bottle Washer", idSecond));
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.GuestSpeakerList, GuestSpeakerListUrl);
+
+        var sessionModel = new EventSessionModel { GuestSpeakers = guestSpeakerList, IsAlreadyPublished = true, HasChangedEvent = false };
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        sut.DeleteGuestSpeaker(idToRemove);
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
     }
 }

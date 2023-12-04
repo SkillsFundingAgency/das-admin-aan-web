@@ -52,6 +52,10 @@ public class EventTypeController : Controller
         }
 
         sessionModel.EventTitle = submitModel.EventTitle;
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
 
         _sessionService.Set(sessionModel);
 
