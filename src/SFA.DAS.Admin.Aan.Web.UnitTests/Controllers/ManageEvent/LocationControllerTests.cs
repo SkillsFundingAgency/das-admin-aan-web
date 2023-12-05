@@ -219,6 +219,34 @@ public class LocationControllerTests
         result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
+    [Test]
+    public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<LocationViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            HasChangedEvent = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new LocationViewModel { Postcode = "LE12 1QW", OnlineEventLink = "https://www.google.com", EventFormat = EventFormat.Hybrid };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new LocationController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+
+        sut.Post(submitModel);
+
+        sut.ModelState.IsValid.Should().BeTrue();
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
+    }
+
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventLocation_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,

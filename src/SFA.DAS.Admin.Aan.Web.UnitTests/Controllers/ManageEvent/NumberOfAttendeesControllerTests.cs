@@ -169,6 +169,32 @@ public class NumberOfAttendeesControllerTests
     }
 
     [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
+    {
+        var calendarEventId = Guid.NewGuid();
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<NumberOfAttendeesViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new NumberOfAttendeesViewModel();
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new NumberOfAttendeesController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.Post(submitModel);
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
+    }
+
+    [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventNumberOfAttendees_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] NumberOfAttendeesController sut)

@@ -236,6 +236,31 @@ public class SchoolEventControllerSchoolNameTests
         result.RouteName.Should().Be(RouteNames.CalendarEvent);
     }
 
+    [Test]
+    public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
+    {
+        var schoolName = "school name";
+        var urn = "32123";
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<SchoolNameViewModel>>();
+
+        var sessionModel = new EventSessionModel { IsAlreadyPublished = true };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new SchoolNameViewModel { Urn = urn, Name = schoolName };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new SchoolEventController(sessionServiceMock.Object, Mock.Of<IValidator<IsAtSchoolViewModel>>(), validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
+
+        sut.PostSchoolName(submitModel);
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
+    }
+
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventLocation_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,

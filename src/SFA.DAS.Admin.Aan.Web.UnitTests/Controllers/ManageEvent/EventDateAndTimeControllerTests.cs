@@ -215,6 +215,37 @@ public class EventDateAndTimeControllerTests
         result.RouteName.Should().Be(RouteNames.CalendarEvent);
     }
 
+    [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
+    {
+        var calendarEventId = Guid.NewGuid();
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true,
+            DateOfEvent = DateTime.Today.AddDays(1),
+            StartHour = 12,
+            StartMinutes = 0,
+            EndHour = 13,
+            EndMinutes = 30,
+            HasChangedEvent = false
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventDateAndTimeViewModel();
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new EventDateAndTimeController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.Post(submitModel);
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
+    }
 
     [TestCase(12, 0, 13, 0)]
     public void Post_SetEventDateTimeOnSessionModel(int startHour, int startMinutes, int endHour, int endMinutes)

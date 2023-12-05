@@ -49,14 +49,18 @@ public class NumberOfAttendeesController : Controller
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.PlannedAttendees = submitModel.NumberOfAttendees;
-        _sessionService.Set(sessionModel);
 
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
+
+        _sessionService.Set(sessionModel);
 
         if (sessionModel.IsAlreadyPublished)
         {
             return RedirectToRoute(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId });
         }
-
 
         return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
     }

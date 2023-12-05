@@ -206,6 +206,33 @@ public class OrganiserDetailsControllerTests
     }
 
     [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
+    {
+        var calendarEventId = Guid.NewGuid();
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<OrganiserDetailsViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true,
+            HasChangedEvent = false
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new OrganiserDetailsViewModel();
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new OrganiserDetailsController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.Post(submitModel);
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
+    }
+
+    [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventLocation_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] OrganiserDetailsController sut)
