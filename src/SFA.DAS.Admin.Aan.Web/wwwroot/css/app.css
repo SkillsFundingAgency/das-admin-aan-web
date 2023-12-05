@@ -72,19 +72,18 @@
 
 .app-calendar__header,
 .app-calendar__day {
-  font-family: "GDS Transport",arial,sans-serif;
+  font-family: "GDS Transport", arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   font-size: 16px;
 }
 
 .app-calendar__header {
-  background: #2C7298;
+  background: #2c7298;
   color: #fff;
   font-weight: 700;
   text-align: center;
   padding: 10px 0;
 }
-
 
 .app-calendar__day {
   border-right: 1px solid #ccc;
@@ -108,7 +107,7 @@
 }
 
 .app-calendar__date--today .app-calendar__date-day {
-  background-color: #2C7298;
+  background-color: #2c7298;
   color: #fff;
   min-width: 1.2em;
   border-radius: 50%;
@@ -122,7 +121,7 @@
 
 .app-calendar__event {
   border-left: 8px solid #b1b4b6;
-  background: #F3F2F1;
+  background: #f3f2f1;
   font-weight: 700;
   font-size: 13px;
   padding: 7px;
@@ -131,15 +130,15 @@
 }
 
 .app-calendar__event--Hybrid {
-  border-color: #85994B;
+  border-color: #85994b;
 }
 
 .app-calendar__event--InPerson {
-  border-color: #6F72AF;
+  border-color: #6f72af;
 }
 
 .app-calendar__event--Online {
-  border-color: #912B88;
+  border-color: #912b88;
 }
 
 a.app-calendar__event {
@@ -147,23 +146,23 @@ a.app-calendar__event {
   color: #0b0c0c;
 }
 
-  a.app-calendar__event:hover {
-    color: #0b0c0c;
-    background-color: #ddd;
-  }
+a.app-calendar__event:hover {
+  color: #0b0c0c;
+  background-color: #ddd;
+}
 
-  a.app-calendar__event:focus {
-    background-color: #fd0;
-    color: #0b0c0c;
-    border-color: #0b0c0c;
-  }
+a.app-calendar__event:focus {
+  background-color: #fd0;
+  color: #0b0c0c;
+  border-color: #0b0c0c;
+}
 
 .app-calendar-legend {
   border-radius: 12px;
   max-width: 240px;
   padding: 10px 20px;
   border: 1px solid #b1b4b6;
-  font-family: "GDS Transport",arial,sans-serif;
+  font-family: "GDS Transport", arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   color: #0b0c0c;
   float: right;
@@ -202,7 +201,7 @@ a.app-calendar__event {
 }
 
 .app-calendar-nav__link {
-  background: #2C7298;
+  background: #2c7298;
   width: 25px;
   height: 25px;
   display: flex;
@@ -221,7 +220,7 @@ a.app-calendar__event {
 }
 
 .app-calendar-nav__link:focus .app-calendar-nav__icon {
-  fill: #000
+  fill: #000;
 }
 
 .app-calendar-nav__link-title {
@@ -233,13 +232,13 @@ a.app-calendar__event {
   margin-top: 40px;
 }
 
-  .app-icon-list > li {
-    border-bottom: 1px solid #b1b4b6;
-    padding-top: 30px;
-    padding-bottom: 20px;
-    padding-right: 100px;
-    position: relative;
-  }
+.app-icon-list > li {
+  border-bottom: 1px solid #b1b4b6;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  padding-right: 100px;
+  position: relative;
+}
 
 .app-icon-list__icon {
   position: absolute;
@@ -248,7 +247,7 @@ a.app-calendar__event {
   top: 50%;
   right: 0;
   margin-top: -30px;
-  color: #1D3150;
+  color: #1d3150;
 }
 
 .app-tag {
@@ -354,9 +353,9 @@ a.app-calendar__event {
     width: 30%;
   }
 
-    .app-speaker > p {
-      margin-bottom: 0;
-    }
+  .app-speaker > p {
+    margin-bottom: 0;
+  }
 }
 
 .app-attendee-list {
@@ -364,10 +363,10 @@ a.app-calendar__event {
   border-top: 1px solid #b1b4b6;
 }
 
-  .app-attendee-list > li {
-    padding: 10px 0;
-    border-bottom: 1px solid #b1b4b6;
-  }
+.app-attendee-list > li {
+  padding: 10px 0;
+  border-bottom: 1px solid #b1b4b6;
+}
 
 .app-details .govuk-details__summary:before,
 .app-details[open] > .govuk-details__summary:before {
@@ -389,12 +388,12 @@ a.app-calendar__event {
   left: 6px;
   border-left: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
-  transform: rotate(-45deg)
+  transform: rotate(-45deg);
 }
 
 .app-details[open] > .govuk-details__summary:after {
   transform: rotate(135deg);
-  top: 10px
+  top: 10px;
 }
 
 a.das-show-hide__button {
@@ -402,35 +401,35 @@ a.das-show-hide__button {
   padding-left: 25px;
 }
 
-  a.das-show-hide__button:before {
-    content: "";
-    border-radius: 50%;
-    border: 1px solid currentColor;
-    width: 17px;
-    height: 17px;
-    clip-path: none;
-    position: absolute;
-    left: 0;
-    top: 3px;
-  }
+a.das-show-hide__button:before {
+  content: "";
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  width: 17px;
+  height: 17px;
+  clip-path: none;
+  position: absolute;
+  left: 0;
+  top: 3px;
+}
 
-  a.das-show-hide__button:after {
-    content: "";
-    display: block;
-    width: 5px;
-    height: 5px;
-    position: absolute;
-    top: 8px;
-    left: 6px;
-    border-left: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: rotate(-45deg)
-  }
+a.das-show-hide__button:after {
+  content: "";
+  display: block;
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  top: 8px;
+  left: 6px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
 
-  a.das-show-hide__button[aria-expanded="false"]:after {
-    transform: rotate(135deg);
-    top: 10px
-  }
+a.das-show-hide__button[aria-expanded="false"]:after {
+  transform: rotate(135deg);
+  top: 10px;
+}
 
 .das-flex-space-around {
   display: -webkit-box;
@@ -451,37 +450,40 @@ a.das-show-hide__button {
 }
 
 .das-search-title {
-    clear: both;
-    float: left;
-    margin-right: 7px;
-    font-weight: 700;
-    flex-basis: 35%;
+  clear: both;
+  float: left;
+  margin-right: 7px;
+  font-weight: 700;
+  flex-basis: 35%;
 }
 
-.das-pagination-links > a, .das-pagination-links span {
+.das-pagination-links > a,
+.das-pagination-links span {
   height: 40px;
   line-height: 40px;
   margin-left: 15px;
 }
 
 .app-tag--Published {
-  color: #005a30;background: #cce2d8;
+  color: #005a30;
+  background: #cce2d8;
 }
 
 .app-tag--Cancelled {
-  color: #383f43;background: #eeefef;
+  color: #383f43;
+  background: #eeefef;
 }
 
 .app-user-header {
-    background-color: #1d70b8;
-    margin-top: -10px;
-    padding-top: 15px;
-    padding-bottom: 5px
+  background-color: #1d70b8;
+  margin-top: -10px;
+  padding-top: 15px;
+  padding-bottom: 5px;
 }
 
 .app-user-header__name {
-    color: #fff;
-    margin: 10px 0
+  color: #fff;
+  margin: 10px 0;
 }
 
 /* CK Editor Styles */
@@ -512,15 +514,16 @@ a.das-show-hide__button {
   box-shadow: inset 0 0 0 2px;
 }
 
-.app-editor .ck.ck-button.ck-on, .app-editor a.ck.ck-button.ck-on {
- background-color: #fd0;
- color: #0b0c0c;
+.app-editor .ck.ck-button.ck-on,
+.app-editor a.ck.ck-button.ck-on {
+  background-color: #fd0;
+  color: #0b0c0c;
 }
 
 .app-editor .ck-content ul,
 .app-editor .ck-content ol {
   color: #0b0c0c;
-  font-family: "GDS Transport",arial,sans-serif;
+  font-family: "GDS Transport", arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
@@ -536,4 +539,48 @@ a.das-show-hide__button {
   margin-right: 5px;
   position: relative;
   font-size: 19px;
+}
+
+.app-tag--Apprentice {
+  background-color: #00703c;
+}
+
+.app-tag--Employer {
+  background-color: #4c2c92;
+}
+
+.app-tag--RegionalChair {
+  background-color: #5694ca;
+}
+
+.app-definition-list--inline {
+  font-size: 14px;
+  display: block;
+  margin: 10px 0 0;
+  color: #505a5f;
+}
+
+.app-definition-list--inline dt {
+  display: inline-block;
+}
+
+.app-definition-list--inline dd {
+  display: inline-block;
+  margin: 0;
+}
+
+@media (min-width: 40.0625em) {
+  .app-definition-list--inline {
+    font-size: 16px;
+    display: inline-block;
+    margin: 0;
+  }
+  .app-definition-list--inline dt {
+    margin-left: 5px;
+  }
+
+  .app-definition-list--inline dd {
+    display: inline-block;
+    margin: 0;
+  }
 }

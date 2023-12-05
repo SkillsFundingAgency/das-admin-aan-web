@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
+﻿using SFA.DAS.Aan.SharedUi.Models;
+
+namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 
 public class NetworkEventsViewModel
 {
