@@ -283,6 +283,38 @@ public class EventTypeControllerTests
         result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
+    [Test]
+    public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
+    {
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventTypeViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            IsAlreadyPublished = true
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventTypeViewModel { EventTitle = "title" };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.ValidateAsync(submitModel, It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
+
+        var outerApiMock = new Mock<IOuterApiClient>();
+        outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(new List<CalendarDetail>());
+        outerApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(new GetRegionsResult());
+
+        var sut = new EventTypeController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
+
+        sut.Post(submitModel, new CancellationToken());
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
+    }
+
     [Test, MoqAutoData]
     public void Post_WhenValidationErrors_RedirectToEventFormat(
         [Frozen] Mock<ISessionService> sessionServiceMock,

@@ -6,7 +6,7 @@ public class ReviewEventViewModel : ManageEventViewModelBase
 {
     public string? PreviewLink { get; set; }
     public bool HasSeenPreview { get; set; }
-
+    public bool HasChangedEvent { get; set; }
     public EventFormat? EventFormat { get; set; }
 
     public string? EventTitle { get; set; }
@@ -84,6 +84,7 @@ public class ReviewEventViewModel : ManageEventViewModelBase
             OrganiserEmail = source.ContactEmail,
             NumberOfAttendees = source.PlannedAttendees,
             LastUpdatedDate = source.LastUpdatedDate.GetValueOrDefault(),
-            PageTitle = source.PageTitle
+            PageTitle = source.PageTitle,
+            HasChangedEvent = source.HasChangedEvent
         };
 }

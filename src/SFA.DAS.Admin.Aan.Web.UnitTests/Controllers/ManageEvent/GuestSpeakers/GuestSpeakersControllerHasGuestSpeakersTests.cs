@@ -219,6 +219,37 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
     }
 
     [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
+    {
+        var calendarEventId = Guid.NewGuid();
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<HasGuestSpeakersViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true,
+            DateOfEvent = DateTime.Today.AddDays(1),
+            StartHour = 12,
+            StartMinutes = 0,
+            EndHour = 13,
+            EndMinutes = 30
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new HasGuestSpeakersViewModel { HasGuestSpeakers = true };
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new GuestSpeakersController(sessionServiceMock.Object, Mock.Of<IValidator<GuestSpeakerAddViewModel>>(), validatorMock.Object);
+
+        sut.PostHasGuestSpeakers(submitModel);
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
+    }
+
+    [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfHasGuestSpeakers_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] GuestSpeakersController sut)

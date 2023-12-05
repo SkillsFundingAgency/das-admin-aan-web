@@ -217,6 +217,33 @@ public class EventDescriptionControllerTests
     }
 
     [Test, MoqAutoData]
+    public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
+    {
+        var calendarEventId = Guid.NewGuid();
+        var sessionServiceMock = new Mock<ISessionService>();
+        var validatorMock = new Mock<IValidator<EventDescriptionViewModel>>();
+
+        var sessionModel = new EventSessionModel
+        {
+            CalendarEventId = calendarEventId,
+            IsAlreadyPublished = true,
+            HasChangedEvent = false
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventDescriptionViewModel();
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
+
+        var sut = new EventDescriptionController(sessionServiceMock.Object, validatorMock.Object);
+
+        sut.Post(submitModel);
+        sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
+    }
+
+    [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventDescription_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] EventDescriptionController sut)

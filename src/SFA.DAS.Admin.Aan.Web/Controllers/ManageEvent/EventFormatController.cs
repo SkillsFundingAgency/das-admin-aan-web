@@ -48,6 +48,11 @@ public class EventFormatController : Controller
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.EventFormat = submitModel.EventFormat;
 
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
+
         _sessionService.Set(sessionModel);
 
         if (sessionModel.IsAlreadyPublished)

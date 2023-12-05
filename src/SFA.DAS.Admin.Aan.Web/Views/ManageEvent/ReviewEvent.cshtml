@@ -7,35 +7,52 @@
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-    <partial name="_validationSummary" />
-    <form asp-route="@Model.PostLink" method="POST">
-        <strong class="govuk-tag app-tag--Published govuk-!-margin-bottom-2">
-            Published
-        </strong>
-    <input type="hidden" asp-for="@Model.PostLink"/>
-    <input type="hidden" asp-for="@Model.CancelLink"/>
+        @if (@Model.HasChangedEvent)
+        {
+            <div class="govuk-notification-banner" role="region"
+                 aria-labelledby="govuk-notification-banner-title"
+                 data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        Important
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <p class="govuk-notification-banner__heading">
+                        You have made changes to this event. Do not forget to publish your changes.
+                    </p>
+                </div>
+            </div>
+        }
+        <partial name="_validationSummary"/>
+        <form asp-route="@Model.PostLink" method="POST">
+            <strong class="govuk-tag app-tag--Published govuk-!-margin-bottom-2">
+                Published
+            </strong>
+            <input type="hidden" asp-for="@Model.PostLink"/>
+            <input type="hidden" asp-for="@Model.CancelLink"/>
 
-    <h1 class="govuk-heading-l">@Model.EventTitle</h1>
-    
-    <p class="govuk-">
-        Last updated on @Model.LastUpdatedDate.ToString("dd MMMM yyyy") at @Model.LastUpdatedDate.ToString("h:mmtt").ToLower()
-    </p>
-    <div id="previewlink" class="govuk-body">
-        You can <a href="@Model.PreviewLink">preview the event here</a>.
-    </div>
+            <h1 class="govuk-heading-l">@Model.EventTitle</h1>
 
-    <h2 class="govuk-heading-m">
-        Details
-    </h2>
-    <partial name="_CalendarEventReview" />
-    <div class="govuk-button-group">
-        <button
-            data-prevent-double-click="true"
-            type="submit" id="continue" class="govuk-button" data-module="govuk-button">
-            Continue
-        </button>
-        <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
-    </div>
-    </form>
+            <p class="govuk-">
+                Last updated on @Model.LastUpdatedDate.ToString("dd MMMM yyyy") at @Model.LastUpdatedDate.ToString("h:mmtt").ToLower()
+            </p>
+            <div id="previewlink" class="govuk-body">
+                You can <a href="@Model.PreviewLink">preview the event here</a>.
+            </div>
+
+            <h2 class="govuk-heading-m">
+                Details
+            </h2>
+            <partial name="_CalendarEventReview"/>
+            <div class="govuk-button-group">
+                <button
+                    data-prevent-double-click="true"
+                    type="submit" id="continue" class="govuk-button" data-module="govuk-button">
+                    Continue
+                </button>
+                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            </div>
+        </form>
     </div>
 </div>

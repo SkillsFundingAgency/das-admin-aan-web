@@ -53,6 +53,12 @@ public class EventDateAndTimeController : Controller
         sessionModel.StartMinutes = submitModel.StartMinutes;
         sessionModel.EndHour = submitModel.EndHour;
         sessionModel.EndMinutes = submitModel.EndMinutes;
+
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
+
         _sessionService.Set(sessionModel);
 
         if (sessionModel.IsAlreadyPublished)

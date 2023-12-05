@@ -51,6 +51,11 @@ public class EventDescriptionController : Controller
         sessionModel.EventOutline = submitModel.EventOutline?.Trim();
         sessionModel.EventSummary = submitModel.EventSummary?.Trim();
 
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
+
         _sessionService.Set(sessionModel);
 
         if (sessionModel.IsAlreadyPublished)

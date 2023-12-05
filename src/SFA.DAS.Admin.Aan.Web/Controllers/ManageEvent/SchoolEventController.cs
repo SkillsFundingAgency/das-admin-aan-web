@@ -53,6 +53,12 @@ public class SchoolEventController : Controller
 
         sessionModel.IsAtSchool = submitModel.IsAtSchool;
         sessionModel.IsDirectCallFromCheckYourAnswers = false;
+
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
+
         _sessionService.Set(sessionModel);
 
         if (sessionModel.IsAtSchool == true)
@@ -105,6 +111,12 @@ public class SchoolEventController : Controller
 
         sessionModel.SchoolName = submitModel.Name;
         sessionModel.Urn = submitModel.Urn;
+
+        if (sessionModel.IsAlreadyPublished)
+        {
+            sessionModel.HasChangedEvent = true;
+        }
+
         _sessionService.Set(sessionModel);
 
         if (sessionModel.IsAlreadyPublished)
