@@ -11,10 +11,15 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers;
 [Authorize(Roles = Roles.ManageEventsRole)]
 public class CalendarEventController : Controller
 {
-    private readonly IOuterApiClient _outerApiClient;
-    private readonly ISessionService _sessionService;
     public const string ViewPath = "~/Views/ManageEvent/ReviewEvent.cshtml";
     public const string PreviewViewPath = "~/Views/NetworkEventDetails/Detail.cshtml";
+    public const string EventPreviewHeader = "Event preview";
+    public const string PreviewBackLinkDescription = "back to event page";
+    public const string EventDetailsHeader = "Event details";
+    public const string DetailsBackLinkDescription = "back to manage events";
+
+    private readonly IOuterApiClient _outerApiClient;
+    private readonly ISessionService _sessionService;
 
     public CalendarEventController(IOuterApiClient outerApiClient, ISessionService sessionService)
     {
@@ -48,7 +53,6 @@ public class CalendarEventController : Controller
         return View(ViewPath, model);
     }
 
-
     [HttpPost]
     [Route("events/{calendarEventId}", Name = RouteNames.CalendarEvent)]
     public IActionResult Post()
@@ -61,7 +65,18 @@ public class CalendarEventController : Controller
     public IActionResult GetPreview()
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
+        if (sessionModel == null) return RedirectToRoute(RouteNames.NetworkEvents, null);
         var model = GetPreviewModel(sessionModel);
+        return View(PreviewViewPath, model);
+    }
+
+    [HttpGet]
+    [Route("events/{calendarEventId}/details", Name = RouteNames.EventDetails)]
+    public async Task<IActionResult> GetDetails([FromRoute] Guid calendarEventId, CancellationToken cancellationToken)
+    {
+        var calendarEvent = await _outerApiClient.GetCalendarEvent(_sessionService.GetMemberId(), calendarEventId, cancellationToken);
+        EventSessionModel sessionModel = calendarEvent;
+        var model = GetPreviewModel(sessionModel, true);
         return View(PreviewViewPath, model);
     }
 
@@ -101,14 +116,23 @@ public class CalendarEventController : Controller
         return model;
     }
 
-    private NetworkEventDetailsViewModel GetPreviewModel(EventSessionModel sessionModel)
+    private NetworkEventDetailsViewModel GetPreviewModel(EventSessionModel sessionModel, bool IsShowingDetails = false)
     {
         var model = (NetworkEventDetailsViewModel)sessionModel;
-
         model.IsPreview = true;
-        model.BackLinkUrl = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId })!;
+        if (IsShowingDetails)
+        {
+            model.BackLinkUrl = Url.RouteUrl(RouteNames.NetworkEvents)!;
+            model.PreviewHeader = EventDetailsHeader;
+            model.BackLinkDescription = DetailsBackLinkDescription;
+        }
+        else
+        {
+            model.BackLinkUrl = Url.RouteUrl(RouteNames.CalendarEvent, new { sessionModel.CalendarEventId })!;
+            model.PreviewHeader = EventPreviewHeader;
+            model.BackLinkDescription = PreviewBackLinkDescription;
+        }
 
         return model;
     }
-
 }

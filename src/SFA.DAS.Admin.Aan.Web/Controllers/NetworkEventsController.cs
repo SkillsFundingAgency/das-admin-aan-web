@@ -130,8 +130,9 @@ public class NetworkEventsController : Controller
         foreach (var calendarEvent in result.CalendarEvents)
         {
             CalendarEventViewModel vm = calendarEvent;
-            vm.CancelEventLink = Url.RouteUrl(RouteNames.DeleteEvent, new { calendarEvent.CalendarEventId })!;
-            vm.EditEventLink = Url.RouteUrl(RouteNames.CalendarEvent, new { calendarEvent.CalendarEventId })!;
+            vm.CancelEventLink = Url.RouteUrl(RouteNames.DeleteEvent, new { calendarEvent.CalendarEventId });
+            vm.EditEventLink = Url.RouteUrl(RouteNames.CalendarEvent, new { calendarEvent.CalendarEventId });
+            vm.ViewDetailsLink = Url.RouteUrl(RouteNames.EventDetails, new { calendarEvent.CalendarEventId });
             model.CalendarEvents.Add(vm);
         }
         return model;

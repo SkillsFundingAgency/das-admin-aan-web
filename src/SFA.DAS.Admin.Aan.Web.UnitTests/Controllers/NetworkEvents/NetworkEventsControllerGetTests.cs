@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using AutoFixture.NUnit3;
+using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -77,7 +78,27 @@ public class NetworkEventsControllerGetTests
         _toDate = DateTime.Now.AddDays(2);
     }
 
-    [Test, MoqAutoData]
+    [Test, AutoData]
+    public async Task GetCalendarEvents_AppendsLinks(string cancelEventUrl, string editEventUrl, string eventDetailsUrl, GetCalendarEventsQueryResult apiResponse)
+    {
+        _outerApiMock
+            .Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
+                It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
+        var sut = new NetworkEventsController(_outerApiMock.Object, _sessionServiceMock.Object, _validatorMock.Object);
+        sut.AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl)
+            .AddUrlForRoute(RouteNames.DeleteEvent, cancelEventUrl)
+            .AddUrlForRoute(RouteNames.CalendarEvent, editEventUrl)
+            .AddUrlForRoute(RouteNames.EventDetails, eventDetailsUrl);
+
+        var actualResult = await sut.Index(new GetNetworkEventsRequest(), new CancellationToken());
+
+        var model = actualResult.As<ViewResult>().Model.As<NetworkEventsViewModel>();
+        model.CalendarEvents.Should().Contain(c => c.EditEventLink == editEventUrl && c.CancelEventLink == cancelEventUrl && c.ViewDetailsLink == eventDetailsUrl);
+    }
+
+    [Test]
     public void GetCalendarEvents_ReturnsApiResponse()
     {
         var request = new GetNetworkEventsRequest

@@ -264,6 +264,7 @@ public class EventSessionModelTests
         vm.IsPreview.Should().BeTrue();
         vm.Attendees.Count.Should().Be(0);
         vm.AttendeeCount.Should().Be(0);
+        vm.IsActive.Should().Be(source.IsActive);
     }
 
     [TestCase("Hybrid", EventFormat.Hybrid)]
@@ -323,5 +324,20 @@ public class EventSessionModelTests
 
         var result = (EventSessionModel)source;
         result.RegionName.Should().Be(expectedRegionName);
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public void Operator_MappingGetCalendarEventQueryResult_IsActive(bool expectedIsActive)
+    {
+
+        var source = new GetCalendarEventQueryResult
+        {
+            EventGuests = new List<EventGuestModel>(),
+            IsActive = expectedIsActive
+        };
+
+        var result = (EventSessionModel)source;
+        result.IsActive.Should().Be(expectedIsActive);
     }
 }

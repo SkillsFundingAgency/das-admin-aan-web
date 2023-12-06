@@ -53,6 +53,7 @@ public class EventSessionModel
 
     public Guid? CalendarEventId { get; set; }
     public bool IsAlreadyPublished { get; set; }
+    public bool IsActive { get; set; }
     public IEnumerable<AttendeeModel> Attendees { get; set; } = new List<AttendeeModel>();
 
     public string PageTitle => IsAlreadyPublished ? UpdateEvent.PageTitle : CreateEvent.PageTitle;
@@ -161,7 +162,6 @@ public class EventSessionModel
 
     public static implicit operator NetworkEventDetailsViewModel(EventSessionModel source)
     {
-
         var attendees = new List<Attendee>();
         if (source.Attendees.Any())
         {
@@ -182,7 +182,8 @@ public class EventSessionModel
             LocationDetails = new LocationDetails(source.Location, source.Postcode, source.Latitude, source.Longitude, null),
             EventGuests = source.GuestSpeakers.Select(guest => new EventGuest(guest.GuestName, guest.GuestJobTitle)).ToList(),
             Attendees = attendees,
-            IsPreview = true
+            IsPreview = true,
+            IsActive = source.IsActive
         };
 
         return model;
@@ -245,6 +246,7 @@ public class EventSessionModel
             CalendarEventId = source.CalendarEventId,
             IsDirectCallFromCheckYourAnswers = true,
             Attendees = source.Attendees,
+            IsActive = source.IsActive
         };
 
         return model;
