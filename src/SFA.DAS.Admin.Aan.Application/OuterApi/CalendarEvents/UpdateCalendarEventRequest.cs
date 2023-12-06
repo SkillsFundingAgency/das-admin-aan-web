@@ -1,8 +1,10 @@
 ﻿using SFA.DAS.Aan.SharedUi.Constants;
 
 namespace SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
-public class CreateEventRequest
+
+public class UpdateCalendarEventRequest
 {
+    public bool SendUpdateEventNotification { get; set; }
     public int? CalendarId { get; set; }
     public EventFormat? EventFormat { get; set; }
     public DateTime? StartDate { get; set; }

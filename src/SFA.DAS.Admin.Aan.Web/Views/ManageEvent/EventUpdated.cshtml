@@ -1,0 +1,33 @@
+﻿@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.EventUpdatedViewModel
+@{
+    ViewData["Title"] = "Update Calendar Event";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+                You have successfully updated a network event
+            </h1>
+
+        </div>
+        
+        <h1 class="govuk-heading-l">
+            What happens next?
+        </h1>
+        <p>
+            You have successfully updated a network event and it has been changed accordingly in the events hub. If you requested attendees be notified of the updates, thy will be notified by email of the changes to the event.
+        </p>
+        <ul class="govuk-list app-icon-list">
+            <li>
+                <h2 class="govuk-heading-m"><a href="@Model.AdministratorHubLink" class="govuk-link govuk-link--no-visited-state">Administrator Hub</a></h2>
+                <p>Create network events as part of your role as a chair or coordinator</p>
+                <svg class="app-icon-list__icon"><use href="/img/sprite.svg#icon-manage-users" /></svg>
+            </li>
+                <li>
+                <h2 class="govuk-heading-m"><a href="@Model.ManageEventsLink" class="govuk-link govuk-link--no-visited-state">Manage events</a></h2>
+                    <p>Discover suitable events, manage your upcoming events and give feedback about events you have attended.</p>
+                    <svg class="app-icon-list__icon"><use href="/img/sprite.svg#icon-manage-events" /></svg>
+                </li>
+        </ul>
+    </div>
+</div>

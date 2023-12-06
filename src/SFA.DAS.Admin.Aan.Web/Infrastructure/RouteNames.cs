@@ -9,6 +9,7 @@ public static class RouteNames
     public const string NetworkEvents = nameof(NetworkEvents);
     public const string DeleteEvent = nameof(DeleteEvent);
     public const string DeleteEventConfirmation = nameof(DeleteEventConfirmation);
+    public const string UpdateEventConfirmation = nameof(UpdateEventConfirmation);
     public const string CalendarEvent = nameof(CalendarEvent);
     public const string EventDetails = nameof(EventDetails);
 
@@ -49,5 +50,6 @@ public static class RouteNames
         public const string UpdateIsAtSchool = nameof(UpdateIsAtSchool);
         public const string UpdateSchoolName = nameof(UpdateSchoolName);
         public const string UpdateNumberOfAttendees = nameof(UpdateNumberOfAttendees);
+        public const string NotifyAttendees = nameof(NotifyAttendees);
     }
 }
