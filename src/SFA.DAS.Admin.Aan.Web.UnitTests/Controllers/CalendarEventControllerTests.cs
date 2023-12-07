@@ -1,5 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Aan.SharedUi.Models;
@@ -398,11 +399,48 @@ public class CalendarEventControllerTests
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
 
         var result = sut.GetPreview();
-        var actualResult = result as ViewResult;
+        var actualResult = result.As<ViewResult>();
 
-        Assert.That(actualResult!.Model, Is.TypeOf<NetworkEventDetailsViewModel>());
-        var vm = actualResult.Model as NetworkEventDetailsViewModel;
-        vm!.BackLinkUrl.Should().Be(CalendarEventUrl);
-        sessionServiceMock.Verify(x => x.Get<EventSessionModel>(), Times.Once);
+        using (new AssertionScope())
+        {
+            actualResult.Model.Should().BeOfType<NetworkEventDetailsViewModel>();
+            var vm = actualResult.Model.As<NetworkEventDetailsViewModel>();
+            vm.BackLinkUrl.Should().Be(CalendarEventUrl);
+            vm.BackLinkDescription.Should().Be(CalendarEventController.PreviewBackLinkDescription);
+            vm.PreviewHeader.Should().Be(CalendarEventController.EventPreviewHeader);
+            sessionServiceMock.Verify(x => x.Get<EventSessionModel>(), Times.Once);
+        }
+    }
+
+    [Test]
+    public void GetCalendarEventPreview_SessionModelMissing_RedirectsToManageEvents()
+    {
+        CalendarEventController sut = new(Mock.Of<IOuterApiClient>(), Mock.Of<ISessionService>());
+        var result = sut.GetPreview();
+        result.Should().BeOfType<RedirectToRouteResult>();
+        result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.NetworkEvents);
+    }
+
+    [Test, AutoData]
+    public async Task GetCalendarEventDetails_ReturnsPreview(string networkEventsUrl, GetCalendarEventQueryResult apiResponse, Guid memberId, Guid calendarEventId, CancellationToken cancellationToken)
+    {
+        Mock<ISessionService> serviceMock = new();
+        serviceMock.Setup(s => s.GetMemberId()).Returns(memberId);
+        Mock<IOuterApiClient> apiMock = new();
+        apiMock.Setup(a => a.GetCalendarEvent(memberId, calendarEventId, cancellationToken)).ReturnsAsync(apiResponse);
+        CalendarEventController sut = new(apiMock.Object, serviceMock.Object);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, networkEventsUrl);
+
+        var result = await sut.GetDetails(calendarEventId, cancellationToken);
+
+        using (new AssertionScope())
+        {
+            result.Should().BeOfType<ViewResult>();
+            result.As<ViewResult>().ViewName.Should().Be(CalendarEventController.PreviewViewPath);
+            var vm = result.As<ViewResult>().Model.As<NetworkEventDetailsViewModel>();
+            vm.BackLinkUrl.Should().Be(networkEventsUrl);
+            vm.BackLinkDescription.Should().Be(CalendarEventController.DetailsBackLinkDescription);
+            vm.PreviewHeader.Should().Be(CalendarEventController.EventDetailsHeader);
+        }
     }
 }
