@@ -7,7 +7,7 @@ using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
+namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageMembers;
 public class EventUpdatedControllerTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
