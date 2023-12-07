@@ -17,7 +17,7 @@
                 <input type="hidden" asp-for="@Model.PostLink"/> 
                 <input type="hidden" asp-for="@Model.CancelLink"/>
                 <div esfa-validation-marker-for="@Model.IsNotifyAttendees" class="govuk-form-group">
-                    <span asp-validation-for="IsNotifyAttendees" class="govuk-error-message"></span>
+                    <span asp-validation-for="IsNotifyAttendees" class="govuk-error-message" id="IsNotifyAttendees"></span>
                     <div id="EventFormat" class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item">
                             <input asp-for="IsNotifyAttendees" id="true" class="govuk-radios__input" type="radio" value="true"
