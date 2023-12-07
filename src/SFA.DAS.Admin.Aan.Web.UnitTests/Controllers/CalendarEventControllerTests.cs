@@ -1,7 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
-using FluentValidation;
 using FluentAssertions.Execution;
+using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -511,7 +511,7 @@ public class CalendarEventControllerTests
     [Test]
     public void GetCalendarEventPreview_SessionModelMissing_RedirectsToManageEvents()
     {
-        CalendarEventController sut = new(Mock.Of<IOuterApiClient>(), Mock.Of<ISessionService>());
+        CalendarEventController sut = new(Mock.Of<IOuterApiClient>(), Mock.Of<ISessionService>(), Mock.Of<IValidator<ReviewEventViewModel>>());
         var result = sut.GetPreview();
         result.Should().BeOfType<RedirectToRouteResult>();
         result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.NetworkEvents);
@@ -524,7 +524,7 @@ public class CalendarEventControllerTests
         serviceMock.Setup(s => s.GetMemberId()).Returns(memberId);
         Mock<IOuterApiClient> apiMock = new();
         apiMock.Setup(a => a.GetCalendarEvent(memberId, calendarEventId, cancellationToken)).ReturnsAsync(apiResponse);
-        CalendarEventController sut = new(apiMock.Object, serviceMock.Object);
+        CalendarEventController sut = new(apiMock.Object, serviceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, networkEventsUrl);
 
         var result = await sut.GetDetails(calendarEventId, cancellationToken);
