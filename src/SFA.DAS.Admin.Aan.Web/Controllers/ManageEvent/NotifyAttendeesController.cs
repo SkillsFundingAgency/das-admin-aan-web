@@ -8,7 +8,7 @@ using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
-namespace SFA.DAS.Admin.Aan.Web.Controllers.UpdateEvent;
+namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
 public class NotifyAttendeesController : Controller
@@ -59,6 +59,5 @@ public class NotifyAttendeesController : Controller
         await _outerApiClient.UpdateCalendarEvent(_sessionService.GetMemberId(), calendarEventId, request, cancellationToken);
 
         return RedirectToRoute(RouteNames.UpdateEventConfirmation, new { calendarEventId = sessionModel.CalendarEventId });
-
     }
 }

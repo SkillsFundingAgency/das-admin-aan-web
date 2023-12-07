@@ -29,7 +29,6 @@ public interface IOuterApiClient
     Task<PostCalendarEventResult> PostCalendarEvent([Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [Body] CreateEventRequest request, CancellationToken cancellationToken);
 
     [Put("/calendarEvents/{calendarEventId}")]
-    [AllowAnyStatusCode]
     Task UpdateCalendarEvent(
         [Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId,
         [Path("calendarEventId")] Guid calendarEventId,
@@ -37,7 +36,6 @@ public interface IOuterApiClient
         CancellationToken cancellationToken);
 
     [Delete("/calendarEvents/{calendarEventId}")]
-    [AllowAnyStatusCode]
     Task DeleteCalendarEvent(
         [Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId,
         [Path("calendarEventId")] Guid calendarEventId,
