@@ -37,8 +37,10 @@ public class PreviewEventController : Controller
         var model = (NetworkEventDetailsViewModel)sessionModel;
 
         model.IsPreview = true;
+        model.IsActive = true;
         model.BackLinkUrl = Url.RouteUrl(RouteNames.CreateEvent.CheckYourAnswers)!;
-
+        model.BackLinkDescription = CalendarEventController.PreviewBackLinkDescription;
+        model.PreviewHeader = CalendarEventController.EventPreviewHeader;
         return model;
     }
 }
