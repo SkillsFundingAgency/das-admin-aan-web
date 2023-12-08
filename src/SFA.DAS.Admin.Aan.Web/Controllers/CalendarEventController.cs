@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Aan.SharedUi.Models;
 using SFA.DAS.Admin.Aan.Application.Services;
@@ -11,6 +13,7 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers;
 [Authorize(Roles = Roles.ManageEventsRole)]
 public class CalendarEventController : Controller
 {
+    private readonly IValidator<ReviewEventViewModel> _validator;
     public const string ViewPath = "~/Views/ManageEvent/ReviewEvent.cshtml";
     public const string PreviewViewPath = "~/Views/NetworkEventDetails/Detail.cshtml";
     public const string EventPreviewHeader = "Event preview";
@@ -21,10 +24,11 @@ public class CalendarEventController : Controller
     private readonly IOuterApiClient _outerApiClient;
     private readonly ISessionService _sessionService;
 
-    public CalendarEventController(IOuterApiClient outerApiClient, ISessionService sessionService)
+    public CalendarEventController(IOuterApiClient outerApiClient, ISessionService sessionService, IValidator<ReviewEventViewModel> validator)
     {
         _outerApiClient = outerApiClient;
         _sessionService = sessionService;
+        _validator = validator;
     }
 
     [HttpGet]
@@ -55,9 +59,21 @@ public class CalendarEventController : Controller
 
     [HttpPost]
     [Route("events/{calendarEventId}", Name = RouteNames.CalendarEvent)]
-    public IActionResult Post()
+    public async Task<IActionResult> Post(Guid calendarEventId, CancellationToken cancellationToken)
     {
-        return RedirectToRoute(RouteNames.NetworkEvents);
+        var sessionModel = _sessionService.Get<EventSessionModel>();
+        if (sessionModel == null) return RedirectToRoute(RouteNames.NetworkEvents);
+        var submitModel = await GetViewModel(sessionModel, cancellationToken);
+
+        var result = await _validator.ValidateAsync(submitModel, cancellationToken);
+
+        if (!result.IsValid)
+        {
+            result.AddToModelState(ModelState);
+            return View(ViewPath, submitModel);
+        }
+
+        return RedirectToRoute(RouteNames.UpdateEvent.NotifyAttendees, new { calendarEventId });
     }
 
     [HttpGet]

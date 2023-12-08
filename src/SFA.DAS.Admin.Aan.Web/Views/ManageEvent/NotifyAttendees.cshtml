@@ -1,0 +1,52 @@
+﻿@using SFA.DAS.Admin.Aan.Web.Infrastructure
+@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.NotifyAttendeesViewModel
+@{
+    ViewData["Title"] = "Update Calendar Event - notify attendees";
+}
+<partial name="_validationSummary" />
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">
+            Publish changes and notify attendees
+        </h1>
+        <h2 class="govuk-heading-m">
+            Do you want to notify attendees of the changes you have made?
+        </h2>
+        <form asp-route="@Model.PostLink" method="POST">
+            <div class="govuk-form-group">
+                <input type="hidden" asp-for="@Model.PostLink"/> 
+                <input type="hidden" asp-for="@Model.CancelLink"/>
+                <div esfa-validation-marker-for="@Model.IsNotifyAttendees" class="govuk-form-group">
+                    <span asp-validation-for="IsNotifyAttendees" class="govuk-error-message" id="IsNotifyAttendees"></span>
+                    <div id="EventFormat" class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input asp-for="IsNotifyAttendees" id="true" class="govuk-radios__input" type="radio" value="true"
+                                   sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="true">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input asp-for="IsNotifyAttendees" id="false" class="govuk-radios__input" type="radio" value="false"
+                                   sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="false">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+            <div class="govuk-button-group">
+                <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Publish changes</button>
+                <a href="@Model.CancelLink" class="govuk-link">Cancel changes</a>
+            </div>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                        Clicking 'Publish changes' will update the event immediately with the changes you have made
+                </strong>
+            </div>
+        </form>
+    </div>
+</div>

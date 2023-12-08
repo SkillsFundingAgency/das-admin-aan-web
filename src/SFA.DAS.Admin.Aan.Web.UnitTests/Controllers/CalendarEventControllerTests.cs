@@ -1,8 +1,11 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Aan.SharedUi.Models;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
@@ -33,6 +36,7 @@ public class CalendarEventControllerTests
     private static readonly string NumberOfAttendeesUrl = Guid.NewGuid().ToString();
     private static readonly string IsAtSchoolUrl = Guid.NewGuid().ToString();
     private static readonly string SchoolNameUrl = Guid.NewGuid().ToString();
+    private static readonly string NotifyAttendeesUrl = Guid.NewGuid().ToString();
 
     private Mock<IOuterApiClient> _outerApiMock = null!;
     private readonly Guid _calendarEventId = Guid.NewGuid();
@@ -92,7 +96,7 @@ public class CalendarEventControllerTests
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
@@ -133,7 +137,7 @@ public class CalendarEventControllerTests
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
@@ -153,7 +157,7 @@ public class CalendarEventControllerTests
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
         sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdatePreviewEvent, UpdateEventUrl);
@@ -181,7 +185,7 @@ public class CalendarEventControllerTests
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
         sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateEventFormat, EventFormatUrl);
 
@@ -200,7 +204,7 @@ public class CalendarEventControllerTests
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
         sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateLocation, EventLocationUrl);
 
@@ -219,7 +223,7 @@ public class CalendarEventControllerTests
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
         sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateHasGuestSpeakers, HasGuestSpeakersUrl);
 
@@ -238,7 +242,7 @@ public class CalendarEventControllerTests
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
         sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateGuestSpeakerList, ListGuestSpeakersUrl);
 
@@ -257,7 +261,7 @@ public class CalendarEventControllerTests
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
         sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateDateAndTime, EventDateAndTimeUrl);
 
@@ -276,7 +280,7 @@ public class CalendarEventControllerTests
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
         sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateDescription, EventDescriptionUrl);
 
@@ -295,7 +299,7 @@ public class CalendarEventControllerTests
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
         sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateOrganiserDetails, OrganiserDetailsUrl);
 
@@ -314,7 +318,7 @@ public class CalendarEventControllerTests
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
         sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateNumberOfAttendees, NumberOfAttendeesUrl);
 
@@ -333,7 +337,7 @@ public class CalendarEventControllerTests
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
         sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateIsAtSchool, IsAtSchoolUrl);
 
@@ -353,7 +357,7 @@ public class CalendarEventControllerTests
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
         sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.UpdateSchoolName, SchoolNameUrl);
 
@@ -365,16 +369,108 @@ public class CalendarEventControllerTests
         vm!.SchoolNameLink.Should().Be(SchoolNameUrl);
     }
 
-    [Test]
-    public void PostCalendarEvent_RedirectToManageEvents()
+    [Test, MoqAutoData]
+    public async Task Post_RedirectsToNotifyAttendees(
+        [Frozen] Mock<IOuterApiClient> outerAPiMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
+        List<CalendarDetail> calendars,
+        GetRegionsResult regionsResult)
     {
-        var sut = new CalendarEventController(Mock.Of<IOuterApiClient>(), Mock.Of<ISessionService>());
+        outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
+        outerAPiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
+
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.ValidateAsync(It.IsAny<ReviewEventViewModel>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
+
+        var sessionServiceMock = new Mock<ISessionService>();
+        var sessionModel = new EventSessionModel
+        {
+            CalendarId = calendars.First().Id,
+            RegionId = regionsResult.Regions.First().Id,
+            DateOfEvent = DateTime.Today,
+            StartHour = DateTime.Today.Hour,
+            StartMinutes = DateTime.Today.Minute,
+            EndHour = DateTime.Today.Hour,
+            EndMinutes = DateTime.Today.Minute,
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new CalendarEventController(outerAPiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.UpdateEvent.NotifyAttendees, NotifyAttendeesUrl);
+
+        var actualResult = await sut.Post(_calendarEventId, new CancellationToken());
+
+        var result = (RedirectToRouteResult)actualResult;
+        sut.ModelState.IsValid.Should().BeTrue();
+        result.RouteName.Should().Be(RouteNames.UpdateEvent.NotifyAttendees);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Post_RedirectsToNetworkEventsWhenSessionModelIsNull(
+        [Frozen] Mock<IOuterApiClient> outerAPiMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock)
+    {
+        var validationResult = new ValidationResult();
+        validatorMock.Setup(v => v.ValidateAsync(It.IsAny<ReviewEventViewModel>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
+
+        var sessionServiceMock = new Mock<ISessionService>();
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns((EventSessionModel)null!);
+
+        var sut = new CalendarEventController(outerAPiMock.Object, sessionServiceMock.Object, validatorMock.Object);
 
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-        var result = (RedirectToRouteResult)sut.Post();
 
-        sut.ModelState.IsValid.Should().BeTrue();
+        var actualResult = await sut.Post(_calendarEventId, new CancellationToken());
+
+        var result = (RedirectToRouteResult)actualResult;
         result.RouteName.Should().Be(RouteNames.NetworkEvents);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Post_RedirectsToNetworkEvents(
+        [Frozen] Mock<IOuterApiClient> outrApiMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
+        List<CalendarDetail> calendars,
+        GetRegionsResult regionsResult)
+    {
+        outrApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
+        outrApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
+
+        var validationResult = new ValidationResult();
+        validationResult.Errors.Add(new ValidationFailure("name", "message"));
+        validatorMock.Setup(v => v.ValidateAsync(It.IsAny<ReviewEventViewModel>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
+
+        var sessionServiceMock = new Mock<ISessionService>();
+        var sessionModel = new EventSessionModel
+        {
+            CalendarId = calendars.First().Id,
+            RegionId = regionsResult.Regions.First().Id,
+            DateOfEvent = DateTime.Today,
+            StartHour = DateTime.Today.Hour,
+            StartMinutes = DateTime.Today.Minute,
+            EndHour = DateTime.Today.Hour,
+            EndMinutes = DateTime.Today.Minute,
+            EventFormat = EventFormat.InPerson,
+            Location = null
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+        var sut = new CalendarEventController(outrApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
+
+        var actualResult = await sut.Post(_calendarEventId, new CancellationToken());
+
+        var result = (ViewResult)actualResult;
+        Assert.That(result.Model, Is.TypeOf<ReviewEventViewModel>());
+        (result.Model as ReviewEventViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
+
     }
 
     [Test, MoqAutoData]
@@ -395,7 +491,7 @@ public class CalendarEventControllerTests
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var sut = new CalendarEventController(outerAPiMock.Object, sessionServiceMock.Object);
+        var sut = new CalendarEventController(outerAPiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
 
         var result = sut.GetPreview();
@@ -415,7 +511,7 @@ public class CalendarEventControllerTests
     [Test]
     public void GetCalendarEventPreview_SessionModelMissing_RedirectsToManageEvents()
     {
-        CalendarEventController sut = new(Mock.Of<IOuterApiClient>(), Mock.Of<ISessionService>());
+        CalendarEventController sut = new(Mock.Of<IOuterApiClient>(), Mock.Of<ISessionService>(), Mock.Of<IValidator<ReviewEventViewModel>>());
         var result = sut.GetPreview();
         result.Should().BeOfType<RedirectToRouteResult>();
         result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.NetworkEvents);
@@ -428,7 +524,7 @@ public class CalendarEventControllerTests
         serviceMock.Setup(s => s.GetMemberId()).Returns(memberId);
         Mock<IOuterApiClient> apiMock = new();
         apiMock.Setup(a => a.GetCalendarEvent(memberId, calendarEventId, cancellationToken)).ReturnsAsync(apiResponse);
-        CalendarEventController sut = new(apiMock.Object, serviceMock.Object);
+        CalendarEventController sut = new(apiMock.Object, serviceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>());
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, networkEventsUrl);
 
         var result = await sut.GetDetails(calendarEventId, cancellationToken);
