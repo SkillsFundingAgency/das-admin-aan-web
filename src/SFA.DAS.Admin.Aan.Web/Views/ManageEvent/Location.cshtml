@@ -5,6 +5,11 @@
 @model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.LocationViewModel
 @{
     ViewData["Title"] = "Create Calendar Event";
+    var subheading = "Provide event location details";
+    @if (Model.ShowLocationDropdown==false)
+    {
+        subheading = "Provide an online event link";
+    }
 }
 
 <partial name="_validationSummary" />
@@ -14,6 +19,7 @@
         <form method="post" asp-route="@Model.PostLink" enctype="multipart/form-data" novalidate>
             <h1 class="govuk-heading-l">
                 <span class="govuk-caption-l">@Model.PageTitle</span>
+                @subheading
             </h1>
             <input asp-for="OrganisationName" id="OrganisationName" type="hidden"/>
             <input asp-for="AddressLine1" id="AddressLine1" type="hidden" />

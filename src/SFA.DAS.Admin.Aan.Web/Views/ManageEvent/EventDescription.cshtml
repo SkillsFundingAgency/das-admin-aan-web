@@ -13,6 +13,7 @@
         <div class="govuk-form-group">
             <h1 class="govuk-heading-l">
                 <span class="govuk-caption-l">@Model.PageTitle</span>
+                Provide more information about your event
             </h1>
             <input type="hidden" asp-for="@Model.PageTitle" />
             <input type="hidden" asp-for="@Model.PostLink"/> 
@@ -27,7 +28,7 @@
                             </label>
                         </h1>
                         <div id="eventOutline-hint" class="govuk-hint">
-                            Short description that outlines the event listing
+                            A short description that outlines the event listing
                         </div>
                         <textarea class="govuk-textarea govuk-js-character-count" id="eventOutline" name="eventOutline" rows="4" aria-describedby="eventOutline-info eventOutline-hint"
                                       sfa-validationerror-class="form-control-error" maxlength="500">@Model.EventOutline</textarea>

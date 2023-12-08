@@ -13,7 +13,8 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-5">Manage events</h1>
-        <p> Create a new network even or search to update, manage or publish existing network events you have created. You can archive or delete network events that are no longer taking place.</p>
+        <p>Create a new network event, or search to update, manage or publish existing network events you have created. You can also cancel network events that are no longer taking place.</p>
+        <p>Your session will time out if you are inactive for 30 minutes.</p>
         <form asp-route="@RouteNames.CreateEvent.CreateNewEvent" method="GET">
             <button type="submit" class="govuk-button" id="create-event">Create event</button>
         </form>

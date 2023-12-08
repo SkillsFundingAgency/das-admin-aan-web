@@ -7,11 +7,13 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <span class="govuk-caption-l">@Model.PageTitle</span>
-        <br/>
         <h1 class="govuk-heading-l">
-            Guest Speakers
+            <span class="govuk-caption-l">@Model.PageTitle</span>
+            Confirm details of guest speaker
         </h1>
+        <p class="govuk-body">
+            Please check the details of your guest speakers are correct and free of typos. If you need to change anything, please delete the speaker and re-add them. You can also add additional speakers.
+        </p>
         <form asp-route="@Model.PostLink" method="POST">
             <div class="govuk-form-group">
                 <input type="hidden" asp-for="@Model.CancelLink"/>
