@@ -25,6 +25,7 @@ namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers
             _mockLogger = new Mock<ILogger<AccountController>>();
         }
 
+        [TearDown] public void TearDown() { _controller?.Dispose(); }
 
         [TestCase("test", "https://test-services.signin.education.gov.uk/approvals/select-organisation?action=request-service", true)]
         [TestCase("pp", "https://test-services.signin.education.gov.uk/approvals/select-organisation?action=request-service", true)]

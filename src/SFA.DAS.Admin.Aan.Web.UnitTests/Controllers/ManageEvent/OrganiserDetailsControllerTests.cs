@@ -94,7 +94,7 @@ public class OrganiserDetailsControllerTests
     [TestCase("location 1", null)]
     [TestCase("location 2", "event online link")]
     [TestCase(null, "event online link")]
-    public void Post_SetEventDetailsOnSessionModel(string organiserName, string? organiserEmail)
+    public void Post_SetEventDetailsOnSessionModel(string? organiserName, string? organiserEmail)
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<OrganiserDetailsViewModel>>();
