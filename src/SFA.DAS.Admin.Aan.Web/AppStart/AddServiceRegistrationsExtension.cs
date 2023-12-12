@@ -11,7 +11,7 @@ public static class AddServiceRegistrationsExtension
 {
     public static IServiceCollection AddServiceRegistrations(this IServiceCollection services, IConfigurationRoot configuration)
     {
-        var outerApiConfiguration = configuration.GetSection(nameof(AdminAanOuterApiConfiguration)).Get<AdminAanOuterApiConfiguration>();
+        var outerApiConfiguration = configuration.GetSection(nameof(AdminAanOuterApiConfiguration)).Get<AdminAanOuterApiConfiguration>()!;
         AddOuterApi(services, outerApiConfiguration);
 
         services.AddTransient<ISessionService, SessionService>();

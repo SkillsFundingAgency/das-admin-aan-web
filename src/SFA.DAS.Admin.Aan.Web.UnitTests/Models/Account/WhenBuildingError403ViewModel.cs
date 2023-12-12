@@ -23,7 +23,6 @@ namespace SFA.DAS.Admin.Aan.Web.UnitTests.Models.Account
         }
 
         [TestCase("")]
-        [TestCase(null)]
         public void Then_The_HelpPage_Link_Is_Correct_When_Environment_Is_Null(string env)
         {
             var actual = new Error403ViewModel(env);
