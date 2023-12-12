@@ -1,12 +1,10 @@
-﻿@using SFA.DAS.Admin.Aan.Web.Infrastructure
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@using SFA.DAS.Admin.Aan.Application.Constants
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using SFA.DAS.Admin.Aan.Web.TagHelpers
 @model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.LocationViewModel
 @{
     ViewData["Title"] = "Create Calendar Event";
     var subheading = "Provide event location details";
-    @if (Model.ShowLocationDropdown==false)
+    @if (!Model.ShowLocationDropdown)
     {
         subheading = "Provide an online event link";
     }
