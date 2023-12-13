@@ -54,7 +54,7 @@ public class NetworkDirectoryController : Controller
         return View(model);
     }
 
-    private static NetworkDirectoryViewModel InitialiseViewModel(GetMembersResponse result)
+    private NetworkDirectoryViewModel InitialiseViewModel(GetMembersResponse result)
     {
         var model = new NetworkDirectoryViewModel
         {
@@ -64,7 +64,7 @@ public class NetworkDirectoryController : Controller
         foreach (var member in result.Members)
         {
             MembersViewModel vm = member;
-            vm.MemberProfileLink = "#";
+            vm.MemberProfileLink = Url.RouteUrl(SharedRouteNames.MemberProfile, new { id = member.MemberId })!;
             model.Members.Add(vm);
         }
 

@@ -23,6 +23,7 @@ public class NetworkDirectoryControllerTests
     private List<Region> _regionsData = null!;
     private const int RegionsCount = 10;
     private string _networkDirectoryUrl = null!;
+    private string _memberProfileUrl = null!;
 
     [SetUp]
     public async Task Init()
@@ -42,7 +43,11 @@ public class NetworkDirectoryControllerTests
 
         NetworkDirectoryController sut = new(apiClientMock.Object);
         _networkDirectoryUrl = fixture.Create<string>();
-        sut.AddUrlHelperMock().AddUrlForRoute(SharedRouteNames.NetworkDirectory, _networkDirectoryUrl);
+        _memberProfileUrl = fixture.Create<string>();
+        sut
+            .AddUrlHelperMock()
+            .AddUrlForRoute(SharedRouteNames.NetworkDirectory, _networkDirectoryUrl)
+            .AddUrlForRoute(SharedRouteNames.MemberProfile, _memberProfileUrl);
 
         _requestModel = fixture.Build<NetworkDirectoryRequestModel>()
             .With(m => m.RegionId, _regionsData.Take(2).Select(r => r.Id).ToList())
@@ -70,7 +75,7 @@ public class NetworkDirectoryControllerTests
     {
         _actualResult.As<ViewResult>().Model.Should().BeOfType<NetworkDirectoryViewModel>();
         _actualResult.As<ViewResult>().Model.As<NetworkDirectoryViewModel>().Members.Count.Should().Be(_getMembersResponse.Members.Count());
-        _actualResult.As<ViewResult>().Model.As<NetworkDirectoryViewModel>().Members.Should().Contain(m => m.MemberProfileLink == "#");
+        _actualResult.As<ViewResult>().Model.As<NetworkDirectoryViewModel>().Members.Should().Contain(m => m.MemberProfileLink == _memberProfileUrl);
     }
 
     [Test]
