@@ -584,3 +584,11 @@ a.das-show-hide__button[aria-expanded="false"]:after {
     margin: 0;
   }
 }
+
+.profile-job-title {
+  font-size: 28px;
+}
+
+.profile-about-me-section {
+  background: #F5F2ED;
+}
