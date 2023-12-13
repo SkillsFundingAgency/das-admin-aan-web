@@ -12,6 +12,7 @@
         <div class="govuk-form-group">
             <h1 class="govuk-heading-l">
                 <span class="govuk-caption-l">@Model.PageTitle</span>
+                    Provide event location details
             </h1>
             <input type="hidden" asp-for="@Model.PageTitle" />
             <input type="hidden" asp-for="@Model.PostLink"/> 
@@ -21,9 +22,12 @@
                 <span asp-validation-for="IsAtSchool" class="govuk-error-message"></span>
                     <div id="IsAtSchool" class="govuk-radios" data-module="govuk-radios">
                     <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        Is this event held at a school?
-                    </legend>
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                Is this event held at a school or place of learning?
+                        </legend>
+                        <div id="eventOutline-hint" class="govuk-hint">
+                            This includes any place of primary, secondary, further or higher education.
+                        </div>
                     <div class="govuk-radios__item">
                         <input asp-for="IsAtSchool" id="true" class="govuk-radios__input" type="radio" value="true"
                                sfa-validationerror-class="form-control-error">

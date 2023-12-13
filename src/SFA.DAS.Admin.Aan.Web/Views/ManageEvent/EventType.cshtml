@@ -13,7 +13,11 @@
         <div class="govuk-form-group">
             <h1 class="govuk-heading-l">
                 <span class="govuk-caption-l">@Model.PageTitle</span>
+                    Confirm your event details
             </h1>
+            <p class="govuk-body">
+                    Please provide a title for your event and select the event type and region.
+            </p>
             <input type="hidden" asp-for="@Model.CancelLink"/>
             <div esfa-validation-marker-for="@Model.EventTitle" class="govuk-form-group">
                 <span asp-validation-for="EventTitle" class="govuk-error-message"></span>

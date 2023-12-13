@@ -9,7 +9,11 @@
         <form asp-route="@Model.PostLink" method="POST">
             <h1 class="govuk-heading-l">
                 <span class="govuk-caption-l">@Model.PageTitle</span>
+                Confirm your event date and time
             </h1>
+            <p class="govuk-body">
+                Please advise when your event will start.
+            </p>
             <input type="hidden" asp-for="@Model.PageTitle" />
             <input type="hidden" asp-for="@Model.PostLink"/> 
             <input type="hidden" asp-for="@Model.CancelLink"/>

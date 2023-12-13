@@ -1,10 +1,13 @@
-﻿@using SFA.DAS.Admin.Aan.Web.Infrastructure
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@using SFA.DAS.Admin.Aan.Application.Constants
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using SFA.DAS.Admin.Aan.Web.TagHelpers
 @model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.LocationViewModel
 @{
     ViewData["Title"] = "Create Calendar Event";
+    var subheading = "Provide event location details";
+    @if (!Model.ShowLocationDropdown)
+    {
+        subheading = "Provide an online event link";
+    }
 }
 
 <partial name="_validationSummary" />
@@ -14,6 +17,7 @@
         <form method="post" asp-route="@Model.PostLink" enctype="multipart/form-data" novalidate>
             <h1 class="govuk-heading-l">
                 <span class="govuk-caption-l">@Model.PageTitle</span>
+                @subheading
             </h1>
             <input asp-for="OrganisationName" id="OrganisationName" type="hidden"/>
             <input asp-for="AddressLine1" id="AddressLine1" type="hidden" />
@@ -60,7 +64,7 @@
                                 Online event link (optional)
                             </legend>
                             <div id="eventOutline-hint" class="govuk-hint">
-                                You can add this later, but you must add an outline event link before the event starts
+                                You can add this later, but you must add an online event link before the event starts
                             </div>
                             <div class="govuk-form-group">
                                 <input class="govuk-input" id="onlineEventLink" name="onlineEventLink" type="text" value="@Model.OnlineEventLink" maxlength="@Model.EventOnlineLinkMaxLength">

@@ -10,8 +10,11 @@
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l">
             <span class="govuk-caption-l">@Model.PageTitle</span>
-            Event format
+            Choose an event format
         </h1>
+        <p class="govuk-body">
+            Please indicate whether this event will take place in person at a physical venue, in an online space or a combination of the two.
+        </p>
         <form asp-route="@Model.PostLink" method="POST">
             <div class="govuk-form-group">
                 <input type="hidden" asp-for="@Model.PageTitle" />
