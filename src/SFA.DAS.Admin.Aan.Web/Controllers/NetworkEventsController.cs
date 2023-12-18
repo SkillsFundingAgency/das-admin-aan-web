@@ -37,7 +37,7 @@ public class NetworkEventsController : Controller
         _sessionService.Delete(nameof(EventSessionModel));
 
         var filterUrl = FilterBuilder.BuildFullQueryString(request, Url);
-        var calendarEventsTask = _outerApiClient.GetCalendarEvents(Guid.NewGuid(), QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
+        var calendarEventsTask = _outerApiClient.GetCalendarEvents(_sessionService.GetMemberId(), QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
         var regionTask = _outerApiClient.GetRegions(cancellationToken);
 
@@ -54,7 +54,7 @@ public class NetworkEventsController : Controller
         model.PaginationViewModel = SetupPagination(calendarEventsTask.Result, filterUrl!);
         var filterChoices = PopulateFilterChoices(request, calendars, regions);
         model.FilterChoices = filterChoices;
-        model.SelectedFilters = FilterBuilder.Build(request, Url, filterChoices.EventStatusChecklistDetails.Lookups, filterChoices.EventTypeChecklistDetails.Lookups, filterChoices.RegionChecklistDetails.Lookups);
+        model.SelectedFilters = FilterBuilder.Build(request, Url, filterChoices.EventStatusChecklistDetails.Lookups, filterChoices.EventTypeChecklistDetails.Lookups, filterChoices.RegionChecklistDetails.Lookups, filterChoices.ShowUserEventsOnlyChecklistDetails.Lookups);
         model.ClearSelectedFiltersLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
 
         return View(model);
@@ -169,6 +169,15 @@ public class NetworkEventsController : Controller
                 Title = "Regions",
                 QueryStringParameterName = "regionId",
                 Lookups = regions.OrderBy(x => x.Ordering).Select(region => new ChecklistLookup(region.Area, region.Id.ToString(), request.RegionId.Exists(x => x == region.Id))).ToList()
+            },
+            ShowUserEventsOnlyChecklistDetails = new ChecklistDetails
+            {
+                Title = "",
+                QueryStringParameterName = "showUserEventsOnly",
+                Lookups = new List<ChecklistLookup>
+                {
+                    new("Show user events only",true.ToString(),  request.ShowUserEventsOnly.FirstOrDefault())
+                }
             }
         };
 }

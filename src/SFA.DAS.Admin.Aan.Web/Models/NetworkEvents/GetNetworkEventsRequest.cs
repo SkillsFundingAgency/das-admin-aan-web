@@ -24,4 +24,6 @@ public class GetNetworkEventsRequest
 
     [FromQuery]
     public int? PageSize { get; set; }
+
+    [FromQuery] public List<bool> ShowUserEventsOnly { get; set; } = new();
 }

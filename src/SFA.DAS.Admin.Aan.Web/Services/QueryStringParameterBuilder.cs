@@ -18,6 +18,10 @@ public static class QueryStringParameterBuilder
         parameters.Add("regionId", request.RegionId.Select(region => region.ToString()).ToArray());
         if (request.Page.HasValue) parameters.Add("page", new[] { request.Page.Value.ToString() }!);
         if (request.PageSize.HasValue) parameters.Add("pageSize", new[] { request.PageSize.Value.ToString() }!);
+        if (request.ShowUserEventsOnly.Count == 1)
+        {
+            parameters.Add("showUserEventsOnly", request.ShowUserEventsOnly.Select(s => s.ToString()).ToArray());
+        }
         return parameters;
     }
 }
