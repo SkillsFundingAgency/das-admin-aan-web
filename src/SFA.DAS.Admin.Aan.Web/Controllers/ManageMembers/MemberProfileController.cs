@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Aan.SharedUi.Infrastructure;
 using SFA.DAS.Aan.SharedUi.Models.AmbassadorProfile;
 using SFA.DAS.Aan.SharedUi.Models.PublicProfile;
@@ -39,15 +40,18 @@ public class MemberProfileController : Controller
     private async Task<AmbassadorProfileViewModel> GetViewModel(Guid id, Guid adminUserId, CancellationToken cancellationToken)
     {
         var memberProfiles = await _outerApiClient.GetMemberProfile(id, adminUserId, cancellationToken);
-        var profilesResult = await _outerApiClient.GetProfilesByUserType(memberProfiles.UserType.ToString(), cancellationToken);
+        var profilesResult = await _outerApiClient.GetProfilesByUserType(memberProfiles.UserType, cancellationToken);
 
         AmbassadorProfileViewModel ambassadorProfileViewModel = new();
 
-        ambassadorProfileViewModel.ConnectViaLinkedIn.LinkedInUrl = MemberProfileHelper.GetLinkedInUrl(profilesResult.Profiles, memberProfiles.Profiles);
-        ambassadorProfileViewModel.ConnectViaLinkedIn.FirstName = memberProfiles.FirstName;
+        ambassadorProfileViewModel.ContactInformation.LinkedInUrl = MemberProfileHelper.GetLinkedInUrl(profilesResult.Profiles, memberProfiles.Profiles);
+        ambassadorProfileViewModel.ContactInformation.FirstName = memberProfiles.FirstName;
+        ambassadorProfileViewModel.ContactInformation.Email = memberProfiles.Email;
 
         ambassadorProfileViewModel.MemberInformation.FullName = memberProfiles.FullName;
         ambassadorProfileViewModel.MemberInformation.RegionName = memberProfiles.RegionName;
+        ambassadorProfileViewModel.MemberInformation.ShowMaturityStatus = true;
+        ambassadorProfileViewModel.MemberInformation.MaturityStatus = MemberMaturityStatus.New;
         ambassadorProfileViewModel.MemberInformation.UserRole = memberProfiles.UserType.ConvertToRole(memberProfiles.IsRegionalChair);
         ambassadorProfileViewModel.MemberInformation.Biography = MemberProfileHelper.GetProfileValueByDescription(MemberProfileConstants.MemberProfileDescription.Biography, profilesResult.Profiles, memberProfiles.Profiles);
         ambassadorProfileViewModel.MemberInformation.JobTitle = MemberProfileHelper.GetProfileValueByDescription(MemberProfileConstants.MemberProfileDescription.JobTitle, profilesResult.Profiles, memberProfiles.Profiles);
@@ -70,7 +74,7 @@ public class MemberProfileController : Controller
 
                 //following are only applicable to Employer user, the values are assumed to be null otherwise
                 ambassadorProfileViewModel.ApprenticeshipInformation.Sectors = memberProfiles.Apprenticeship.Sectors;
-                ambassadorProfileViewModel.ApprenticeshipInformation.ActiveApprenticesCount = memberProfiles.Apprenticeship.ActiveApprenticesCount.GetValueOrDefault();
+                ambassadorProfileViewModel.ApprenticeshipInformation.ActiveApprenticesCount = memberProfiles.Apprenticeship.ActiveApprenticesCount;
             }
         }
 
