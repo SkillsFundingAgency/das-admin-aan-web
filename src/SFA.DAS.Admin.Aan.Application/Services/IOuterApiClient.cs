@@ -1,4 +1,6 @@
 ﻿using RestEase;
+using SFA.DAS.Aan.SharedUi.Models.AmbassadorProfile;
+using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Admins;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
@@ -58,5 +60,5 @@ public interface IOuterApiClient
     Task<GetMemberProfileResponse> GetMemberProfile([Path] Guid memberId, [Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, CancellationToken cancellationToken);
 
     [Get("/profiles/{userType}")]
-    Task<GetProfilesResult> GetProfilesByUserType([Path] string userType, CancellationToken? cancellationToken);
+    Task<GetProfilesResult> GetProfilesByUserType([Path] MemberUserType userType, CancellationToken? cancellationToken);
 }

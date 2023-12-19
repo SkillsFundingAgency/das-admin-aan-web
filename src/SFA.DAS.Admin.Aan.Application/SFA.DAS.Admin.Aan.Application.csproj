@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="RestEase" Version="1.6.4" />
-    <PackageReference Include="SFA.DAS.Aan.SharedUi" Version="3.0.2-prerelease-local" />
+    <PackageReference Include="SFA.DAS.Aan.SharedUi" Version="0.1.80-prerelease-12" />
   </ItemGroup>
 
 </Project>

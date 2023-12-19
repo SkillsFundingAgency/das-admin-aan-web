@@ -1,0 +1,25 @@
+﻿@using SFA.DAS.Aan.SharedUi.Models.PublicProfile;
+
+@model ContactInformationSectionViewModel
+
+<ul class="govuk-list app-icon-profile">
+    <li>
+        <h3 class="govuk-heading-m">Connect with @Model.FirstName via email</h3>
+        <p>
+            Email @Model.FirstName at:<br />
+            <a href="mailto:@Model.Email" target="_blank" class="govuk-link govuk-link--no-visited-state">@Model.Email</a>
+        </p>
+        <svg class="app-icon-profile__icon"><use href="/img/sprite.svg#icon-email" /></svg>
+    </li>
+    @if (!string.IsNullOrEmpty(Model.LinkedInUrl))
+    {
+        <li>
+            <h3 class="govuk-heading-m">Connect with @Model.FirstName on Linkedin</h3>
+            <p>
+                Send @Model.FirstName a connection request: <br /> 
+                <a href="@Model.LinkedInUrl" target="_blank" class="govuk-link govuk-link--no-visited-state">@Model.LinkedInUrl</a>
+             </p>
+            <svg class="app-icon-profile__icon"><use href="/img/sprite.svg#icon-linkedin" /></svg>
+        </li>
+    }
+</ul>
