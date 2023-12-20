@@ -12,6 +12,7 @@ public static class RouteNames
     public const string UpdateEventConfirmation = nameof(UpdateEventConfirmation);
     public const string CalendarEvent = nameof(CalendarEvent);
     public const string EventDetails = nameof(EventDetails);
+    public const string MemberProfile = nameof(MemberProfile);
 
     public static class CreateEvent
     {

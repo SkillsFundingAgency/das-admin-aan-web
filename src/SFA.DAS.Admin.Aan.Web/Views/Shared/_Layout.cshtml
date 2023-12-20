@@ -60,7 +60,7 @@
         </div>
     </header>
 
-    @if (!User.Identity.IsAuthenticated)
+    @if (!User.Identity!.IsAuthenticated)
     {
         <div id="global-header-bar"></div>
     }

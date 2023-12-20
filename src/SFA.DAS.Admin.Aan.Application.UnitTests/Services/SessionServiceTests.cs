@@ -1,11 +1,11 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Text;
+using System.Text.Json;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
-using System.Text;
-using System.Text.Json;
 
 namespace SFA.DAS.Admin.Aan.Application.UnitTests.Services;
 
@@ -18,8 +18,10 @@ public class SessionServiceTests
     public void Before_Each_Test()
     {
         _sessionMock = new Mock<ISession>();
-        var httpContext = new DefaultHttpContext();
-        httpContext.Session = _sessionMock.Object;
+        DefaultHttpContext httpContext = new()
+        {
+            Session = _sessionMock.Object
+        };
         var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
         httpContextAccessorMock.Setup(h => h.HttpContext).Returns(httpContext);
         _sut = new SessionService(httpContextAccessorMock.Object);
@@ -68,12 +70,12 @@ public class SessionServiceTests
     [Test, AutoData]
     public void Get_ContextNotMatching_ReturnsNull(string key)
     {
-        byte[] contextValue;
+        byte[]? contextValue;
         _sessionMock.Setup(s => s.TryGetValue(key, out contextValue)).Returns(false);
 
         var actual = _sut.Get(key);
 
-        _sessionMock.Verify(s => s.TryGetValue(key, out It.Ref<byte[]>.IsAny), Times.Once);
+        _sessionMock.Verify(s => s.TryGetValue(key, out It.Ref<byte[]?>.IsAny), Times.Once);
 
         actual.Should().BeNull();
     }
@@ -106,7 +108,7 @@ public class SessionServiceTests
     }
 
     [Test, AutoData]
-    public void GetOfT_ObjectKeyNotFoundInSession_ReturnsNull(Person value)
+    public void GetOfT_ObjectKeyNotFoundInSession_ReturnsNull()
     {
         var actual = _sut.Get<Person>();
 
@@ -154,7 +156,7 @@ public class SessionServiceTests
     }
 
     [Test]
-    public void Clear_CallsSesssionClear()
+    public void Clear_CallsSessionClear()
     {
         _sut.Clear();
         _sessionMock.Verify(s => s.Clear());

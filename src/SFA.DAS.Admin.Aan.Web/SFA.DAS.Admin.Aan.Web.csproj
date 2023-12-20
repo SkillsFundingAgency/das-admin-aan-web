@@ -8,14 +8,14 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommonMark.NET" Version="0.15.1" />
-		<PackageReference Include="FluentValidation" Version="11.6.0" />
+		<PackageReference Include="FluentValidation" Version="11.8.1" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.6.0" />
-		<PackageReference Include="MediatR" Version="12.1.1" />
-		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.1" />
+		<PackageReference Include="MediatR" Version="12.2.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
-		<PackageReference Include="SFA.DAS.Aan.SharedUi" Version="0.1.74" />
+		<PackageReference Include="SFA.DAS.Aan.SharedUi" Version="0.1.80-prerelease-12" />
 		<PackageReference Include="SFA.DAS.AdminService.Common" Version="0.1.75" />
 		<PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84" />
 		<PackageReference Include="SFA.DAS.DfESignIn.Auth" Version="17.1.74" />

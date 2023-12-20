@@ -160,7 +160,7 @@ public class LocationControllerTests
     [TestCase("AB1 CTX", null, null)]
     [TestCase("AB2 CTX", "event online link", null)]
     [TestCase(null, "event online link", EventFormat.Hybrid)]
-    public void Post_SetEventDetailsOnSessionModel(string postcode, string? eventOnlineLink, EventFormat? eventFormat)
+    public void Post_SetEventDetailsOnSessionModel(string? postcode, string? eventOnlineLink, EventFormat? eventFormat)
     {
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<LocationViewModel>>();

@@ -22,15 +22,11 @@ internal class PreviewEventControllerTests
     [Test, MoqAutoData]
     public void Get_ReturnsNetworkEventDetailsViewModel(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        List<CalendarDetail> calendars)
+        List<CalendarDetail> calendars,
+        List<GuestSpeaker> guestSpeakers)
     {
         outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
         var sessionServiceMock = new Mock<ISessionService>();
-        var guestSpeakers = new List<GuestSpeaker>
-        {
-            new("Joe Cool","Head of Cool",2),
-            new("Mark Niac", "Head of Genius",2)
-        };
 
         var sessionModel = new EventSessionModel
         {
