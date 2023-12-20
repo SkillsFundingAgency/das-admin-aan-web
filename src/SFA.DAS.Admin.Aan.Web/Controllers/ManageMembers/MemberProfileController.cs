@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Aan.SharedUi.Infrastructure;
 using SFA.DAS.Aan.SharedUi.Models.AmbassadorProfile;
 using SFA.DAS.Aan.SharedUi.Models.PublicProfile;
@@ -49,15 +48,19 @@ public class MemberProfileController : Controller
         ambassadorProfileViewModel.ContactInformation.Email = memberProfiles.Email;
 
         ambassadorProfileViewModel.MemberInformation.FullName = memberProfiles.FullName;
-        ambassadorProfileViewModel.MemberInformation.RegionName = memberProfiles.RegionName;
-        ambassadorProfileViewModel.MemberInformation.ShowMaturityStatus = true;
-        ambassadorProfileViewModel.MemberInformation.MaturityStatus = MemberMaturityStatus.New;
+        ambassadorProfileViewModel.MemberInformation.RegionName = (memberProfiles.RegionId != null) ? memberProfiles.RegionName : "Multi-regional";
+
+        ambassadorProfileViewModel.MemberInformation.ShowMaturityTag = true;
+        ambassadorProfileViewModel.MemberInformation.ShowJoinedDate = true;
+        ambassadorProfileViewModel.MemberInformation.JoinedDate = memberProfiles.JoinedDate;
+
+
         ambassadorProfileViewModel.MemberInformation.UserRole = memberProfiles.UserType.ConvertToRole(memberProfiles.IsRegionalChair);
         ambassadorProfileViewModel.MemberInformation.Biography = MemberProfileHelper.GetProfileValueByDescription(MemberProfileConstants.MemberProfileDescription.Biography, profilesResult.Profiles, memberProfiles.Profiles);
         ambassadorProfileViewModel.MemberInformation.JobTitle = MemberProfileHelper.GetProfileValueByDescription(MemberProfileConstants.MemberProfileDescription.JobTitle, profilesResult.Profiles, memberProfiles.Profiles);
 
-        ambassadorProfileViewModel.ApprenticeshipInformation.IsEmployerInformationAvailable = memberProfiles.UserType == MemberUserType.Employer && MemberProfileHelper.IsApprenticeshipInformationShared(memberProfiles.Preferences);
-        ambassadorProfileViewModel.ApprenticeshipInformation.IsApprenticeshipInformationAvailable = memberProfiles.UserType == MemberUserType.Apprentice && MemberProfileHelper.IsApprenticeshipInformationShared(memberProfiles.Preferences);
+        ambassadorProfileViewModel.ApprenticeshipInformation.IsEmployerInformationAvailable = memberProfiles.UserType == MemberUserType.Employer;
+        ambassadorProfileViewModel.ApprenticeshipInformation.IsApprenticeshipInformationAvailable = memberProfiles.UserType == MemberUserType.Apprentice;
 
         if (ambassadorProfileViewModel.ApprenticeshipInformation.IsEmployerInformationAvailable || ambassadorProfileViewModel.ApprenticeshipInformation.IsApprenticeshipInformationAvailable)
         {
