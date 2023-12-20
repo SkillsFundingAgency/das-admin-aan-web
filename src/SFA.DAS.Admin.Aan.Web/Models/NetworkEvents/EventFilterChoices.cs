@@ -7,4 +7,5 @@ public class EventFilterChoices
     public ChecklistDetails EventStatusChecklistDetails { get; set; } = new ChecklistDetails();
     public ChecklistDetails EventTypeChecklistDetails { get; set; } = new ChecklistDetails();
     public ChecklistDetails RegionChecklistDetails { get; set; } = new ChecklistDetails();
+    public ChecklistDetails ShowUserEventsOnlyChecklistDetails { get; set; } = new ChecklistDetails();
 }

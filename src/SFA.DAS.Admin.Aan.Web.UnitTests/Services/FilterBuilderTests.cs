@@ -29,7 +29,7 @@ public class FilterBuilderTests
         };
 
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
         actual.Count.Should().Be(0);
     }
 
@@ -47,7 +47,7 @@ public class FilterBuilderTests
             FromDate = fromDate
         };
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
         actual.Count.Should().Be(expectedNumberOfFilters);
         if (expectedNumberOfFilters > 0)
         {
@@ -77,7 +77,7 @@ public class FilterBuilderTests
             ToDate = toDate
         };
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
 
         actual.Count.Should().Be(expectedNumberOfFilters);
         if (expectedNumberOfFilters > 0)
@@ -109,7 +109,7 @@ public class FilterBuilderTests
             ToDate = toDate
         };
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
 
         actual.Count.Should().Be(2);
 
@@ -155,7 +155,7 @@ public class FilterBuilderTests
             request.IsActive = new List<bool> { eventStatus.Value };
         }
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, ChecklistLookupEventStatus(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, ChecklistLookupEventStatus(), new List<ChecklistLookup>(), new List<ChecklistLookup>(), new List<ChecklistLookup>());
         actual.Count.Should().Be(expectedNumberOfFilters);
         if (expectedNumberOfFilters > 0)
         {
@@ -198,7 +198,7 @@ public class FilterBuilderTests
             .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
             .Returns(LocationUrl);
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), eventTypesLookup, new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), eventTypesLookup, new List<ChecklistLookup>(), new List<ChecklistLookup>());
 
         if (expectedNumberOfFilters == 0)
         {
@@ -247,7 +247,7 @@ public class FilterBuilderTests
             .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
             .Returns(LocationUrl);
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), eventTypesLookup, new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), eventTypesLookup, new List<ChecklistLookup>(), new List<ChecklistLookup>());
 
         var firstItem = actual.First();
         firstItem.Filters.Count.Should().Be(2);
@@ -295,7 +295,7 @@ public class FilterBuilderTests
             .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
             .Returns(LocationUrl);
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), eventTypesLookup, new List<ChecklistLookup>());
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), eventTypesLookup, new List<ChecklistLookup>(), new List<ChecklistLookup>());
 
         var firstItem = actual.First();
         firstItem.Filters.Count.Should().Be(3);
@@ -349,7 +349,7 @@ public class FilterBuilderTests
             .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
             .Returns(LocationUrl);
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), regionLookups);
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), regionLookups, new List<ChecklistLookup>());
 
         if (expectedNumberOfFilters == 0)
         {
@@ -403,7 +403,7 @@ public class FilterBuilderTests
             .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
             .Returns(LocationUrl);
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), regionLookups);
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), regionLookups, new List<ChecklistLookup>());
 
         var firstItem = actual.First();
         firstItem.Filters.Count.Should().Be(2);
@@ -463,7 +463,7 @@ public class FilterBuilderTests
             .Setup(x => x.RouteUrl(It.IsAny<UrlRouteContext>()))
             .Returns(LocationUrl);
 
-        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), regionLookups);
+        var actual = FilterBuilder.Build(request, mockUrlHelper.Object, new List<ChecklistLookup>(), new List<ChecklistLookup>(), regionLookups, new List<ChecklistLookup>());
 
         var firstItem = actual.First();
         firstItem.Filters.Count.Should().Be(expectedNumberOfFilters);

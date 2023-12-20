@@ -9,7 +9,7 @@ public class QueryStringParameterBuilderTests
 {
 
     [Test, AutoData]
-    public void Builder_PopulatesDictionaryBuiltFromModel(DateTime? fromDate, DateTime? toDate, bool? isActive, List<int> calendarIds, int? page, int? pageSize)
+    public void Builder_PopulatesDictionaryBuiltFromModel(DateTime? fromDate, DateTime? toDate, bool? isActive, List<int> calendarIds, int? page, int? pageSize, bool showUserEventsOnly)
     {
         var request = new GetNetworkEventsRequest
         {
@@ -17,7 +17,8 @@ public class QueryStringParameterBuilderTests
             ToDate = toDate,
             CalendarId = calendarIds,
             Page = page,
-            PageSize = pageSize
+            PageSize = pageSize,
+            ShowUserEventsOnly = new List<bool> { showUserEventsOnly }
         };
 
         if (isActive.HasValue)
@@ -49,6 +50,11 @@ public class QueryStringParameterBuilderTests
 
         parameters.TryGetValue("pageSize", out string[]? pageSizeResult);
         pageSizeResult![0].Should().Be(pageSize?.ToString());
+
+
+        parameters.TryGetValue("showUserEventsOnly", out var showUserEventsOnlyResult);
+        showUserEventsOnlyResult!.Length.Should().Be(1);
+        showUserEventsOnly.ToString().Should().BeEquivalentTo(showUserEventsOnlyResult.First());
     }
 
     [TestCase(null)]
@@ -203,6 +209,30 @@ public class QueryStringParameterBuilderTests
 
         parameters.ContainsKey("page").Should().BeFalse();
         parameters.ContainsKey("pageSize").Should().BeFalse();
+    }
+
+    [TestCase(null)]
+    [TestCase(true)]
+    [TestCase(false)]
+    public void Builder_ConstructParameters_ShowUserEventsOnly(bool? showUserEventsOnly)
+    {
+        var request = new GetNetworkEventsRequest();
+
+        if (showUserEventsOnly.HasValue)
+        {
+            request.ShowUserEventsOnly = new List<bool> { showUserEventsOnly.Value };
+        };
+
+        var parameters = QueryStringParameterBuilder.BuildQueryStringParameters(request);
+        parameters.TryGetValue("showUserEventsOnly", out var result);
+        if (showUserEventsOnly.HasValue)
+        {
+            result![0].Should().Be(showUserEventsOnly.ToString());
+        }
+        else
+        {
+            result.Should().BeNull();
+        }
     }
 
     private static readonly int?[] NullableIntRange = { null, 1, 2, 3, 4, 5, 6, 7, 8, 9 };

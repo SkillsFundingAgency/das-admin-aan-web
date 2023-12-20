@@ -8,7 +8,7 @@ namespace SFA.DAS.Admin.Aan.Web.Services;
 
 public static class FilterBuilder
 {
-    public static List<SelectedFilter> Build(GetNetworkEventsRequest request, IUrlHelper urlHelper, IEnumerable<ChecklistLookup> eventStatusLookups, IEnumerable<ChecklistLookup> eventTypeLookups, IEnumerable<ChecklistLookup> regionLookups)
+    public static List<SelectedFilter> Build(GetNetworkEventsRequest request, IUrlHelper urlHelper, IEnumerable<ChecklistLookup> eventStatusLookups, IEnumerable<ChecklistLookup> eventTypeLookups, IEnumerable<ChecklistLookup> regionLookups, IEnumerable<ChecklistLookup> showUserEventsOnlyLookups)
     {
         var filters = new List<SelectedFilter>();
         var fullQueryParameters = BuildQueryParameters(request);
@@ -26,6 +26,7 @@ public static class FilterBuilder
         filters.AddFilterItems(urlHelper, fullQueryParameters, request.IsActive.Select(e => e.ToString()), "Event status", "isActive", eventStatusLookups);
         filters.AddFilterItems(urlHelper, fullQueryParameters, request.CalendarId.Select(e => e.ToString()), "Event type", "calendarId", eventTypeLookups);
         filters.AddFilterItems(urlHelper, fullQueryParameters, request.RegionId.Select(e => e.ToString()), "Region", "regionId", regionLookups);
+        filters.AddFilterItems(urlHelper, fullQueryParameters, request.ShowUserEventsOnly.Select(e => e.ToString()), "", "showUserEventsOnly", showUserEventsOnlyLookups);
         return filters;
     }
 
@@ -45,8 +46,7 @@ public static class FilterBuilder
             FieldOrder = filters.Count + 1
         };
 
-        int i = 0;
-
+        var i = 0;
 
         foreach (var value in selectedValues)
         {
@@ -74,6 +74,7 @@ public static class FilterBuilder
         queryParameters.AddRange(request.IsActive.Select(isActive => "isActive=" + isActive));
         queryParameters.AddRange(request.CalendarId.Select(eventType => "calendarId=" + eventType));
         queryParameters.AddRange(request.RegionId.Select(region => "regionId=" + region));
+        queryParameters.AddRange(request.ShowUserEventsOnly.Select(s => "showUserEventsOnly=" + s));
 
         return queryParameters;
     }
