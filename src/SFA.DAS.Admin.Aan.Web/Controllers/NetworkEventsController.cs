@@ -176,7 +176,7 @@ public class NetworkEventsController : Controller
                 QueryStringParameterName = "showUserEventsOnly",
                 Lookups = new List<ChecklistLookup>
                 {
-                    new("Show user events only",true.ToString(),  request.ShowUserEventsOnly.FirstOrDefault())
+                    new("Only show my events",true.ToString(),  request.ShowUserEventsOnly.FirstOrDefault())
                 }
             }
         };
