@@ -28,10 +28,9 @@
                         <button type="submit" class="govuk-button" id="filters-submit">Apply filters</button>
                         @{
                             await Html.RenderPartialAsync("_FilterDirectoryKeyword", Model.FilterChoices);
-                            await Html.RenderPartialAsync("~/Views/Shared/_FilterDetails.cshtml",
-                            Model.FilterChoices.RoleChecklistDetails);
-                            await Html.RenderPartialAsync("~/Views/Shared/_FilterDetails.cshtml",
-                            Model.FilterChoices.RegionChecklistDetails);
+                            await Html.RenderPartialAsync("~/Views/Shared/_FilterDetails.cshtml", Model.FilterChoices.RoleChecklistDetails);
+                            await Html.RenderPartialAsync("~/Views/Shared/_FilterDetails.cshtml", Model.FilterChoices.StatusChecklistDetails);
+                            await Html.RenderPartialAsync("~/Views/Shared/_FilterDetails.cshtml", Model.FilterChoices.RegionChecklistDetails);
                         }
                         <button type="submit" class="govuk-button" id="filters-submit-second">Apply filters</button>
                     </form>

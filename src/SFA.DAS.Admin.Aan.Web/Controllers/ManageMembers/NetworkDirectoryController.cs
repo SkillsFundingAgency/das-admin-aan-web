@@ -48,10 +48,17 @@ public class NetworkDirectoryController : Controller
 
         var filterChoices = PopulateFilterChoices(request, regions);
         model.FilterChoices = filterChoices;
-        model.SelectedFiltersModel.SelectedFilters = FilterBuilder.Build(request, () => Url.RouteUrl(SharedRouteNames.NetworkDirectory)!, filterChoices.RoleChecklistDetails.Lookups, filterChoices.RegionChecklistDetails.Lookups);
+        model.SelectedFiltersModel.SelectedFilters = GetSelectedFilters(request, filterChoices);
         model.SelectedFiltersModel.ClearSelectedFiltersLink = Url.RouteUrl(SharedRouteNames.NetworkDirectory)!;
 
         return View(model);
+    }
+
+    private List<SelectedFilter> GetSelectedFilters(NetworkDirectoryRequestModel request, DirectoryFilterChoices filterChoices)
+    {
+        var selectedFilters = FilterBuilder.Build(request, () => Url.RouteUrl(SharedRouteNames.NetworkDirectory)!, filterChoices.RoleChecklistDetails.Lookups, filterChoices.RegionChecklistDetails.Lookups);
+        selectedFilters.AddFilterItems(() => Url.RouteUrl(SharedRouteNames.NetworkDirectory)!, FilterBuilder.BuildQueryParameters(request), request.Status.Select(e => e.ToString()), "Status", "status", filterChoices.StatusChecklistDetails.Lookups);
+        return selectedFilters;
     }
 
     private NetworkDirectoryViewModel InitialiseViewModel(GetMembersResponse result)
@@ -91,6 +98,16 @@ public class NetworkDirectoryController : Controller
                 Title = RegionCheckListTitle,
                 QueryStringParameterName = RegionCheckListParameterName,
                 Lookups = regions.OrderBy(x => x.Ordering).Select(region => new ChecklistLookup(region.Area, region.Id.ToString(), request.RegionId.Exists(x => x == region.Id))).ToList()
+            },
+            StatusChecklistDetails = new()
+            {
+                Title = "Status",
+                QueryStringParameterName = "status",
+                Lookups = new ChecklistLookup[]
+                {
+                    new(MemberMaturityStatus.New.ToString(), MemberMaturityStatus.New.ToString(), request.Status.Exists(s => s == MemberMaturityStatus.New)),
+                    new(MemberMaturityStatus.Active.ToString(), MemberMaturityStatus.Active.ToString(), request.Status.Exists(s => s == MemberMaturityStatus.Active))
+                }
             }
         };
 }
