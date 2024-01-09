@@ -22,7 +22,7 @@
 		<PackageReference Include="SFA.DAS.Http" Version="3.2.69" />
 		<PackageReference Include="RestEase" Version="1.6.4" />
 		<PackageReference Include="RestEase.HttpClientFactory" Version="1.6.4" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.22.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.34.0" />
 		<PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.21" />
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="6.0.11" />
