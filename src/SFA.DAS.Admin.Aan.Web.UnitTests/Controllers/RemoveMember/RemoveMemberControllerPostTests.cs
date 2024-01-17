@@ -124,7 +124,7 @@ public class RemoveMemberControllerPostTests
         });
     }
 
-    public void SetUpControllerWithContext()
+    private void SetUpControllerWithContext()
     {
         var _fixture = new Fixture();
         _outerApiMock = new();
