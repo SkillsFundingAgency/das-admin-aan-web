@@ -83,6 +83,9 @@ public class MemberProfileController : Controller
 
         ambassadorProfileViewModel.AreasOfInterest = MemberProfileHelper.CreateAreasOfInterestViewModel(memberProfiles.UserType, profilesResult.Profiles, memberProfiles.Profiles, memberProfiles.FirstName);
 
+        ambassadorProfileViewModel.RemoveMember.FirstName = memberProfiles.FirstName;
+        ambassadorProfileViewModel.RemoveMember.RouteLink = Url.RouteUrl(RouteNames.RemoveMember, new { id })!;
+
         return ambassadorProfileViewModel;
     }
 }

@@ -1,0 +1,63 @@
+﻿@using SFA.DAS.Admin.Aan.Application.Constants;
+@using SFA.DAS.Admin.Aan.Web.Models.RemoveMember;
+@model RemoveMemberViewModel
+@{
+    ViewData["Title"] = "Remove Member";
+}
+<partial name="_validationSummary" />
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h3 class="govuk-heading-m govuk-!-margin-bottom-1 govuk-hint">Manage ambassadors</h3>
+        <h1 class="govuk-heading-xl govuk-!-margin-top-4 govuk-!-margin-bottom-0">Remove ambassador</h1>
+        <div class="govuk-!-margin-top-4">
+            <p class="govuk-!-margin-bottom-2">Use this form to remove @Model.FullName from the Apprenticeship Ambassador Network.</p>
+            <p class="govuk-!-margin-bottom-2">If you are removing this person for breaching the network <a href="https://www.apprenticeships.gov.uk/influencers/aan-resources" rel="noopener" target="_blank">code of conduct</a>, please contact the central team before doing so.</p>
+        </div>
+        @using (Html.BeginForm("Index", "RemoveMember", new { id = Model.MemberId }, FormMethod.Post))
+        {
+            <div id="Status" esfa-validation-marker-for="@Model.Status" class="govuk-form-group">
+                <h3 class="govuk-heading-m govuk-!-margin-bottom-4">Reason for removing from the network?</h3>
+                <span asp-validation-for="@Model.Status" class="govuk-error-message"></span>
+                <div class="govuk-radios" data-module="govuk-radios">
+                    <div class="govuk-radios__item">
+                        <input type="radio" asp-for="@Model.Status" id="inActivity" class="govuk-radios__input" value="@MembershipStatusType.Deleted">
+                        <label class="govuk-label govuk-radios__label profile-govuk-radios" for="inActivity">
+                            Inactivity
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input type="radio" asp-for="@Model.Status" id="breachCodeOfConduct" class="govuk-radios__input" value="@MembershipStatusType.Removed">
+                        <label class="govuk-label govuk-radios__label profile-govuk-radios" for="breachCodeOfConduct">
+                            Breach of code of conduct
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="govuk-!-margin-top-4">
+                <h3 class="govuk-heading-m govuk-!-margin-bottom-4">Are you sure you want to remove this ambassador?</h3>
+                <div id="remove-ambassador-hint" class="govuk-hint">
+                    Once you have removed an ambassador account, it cannot be restored. To apply to become a member again, the former ambassador must submit a new application using the portal.
+                </div>
+                <div class="govuk-checkboxes govuk-checkboxes">
+                    <div esfa-validation-marker-for="HasRemoveConfirmed" class="govuk-form-group govuk-!-margin-bottom-1">
+                        <span asp-validation-for="HasRemoveConfirmed" class="govuk-error-message"></span>
+                        <div class="govuk-checkboxes__item govuk-!-margin-bottom-1" id="HasRemoveConfirmed">
+                            <input type="checkbox" asp-for="HasRemoveConfirmed" class="govuk-checkboxes__input" id="hasRemoveConfirmed" name="hasRemoveConfirmed">
+                            <label class="govuk-label govuk-checkboxes__label profile-govuk-checkboxes" for="hasRemoveConfirmed">
+                                Yes
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+            <div class="govuk-button-group">
+                <button id="saveChanges" type="submit" data-disable-on-submit="true" class="govuk-button govuk-button--warning" data-module="govuk-button">
+                    Remove ambassador
+                </button>
+                <a class="govuk-link" href="@Model.CancelLink">Cancel</a>
+            </div>
+        }
+    </div>
+</div>
