@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Aan.SharedUi.Models.PublicProfile;
+using SFA.DAS.Admin.Aan.Web.Models.RemoveMember;
 
 namespace SFA.DAS.Admin.Aan.Web.Models;
 
@@ -14,4 +15,6 @@ public class AmbassadorProfileViewModel
 
 
     public AreasOfInterestSectionViewModel AreasOfInterest { get; set; } = new();
+
+    public RemoveMemberViewModel RemoveMember { get; set; } = new();
 }

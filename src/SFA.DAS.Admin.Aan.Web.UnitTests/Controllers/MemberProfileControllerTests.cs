@@ -7,7 +7,9 @@ using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Profiles;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageMembers;
+using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models;
+using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
@@ -25,13 +27,16 @@ public class MemberProfileControllerTests
         GetProfilesResult getProfilesResult,
         CancellationToken cancellationToken)
     {
+        string RemoveMemberUrl = Guid.NewGuid().ToString();
         sessionServiceMock.Setup(s => s.GetMemberId()).Returns(userId);
 
         getMemberProfileResponse.Preferences = Enumerable.Range(1, 4).Select(id => new MemberPreference { PreferenceId = id, Value = true });
         clientMock.Setup(c => c.GetMemberProfile(memberId, userId, cancellationToken)).ReturnsAsync(getMemberProfileResponse);
         clientMock.Setup(c => c.GetProfilesByUserType(getMemberProfileResponse.UserType, cancellationToken)).ReturnsAsync(getProfilesResult);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.RemoveMember, RemoveMemberUrl);
 
         var result = await sut.Get(memberId, cancellationToken);
+
 
         result.As<ViewResult>().Model.As<AmbassadorProfileViewModel>().Should().NotBeNull();
     }

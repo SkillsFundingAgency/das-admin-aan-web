@@ -15,6 +15,8 @@
             await Html.RenderPartialAsync("~/Views/MemberProfile/_ApprenticeInformationSection.cshtml", Model.ApprenticeshipInformation);
 
             await Html.RenderPartialAsync("~/Views/MemberProfile/_ContactInformationSection.cshtml", Model.ContactInformation);
+
+            await Html.RenderPartialAsync("~/Views/MemberProfile/_RemoveMember.cshtml", Model.RemoveMember);
         }
     </div>
 </div>

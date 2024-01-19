@@ -61,4 +61,7 @@ public interface IOuterApiClient
 
     [Get("/profiles/{userType}")]
     Task<GetProfilesResult> GetProfilesByUserType([Path] MemberUserType userType, CancellationToken? cancellationToken);
+
+    [Post("/members/{memberId}/leaving")]
+    Task<string> PostMemberLeaving([Path] Guid memberId, [Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [Body] PostMemberStatusModel postMemberStatusModel, CancellationToken cancellationToken);
 }
