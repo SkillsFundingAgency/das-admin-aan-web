@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Remove Member Confirmation";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+                You have successfully removed an ambassador from the network
+            </h1>
+        </div>
+
+        <h2 class="govuk-heading-m">What happens next</h2>
+
+        <p class="govuk-body">
+            The ambassador will be notified that they’ve been removed from the network and their account is no longer active. If they want to re-join the network, they must sign up again to the portal. Ambassadors who were removed for breaching the code of conduct cannot rejoin the portal.
+        </p>
+
+        <ul class="govuk-list app-icon-list">
+            <li>
+                <h2 class="govuk-heading-m"><a href="@ViewBag.NetworkDirectoryLink" class="govuk-link govuk-link--no-visited-state">Manage ambassadors</a></h2>
+                <p>See which ambassadors are new to the network, who hasn’t been active or who has left the network.</p>
+                <svg class="app-icon-list__icon"><use href="/img/sprite.svg#icon-manage-users" /></svg>
+            </li>
+        </ul>
+    </div>
+</div>

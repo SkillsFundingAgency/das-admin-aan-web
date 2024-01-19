@@ -59,6 +59,14 @@ public class RemoveMemberController : Controller
         PostMemberStatusModel postMemberStatusModel = new PostMemberStatusModel();
         postMemberStatusModel.Status = submitRemoveMemberModel.Status;
         await _outerApiClient.PostMemberLeaving(id, adminMemberId, postMemberStatusModel, cancellationToken);
-        return RedirectToRoute(SharedRouteNames.NetworkDirectory);
+
+        return RedirectToAction("RemoveMemberConfirmation");
+    }
+
+    [HttpGet]
+    public ActionResult RemoveMemberConfirmation()
+    {
+        ViewBag.NetworkDirectoryLink = Url.RouteUrl(SharedRouteNames.NetworkDirectory)!;
+        return View();
     }
 }
