@@ -139,7 +139,7 @@ public class RemoveMemberControllerPostTests
         _outerApiMock.Setup(o => o.PostMemberLeaving(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<PostMemberStatusModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(string.Empty);
 
         sut = new RemoveMemberController(_sessionServiceMock.Object, _outerApiMock.Object, _validatorMock.Object);
-        sut.AddUrlHelperMock().AddUrlForRoute(SharedRouteNames.MemberProfile, MemberProfileUrl).AddUrlForRoute(SharedRouteNames.NetworkDirectory, NetworkDirectoryUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(SharedRouteNames.MemberProfile, MemberProfileUrl);
     }
 
     private void SetUpModelValidateTrue()

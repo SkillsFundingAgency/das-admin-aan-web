@@ -1,4 +1,6 @@
-﻿@{
+﻿@using SFA.DAS.Admin.Aan.Web.Models.RemoveMember;
+@model RemoveMemberConfirmationModel;
+@{
     ViewData["Title"] = "Remove Member Confirmation";
 }
 <div class="govuk-grid-row">
@@ -17,7 +19,7 @@
 
         <ul class="govuk-list app-icon-list">
             <li>
-                <h2 class="govuk-heading-m"><a href="@ViewBag.NetworkDirectoryLink" class="govuk-link govuk-link--no-visited-state">Manage ambassadors</a></h2>
+                <h2 class="govuk-heading-m"><a href="@Model.NetworkDirectoryLink" class="govuk-link govuk-link--no-visited-state">Manage ambassadors</a></h2>
                 <p>See which ambassadors are new to the network, who hasn’t been active or who has left the network.</p>
                 <svg class="app-icon-list__icon"><use href="/img/sprite.svg#icon-manage-users" /></svg>
             </li>

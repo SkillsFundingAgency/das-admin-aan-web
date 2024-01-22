@@ -66,7 +66,8 @@ public class RemoveMemberController : Controller
     [HttpGet]
     public ActionResult RemoveMemberConfirmation()
     {
-        ViewBag.NetworkDirectoryLink = Url.RouteUrl(SharedRouteNames.NetworkDirectory)!;
-        return View();
+        RemoveMemberConfirmationModel removeMemberConfirmationModel = new RemoveMemberConfirmationModel();
+        removeMemberConfirmationModel.NetworkDirectoryLink = Url.RouteUrl(SharedRouteNames.NetworkDirectory)!;
+        return View(removeMemberConfirmationModel);
     }
 }

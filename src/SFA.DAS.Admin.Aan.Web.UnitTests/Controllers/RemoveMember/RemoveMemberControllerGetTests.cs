@@ -110,6 +110,30 @@ public class RemoveMemberControllerGetTests
         });
     }
 
+    [Test]
+    public void RemoveMemberConfirmation_ShouldReturnRemoveMemberConfirmationModel()
+    {
+        // Act
+        var result = sut.RemoveMemberConfirmation();
+        var viewResult = result as ViewResult;
+        var viewModel = viewResult!.Model as RemoveMemberConfirmationModel;
+
+        // Assert
+        Assert.That(viewModel, Is.InstanceOf<RemoveMemberConfirmationModel>());
+    }
+
+    [Test]
+    public void RemoveMemberConfirmation_ShouldReturnExpectedValue()
+    {
+        // Act
+        var result = sut.RemoveMemberConfirmation();
+        var viewResult = result as ViewResult;
+        var viewModel = viewResult!.Model as RemoveMemberConfirmationModel;
+
+        // Assert
+        Assert.That(viewModel!.NetworkDirectoryLink, Is.EqualTo(NetworkDirectoryUrl));
+    }
+
     [TearDown]
     public void TearDown()
     {
