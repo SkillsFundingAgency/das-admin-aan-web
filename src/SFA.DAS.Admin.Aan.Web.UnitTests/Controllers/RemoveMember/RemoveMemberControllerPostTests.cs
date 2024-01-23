@@ -20,6 +20,7 @@ public class RemoveMemberControllerPostTests
     private Mock<IValidator<SubmitRemoveMemberModel>> _validatorMock = null!;
     private Guid memberId = Guid.NewGuid();
     private string MemberProfileUrl = Guid.NewGuid().ToString();
+    private string NetworkDirectoryUrl = Guid.NewGuid().ToString();
     private GetMemberProfileResponse getMemberProfileResponse = null!;
     private SubmitRemoveMemberModel submitRemoveMemberModel = null!;
 
@@ -118,9 +119,9 @@ public class RemoveMemberControllerPostTests
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(response, Is.TypeOf<RedirectToRouteResult>());
-            var redirectToAction = (RedirectToRouteResult)response;
-            Assert.That(redirectToAction.RouteName, Does.Contain(SharedRouteNames.NetworkDirectory));
+            Assert.That(response, Is.TypeOf<RedirectToActionResult>());
+            var redirectToAction = (RedirectToActionResult)response;
+            Assert.That(redirectToAction.ActionName, Does.Contain("RemoveMemberConfirmation"));
         });
     }
 

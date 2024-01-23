@@ -18,6 +18,7 @@ public class RemoveMemberControllerGetTests
     private Mock<ISessionService> _sessionServiceMock = null!;
     private Guid memberId = Guid.NewGuid();
     private string MemberProfileUrl = Guid.NewGuid().ToString();
+    private string NetworkDirectoryUrl = Guid.NewGuid().ToString();
     private GetMemberProfileResponse getMemberProfileResponse = null!;
     private IFixture _fixture;
 
@@ -33,7 +34,7 @@ public class RemoveMemberControllerGetTests
         _outerApiMock.Setup(o => o.GetMemberProfile(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(getMemberProfileResponse);
 
         sut = new RemoveMemberController(_sessionServiceMock.Object, _outerApiMock.Object, Mock.Of<IValidator<SubmitRemoveMemberModel>>());
-        sut.AddUrlHelperMock().AddUrlForRoute(SharedRouteNames.MemberProfile, MemberProfileUrl);
+        sut.AddUrlHelperMock().AddUrlForRoute(SharedRouteNames.MemberProfile, MemberProfileUrl).AddUrlForRoute(SharedRouteNames.NetworkDirectory, NetworkDirectoryUrl);
     }
 
     [Test]
@@ -92,6 +93,45 @@ public class RemoveMemberControllerGetTests
             Assert.That(viewModel!.FirstName, Is.Null);
             Assert.That(viewModel!.RouteLink, Is.Null);
         });
+    }
+
+    [Test]
+    public void RemoveMemberConfirmation_ShouldReturnView()
+    {
+        // Act
+        var result = sut.RemoveMemberConfirmation();
+        var viewResult = result as ViewResult;
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.InstanceOf<ViewResult>());
+            Assert.That(viewResult, Is.Not.Null);
+        });
+    }
+
+    [Test]
+    public void RemoveMemberConfirmation_ShouldReturnRemoveMemberConfirmationModel()
+    {
+        // Act
+        var result = sut.RemoveMemberConfirmation();
+        var viewResult = result as ViewResult;
+        var viewModel = viewResult!.Model as RemoveMemberConfirmationModel;
+
+        // Assert
+        Assert.That(viewModel, Is.InstanceOf<RemoveMemberConfirmationModel>());
+    }
+
+    [Test]
+    public void RemoveMemberConfirmation_ShouldReturnExpectedValue()
+    {
+        // Act
+        var result = sut.RemoveMemberConfirmation();
+        var viewResult = result as ViewResult;
+        var viewModel = viewResult!.Model as RemoveMemberConfirmationModel;
+
+        // Assert
+        Assert.That(viewModel!.NetworkDirectoryLink, Is.EqualTo(NetworkDirectoryUrl));
     }
 
     [TearDown]
