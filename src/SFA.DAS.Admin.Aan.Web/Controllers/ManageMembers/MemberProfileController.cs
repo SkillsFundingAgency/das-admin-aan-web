@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Aan.SharedUi.Infrastructure;
 using SFA.DAS.Aan.SharedUi.Models.AmbassadorProfile;
@@ -82,6 +83,8 @@ public class MemberProfileController : Controller
         }
 
         ambassadorProfileViewModel.AreasOfInterest = MemberProfileHelper.CreateAreasOfInterestViewModel(memberProfiles.UserType, profilesResult.Profiles, memberProfiles.Profiles, memberProfiles.FirstName);
+
+        ambassadorProfileViewModel.Activities.FutureEvents = memberProfiles.Activities.EventsPlanned.Events.Select((x) => new EventViewModel(x.EventTitle, x.EventDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture))).ToList();
 
         ambassadorProfileViewModel.RemoveMember.FirstName = memberProfiles.FirstName;
         ambassadorProfileViewModel.RemoveMember.RouteLink = Url.RouteUrl(RouteNames.RemoveMember, new { id })!;

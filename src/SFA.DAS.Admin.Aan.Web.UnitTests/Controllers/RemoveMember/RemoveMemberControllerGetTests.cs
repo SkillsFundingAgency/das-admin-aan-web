@@ -3,8 +3,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Aan.SharedUi.Infrastructure;
-using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Application.Constants;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Members.Responses;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageMembers;
 using SFA.DAS.Admin.Aan.Web.Models.RemoveMember;
@@ -19,7 +19,7 @@ public class RemoveMemberControllerGetTests
     private Guid memberId = Guid.NewGuid();
     private string MemberProfileUrl = Guid.NewGuid().ToString();
     private string NetworkDirectoryUrl = Guid.NewGuid().ToString();
-    private GetMemberProfileResponse getMemberProfileResponse = null!;
+    private MemberProfileResponse memberProfileResponse = null!;
     private IFixture _fixture;
 
     [SetUp]
@@ -28,10 +28,10 @@ public class RemoveMemberControllerGetTests
         _fixture = new Fixture();
         _outerApiMock = new();
         _sessionServiceMock = new();
-        getMemberProfileResponse = _fixture.Create<GetMemberProfileResponse>();
+        memberProfileResponse = _fixture.Create<MemberProfileResponse>();
         _sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        _outerApiMock.Setup(o => o.GetMemberProfile(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(getMemberProfileResponse);
+        _outerApiMock.Setup(o => o.GetMemberProfile(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(memberProfileResponse);
 
         sut = new RemoveMemberController(_sessionServiceMock.Object, _outerApiMock.Object, Mock.Of<IValidator<SubmitRemoveMemberModel>>());
         sut.AddUrlHelperMock().AddUrlForRoute(SharedRouteNames.MemberProfile, MemberProfileUrl).AddUrlForRoute(SharedRouteNames.NetworkDirectory, NetworkDirectoryUrl);
@@ -85,7 +85,7 @@ public class RemoveMemberControllerGetTests
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(viewModel!.FullName, Is.EqualTo(getMemberProfileResponse.FullName));
+            Assert.That(viewModel!.FullName, Is.EqualTo(memberProfileResponse.FullName));
             Assert.That(viewModel!.CancelLink, Is.EqualTo(MemberProfileUrl));
             Assert.That(viewModel!.MemberId, Is.EqualTo(memberId));
             Assert.That(viewModel!.HasRemoveConfirmed, Is.EqualTo(false));

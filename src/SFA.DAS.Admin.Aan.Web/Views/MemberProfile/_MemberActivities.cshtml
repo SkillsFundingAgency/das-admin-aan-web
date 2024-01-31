@@ -1,0 +1,44 @@
+﻿@using SFA.DAS.Admin.Aan.Web.Models;
+
+@model MemberActivitiesViewModel;
+
+<div>
+    <h3 class="govuk-heading-m">Upcoming events (@Model.FutureEventsCount)</h3>
+
+    <div data-module="das-show-hide" class="govuk-!-margin-bottom-4">
+        <a class="govuk-link govuk-body das-show-hide__button govuk-!-margin-bottom-2" href="#future-event-list" data-aria-controls="future-event-list" data-button-string="all event sign ups">Show/hide</a>
+        <div id="future-event-list">
+            <div class="govuk-grid-row govuk-!-margin-top-2">
+                <div class="govuk-heading-m govuk-grid-column-two-thirds govuk-!-margin-bottom-0">
+                    Event name
+                </div>
+                <div class="govuk-heading-m govuk-grid-column-one-third govuk-!-margin-bottom-0">
+                    Date
+                </div>
+            </div>
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-bottom-2 govuk-!-margin-top-2">
+            @if (Model.FutureEvents.Count > 0)
+            {
+                @foreach (var events in Model.FutureEvents.OrderBy(a => a.EventDate))
+                {
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds  govuk-!-margin-bottom-0">
+                            @events.EventTitle
+                        </div>
+                        <div class="govuk-grid-column-one-third  govuk-!-margin-bottom-0">
+                            @events.EventDate
+                        </div>
+                    </div>
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-bottom-2 govuk-!-margin-top-2">
+                }
+            }
+            else
+            {
+                <div class="govuk-grid-row  govuk-!-margin-bottom-0 govuk-!-margin-left-0">
+                    No upcoming events
+                </div>
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-2">
+            }
+        </div>
+    </div>
+</div>
