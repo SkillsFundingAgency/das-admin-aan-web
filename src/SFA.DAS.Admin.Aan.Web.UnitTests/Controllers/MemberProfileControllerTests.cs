@@ -73,7 +73,7 @@ public class MemberProfileControllerTests
         {
             Assert.That(viewModel!.Activities, Is.Not.Null);
             Assert.That(viewModel!.Activities.FutureEvents, Is.Not.Null);
-            Assert.That(viewModel!.Activities.FutureEvents.Count, Is.EqualTo(memberProfileResponse.Activities.EventsPlanned.Events.Count));
+            Assert.That(viewModel!.Activities.FutureEvents, Has.Count.EqualTo(memberProfileResponse.Activities.EventsPlanned.Events.Count));
             Assert.That(viewModel!.Activities.FutureEventsCount, Is.EqualTo(memberProfileResponse.Activities.EventsPlanned.Events.Count));
             Assert.That(viewModel!.Activities.FutureEvents[0].EventDate, Is.EqualTo(memberProfileResponse.Activities.EventsPlanned.Events[0].EventDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)));
             Assert.That(viewModel!.Activities.FutureEvents[0].EventTitle, Is.EqualTo(memberProfileResponse.Activities.EventsPlanned.Events[0].EventTitle));
