@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System.Globalization;
+using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -91,5 +92,19 @@ public class MemberProfileControllerTests
             Assert.That(viewModel!.RemoveMember.FirstName, Is.EqualTo(memberProfileResponse.FirstName));
             Assert.That(viewModel!.RemoveMember.RouteLink, Is.EqualTo(RemoveMemberUrl));
         });
+    }
+
+    [Test]
+    public void Get_ShouldReturnUpcomingEventsInEventDateOrder()
+    {
+        // Arrange
+        List<EventViewModel> eventViewModels = memberProfileResponse.Activities.EventsPlanned.Events.OrderBy(x => x.EventDate).Select((x) => new EventViewModel(x.EventTitle, x.EventDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture))).ToList();
+
+        // Act
+        var viewResult = result as ViewResult;
+        var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
+
+        // Assert
+        Assert.That(viewModel!.Activities.FutureEvents, Is.EqualTo(eventViewModels));
     }
 }
