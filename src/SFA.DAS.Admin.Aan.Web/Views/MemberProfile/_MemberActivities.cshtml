@@ -3,7 +3,26 @@
 @model MemberActivitiesViewModel;
 
 <div>
-    <h3 class="govuk-heading-m">Upcoming events (@Model.FutureEventsCount)</h3>
+    <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-2">@Model.FirstName's activities</h1>
+    <p>Last event sign up: @Model.LastEventSignUpDate</p>
+    <h3 class="govuk-heading-m">
+        In the past 12 months
+    </h3>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <div class="app-figure">
+                <p class="govuk-body app-figure__figure">@Model.EventsAttendedCount</p>
+                <p class="govuk-body app-figure__label">Events attended</p>
+            </div>
+        </div>
+        <div class="govuk-grid-column-one-half">
+            <div class="app-figure">
+                <p class="govuk-body app-figure__figure">@Model.SchoolEventsAttendedCount</p>
+                <p class="govuk-body app-figure__label">School events attended</p>
+            </div>
+        </div>
+    </div>
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">Upcoming events (@Model.FutureEventsCount)</h3>
 
     <div data-module="das-show-hide" class="govuk-!-margin-bottom-4">
         <a class="govuk-link govuk-body das-show-hide__button govuk-!-margin-bottom-2" href="#future-event-list" data-aria-controls="future-event-list" data-button-string="all event sign ups">Show/hide</a>

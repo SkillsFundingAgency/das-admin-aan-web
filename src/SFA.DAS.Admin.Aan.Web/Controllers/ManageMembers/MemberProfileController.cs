@@ -85,7 +85,11 @@ public class MemberProfileController : Controller
         ambassadorProfileViewModel.AreasOfInterest = MemberProfileHelper.CreateAreasOfInterestViewModel(memberProfiles.UserType, profilesResult.Profiles, memberProfiles.Profiles, memberProfiles.FirstName);
 
         ambassadorProfileViewModel.Activities.FutureEvents = memberProfiles.Activities.EventsPlanned.Events.OrderBy(x => x.EventDate).Select((x) => new EventViewModel(x.EventTitle, x.EventDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture))).ToList();
-
+        ambassadorProfileViewModel.Activities.FirstName = memberProfiles.FirstName;
+        ambassadorProfileViewModel.Activities.LastEventSignUpDate =
+            (memberProfiles.Activities.LastSignedUpDate != null ? memberProfiles.Activities.LastSignedUpDate?.ToString("dd/MM/yyyy") : "no events attended")!;
+        ambassadorProfileViewModel.Activities.EventsAttendedCount = memberProfiles.Activities.EventsAttended.Events.Count(x => x.Urn == null);
+        ambassadorProfileViewModel.Activities.SchoolEventsAttendedCount = memberProfiles.Activities.EventsAttended.Events.Count(x => x.Urn != null);
         ambassadorProfileViewModel.RemoveMember.FirstName = memberProfiles.FirstName;
         ambassadorProfileViewModel.RemoveMember.RouteLink = Url.RouteUrl(RouteNames.RemoveMember, new { id })!;
 

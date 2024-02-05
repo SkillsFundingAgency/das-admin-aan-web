@@ -64,6 +64,11 @@ public class MemberProfileControllerTests
     [Test]
     public void Get_ShouldReturnExpectedValueForActivities()
     {
+        // Arrange 
+        int eventsAttendedCount = memberProfileResponse.Activities.EventsAttended.Events.Count(x => x.Urn == null);
+        int schoolEventsAttendedCount = memberProfileResponse.Activities.EventsAttended.Events.Count(x => x.Urn != null);
+        string lastSignedUpDate = (memberProfileResponse.Activities.LastSignedUpDate != null ? memberProfileResponse.Activities.LastSignedUpDate?.ToString("dd/MM/yyyy") : "no events attended")!;
+
         // Act
         var viewResult = result as ViewResult;
         var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
@@ -75,6 +80,10 @@ public class MemberProfileControllerTests
             Assert.That(viewModel!.Activities.FutureEvents, Is.Not.Null);
             Assert.That(viewModel!.Activities.FutureEvents, Has.Count.EqualTo(memberProfileResponse.Activities.EventsPlanned.Events.Count));
             Assert.That(viewModel!.Activities.FutureEventsCount, Is.EqualTo(memberProfileResponse.Activities.EventsPlanned.Events.Count));
+            Assert.That(viewModel!.Activities.FirstName, Is.EqualTo(memberProfileResponse.FirstName));
+            Assert.That(viewModel!.Activities.EventsAttendedCount, Is.EqualTo(eventsAttendedCount));
+            Assert.That(viewModel!.Activities.SchoolEventsAttendedCount, Is.EqualTo(schoolEventsAttendedCount));
+            Assert.That(viewModel!.Activities.LastEventSignUpDate, Is.EqualTo(lastSignedUpDate));
         });
     }
 
