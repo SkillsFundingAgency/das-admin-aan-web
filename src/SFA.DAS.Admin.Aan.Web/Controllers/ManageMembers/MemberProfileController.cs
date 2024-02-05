@@ -87,7 +87,7 @@ public class MemberProfileController : Controller
         ambassadorProfileViewModel.Activities.FutureEvents = memberProfiles.Activities.EventsPlanned.Events.OrderBy(x => x.EventDate).Select((x) => new EventViewModel(x.EventTitle, x.EventDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture))).ToList();
         ambassadorProfileViewModel.Activities.FirstName = memberProfiles.FirstName;
         ambassadorProfileViewModel.Activities.LastEventSignUpDate =
-            (memberProfiles.Activities.LastSignedUpDate != null ? memberProfiles.Activities.LastSignedUpDate?.ToString("dd/MM/yyyy") : "no events attended")!;
+            (memberProfiles.Activities.LastSignedUpDate != null ? memberProfiles.Activities.LastSignedUpDate.GetValueOrDefault().ToString("dd/MM/yyyy") : "no events attended")!;
         ambassadorProfileViewModel.Activities.EventsAttendedCount = memberProfiles.Activities.EventsAttended.Events.Count(x => x.Urn == null);
         ambassadorProfileViewModel.Activities.SchoolEventsAttendedCount = memberProfiles.Activities.EventsAttended.Events.Count(x => x.Urn != null);
         ambassadorProfileViewModel.RemoveMember.FirstName = memberProfiles.FirstName;

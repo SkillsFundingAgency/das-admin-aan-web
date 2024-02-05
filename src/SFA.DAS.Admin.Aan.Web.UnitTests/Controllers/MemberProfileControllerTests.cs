@@ -38,19 +38,6 @@ public class MemberProfileControllerTests
 
     }
 
-    private async Task Init()
-    {
-        Fixture fixture = new();
-        memberProfileResponse = fixture.Create<MemberProfileResponse>();
-        getProfilesResult = fixture.Create<GetProfilesResult>();
-        memberProfileResponse.Preferences = Enumerable.Range(1, 4).Select(id => new MemberPreference { PreferenceId = id, Value = true });
-        outerApiClientMock.Setup(c => c.GetMemberProfile(memberId, userId, cancellationToken)).ReturnsAsync(memberProfileResponse);
-        outerApiClientMock.Setup(c => c.GetProfilesByUserType(memberProfileResponse.UserType, cancellationToken)).ReturnsAsync(getProfilesResult);
-        sut = new(sessionServiceMock.Object, outerApiClientMock.Object);
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.RemoveMember, RemoveMemberUrl);
-        result = await sut.Get(memberId, cancellationToken);
-    }
-
     [Test]
     public async Task Get_ReturnsMemberProfileViewResult()
     {
@@ -92,6 +79,7 @@ public class MemberProfileControllerTests
         result.Should().BeOfType<ViewResult>();
     }
 
+    [Test]
     public async Task Get_ShouldReturnExpectedValueForActivities()
     {
         // Arrange 
@@ -152,6 +140,7 @@ public class MemberProfileControllerTests
         Assert.That(viewModel!.Activities.FutureEvents, Is.EqualTo(eventViewModels));
     }
 
+    [Test]
     public async Task Get_MemberWithNullRegion_ShouldReturnExpectedValueForRegionName()
     {
         // Arrange 
@@ -159,7 +148,6 @@ public class MemberProfileControllerTests
         memberProfileResponse = fixture.Create<MemberProfileResponse>();
         getProfilesResult = fixture.Create<GetProfilesResult>();
         memberProfileResponse.RegionId = null;
-        memberProfileResponse.Activities.LastSignedUpDate = null;
         memberProfileResponse.Preferences = Enumerable.Range(1, 4).Select(id => new MemberPreference { PreferenceId = id, Value = true });
         outerApiClientMock.Setup(c => c.GetMemberProfile(memberId, userId, cancellationToken)).ReturnsAsync(memberProfileResponse);
         outerApiClientMock.Setup(c => c.GetProfilesByUserType(memberProfileResponse.UserType, cancellationToken)).ReturnsAsync(getProfilesResult);
@@ -178,6 +166,24 @@ public class MemberProfileControllerTests
         });
     }
 
+    [Test]
+    public async Task Get_MemberWithValidRegion_ShouldReturnExpectedValueForRegionName()
+    {
+        // Arrange 
+        await Init();
+
+        // Act
+        var viewResult = result as ViewResult;
+        var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel!.MemberInformation.RegionName, Is.EqualTo(memberProfileResponse.RegionName));
+        });
+    }
+
+    [Test]
     public async Task Get_MemberWithNoActivity_ShouldReturnExpectedValueForActivities()
     {
         // Arrange 
@@ -207,5 +213,18 @@ public class MemberProfileControllerTests
             Assert.That(viewModel!.Activities.SchoolEventsAttendedCount, Is.EqualTo(0));
             Assert.That(viewModel!.Activities.LastEventSignUpDate, Is.EqualTo("no events attended"));
         });
+    }
+
+    private async Task Init()
+    {
+        Fixture fixture = new();
+        memberProfileResponse = fixture.Create<MemberProfileResponse>();
+        getProfilesResult = fixture.Create<GetProfilesResult>();
+        memberProfileResponse.Preferences = Enumerable.Range(1, 4).Select(id => new MemberPreference { PreferenceId = id, Value = true });
+        outerApiClientMock.Setup(c => c.GetMemberProfile(memberId, userId, cancellationToken)).ReturnsAsync(memberProfileResponse);
+        outerApiClientMock.Setup(c => c.GetProfilesByUserType(memberProfileResponse.UserType, cancellationToken)).ReturnsAsync(getProfilesResult);
+        sut = new(sessionServiceMock.Object, outerApiClientMock.Object);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.RemoveMember, RemoveMemberUrl);
+        result = await sut.Get(memberId, cancellationToken);
     }
 }
