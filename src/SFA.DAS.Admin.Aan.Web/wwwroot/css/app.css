@@ -276,6 +276,7 @@ a.app-calendar__event:focus {
   text-align: center;
   letter-spacing: 0;
   background: #505a5f;
+  color: #fff;
 }
 
 @media (min-width: 40.0625em) {
@@ -286,14 +287,17 @@ a.app-calendar__event:focus {
 
 .app-tag--Hybrid {
   background-color: #85994b;
+  color: #fff;
 }
 
 .app-tag--InPerson {
   background-color: #6f72af;
+  color: #fff;
 }
 
 .app-tag--Online {
   background-color: #912b88;
+  color: #fff;
 }
 
 .app-date {
@@ -564,14 +568,17 @@ a.das-show-hide__button[aria-expanded="false"]:after {
 
 .app-tag--Apprentice {
   background-color: #00703c;
+  color: #fff;
 }
 
 .app-tag--Employer {
   background-color: #4c2c92;
+  color: #fff;
 }
 
 .app-tag--RegionalChair {
   background-color: #5694ca;
+  color: #fff;
 }
 
 .app-definition-list--inline {
@@ -611,5 +618,5 @@ a.das-show-hide__button[aria-expanded="false"]:after {
 }
 
 .profile-about-me-section {
-  background: #F5F2ED;
+  background: #f5f2ed;
 }
