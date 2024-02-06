@@ -160,10 +160,7 @@ public class MemberProfileControllerTests
         var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
 
         // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(viewModel!.MemberInformation.RegionName, Is.EqualTo("Multi-regional"));
-        });
+        Assert.That(viewModel!.MemberInformation.RegionName, Is.EqualTo("Multi-regional"));
     }
 
     [Test]
@@ -177,10 +174,7 @@ public class MemberProfileControllerTests
         var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
 
         // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(viewModel!.MemberInformation.RegionName, Is.EqualTo(memberProfileResponse.RegionName));
-        });
+        Assert.That(viewModel!.MemberInformation.RegionName, Is.EqualTo(memberProfileResponse.RegionName));
     }
 
     [Test]
