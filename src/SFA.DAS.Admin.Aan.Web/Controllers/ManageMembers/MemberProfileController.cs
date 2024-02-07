@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Aan.SharedUi.Infrastructure;
 using SFA.DAS.Aan.SharedUi.Models.AmbassadorProfile;
 using SFA.DAS.Aan.SharedUi.Models.PublicProfile;
@@ -9,6 +10,7 @@ using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models;
+using static SFA.DAS.Aan.SharedUi.Constants.ProfileConstants;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageMembers;
 
@@ -92,6 +94,15 @@ public class MemberProfileController : Controller
         ambassadorProfileViewModel.Activities.SchoolEventsAttendedCount = memberProfiles.Activities.EventsAttended.Events.Count(x => x.Urn != null);
         ambassadorProfileViewModel.RemoveMember.FirstName = memberProfiles.FirstName;
         ambassadorProfileViewModel.RemoveMember.RouteLink = Url.RouteUrl(RouteNames.RemoveMember, new { id })!;
+
+        if (ambassadorProfileViewModel.MemberInformation.MaturityStatus == MemberMaturityStatus.New)
+        {
+            if (ambassadorProfileViewModel.MemberInformation.UserRole == Role.Apprentice
+                && memberProfiles.Profiles.Any(x => x.ProfileId == ProfileIds.ReasonToJoinAmbassadorNetwork))
+            {
+                ambassadorProfileViewModel.ReasonForJoining = memberProfiles.Profiles.Where(x => x.ProfileId == ProfileIds.ReasonToJoinAmbassadorNetwork).First().Value;
+            }
+        }
 
         return ambassadorProfileViewModel;
     }

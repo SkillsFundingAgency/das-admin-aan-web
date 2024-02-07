@@ -1,4 +1,5 @@
-﻿@model AmbassadorProfileViewModel
+﻿@using SFA.DAS.Aan.SharedUi.Constants;
+@model AmbassadorProfileViewModel
 @{
     ViewData["Title"] = "Member Profile";
 }
@@ -10,7 +11,10 @@
             await Html.RenderPartialAsync("~/Views/MemberProfile/_MemberInformationSection.cshtml", Model.MemberInformation);
 
             await Html.RenderPartialAsync("~/Views/MemberProfile/_AreasOfInterestSection.cshtml", Model.AreasOfInterest);
-
+            @if (Model.MemberInformation.MaturityStatus == MemberMaturityStatus.New && Model.MemberInformation.UserRole == Role.Apprentice)
+            {
+                await Html.RenderPartialAsync("~/Views/MemberProfile/_ReasonForJoining.cshtml", Model.ReasonForJoining);
+            }
             await Html.RenderPartialAsync("~/Views/MemberProfile/_EmployerInformationSection.cshtml", Model.ApprenticeshipInformation);
             await Html.RenderPartialAsync("~/Views/MemberProfile/_ApprenticeInformationSection.cshtml", Model.ApprenticeshipInformation);
 
