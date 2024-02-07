@@ -238,6 +238,32 @@ public class MemberProfileControllerTests
     }
 
     [Test, AutoData]
+    public async Task Get_OldApprenticeAccount_ShouldReturnExpectedValueForReasonForJoining(MemberProfileResponse memberProfileResponse, GetProfilesResult profilesResult, string reasonToJoin, Mock<ISessionService> _sessionServiceMock, Mock<IOuterApiClient> _outerApiClientMock, CancellationToken _cancellationToken)
+    {
+        // Arrange
+        _sessionServiceMock.Setup(s => s.GetMemberId()).Returns(userId);
+        memberProfileResponse.UserType = MemberUserType.Apprentice;
+        memberProfileResponse.IsRegionalChair = false;
+        memberProfileResponse.JoinedDate = DateTime.UtcNow.AddDays(-100);
+        memberProfileResponse.Profiles = new List<MemberProfile>() {
+        new MemberProfile(){ProfileId=ProfileIds.ReasonToJoinAmbassadorNetwork,Value=reasonToJoin}
+        };
+        memberProfileResponse.Preferences = Enumerable.Range(1, 4).Select(id => new MemberPreference { PreferenceId = id, Value = true });
+        _outerApiClientMock.Setup(c => c.GetMemberProfile(memberId, userId, _cancellationToken)).ReturnsAsync(memberProfileResponse);
+        _outerApiClientMock.Setup(c => c.GetProfilesByUserType(memberProfileResponse.UserType, _cancellationToken)).ReturnsAsync(profilesResult);
+        sut = new(_sessionServiceMock.Object, _outerApiClientMock.Object);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.RemoveMember, RemoveMemberUrl);
+
+        // Act
+        result = await sut.Get(memberId, _cancellationToken);
+        var viewResult = result as ViewResult;
+        var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
+
+        // Assert
+        Assert.That(viewModel!.ReasonForJoining, Is.Null);
+    }
+
+    [Test, AutoData]
     public async Task Get_NewEmployerAccount_ShouldReturnNullValueForReasonForJoining(MemberProfileResponse memberProfileResponse, GetProfilesResult profilesResult, string reasonToJoin, Mock<ISessionService> _sessionServiceMock, Mock<IOuterApiClient> _outerApiClientMock, CancellationToken _cancellationToken)
     {
         // Arrange

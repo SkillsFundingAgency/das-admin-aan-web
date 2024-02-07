@@ -11,7 +11,7 @@
             await Html.RenderPartialAsync("~/Views/MemberProfile/_MemberInformationSection.cshtml", Model.MemberInformation);
 
             await Html.RenderPartialAsync("~/Views/MemberProfile/_AreasOfInterestSection.cshtml", Model.AreasOfInterest);
-            @if (Model.MemberInformation.MaturityStatus == MemberMaturityStatus.New && Model.MemberInformation.UserRole == Role.Apprentice)
+            @if (Model.MemberInformation.UserRole == Role.Apprentice && Model.MemberInformation.MaturityStatus == MemberMaturityStatus.New)
             {
                 await Html.RenderPartialAsync("~/Views/MemberProfile/_ReasonForJoining.cshtml", Model.ReasonForJoining);
             }
