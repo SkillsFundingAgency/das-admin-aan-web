@@ -4,8 +4,8 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Aan.SharedUi.Infrastructure;
-using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Members;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Members.Responses;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageMembers;
 using SFA.DAS.Admin.Aan.Web.Models.RemoveMember;
@@ -21,7 +21,7 @@ public class RemoveMemberControllerPostTests
     private Guid memberId = Guid.NewGuid();
     private string MemberProfileUrl = Guid.NewGuid().ToString();
     private string NetworkDirectoryUrl = Guid.NewGuid().ToString();
-    private GetMemberProfileResponse getMemberProfileResponse = null!;
+    private MemberProfileResponse memberProfileResponse = null!;
     private SubmitRemoveMemberModel submitRemoveMemberModel = null!;
 
     [Test]
@@ -84,7 +84,7 @@ public class RemoveMemberControllerPostTests
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(viewModel!.FullName, Is.EqualTo(getMemberProfileResponse.FullName));
+            Assert.That(viewModel!.FullName, Is.EqualTo(memberProfileResponse.FullName));
             Assert.That(viewModel!.CancelLink, Is.EqualTo(MemberProfileUrl));
             Assert.That(viewModel!.MemberId, Is.EqualTo(memberId));
             Assert.That(viewModel!.HasRemoveConfirmed, Is.EqualTo(submitRemoveMemberModel.HasRemoveConfirmed));
@@ -131,11 +131,11 @@ public class RemoveMemberControllerPostTests
         _outerApiMock = new();
         _sessionServiceMock = new();
         _validatorMock = new();
-        getMemberProfileResponse = _fixture.Create<GetMemberProfileResponse>();
+        memberProfileResponse = _fixture.Create<MemberProfileResponse>();
         submitRemoveMemberModel = _fixture.Create<SubmitRemoveMemberModel>();
         _sessionServiceMock.Setup(x => x.GetMemberId()).Returns(memberId);
 
-        _outerApiMock.Setup(o => o.GetMemberProfile(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(getMemberProfileResponse);
+        _outerApiMock.Setup(o => o.GetMemberProfile(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(memberProfileResponse);
         _outerApiMock.Setup(o => o.PostMemberLeaving(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<PostMemberStatusModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(string.Empty);
 
         sut = new RemoveMemberController(_sessionServiceMock.Object, _outerApiMock.Object, _validatorMock.Object);
