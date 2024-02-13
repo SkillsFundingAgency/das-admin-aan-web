@@ -1,8 +1,8 @@
 ﻿namespace SFA.DAS.Admin.Aan.Application.OuterApi.Members;
-public record MemberActivities(DateTime? LastSignedUpDate, EventsModel EventsAttended, EventsModel EventsPlanned);
+public class MemberActivities
+{
+    public DateTime? LastSignedUpDate { get; set; }
+    public EventsModel EventsAttended { get; set; } = new EventsModel();
+    public EventsModel EventsPlanned { get; set; } = new EventsModel();
+}
 
-public record EventsModel(DateRangeModel EventsDateRange, List<EventAttendanceModel> Events);
-
-public record DateRangeModel(DateTime FromDate, DateTime ToDate);
-
-public record EventAttendanceModel(Guid CalendarEventId, DateTime EventDate, string EventTitle, long? Urn);
