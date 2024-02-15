@@ -234,7 +234,39 @@ public class MemberProfileControllerTests
         var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
 
         // Assert
-        Assert.That(viewModel!.ReasonForJoining, Is.EqualTo(reasonToJoin));
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel!.ReasonForJoining.ShowReasonForJoining, Is.True);
+            Assert.That(viewModel!.ReasonForJoining.ReasonForJoining, Is.EqualTo(reasonToJoin));
+        });
+    }
+
+    [Test, AutoData]
+    public async Task Get_NewApprenticeAccountWithNoValue_ShouldReturnExpectedValueForReasonForJoining(MemberProfileResponse memberProfileResponse, GetProfilesResult profilesResult, Mock<ISessionService> _sessionServiceMock, Mock<IOuterApiClient> _outerApiClientMock, CancellationToken _cancellationToken)
+    {
+        // Arrange
+        _sessionServiceMock.Setup(s => s.GetMemberId()).Returns(userId);
+        memberProfileResponse.UserType = MemberUserType.Apprentice;
+        memberProfileResponse.IsRegionalChair = false;
+        memberProfileResponse.JoinedDate = DateTime.UtcNow.AddDays(-1);
+        memberProfileResponse.Profiles = new[] { new MemberProfile() { ProfileId = ProfileIds.ReasonToJoinAmbassadorNetwork, Value = string.Empty } };
+        memberProfileResponse.Preferences = Enumerable.Range(1, 4).Select(id => new MemberPreference { PreferenceId = id, Value = true });
+        _outerApiClientMock.Setup(c => c.GetMemberProfile(memberId, userId, _cancellationToken)).ReturnsAsync(memberProfileResponse);
+        _outerApiClientMock.Setup(c => c.GetProfilesByUserType(memberProfileResponse.UserType, _cancellationToken)).ReturnsAsync(profilesResult);
+        sut = new(_sessionServiceMock.Object, _outerApiClientMock.Object);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.RemoveMember, RemoveMemberUrl);
+
+        // Act
+        result = await sut.Get(memberId, _cancellationToken);
+        var viewResult = result as ViewResult;
+        var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel!.ReasonForJoining.ShowReasonForJoining, Is.False);
+            Assert.That(viewModel!.ReasonForJoining.ReasonForJoining, Is.EqualTo(string.Empty));
+        });
     }
 
     [Test, AutoData]
@@ -245,9 +277,7 @@ public class MemberProfileControllerTests
         memberProfileResponse.UserType = MemberUserType.Apprentice;
         memberProfileResponse.IsRegionalChair = false;
         memberProfileResponse.JoinedDate = DateTime.UtcNow.AddDays(-100);
-        memberProfileResponse.Profiles = new List<MemberProfile>() {
-        new MemberProfile(){ProfileId=ProfileIds.ReasonToJoinAmbassadorNetwork,Value=reasonToJoin}
-        };
+        memberProfileResponse.Profiles = new[] { new MemberProfile() { ProfileId = ProfileIds.ReasonToJoinAmbassadorNetwork, Value = reasonToJoin } };
         memberProfileResponse.Preferences = Enumerable.Range(1, 4).Select(id => new MemberPreference { PreferenceId = id, Value = true });
         _outerApiClientMock.Setup(c => c.GetMemberProfile(memberId, userId, _cancellationToken)).ReturnsAsync(memberProfileResponse);
         _outerApiClientMock.Setup(c => c.GetProfilesByUserType(memberProfileResponse.UserType, _cancellationToken)).ReturnsAsync(profilesResult);
@@ -260,20 +290,22 @@ public class MemberProfileControllerTests
         var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
 
         // Assert
-        Assert.That(viewModel!.ReasonForJoining, Is.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel!.ReasonForJoining.ShowReasonForJoining, Is.False);
+            Assert.That(viewModel!.ReasonForJoining.ReasonForJoining, Is.EqualTo(reasonToJoin));
+        });
     }
 
     [Test, AutoData]
-    public async Task Get_NewEmployerAccount_ShouldReturnNullValueForReasonForJoining(MemberProfileResponse memberProfileResponse, GetProfilesResult profilesResult, string reasonToJoin, Mock<ISessionService> _sessionServiceMock, Mock<IOuterApiClient> _outerApiClientMock, CancellationToken _cancellationToken)
+    public async Task Get_NewEmployerAccount_ShouldReturnNullValueForReasonForJoining(MemberProfileResponse memberProfileResponse, GetProfilesResult profilesResult, Mock<ISessionService> _sessionServiceMock, Mock<IOuterApiClient> _outerApiClientMock, CancellationToken _cancellationToken)
     {
         // Arrange
         _sessionServiceMock.Setup(s => s.GetMemberId()).Returns(userId);
         memberProfileResponse.UserType = MemberUserType.Employer;
         memberProfileResponse.IsRegionalChair = false;
         memberProfileResponse.JoinedDate = DateTime.UtcNow.AddDays(-1);
-        memberProfileResponse.Profiles = new List<MemberProfile>() {
-        new MemberProfile(){ProfileId=ProfileIds.ReasonToJoinAmbassadorNetwork,Value=reasonToJoin}
-        };
+
         memberProfileResponse.Preferences = Enumerable.Range(1, 4).Select(id => new MemberPreference { PreferenceId = id, Value = true });
         _outerApiClientMock.Setup(c => c.GetMemberProfile(memberId, userId, _cancellationToken)).ReturnsAsync(memberProfileResponse);
         _outerApiClientMock.Setup(c => c.GetProfilesByUserType(memberProfileResponse.UserType, _cancellationToken)).ReturnsAsync(profilesResult);
@@ -286,7 +318,7 @@ public class MemberProfileControllerTests
         var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
 
         // Assert
-        Assert.That(viewModel!.ReasonForJoining, Is.Null);
+        Assert.That(viewModel!.ReasonForJoining.ReasonForJoining, Is.Null);
     }
 
     private async Task Init()
