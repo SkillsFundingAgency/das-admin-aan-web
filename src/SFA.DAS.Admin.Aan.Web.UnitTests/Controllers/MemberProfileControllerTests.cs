@@ -234,8 +234,11 @@ public class MemberProfileControllerTests
         var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
 
         // Assert
-        Assert.That(viewModel!.ReasonForJoining.ShowReasonForJoining, Is.True);
-        Assert.That(viewModel!.ReasonForJoining.ReasonForJoining, Is.EqualTo(reasonToJoin));
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel!.ReasonForJoining.ShowReasonForJoining, Is.True);
+            Assert.That(viewModel!.ReasonForJoining.ReasonForJoining, Is.EqualTo(reasonToJoin));
+        });
     }
 
     [Test, AutoData]
@@ -259,8 +262,11 @@ public class MemberProfileControllerTests
         var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
 
         // Assert
-        Assert.That(viewModel!.ReasonForJoining.ShowReasonForJoining, Is.False);
-        Assert.That(viewModel!.ReasonForJoining.ReasonForJoining, Is.EqualTo(string.Empty));
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel!.ReasonForJoining.ShowReasonForJoining, Is.False);
+            Assert.That(viewModel!.ReasonForJoining.ReasonForJoining, Is.EqualTo(string.Empty));
+        });
     }
 
     [Test, AutoData]
@@ -284,8 +290,11 @@ public class MemberProfileControllerTests
         var viewModel = viewResult!.Model as AmbassadorProfileViewModel;
 
         // Assert
-        Assert.That(viewModel!.ReasonForJoining.ShowReasonForJoining, Is.False);
-        Assert.That(viewModel!.ReasonForJoining.ReasonForJoining, Is.EqualTo(reasonToJoin));
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel!.ReasonForJoining.ShowReasonForJoining, Is.False);
+            Assert.That(viewModel!.ReasonForJoining.ReasonForJoining, Is.EqualTo(reasonToJoin));
+        });
     }
 
     [Test, AutoData]
