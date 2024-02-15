@@ -95,9 +95,14 @@ public class MemberProfileController : Controller
         ambassadorProfileViewModel.RemoveMember.FirstName = memberProfiles.FirstName;
         ambassadorProfileViewModel.RemoveMember.RouteLink = Url.RouteUrl(RouteNames.RemoveMember, new { id })!;
 
-        if (ambassadorProfileViewModel.MemberInformation.UserRole == Role.Apprentice && ambassadorProfileViewModel.MemberInformation.MaturityStatus == MemberMaturityStatus.New && memberProfiles.Profiles.Any(x => x.ProfileId == ProfileIds.ReasonToJoinAmbassadorNetwork))
+        if (ambassadorProfileViewModel.MemberInformation.UserRole == Role.Apprentice)
         {
-            ambassadorProfileViewModel.ReasonForJoining = memberProfiles.Profiles.First(x => x.ProfileId == ProfileIds.ReasonToJoinAmbassadorNetwork).Value;
+            string? reasonForJoining = memberProfiles.Profiles.FirstOrDefault(x => x.ProfileId == ProfileIds.ReasonToJoinAmbassadorNetwork)?.Value;
+            ambassadorProfileViewModel.ReasonForJoining = new()
+            {
+                ShowReasonForJoining = (ambassadorProfileViewModel.MemberInformation.MaturityStatus == MemberMaturityStatus.New && !string.IsNullOrEmpty(reasonForJoining)),
+                ReasonForJoining = reasonForJoining
+            };
         }
 
         return ambassadorProfileViewModel;

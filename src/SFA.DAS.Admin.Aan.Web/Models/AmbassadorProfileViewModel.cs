@@ -13,7 +13,7 @@ public class AmbassadorProfileViewModel
 
     public AreasOfInterestSectionViewModel AreasOfInterest { get; set; } = new();
 
-    public string? ReasonForJoining { get; set; }
+    public ReasonForJoiningViewModel ReasonForJoining { get; set; } = new();
 
     public MemberActivitiesViewModel Activities { get; set; } = new();
 
