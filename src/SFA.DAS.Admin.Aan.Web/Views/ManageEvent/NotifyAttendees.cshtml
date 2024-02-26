@@ -36,17 +36,17 @@
                     </div>
                 </div>
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-            <div class="govuk-button-group">
-                <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Publish changes</button>
-                <a href="@Model.CancelLink" class="govuk-link">Cancel changes</a>
-            </div>
-            <div class="govuk-warning-text">
-                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                <strong class="govuk-warning-text__text">
-                    <span class="govuk-warning-text__assistive">Warning</span>
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
                         Clicking 'Publish changes' will update the event immediately with the changes you have made
-                </strong>
-            </div>
+                    </strong>
+                </div>
+                <div class="govuk-button-group">
+                    <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Publish changes</button>
+                    <a href="@Model.CancelLink" class="govuk-link">Cancel changes</a>
+                </div>
         </form>
     </div>
 </div>
