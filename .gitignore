@@ -351,5 +351,3 @@ MigrationBackup/
 .ionide/
 appsettings.Development.json
 .DS_Store
-/src/SFA.DAS.Admin.Aan.Web/appsettings.json
-/src/SFA.DAS.Admin.Aan.Web/appsettings.json
