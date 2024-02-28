@@ -2,7 +2,7 @@
 
 public class GetSchoolsResult
 {
-    public List<SchoolItem> Schools { get; set; } = new();
+    public List<SchoolItem> Schools { get; set; } = [];
 }
 
 public class SchoolItem

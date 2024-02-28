@@ -16,9 +16,9 @@ public class RemoveMemberControllerGetTests
     private RemoveMemberController sut = null!;
     private Mock<IOuterApiClient> _outerApiMock = null!;
     private Mock<ISessionService> _sessionServiceMock = null!;
-    private Guid memberId = Guid.NewGuid();
-    private string MemberProfileUrl = Guid.NewGuid().ToString();
-    private string NetworkDirectoryUrl = Guid.NewGuid().ToString();
+    private readonly Guid memberId = Guid.NewGuid();
+    private readonly string MemberProfileUrl = Guid.NewGuid().ToString();
+    private readonly string NetworkDirectoryUrl = Guid.NewGuid().ToString();
     private MemberProfileResponse memberProfileResponse = null!;
     private IFixture _fixture;
 
@@ -137,6 +137,6 @@ public class RemoveMemberControllerGetTests
     [TearDown]
     public void TearDown()
     {
-        if (sut != null) sut.Dispose();
+        sut?.Dispose();
     }
 }

@@ -13,7 +13,7 @@ public class EventPublishedController : Controller
 
     [HttpGet]
     [Route("events/{eventId}/published", Name = RouteNames.CreateEvent.EventPublished)]
-    public IActionResult Get(Guid eventId)
+    public IActionResult Get()
     {
         var model = new EventPublishedViewModel
         {

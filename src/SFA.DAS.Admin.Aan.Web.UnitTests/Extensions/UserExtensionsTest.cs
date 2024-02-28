@@ -1,14 +1,14 @@
-﻿using FluentAssertions;
+﻿using System.Security.Claims;
+using AutoFixture.NUnit3;
+using FluentAssertions;
 using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.DfESignIn.Auth.Constants;
-using SFA.DAS.Testing.AutoFixture;
-using System.Security.Claims;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Extensions
 {
     public class UserExtensionsTest
     {
-        [Test, MoqAutoData]
+        [Test, AutoData]
         public void GetFirstName_Returns_ExpectedResults(string firstName)
         {
             // arrange
@@ -24,7 +24,7 @@ namespace SFA.DAS.Admin.Aan.Web.UnitTests.Extensions
             actual.Should().Be(firstName);
         }
 
-        [Test, MoqAutoData]
+        [Test, AutoData]
         public void GetLastName_Returns_ExpectedResults(string lastName)
         {
             // arrange
@@ -40,7 +40,7 @@ namespace SFA.DAS.Admin.Aan.Web.UnitTests.Extensions
             actual.Should().Be(lastName);
         }
 
-        [Test, MoqAutoData]
+        [Test, AutoData]
         public void GetEmail_Returns_ExpectedResults(string email)
         {
             // arrange
@@ -56,7 +56,7 @@ namespace SFA.DAS.Admin.Aan.Web.UnitTests.Extensions
             actual.Should().Be(email);
         }
 
-        [Test, MoqAutoData]
+        [Test, AutoData]
         public void GetDisplay_Returns_ExpectedResults(string firstName, string lastName)
         {
             // arrange

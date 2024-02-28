@@ -63,7 +63,7 @@ public class AdminHubControllerRoleTests
     {
         AdminHubController sut = new();
         sut
-            .AddControllerContextWithRoles(new[] { role })
+            .AddControllerContextWithRoles([role])
             .AddUrlHelperMock()
             .AddUrlForRoute(RouteNames.NetworkEvents, TestConstants.DefaultUrl);
 

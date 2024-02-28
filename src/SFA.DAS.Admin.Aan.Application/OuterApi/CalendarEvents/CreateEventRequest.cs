@@ -20,5 +20,5 @@ public class CreateEventRequest
     public string? ContactName { get; set; }
     public string? ContactEmail { get; set; }
     public int? PlannedAttendees { get; set; }
-    public List<Guest> Guests { get; set; } = new List<Guest>();
+    public List<Guest> Guests { get; set; } = [];
 }

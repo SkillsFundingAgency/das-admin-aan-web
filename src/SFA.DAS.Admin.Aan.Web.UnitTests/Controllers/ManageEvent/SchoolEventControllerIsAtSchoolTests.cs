@@ -18,7 +18,6 @@ public class SchoolEventControllerIsAtSchoolTests
     private static readonly string PostUrl = Guid.NewGuid().ToString();
     private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
     private static readonly string CalendarEventUrl = Guid.NewGuid().ToString();
-    private static readonly string UpdateIsAtSchoolUrl = Guid.NewGuid().ToString();
     private static readonly string SchoolNameUrl = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
@@ -97,7 +96,7 @@ public class SchoolEventControllerIsAtSchoolTests
         vm!.CancelLink.Should().Be(CalendarEventUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_HasSeenPreviewFalse_CancelLinkIsManageEvents()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -118,7 +117,7 @@ public class SchoolEventControllerIsAtSchoolTests
         vm!.CancelLink.Should().Be(NetworkEventsUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_HasSeenPreviewTrue_CancelLinkIsCheckYourAnswers()
     {
         var sessionServiceMock = new Mock<ISessionService>();

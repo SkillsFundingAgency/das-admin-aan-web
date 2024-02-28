@@ -137,7 +137,7 @@ public class GuestSpeakersControllerAddDeleteTests
 
         var sessionModel = new EventSessionModel
         {
-            GuestSpeakers = new List<GuestSpeaker>()
+            GuestSpeakers = []
         };
 
         if (idInCurrentList > 0)
@@ -187,7 +187,7 @@ public class GuestSpeakersControllerAddDeleteTests
 
         var sessionModel = new EventSessionModel
         {
-            GuestSpeakers = new List<GuestSpeaker>(),
+            GuestSpeakers = [],
             IsAlreadyPublished = true
         };
 
@@ -217,7 +217,7 @@ public class GuestSpeakersControllerAddDeleteTests
 
         var sessionModel = new EventSessionModel
         {
-            GuestSpeakers = new List<GuestSpeaker>(),
+            GuestSpeakers = [],
             IsAlreadyPublished = true
         };
 

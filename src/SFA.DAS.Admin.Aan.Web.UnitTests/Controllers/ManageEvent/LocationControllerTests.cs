@@ -36,7 +36,7 @@ public class LocationControllerTests
         vm.PageTitle.Should().Be(CreateEvent.PageTitle);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_HasSeenPreviewTrue_CancelLinkIsCheckYourAnswers()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -57,7 +57,7 @@ public class LocationControllerTests
         vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_IsAlreadyPublishedTrue_CancelLinkIsCalendarEvent()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -90,7 +90,7 @@ public class LocationControllerTests
         vm!.PostLink.Should().Be(PostUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_IsAlreadyPublishedTrue_PostLinkLinkIsUpdateCalendarEvent()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -109,6 +109,7 @@ public class LocationControllerTests
         var vm = result.Model as LocationViewModel;
         vm!.PostLink.Should().Be(UpdateLocationUrl);
     }
+
     [TestCase(true, UpdateEvent.PageTitle)]
     [TestCase(false, CreateEvent.PageTitle)]
     public void Get_ReturnsExpectedPageTitle(bool isAlreadyPublished, string pageTitle)
@@ -129,7 +130,7 @@ public class LocationControllerTests
         vm!.PageTitle.Should().Be(pageTitle);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Post_IsAlreadyPublishedTrue_RedirectsToUpdateLocation()
     {
         var calendarEventId = Guid.NewGuid();

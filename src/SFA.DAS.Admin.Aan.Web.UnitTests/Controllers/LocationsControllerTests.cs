@@ -10,8 +10,7 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
 public class LocationsControllerTests
 {
-    [Test]
-    [MoqAutoData]
+    [Test, MoqAutoData]
     public void GetAddresses_ReturnsApiResponse(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Greedy] LocationsController sut,

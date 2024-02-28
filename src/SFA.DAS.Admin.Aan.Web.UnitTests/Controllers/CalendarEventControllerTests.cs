@@ -56,10 +56,7 @@ public class CalendarEventControllerTests
         };
         var regionsResult = new GetRegionsResult
         {
-            Regions = new List<Region>
-            {
-                new(RegionId, RegionName, 1)
-            }
+            Regions = [new(RegionId, RegionName, 1)]
         };
 
         _outerApiMock = new Mock<IOuterApiClient>();

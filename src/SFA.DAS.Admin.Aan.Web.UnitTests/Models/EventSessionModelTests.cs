@@ -86,8 +86,8 @@ public class EventSessionModelTests
     {
         var guestSpeakers = new List<GuestSpeaker>
         {
-            new GuestSpeaker("name1", "jobTitle1", 1),
-            new GuestSpeaker("name2", "jobTitle2", 2)
+            new ("name1", "jobTitle1", 1),
+            new ("name2", "jobTitle2", 2)
         };
 
         var model = new EventSessionModel

@@ -8,19 +8,13 @@ public class CalendarEventViewModel
 {
     public Guid CalendarEventId { get; set; }
     public string CalendarName { get; set; } = null!;
-
     public DateTime Start { get; set; }
     public string Title { get; set; } = null!;
     public EventFormat EventFormat { get; set; }
-
     public bool IsActive { get; set; }
-
     public string Status => IsActive ? EventStatus.Published : EventStatus.Cancelled;
-
     public bool IsEditable => IsActive && Start >= DateTime.Now;
-
     public int NumberOfAttendees { get; set; }
-
     public string? CancelEventLink { get; set; }
     public string? EditEventLink { get; set; }
     public string? ViewDetailsLink { get; set; }

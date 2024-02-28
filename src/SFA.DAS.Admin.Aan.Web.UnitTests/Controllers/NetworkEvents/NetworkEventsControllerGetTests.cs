@@ -46,10 +46,7 @@ public class NetworkEventsControllerGetTests
 
         var regionsResult = new GetRegionsResult
         {
-            Regions = new List<Region>
-            {
-                new(1, "London", RegionId)
-            }
+            Regions = [new(1, "London", RegionId)]
         };
 
         _outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
@@ -107,8 +104,8 @@ public class NetworkEventsControllerGetTests
             PageSize = _result.PageSize,
             FromDate = _fromDate,
             ToDate = _toDate,
-            CalendarId = new List<int> { CalendarId },
-            IsActive = new List<bool> { true }
+            CalendarId = [CalendarId],
+            IsActive = [true]
         };
 
         _outerApiMock
@@ -193,7 +190,7 @@ public class NetworkEventsControllerGetTests
         outerApiMock
             .Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
                 It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);
-        outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(new List<CalendarDetail>());
+        outerApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync([]);
         outerApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(new GetRegionsResult());
 
         var sut = new NetworkEventsController(outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<CancelEventViewModel>>());

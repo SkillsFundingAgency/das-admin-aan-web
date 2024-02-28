@@ -2,7 +2,7 @@
 public class MemberActivities
 {
     public DateTime? LastSignedUpDate { get; set; }
-    public EventsModel EventsAttended { get; set; } = new EventsModel();
-    public EventsModel EventsPlanned { get; set; } = new EventsModel();
+    public EventsModel EventsAttended { get; set; } = new();
+    public EventsModel EventsPlanned { get; set; } = new();
 }
 

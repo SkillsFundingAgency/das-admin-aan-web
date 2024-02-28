@@ -24,7 +24,7 @@ public class EventSessionModel
     public string? EventOutline { get; set; }
     public string? EventSummary { get; set; }
     public bool? HasGuestSpeakers { get; set; }
-    public List<GuestSpeaker> GuestSpeakers { get; set; } = new List<GuestSpeaker>();
+    public List<GuestSpeaker> GuestSpeakers { get; set; } = [];
 
     public DateTime? DateOfEvent { get; set; }
     public int? StartHour { get; set; }
