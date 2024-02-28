@@ -1,6 +1,5 @@
 ﻿using RestEase;
 using SFA.DAS.Aan.SharedUi.Models.AmbassadorProfile;
-using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Admins;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
@@ -8,6 +7,7 @@ using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Locations;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Members;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Members.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Profiles;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Schools;
@@ -57,7 +57,7 @@ public interface IOuterApiClient
     Task<GetMembersResponse> GetMembers([QueryMap] IDictionary<string, string[]> parameters, CancellationToken cancellationToken);
 
     [Get("/members/{memberId}/profile?public=false")]
-    Task<GetMemberProfileResponse> GetMemberProfile([Path] Guid memberId, [Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, CancellationToken cancellationToken);
+    Task<MemberProfileResponse> GetMemberProfile([Path] Guid memberId, [Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, CancellationToken cancellationToken);
 
     [Get("/profiles/{userType}")]
     Task<GetProfilesResult> GetProfilesByUserType([Path] MemberUserType userType, CancellationToken? cancellationToken);

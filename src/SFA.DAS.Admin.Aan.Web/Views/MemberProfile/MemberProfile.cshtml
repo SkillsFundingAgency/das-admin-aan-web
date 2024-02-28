@@ -1,4 +1,5 @@
-﻿@model AmbassadorProfileViewModel
+﻿@using SFA.DAS.Aan.SharedUi.Constants;
+@model AmbassadorProfileViewModel
 @{
     ViewData["Title"] = "Member Profile";
 }
@@ -8,14 +9,12 @@
     <div class="govuk-grid-column-two-thirds">
         @{
             await Html.RenderPartialAsync("~/Views/MemberProfile/_MemberInformationSection.cshtml", Model.MemberInformation);
-
             await Html.RenderPartialAsync("~/Views/MemberProfile/_AreasOfInterestSection.cshtml", Model.AreasOfInterest);
-
+            await Html.RenderPartialAsync("~/Views/MemberProfile/_ReasonForJoining.cshtml", Model.ReasonForJoining);
             await Html.RenderPartialAsync("~/Views/MemberProfile/_EmployerInformationSection.cshtml", Model.ApprenticeshipInformation);
             await Html.RenderPartialAsync("~/Views/MemberProfile/_ApprenticeInformationSection.cshtml", Model.ApprenticeshipInformation);
-
             await Html.RenderPartialAsync("~/Views/MemberProfile/_ContactInformationSection.cshtml", Model.ContactInformation);
-
+            await Html.RenderPartialAsync("~/Views/MemberProfile/_MemberActivities.cshtml", Model.Activities);
             await Html.RenderPartialAsync("~/Views/MemberProfile/_RemoveMember.cshtml", Model.RemoveMember);
         }
     </div>

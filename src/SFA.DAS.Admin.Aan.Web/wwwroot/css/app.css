@@ -620,3 +620,20 @@ a.das-show-hide__button[aria-expanded="false"]:after {
 .profile-about-me-section {
   background: #f5f2ed;
 }
+
+.app-figure {
+  background-color: #1d70b8;
+  padding: 10px 15px 15px;
+}
+
+.app-figure__figure {
+  color: #fff;
+  font-weight: 700;
+  font-size: 48px;
+  margin: 0;
+}
+
+.app-figure__label {
+  color: #fff;
+  margin: 0;
+}

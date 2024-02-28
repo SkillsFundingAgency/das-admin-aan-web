@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Aan.SharedUi.Infrastructure;
 using SFA.DAS.Aan.SharedUi.Models.AmbassadorProfile;
 using SFA.DAS.Aan.SharedUi.Models.PublicProfile;
@@ -8,6 +10,7 @@ using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models;
+using static SFA.DAS.Aan.SharedUi.Constants.ProfileConstants;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers.ManageMembers;
 
@@ -83,8 +86,24 @@ public class MemberProfileController : Controller
 
         ambassadorProfileViewModel.AreasOfInterest = MemberProfileHelper.CreateAreasOfInterestViewModel(memberProfiles.UserType, profilesResult.Profiles, memberProfiles.Profiles, memberProfiles.FirstName);
 
+        ambassadorProfileViewModel.Activities.FutureEvents = memberProfiles.Activities.EventsPlanned.Events.OrderBy(x => x.EventDate).Select((x) => new EventViewModel(x.EventTitle, x.EventDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture))).ToList();
+        ambassadorProfileViewModel.Activities.FirstName = memberProfiles.FirstName;
+        ambassadorProfileViewModel.Activities.LastEventSignUpDate =
+            (memberProfiles.Activities.LastSignedUpDate != null ? memberProfiles.Activities.LastSignedUpDate.GetValueOrDefault().ToString("dd/MM/yyyy") : "no events attended")!;
+        ambassadorProfileViewModel.Activities.EventsAttendedCount = memberProfiles.Activities.EventsAttended.Events.Count(x => x.Urn == null);
+        ambassadorProfileViewModel.Activities.SchoolEventsAttendedCount = memberProfiles.Activities.EventsAttended.Events.Count(x => x.Urn != null);
         ambassadorProfileViewModel.RemoveMember.FirstName = memberProfiles.FirstName;
         ambassadorProfileViewModel.RemoveMember.RouteLink = Url.RouteUrl(RouteNames.RemoveMember, new { id })!;
+
+        if (ambassadorProfileViewModel.MemberInformation.UserRole == Role.Apprentice)
+        {
+            string? reasonForJoining = memberProfiles.Profiles.FirstOrDefault(x => x.ProfileId == ProfileIds.ReasonToJoinAmbassadorNetwork)?.Value;
+            ambassadorProfileViewModel.ReasonForJoining = new()
+            {
+                ShowReasonForJoining = (ambassadorProfileViewModel.MemberInformation.MaturityStatus == MemberMaturityStatus.New && !string.IsNullOrEmpty(reasonForJoining)),
+                ReasonForJoining = reasonForJoining
+            };
+        }
 
         return ambassadorProfileViewModel;
     }
