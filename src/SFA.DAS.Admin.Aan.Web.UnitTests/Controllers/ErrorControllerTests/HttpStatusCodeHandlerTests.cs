@@ -26,8 +26,8 @@ public class ErrorControllerTests
     private Mock<IConfiguration> _mockConfiguration = null!;
 
     [TestCase(403, AccessDeniedViewName)]
-    //[TestCase(404, PageNotFoundViewName)]
-    //[TestCase(500, ErrorInServiceViewName)]
+    [TestCase(404, PageNotFoundViewName)]
+    [TestCase(500, ErrorInServiceViewName)]
     public void HttpStatusCodeHandler_ReturnsRespectiveView(int statusCode, string expectedViewName)
     {
         // Arrange
