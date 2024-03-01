@@ -109,10 +109,7 @@ public class CheckYourAnswersControllerTests
 
         var regionsResult = new GetRegionsResult
         {
-            Regions = new List<Region>
-            {
-                new Region(1, "London", 1)
-            }
+            Regions = [new(1, "London", 1)]
         };
 
         outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);

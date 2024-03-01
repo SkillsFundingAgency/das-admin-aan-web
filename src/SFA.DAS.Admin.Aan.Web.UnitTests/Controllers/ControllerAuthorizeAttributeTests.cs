@@ -9,10 +9,8 @@ namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
 
 public class ControllerAuthorizeAttributeTests
 {
-    private readonly List<string> _controllersThatDoNotRequireAuthorize = new List<string>()
-    {
-        nameof(AccountController)
-    };
+    private readonly List<string> _controllersThatDoNotRequireAuthorize =
+    [nameof(AccountController)];
 
     [Test]
     public void Controllers_MustBeDecoratedWithAuthorizeAttribute()

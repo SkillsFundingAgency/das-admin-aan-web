@@ -5,7 +5,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SFA.DAS.Aan.SharedUi.Models.AmbassadorProfile;
-using SFA.DAS.Admin.Aan.Application.OuterApi.Members;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Members.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Profiles;
 using SFA.DAS.Admin.Aan.Application.Services;
@@ -186,8 +185,8 @@ public class MemberProfileControllerTests
         Fixture fixture = new();
         memberProfileResponse = fixture.Create<MemberProfileResponse>();
         getProfilesResult = fixture.Create<GetProfilesResult>();
-        memberProfileResponse.Activities.EventsAttended.Events = new List<EventAttendanceModel>();
-        memberProfileResponse.Activities.EventsPlanned.Events = new List<EventAttendanceModel>();
+        memberProfileResponse.Activities.EventsAttended.Events = [];
+        memberProfileResponse.Activities.EventsPlanned.Events = [];
         memberProfileResponse.Activities.LastSignedUpDate = null;
         memberProfileResponse.Preferences = Enumerable.Range(1, 4).Select(id => new MemberPreference { PreferenceId = id, Value = true });
         outerApiClientMock.Setup(c => c.GetMemberProfile(memberId, userId, cancellationToken)).ReturnsAsync(memberProfileResponse);
@@ -220,7 +219,7 @@ public class MemberProfileControllerTests
         memberProfileResponse.IsRegionalChair = false;
         memberProfileResponse.JoinedDate = DateTime.UtcNow.AddDays(-1);
         memberProfileResponse.Profiles = new List<MemberProfile>() {
-        new MemberProfile(){ProfileId=ProfileIds.ReasonToJoinAmbassadorNetwork,Value=reasonToJoin}
+        new(){ProfileId=ProfileIds.ReasonToJoinAmbassadorNetwork,Value=reasonToJoin}
         };
         memberProfileResponse.Preferences = Enumerable.Range(1, 4).Select(id => new MemberPreference { PreferenceId = id, Value = true });
         _outerApiClientMock.Setup(c => c.GetMemberProfile(memberId, userId, _cancellationToken)).ReturnsAsync(memberProfileResponse);

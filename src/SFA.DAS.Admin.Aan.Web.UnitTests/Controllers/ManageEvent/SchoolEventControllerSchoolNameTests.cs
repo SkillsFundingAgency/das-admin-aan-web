@@ -48,7 +48,7 @@ public class SchoolEventControllerSchoolNameTests
         vm!.PostLink.Should().Be(PostUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_ReturnsExpectedPostLink_WhenIsAlreadyPublishedTrue()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -69,7 +69,7 @@ public class SchoolEventControllerSchoolNameTests
         vm!.PostLink.Should().Be(SchoolNameUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_HasSeenPreviewTrue_CancelLinkIsCheckYourAnswers()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -89,7 +89,7 @@ public class SchoolEventControllerSchoolNameTests
         vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_IsAlreadyPublishedTrue_CancelLinkIsCalendarEvent()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -109,7 +109,7 @@ public class SchoolEventControllerSchoolNameTests
         vm!.CancelLink.Should().Be(CalendarEventUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_HasSeenPreviewFalse_CancelLinkIsManageEvents()
     {
         var sessionServiceMock = new Mock<ISessionService>();

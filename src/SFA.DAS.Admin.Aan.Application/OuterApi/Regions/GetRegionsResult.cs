@@ -2,5 +2,5 @@
 
 public class GetRegionsResult
 {
-    public List<Region> Regions { get; set; } = new();
+    public List<Region> Regions { get; set; } = [];
 }

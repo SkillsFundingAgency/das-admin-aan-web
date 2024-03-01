@@ -29,7 +29,7 @@ public class GuestSpeakerControllerListTests
             CalendarId = 1,
             RegionId = 2,
             EventFormat = EventFormat.Hybrid,
-            GuestSpeakers = new List<GuestSpeaker>()
+            GuestSpeakers = []
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -57,7 +57,7 @@ public class GuestSpeakerControllerListTests
             CalendarId = 1,
             RegionId = 2,
             EventFormat = EventFormat.Hybrid,
-            GuestSpeakers = new List<GuestSpeaker>()
+            GuestSpeakers = []
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -82,7 +82,7 @@ public class GuestSpeakerControllerListTests
             CalendarId = 1,
             RegionId = 2,
             EventFormat = EventFormat.Hybrid,
-            GuestSpeakers = new List<GuestSpeaker>(),
+            GuestSpeakers = [],
             IsAlreadyPublished = true
         };
 
@@ -108,7 +108,7 @@ public class GuestSpeakerControllerListTests
             CalendarId = 1,
             RegionId = 2,
             EventFormat = EventFormat.Hybrid,
-            GuestSpeakers = new List<GuestSpeaker>(),
+            GuestSpeakers = [],
             HasSeenPreview = false
         };
 
@@ -134,7 +134,7 @@ public class GuestSpeakerControllerListTests
             CalendarId = 1,
             RegionId = 2,
             EventFormat = EventFormat.Hybrid,
-            GuestSpeakers = new List<GuestSpeaker>(),
+            GuestSpeakers = [],
             HasSeenPreview = false,
             IsAlreadyPublished = true
         };
@@ -161,7 +161,7 @@ public class GuestSpeakerControllerListTests
             CalendarId = 1,
             RegionId = 2,
             EventFormat = EventFormat.Hybrid,
-            GuestSpeakers = new List<GuestSpeaker>(),
+            GuestSpeakers = [],
             HasSeenPreview = true
         };
 
@@ -187,7 +187,7 @@ public class GuestSpeakerControllerListTests
             CalendarId = 1,
             RegionId = 2,
             EventFormat = EventFormat.Hybrid,
-            GuestSpeakers = new List<GuestSpeaker>()
+            GuestSpeakers = []
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -213,7 +213,7 @@ public class GuestSpeakerControllerListTests
             CalendarId = 1,
             RegionId = 2,
             EventFormat = EventFormat.Hybrid,
-            GuestSpeakers = new List<GuestSpeaker>(),
+            GuestSpeakers = [],
             IsAlreadyPublished = true
         };
 
@@ -240,7 +240,7 @@ public class GuestSpeakerControllerListTests
             CalendarId = 1,
             RegionId = 2,
             EventFormat = EventFormat.Hybrid,
-            GuestSpeakers = new List<GuestSpeaker>()
+            GuestSpeakers = []
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -266,7 +266,7 @@ public class GuestSpeakerControllerListTests
             CalendarId = 1,
             RegionId = 2,
             EventFormat = EventFormat.Hybrid,
-            GuestSpeakers = new List<GuestSpeaker>(),
+            GuestSpeakers = [],
             IsAlreadyPublished = true
         };
 

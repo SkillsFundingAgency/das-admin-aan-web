@@ -136,7 +136,7 @@ public class NetworkEventsControllerCancelEventTests
     {
         var sut = new NetworkEventsController(Mock.Of<IOuterApiClient>(), Mock.Of<ISessionService>(), Mock.Of<IValidator<CancelEventViewModel>>());
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-        var result = sut.DeleteEventConfirmation(Guid.NewGuid());
+        var result = sut.DeleteEventConfirmation();
         var viewResult = result.As<ViewResult>();
 
         Assert.That(viewResult.Model, Is.TypeOf<CancelEventConfirmationViewModel>());

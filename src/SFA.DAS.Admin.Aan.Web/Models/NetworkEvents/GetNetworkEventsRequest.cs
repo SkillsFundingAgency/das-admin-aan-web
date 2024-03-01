@@ -11,13 +11,13 @@ public class GetNetworkEventsRequest
     public DateTime? ToDate { get; set; }
 
     [FromQuery]
-    public List<bool> IsActive { get; set; } = new List<bool>();
+    public List<bool> IsActive { get; set; } = [];
 
     [FromQuery]
-    public List<int> CalendarId { get; set; } = new List<int>();
+    public List<int> CalendarId { get; set; } = [];
 
     [FromQuery]
-    public List<int> RegionId { get; set; } = new List<int>();
+    public List<int> RegionId { get; set; } = [];
 
     [FromQuery]
     public int? Page { get; set; }
@@ -25,5 +25,5 @@ public class GetNetworkEventsRequest
     [FromQuery]
     public int? PageSize { get; set; }
 
-    [FromQuery] public List<bool> ShowUserEventsOnly { get; set; } = new();
+    [FromQuery] public List<bool> ShowUserEventsOnly { get; set; } = [];
 }

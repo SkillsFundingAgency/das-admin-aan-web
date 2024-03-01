@@ -6,9 +6,9 @@ public class NetworkEventsViewModel
 {
     public PaginationViewModel PaginationViewModel { get; set; } = null!;
     public int TotalCount { get; set; }
-    public List<CalendarEventViewModel> CalendarEvents { get; set; } = new List<CalendarEventViewModel>();
-    public EventFilterChoices FilterChoices { get; set; } = new EventFilterChoices();
-    public List<SelectedFilter> SelectedFilters { get; set; } = new List<SelectedFilter>();
+    public List<CalendarEventViewModel> CalendarEvents { get; set; } = [];
+    public EventFilterChoices FilterChoices { get; set; } = new();
+    public List<SelectedFilter> SelectedFilters { get; set; } = [];
     public bool ShowFilterOptions => SelectedFilters.Any();
     public string ClearSelectedFiltersLink { get; set; } = null!;
 

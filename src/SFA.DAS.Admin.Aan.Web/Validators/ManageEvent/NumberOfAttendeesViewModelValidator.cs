@@ -8,7 +8,6 @@ public class NumberOfAttendeesViewModelValidator : AbstractValidator<NumberOfAtt
 
     public const string NumberOfAttendeesEmpty = "You must include the estimated number of attendees you expect at this event";
 
-
     public NumberOfAttendeesViewModelValidator()
     {
         RuleFor(x => x.NumberOfAttendees)

@@ -1,7 +1,7 @@
 ﻿namespace SFA.DAS.Admin.Aan.Application.OuterApi.Locations;
 public class GetAddressesResult
 {
-    public List<AddressItem> Addresses { get; set; } = new();
+    public List<AddressItem> Addresses { get; set; } = [];
 }
 
 public class AddressItem

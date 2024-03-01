@@ -78,7 +78,7 @@ public class EventTypeController : Controller
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
         var regionTask = _outerApiClient.GetRegions(cancellationToken);
 
-        List<Task> tasks = new() { calendarTask, regionTask };
+        List<Task> tasks = [calendarTask, regionTask];
         await Task.WhenAll(tasks);
 
         var eventTypes = calendarTask.Result.OrderBy(x => x.CalendarName);

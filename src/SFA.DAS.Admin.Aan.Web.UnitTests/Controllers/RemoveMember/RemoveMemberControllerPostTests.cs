@@ -18,9 +18,8 @@ public class RemoveMemberControllerPostTests
     private Mock<IOuterApiClient> _outerApiMock = null!;
     private Mock<ISessionService> _sessionServiceMock = null!;
     private Mock<IValidator<SubmitRemoveMemberModel>> _validatorMock = null!;
-    private Guid memberId = Guid.NewGuid();
-    private string MemberProfileUrl = Guid.NewGuid().ToString();
-    private string NetworkDirectoryUrl = Guid.NewGuid().ToString();
+    private readonly Guid memberId = Guid.NewGuid();
+    private readonly string MemberProfileUrl = Guid.NewGuid().ToString();
     private MemberProfileResponse memberProfileResponse = null!;
     private SubmitRemoveMemberModel submitRemoveMemberModel = null!;
 
@@ -153,13 +152,13 @@ public class RemoveMemberControllerPostTests
         SetUpControllerWithContext();
         _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<SubmitRemoveMemberModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult(new List<ValidationFailure>()
             {
-                new ValidationFailure("TestField","Test Message"){ErrorCode = "1001"}
+                new("TestField","Test Message"){ErrorCode = "1001"}
             }));
     }
 
     [TearDown]
     public void TearDown()
     {
-        if (sut != null) sut.Dispose();
+        sut?.Dispose();
     }
 }

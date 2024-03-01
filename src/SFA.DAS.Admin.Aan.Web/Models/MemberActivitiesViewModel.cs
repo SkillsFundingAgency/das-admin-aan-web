@@ -6,7 +6,7 @@ public class MemberActivitiesViewModel
     public string LastEventSignUpDate { get; set; } = null!;
     public int EventsAttendedCount { get; set; }
     public int SchoolEventsAttendedCount { get; set; }
-    public List<EventViewModel> FutureEvents { get; set; } = new List<EventViewModel>();
+    public List<EventViewModel> FutureEvents { get; set; } = [];
     public int FutureEventsCount { get { return FutureEvents.Count; } }
 }
 

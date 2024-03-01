@@ -6,8 +6,8 @@ public class EventTypeViewModel : ManageEventViewModelBase
     public int? EventTypeId { get; set; }
     public int? EventRegionId { get; set; }
 
-    public List<RegionSelection> EventRegions { get; set; } = new List<RegionSelection>();
-    public List<EventTypeSelection> EventTypes { get; set; } = new List<EventTypeSelection>();
+    public List<RegionSelection> EventRegions { get; set; } = [];
+    public List<EventTypeSelection> EventTypes { get; set; } = [];
 }
 
 public class RegionSelection

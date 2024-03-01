@@ -41,7 +41,7 @@ public class NetworkEventsController : Controller
         var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
         var regionTask = _outerApiClient.GetRegions(cancellationToken);
 
-        List<Task> tasks = new() { calendarEventsTask, calendarTask, regionTask };
+        List<Task> tasks = [calendarEventsTask, calendarTask, regionTask];
 
         await Task.WhenAll(tasks);
 
@@ -108,7 +108,7 @@ public class NetworkEventsController : Controller
 
     [HttpGet]
     [Route("{calendarEventId}/cancel-confirmed", Name = RouteNames.DeleteEventConfirmation)]
-    public IActionResult DeleteEventConfirmation(Guid calendarEventId)
+    public IActionResult DeleteEventConfirmation()
     {
         const string viewPath = "~/Views/NetworkEvents/CancelEventConfirmation.cshtml";
         var model = new CancelEventConfirmationViewModel

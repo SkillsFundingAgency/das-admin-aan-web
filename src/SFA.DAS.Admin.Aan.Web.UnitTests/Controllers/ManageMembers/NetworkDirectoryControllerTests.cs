@@ -51,7 +51,7 @@ public class NetworkDirectoryControllerTests
 
         _requestModel = fixture.Build<NetworkDirectoryRequestModel>()
             .With(m => m.RegionId, _regionsData.Take(2).Select(r => r.Id).ToList())
-            .With(m => m.UserRole, new List<Role>() { Role.Apprentice })
+            .With(m => m.UserRole, [Role.Apprentice])
             .Create();
 
         _actualResult = await sut.Index(_requestModel, cancellationToken);

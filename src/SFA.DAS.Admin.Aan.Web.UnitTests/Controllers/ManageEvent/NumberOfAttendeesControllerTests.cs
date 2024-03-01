@@ -44,7 +44,7 @@ public class NumberOfAttendeesControllerTests
         vm!.PostLink.Should().Be(PostUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_ReturnsExpectedCancelLink_WhenHasSeenPreviewTrue()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -68,7 +68,7 @@ public class NumberOfAttendeesControllerTests
         vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_IsAlreadyPublishedTrue_CancelLinkIsCalendarEvent()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -89,7 +89,7 @@ public class NumberOfAttendeesControllerTests
         vm!.CancelLink.Should().Be(CalendarEventUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_IsAlreadyPublishedTrue_PostLinkIsUpdateNumberOfAttendees()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -142,7 +142,7 @@ public class NumberOfAttendeesControllerTests
         result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Post_IsAlreadyPublishedTrue_RedirectsToCalendarEvent()
     {
         var calendarEventId = Guid.NewGuid();
@@ -168,7 +168,7 @@ public class NumberOfAttendeesControllerTests
         result.RouteName.Should().Be(RouteNames.CalendarEvent);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
     {
         var calendarEventId = Guid.NewGuid();

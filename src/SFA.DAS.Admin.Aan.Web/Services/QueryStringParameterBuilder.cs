@@ -8,8 +8,8 @@ public static class QueryStringParameterBuilder
     public static Dictionary<string, string[]> BuildQueryStringParameters(GetNetworkEventsRequest request)
     {
         var parameters = new Dictionary<string, string[]>();
-        if (request.FromDate != null) parameters.Add("fromDate", new string[] { request.FromDate.Value.ToApiString() });
-        if (request.ToDate != null) parameters.Add("toDate", new string[] { request.ToDate.Value.ToApiString() });
+        if (request.FromDate != null) parameters.Add("fromDate", [request.FromDate.Value.ToApiString()]);
+        if (request.ToDate != null) parameters.Add("toDate", [request.ToDate.Value.ToApiString()]);
         if (request.IsActive.Count == 1)
         {
             parameters.Add("isActive", request.IsActive.Select(isActive => isActive.ToString()).ToArray());

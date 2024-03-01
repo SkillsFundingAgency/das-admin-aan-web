@@ -6,6 +6,8 @@
 
 [![Build Status](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_apis/build/status/das-admin-aan-web?branchName=main)](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_build/latest?definitionId=3341&branchName=main)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SkillsFundingAgency_das-admin-aan-web&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=SkillsFundingAgency_das-admin-aan-web)
+[![Confluence Page](https://img.shields.io/badge/Confluence-Project-blue)](https://skillsfundingagency.atlassian.net/wiki/spaces/NDL/pages/3852894209/AAN+Apprentice+Solution+Architecture)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg?longCache=true&style=flat-square)](https://en.wikipedia.org/wiki/MIT_License)
 
 This web solution is part of Apprentice Ambassador Network (AAN) project. AAN requires admin users to create and manage events which are organised by the ambassadors. Also there is a need to manage ambassadors (members). These two journies are enabled in this solution. 
 
@@ -42,6 +44,7 @@ In the web project, if not exist already, add `AppSettings.Development.json` fil
   "ConfigNames": "SFA.DAS.AdminAan.Web,SFA.DAS.Provider.DfeSignIn",
   "EnvironmentName": "LOCAL",
   "ResourceEnvironmentName": "LOCAL",
+  "Version": "1.0",
   "cdn": {
     "url": "https://das-test-frnt-end.azureedge.net"
   }
@@ -49,7 +52,7 @@ In the web project, if not exist already, add `AppSettings.Development.json` fil
 ```
 
 ## Technologies
-* .NetCore 6.0
+* .NetCore 8.0
 * NUnit
 * Moq
 * FluentAssertions

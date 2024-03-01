@@ -10,8 +10,7 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers;
 public class SchoolsControllerTests
 {
-    [Test]
-    [MoqAutoData]
+    [Test, MoqAutoData]
     public void GetSchools_ReturnsApiResponse(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         [Greedy] SchoolsController sut,

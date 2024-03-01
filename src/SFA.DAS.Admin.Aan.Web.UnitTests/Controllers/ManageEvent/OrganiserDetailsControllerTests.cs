@@ -46,7 +46,8 @@ public class OrganiserDetailsControllerTests
         var vm = result.Model as OrganiserDetailsViewModel;
         vm!.PostLink.Should().Be(PostUrl);
     }
-    [Test, MoqAutoData]
+
+    [Test]
     public void Get_ReturnsExpectedCancelLink_WhenHasSeenPreviewTrue()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -70,7 +71,7 @@ public class OrganiserDetailsControllerTests
         vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_IsAlreadyPublishedTrue_CancelLinkIsCalendarEvent()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -158,7 +159,7 @@ public class OrganiserDetailsControllerTests
         result.RouteName.Should().Be(RouteNames.CreateEvent.CheckYourAnswers);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_IsAlreadyPublishedTrue_PostLinkIsUpdateCalendarEvent()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -179,7 +180,7 @@ public class OrganiserDetailsControllerTests
         vm!.PostLink.Should().Be(UpdateOrganiserDetailsUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Post_IsAlreadyPublishedTrue_RedirectsToCalendarEvent()
     {
         var calendarEventId = Guid.NewGuid();
@@ -205,7 +206,7 @@ public class OrganiserDetailsControllerTests
         result.RouteName.Should().Be(RouteNames.CalendarEvent);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
     {
         var calendarEventId = Guid.NewGuid();

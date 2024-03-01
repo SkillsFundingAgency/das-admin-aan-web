@@ -35,7 +35,7 @@ public class EventFormatControllerTests
         vm.PageTitle.Should().Be(CreateEvent.PageTitle);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_HasSeenPreviewTrue_CancelLinkIsCheckYourAnswers()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -56,7 +56,7 @@ public class EventFormatControllerTests
         vm!.CancelLink.Should().Be(CheckYourAnswersUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_IsAlreadyPublishedTrue_CancelLinkIsCalendarEvent()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -88,7 +88,7 @@ public class EventFormatControllerTests
         vm!.PostLink.Should().Be(PostUrl);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Get_IsAlreadyPublishedTrue_PostLinkLinkIsUpdateCalendarEvent()
     {
         var sessionServiceMock = new Mock<ISessionService>();
@@ -161,7 +161,7 @@ public class EventFormatControllerTests
         result.RouteName.Should().Be(RouteNames.CreateEvent.EventType);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Post_IsAlreadyPublishedTrue_RedirectsToUpdateLocation()
     {
         var calendarEventId = Guid.NewGuid();
@@ -189,7 +189,7 @@ public class EventFormatControllerTests
         result.RouteValues!["CalendarEventId"].Should().Be(calendarEventId);
     }
 
-    [Test, MoqAutoData]
+    [Test]
     public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
     {
         var calendarEventId = Guid.NewGuid();

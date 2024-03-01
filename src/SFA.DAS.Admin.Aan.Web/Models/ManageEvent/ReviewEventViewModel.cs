@@ -8,35 +8,24 @@ public class ReviewEventViewModel : ManageEventViewModelBase
     public bool HasSeenPreview { get; set; }
     public bool HasChangedEvent { get; set; }
     public EventFormat? EventFormat { get; set; }
-
     public string? EventTitle { get; set; }
     public string? EventType { get; set; }
     public string? EventRegion { get; set; }
-
     public string? EventOutline { get; set; }
     public string? EventSummary { get; set; }
     public bool? HasGuestSpeakers { get; set; }
-    public List<GuestSpeaker> GuestSpeakers { get; set; } = new List<GuestSpeaker>();
-
+    public List<GuestSpeaker> GuestSpeakers { get; set; } = [];
     public DateTime? Start { get; set; }
     public DateTime? End { get; set; }
-
     public string? EventLocation { get; set; }
     public string? OnlineEventLink { get; set; }
-
     public string? SchoolName { get; set; }
-
     public bool? IsAtSchool { get; set; }
-
     public string? OrganiserName { get; set; }
     public string? OrganiserEmail { get; set; }
-
     public int? NumberOfAttendees { get; set; }
-
     public string? EventFormatLink { get; set; }
-
     public string? EventLocationLink { get; set; }
-
     public string? EventTypeLink { get; set; }
     public string? EventDateTimeLink { get; set; }
     public string? EventDescriptionLink { get; set; }

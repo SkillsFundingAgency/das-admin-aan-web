@@ -52,7 +52,7 @@ public class GuestSpeakersController : Controller
         sessionModel.HasGuestSpeakers = submitModel.HasGuestSpeakers;
         if (sessionModel.HasGuestSpeakers == false)
         {
-            sessionModel.GuestSpeakers = new List<GuestSpeaker>();
+            sessionModel.GuestSpeakers = [];
         }
 
         sessionModel.IsDirectCallFromCheckYourAnswers = false;
