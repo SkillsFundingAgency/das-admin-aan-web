@@ -1,4 +1,5 @@
-﻿using FluentValidation.TestHelper;
+﻿using FluentAssertions;
+using FluentValidation.TestHelper;
 using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Validators.ManageEvent;
@@ -41,8 +42,8 @@ public class LocationViewModelValidatorTests
     [TestCase("", EventFormat.Hybrid, true)]
     [TestCase("", EventFormat.InPerson, true)]
     [TestCase("", EventFormat.Online, true)]
-    [TestCase("notAnUrl", null, true)]
-    [TestCase("notAnUrl", EventFormat.Hybrid, false)]
+    [TestCase("notAnUrl>", null, true)]
+    [TestCase("notAnUrl<", EventFormat.Hybrid, false)]
     [TestCase("notAnUrl", EventFormat.InPerson, true)]
     [TestCase("notAnUrl", EventFormat.Online, false)]
     [TestCase("http://notsecureurl.com", EventFormat.Online, false)]
@@ -71,6 +72,34 @@ public class LocationViewModelValidatorTests
         {
             result.ShouldHaveValidationErrorFor(c => c.OnlineEventLink)
                 .WithErrorMessage(LocationViewModelValidator.EventLinkMustBeValid);
+            result.Errors.Count.Should().Be(1);
+        }
+        else
+        {
+            result.ShouldNotHaveAnyValidationErrors();
+        }
+    }
+
+    [TestCase("https://teams.microsoft.com", EventFormat.Online, true)]
+    [TestCase("https://teams.microsoft.com<", EventFormat.Online, false)]
+    [TestCase("https://teams.microsoft.com>", EventFormat.Online, false)]
+    [TestCase("https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZGRmZC00NzlkLWFmZTktOTU4ZmFkMjA2ZDE1%thread.v2/0?context=%7b%22ad277c9-c60a-4da1-b5f3-b3b8Oid%22%3a%2209a4-c6-48-bc-ad60%22%7d", EventFormat.Hybrid, true)]
+    [TestCase("https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZGRmZC00NzlkLWFmZTktOTU4ZmFkMjA2ZDE1%thread.v2/0?context=%7b%22ad277c9-c60a-4da1-b5f3-b3b8Oid%22%3a%2209a4-c6-48-bc-ad60%22%7d<", EventFormat.Hybrid, false)]
+    [TestCase("https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZGRmZC00NzlkLWFmZTktOTU4ZmFkMjA2ZDE1%thread.v2/0?context=%7b%22ad277c9-c60a-4da1-b5f3-b3b8Oid%22%3a%2209a4-c6-48-bc-ad60%22%7d>", EventFormat.Hybrid, false)]
+    [TestCase("https://test-install.blindsidenetworks.com/bigbluebutton/api/join?meetingID=DemoMeeting", EventFormat.Online, true)]
+    [TestCase("https://test-install.blindsidenetworks.com/bigbluebutton/api/join?meetingID=DemoMeeting>", EventFormat.Online, false)]
+    [TestCase("https://test-install.blindsidenetworks.com/bigbluebutton/api/join?meetingID=DemoMeeting<", EventFormat.Online, false)]
+    public void Validate_EventLink_WithHtmlTags(string? url, EventFormat? eventFormat, bool isValid)
+    {
+        var model = new LocationViewModel
+        { Postcode = "xyz", EventFormat = eventFormat, OnlineEventLink = url };
+
+        var sut = new LocationViewModelValidator();
+        var result = sut.TestValidate(model);
+        if (!isValid)
+        {
+            result.ShouldHaveValidationErrorFor(c => c.OnlineEventLink)
+                .WithErrorMessage(LocationViewModelValidator.EventLinkMustNotHaveHtmlTags);
         }
         else
         {
