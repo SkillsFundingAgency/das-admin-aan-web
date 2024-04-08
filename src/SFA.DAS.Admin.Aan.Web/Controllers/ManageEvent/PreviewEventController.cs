@@ -32,6 +32,7 @@ public class PreviewEventController : Controller
 
     private async Task<NetworkEventDetailsViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
     {
+
         var calendars = await _outerApiClient.GetCalendars(cancellationToken);
         sessionModel.CalendarName = calendars.First(x => x.Id == sessionModel.CalendarId).CalendarName;
         var model = (NetworkEventDetailsViewModel)sessionModel;

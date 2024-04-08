@@ -27,10 +27,12 @@ public class EventSessionModel
     public List<GuestSpeaker> GuestSpeakers { get; set; } = [];
 
     public DateTime? DateOfEvent { get; set; }
-    public int? StartHour { get; set; }
-    public int? StartMinutes { get; set; }
-    public int? EndHour { get; set; }
-    public int? EndMinutes { get; set; }
+    public DateTime? StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
+    // public int? StartHour { get; set; }
+    // public int? StartMinutes { get; set; }
+    // public int? EndHour { get; set; }
+    // public int? EndMinutes { get; set; }
 
     public string? Location { get; set; }
     public string? EventLink { get; set; }
@@ -58,32 +60,6 @@ public class EventSessionModel
 
     public string PageTitle => IsAlreadyPublished ? UpdateEvent.PageTitle : CreateEvent.PageTitle;
 
-    public DateTime? Start
-    {
-        get
-        {
-            if (DateOfEvent == null || !StartHour.HasValue || !StartMinutes.HasValue) return null;
-
-            var dateOfEventToUse = DateOfEvent.Value;
-
-            return new DateTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, StartHour.Value,
-                StartMinutes.Value, 0, DateTimeKind.Unspecified);
-        }
-    }
-
-    public DateTime? End
-    {
-        get
-        {
-            if (DateOfEvent == null || !EndHour.HasValue || !EndMinutes.HasValue) return null;
-
-            var dateOfEventToUse = DateOfEvent.Value;
-
-            return new DateTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, EndHour.Value,
-                EndMinutes.Value, 0, DateTimeKind.Unspecified);
-        }
-    }
-
 
     public static implicit operator CreateEventRequest(EventSessionModel source)
     {
@@ -107,15 +83,15 @@ public class EventSessionModel
         }
 
         DateTime? startDate = null;
-        if (source.Start.HasValue)
+        if (source.StartDate.HasValue)
         {
-            startDate = source.Start.Value.ToUniversalTime();
+            startDate = source.StartDate.Value;
         }
 
         DateTime? endDate = null;
-        if (source.End.HasValue)
+        if (source.EndDate.HasValue)
         {
-            endDate = source.End.Value.ToUniversalTime();
+            endDate = source.EndDate.Value;
         }
 
         var location = source.Location;
@@ -182,15 +158,15 @@ public class EventSessionModel
         }
 
         DateTime? startDate = null;
-        if (source.Start.HasValue)
+        if (source.StartDate.HasValue)
         {
-            startDate = source.Start.Value.ToUniversalTime();
+            startDate = source.StartDate.Value;
         }
 
         DateTime? endDate = null;
-        if (source.End.HasValue)
+        if (source.EndDate.HasValue)
         {
-            endDate = source.End.Value.ToUniversalTime();
+            endDate = source.EndDate.Value;
         }
 
         var location = source.Location;
@@ -246,8 +222,8 @@ public class EventSessionModel
 
         var model = new NetworkEventDetailsViewModel(
             source!.CalendarName,
-            source.Start.GetValueOrDefault(),
-            source.End.GetValueOrDefault(),
+            source.StartDate.GetValueOrDefault(),
+            source.EndDate.GetValueOrDefault(),
             source.EventTitle!,
             source.EventSummary!,
             source.ContactName!,
@@ -300,10 +276,8 @@ public class EventSessionModel
             HasGuestSpeakers = source.EventGuests.Any(),
             GuestSpeakers = guestSpeakers,
             DateOfEvent = source.StartDate.Date,
-            StartHour = source.StartDate.ToLocalTime().Hour,
-            StartMinutes = source.StartDate.ToLocalTime().Minute,
-            EndHour = source.EndDate.ToLocalTime().Hour,
-            EndMinutes = source.EndDate.ToLocalTime().Minute,
+            StartDate = source.StartDate,
+            EndDate = source.EndDate,
             Location = source.Location,
             EventLink = source.EventLink,
             Longitude = source.Longitude,

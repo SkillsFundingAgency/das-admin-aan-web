@@ -23,7 +23,6 @@ public class EventSessionModelTests
         vm.HasSeenPreview.Should().Be(false);
     }
 
-
     [TestCase("2035-12-01", 12, 1, false)]
     [TestCase("2035-12-01", 12, 0, false)]
     [TestCase(null, 12, 0, true)]
@@ -36,16 +35,25 @@ public class EventSessionModelTests
 
         if (!string.IsNullOrEmpty(datetimeDescriptor)) dateTime = DateTime.Parse(datetimeDescriptor);
 
-        var vm = new EventSessionModel { DateOfEvent = dateTime, StartHour = hour, StartMinutes = minutes };
+        var vm = new EventSessionModel { DateOfEvent = dateTime };
+
+        if (dateTime != null && hour != null && minutes != null)
+        {
+            vm.StartDate = new DateTime(dateTime.Value.Year, dateTime.Value.Month, dateTime.Value.Day, hour.Value,
+                minutes.Value, 0);
+        }
 
         if (isNullValue)
-            vm.Start.Should().BeNull();
+        {
+            vm.StartDate.Should().BeNull();
+        }
         else
         {
             var expectedDate = new DateTime(dateTime!.Value.Year, dateTime.Value.Month, dateTime.Value.Day, hour!.Value,
                 minutes!.Value, 0);
-            vm.Start.Should().Be(expectedDate);
+            vm.StartDate.Should().Be(expectedDate);
         }
+
     }
 
     [TestCase("2035-12-01", 12, 1, false)]
@@ -60,15 +68,22 @@ public class EventSessionModelTests
 
         if (!string.IsNullOrEmpty(datetimeDescriptor)) dateTime = DateTime.Parse(datetimeDescriptor);
 
-        var vm = new EventSessionModel { DateOfEvent = dateTime, EndHour = hour, EndMinutes = minutes };
+        var vm = new EventSessionModel { DateOfEvent = dateTime };
+
+        if (dateTime != null && hour != null && minutes != null)
+        {
+            vm.EndDate = new DateTime(dateTime.Value.Year, dateTime.Value.Month, dateTime.Value.Day, hour.Value,
+                minutes.Value, 0);
+
+        }
 
         if (isNullValue)
-            vm.End.Should().BeNull();
+            vm.EndDate.Should().BeNull();
         else
         {
             var expectedDate = new DateTime(dateTime!.Value.Year, dateTime.Value.Month, dateTime.Value.Day, hour!.Value,
                 minutes!.Value, 0);
-            vm.End.Should().Be(expectedDate);
+            vm.EndDate.Should().Be(expectedDate);
         }
     }
 
@@ -233,11 +248,12 @@ public class EventSessionModelTests
     [Test, AutoData]
     public void Operator_MapsToNetworkEventDetailsViewModel(EventSessionModel source)
     {
-        source.DateOfEvent = DateTime.Today.AddDays(1);
-        source.StartHour = 12;
-        source.StartMinutes = 40;
-        source.EndHour = 14;
-        source.EndMinutes = 10;
+        var dateOfEvent = DateTime.Today.AddDays(1);
+
+        source.DateOfEvent = dateOfEvent;
+        source.StartDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 12, 40, 0);
+        source.EndDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 14, 10, 0);
+
         var vm = (NetworkEventDetailsViewModel)source;
         vm.EventFormat.Should().Be(source.EventFormat);
         vm.LocationDetails.Should().BeEquivalentTo(new LocationDetails(source.Location, source.Postcode,
@@ -254,11 +270,11 @@ public class EventSessionModelTests
     [Test, AutoData]
     public void Operator_MapsToNetworkEventDetailsViewModel_NoAttendees(EventSessionModel source)
     {
-        source.DateOfEvent = DateTime.Today.AddDays(1);
-        source.StartHour = 12;
-        source.StartMinutes = 40;
-        source.EndHour = 14;
-        source.EndMinutes = 10;
+        var dateOfEvent = DateTime.Today.AddDays(1);
+
+        source.DateOfEvent = dateOfEvent;
+        source.StartDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 12, 40, 0);
+        source.EndDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 14, 10, 0);
         source.Attendees = new List<AttendeeModel>();
         var vm = (NetworkEventDetailsViewModel)source;
         vm.IsPreview.Should().BeTrue();

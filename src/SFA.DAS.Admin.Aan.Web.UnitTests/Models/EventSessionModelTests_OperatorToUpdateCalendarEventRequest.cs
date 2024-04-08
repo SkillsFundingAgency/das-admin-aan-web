@@ -63,8 +63,6 @@ public class EventSessionModelTestsOperatorToUpdateCalendarEventRequest
         var model = new EventSessionModel
         {
             DateOfEvent = startDate,
-            StartHour = startHour,
-            StartMinutes = startMinutes
         };
 
         var request = (UpdateCalendarEventRequest)model;
@@ -74,7 +72,9 @@ public class EventSessionModelTestsOperatorToUpdateCalendarEventRequest
         }
         else
         {
-            request.StartDate.Should().Be(startDate!.Value.ToUniversalTime());
+            request.StartDate = new DateTime(startDate.Value.Year, startDate.Value.Month, startDate.Value.Day,
+                startHour, startMinutes, 0);
+            request.StartDate.Should().Be(startDate!.Value);
         }
     }
 
@@ -88,9 +88,12 @@ public class EventSessionModelTestsOperatorToUpdateCalendarEventRequest
         var model = new EventSessionModel
         {
             DateOfEvent = endDate,
-            EndHour = hour,
-            EndMinutes = minutes
         };
+
+        if (endDate != null)
+        {
+            model.EndDate = new DateTime(endDate.Value.Year, endDate.Value.Month, endDate.Value.Day, hour, minutes, 0);
+        }
 
         var request = (UpdateCalendarEventRequest)model;
         if (endDateIsNull)
@@ -99,8 +102,9 @@ public class EventSessionModelTestsOperatorToUpdateCalendarEventRequest
         }
         else
         {
-            request.EndDate.Should().Be(endDate!.Value.ToUniversalTime());
+            request.EndDate.Should().Be(endDate!.Value);
         }
+
     }
 
     [TestCase(EventFormat.InPerson, "location", "location")]

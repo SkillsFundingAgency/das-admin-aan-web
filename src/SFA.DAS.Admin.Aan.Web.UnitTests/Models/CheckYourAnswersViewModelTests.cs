@@ -11,10 +11,11 @@ public class CheckYourAnswersViewModelTests
     [Test, AutoData]
     public void Operator_GivenEventSessionModel_ReturnsViewModel(EventSessionModel source)
     {
-        source.StartHour = 12;
-        source.StartMinutes = 25;
-        source.EndHour = 13;
-        source.EndMinutes = 30;
+        var dateOfEvent = DateTime.Today.AddDays(1);
+
+        source.StartDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 12, 0, 0);
+        source.EndDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 13, 30, 0);
+
         source.IsAlreadyPublished = false;
         ReviewEventViewModel sut = source;
         sut.Should().BeEquivalentTo(source, options => options.ExcludingMissingMembers());
@@ -25,14 +26,13 @@ public class CheckYourAnswersViewModelTests
     [TestCase("location 1", null, "location 1")]
     public void Operator_GetFullLocation_CheckResult(string location, string? postcode, string expected)
     {
+        var dateOfEvent = DateTime.Today.AddDays(1);
         var source = new EventSessionModel
         {
             Location = location,
             Postcode = postcode,
-            StartHour = 12,
-            StartMinutes = 25,
-            EndHour = 13,
-            EndMinutes = 30
+            StartDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 12, 25, 0),
+            EndDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 13, 30, 0),
         };
 
         var vm = (ReviewEventViewModel)source;

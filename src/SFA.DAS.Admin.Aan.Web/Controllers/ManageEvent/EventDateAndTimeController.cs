@@ -49,10 +49,18 @@ public class EventDateAndTimeController : Controller
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.DateOfEvent = submitModel.DateOfEvent;
-        sessionModel.StartHour = submitModel.StartHour;
-        sessionModel.StartMinutes = submitModel.StartMinutes;
-        sessionModel.EndHour = submitModel.EndHour;
-        sessionModel.EndMinutes = submitModel.EndMinutes;
+
+        {
+            sessionModel.StartDate = new DateTime(sessionModel.DateOfEvent.Value.Year,
+                    sessionModel.DateOfEvent.Value.Month,
+                    sessionModel.DateOfEvent.Value.Day, submitModel.StartHour!.Value,
+                    submitModel.StartMinutes!.Value, 0, DateTimeKind.Local).ToUniversalTime();
+
+            sessionModel.EndDate = new DateTime(sessionModel.DateOfEvent.Value.Year,
+                sessionModel.DateOfEvent.Value.Month,
+                sessionModel.DateOfEvent.Value.Day, submitModel.EndHour!.Value,
+                submitModel.EndMinutes!.Value, 0, DateTimeKind.Local).ToUniversalTime();
+        }
 
         if (sessionModel.IsAlreadyPublished)
         {
@@ -96,10 +104,10 @@ public class EventDateAndTimeController : Controller
         return new EventDateAndTimeViewModel
         {
             DateOfEvent = sessionModel.DateOfEvent,
-            StartHour = sessionModel.StartHour,
-            StartMinutes = sessionModel.StartMinutes,
-            EndHour = sessionModel.EndHour,
-            EndMinutes = sessionModel.EndMinutes,
+            StartHour = sessionModel.StartDate?.ToLocalTime().Hour,
+            StartMinutes = sessionModel.StartDate?.Minute,
+            EndHour = sessionModel.EndDate?.ToLocalTime().Hour,
+            EndMinutes = sessionModel.EndDate?.Minute,
             CancelLink = cancelLink,
             PostLink = postLink,
             PageTitle = sessionModel.PageTitle

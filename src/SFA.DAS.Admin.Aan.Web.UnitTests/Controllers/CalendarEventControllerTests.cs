@@ -386,10 +386,8 @@ public class CalendarEventControllerTests
             CalendarId = calendars.First().Id,
             RegionId = regionsResult.Regions.First().Id,
             DateOfEvent = DateTime.Today,
-            StartHour = DateTime.Today.Hour,
-            StartMinutes = DateTime.Today.Minute,
-            EndHour = DateTime.Today.Hour,
-            EndMinutes = DateTime.Today.Minute,
+            StartDate = DateTime.Today,
+            EndDate = DateTime.Today
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -449,10 +447,8 @@ public class CalendarEventControllerTests
             CalendarId = calendars.First().Id,
             RegionId = regionsResult.Regions.First().Id,
             DateOfEvent = DateTime.Today,
-            StartHour = DateTime.Today.Hour,
-            StartMinutes = DateTime.Today.Minute,
-            EndHour = DateTime.Today.Hour,
-            EndMinutes = DateTime.Today.Minute,
+            StartDate = DateTime.Today,
+            EndDate = DateTime.Today,
             EventFormat = EventFormat.InPerson,
             Location = null
         };

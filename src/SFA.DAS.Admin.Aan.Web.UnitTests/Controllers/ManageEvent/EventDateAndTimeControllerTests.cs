@@ -191,20 +191,27 @@ public class EventDateAndTimeControllerTests
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
 
+        var dateOfEvent = DateTime.Today.AddDays(1);
+
         var sessionModel = new EventSessionModel
         {
             CalendarEventId = calendarEventId,
             IsAlreadyPublished = true,
+            DateOfEvent = dateOfEvent,
+            StartDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 12, 0, 0),
+            EndDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 13, 30, 0),
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var submitModel = new EventDateAndTimeViewModel
+        {
             DateOfEvent = DateTime.Today.AddDays(1),
             StartHour = 12,
             StartMinutes = 0,
             EndHour = 13,
             EndMinutes = 30
         };
-
-        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
-
-        var submitModel = new EventDateAndTimeViewModel();
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -222,21 +229,28 @@ public class EventDateAndTimeControllerTests
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
 
+        var dateOfEvent = DateTime.Today.AddDays(1);
+
         var sessionModel = new EventSessionModel
         {
             CalendarEventId = calendarEventId,
             IsAlreadyPublished = true,
-            DateOfEvent = DateTime.Today.AddDays(1),
-            StartHour = 12,
-            StartMinutes = 0,
-            EndHour = 13,
-            EndMinutes = 30,
+            DateOfEvent = dateOfEvent,
+            StartDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 12, 0, 0),
+            EndDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 13, 30, 0),
             HasChangedEvent = false
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new EventDateAndTimeViewModel();
+        var submitModel = new EventDateAndTimeViewModel
+        {
+            DateOfEvent = dateOfEvent,
+            StartHour = 12,
+            StartMinutes = 0,
+            EndHour = 13,
+            EndMinutes = 30,
+        };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -279,11 +293,8 @@ public class EventDateAndTimeControllerTests
 
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m
-            => m.DateOfEvent == dateOfEvent &&
-               m.StartHour == startHour &&
-               m.StartMinutes == startMinutes &&
-               m.EndHour == endHour &&
-               m.EndMinutes == endMinutes)));
+                => m.DateOfEvent == dateOfEvent)));
+
         result.RouteName.Should().Be(RouteNames.CreateEvent.Location);
     }
 

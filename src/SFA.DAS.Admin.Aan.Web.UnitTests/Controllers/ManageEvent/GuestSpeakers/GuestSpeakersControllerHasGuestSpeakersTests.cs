@@ -162,16 +162,16 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<HasGuestSpeakersViewModel>>();
 
+        var dateOfEvent = DateTime.Today.AddDays(1);
+
         var sessionModel = new EventSessionModel
         {
             CalendarEventId = calendarEventId,
             IsAlreadyPublished = true,
             HasGuestSpeakers = false,
-            DateOfEvent = DateTime.Today.AddDays(1),
-            StartHour = 12,
-            StartMinutes = 0,
-            EndHour = 13,
-            EndMinutes = 30
+            DateOfEvent = dateOfEvent,
+            StartDate = dateOfEvent.AddHours(12).AddMinutes(0),
+            EndDate = dateOfEvent.AddHours(13).AddMinutes(30)
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -194,15 +194,15 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<HasGuestSpeakersViewModel>>();
 
+        var dateOfEvent = DateTime.Today.AddDays(1);
+
         var sessionModel = new EventSessionModel
         {
             CalendarEventId = calendarEventId,
             IsAlreadyPublished = true,
-            DateOfEvent = DateTime.Today.AddDays(1),
-            StartHour = 12,
-            StartMinutes = 0,
-            EndHour = 13,
-            EndMinutes = 30
+            DateOfEvent = dateOfEvent,
+            StartDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 12, 0, 0),
+            EndDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 13, 30, 0)
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -225,15 +225,15 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<HasGuestSpeakersViewModel>>();
 
+        var dateOfEvent = DateTime.Today.AddDays(1);
+
         var sessionModel = new EventSessionModel
         {
             CalendarEventId = calendarEventId,
             IsAlreadyPublished = true,
-            DateOfEvent = DateTime.Today.AddDays(1),
-            StartHour = 12,
-            StartMinutes = 0,
-            EndHour = 13,
-            EndMinutes = 30
+            DateOfEvent = dateOfEvent,
+            StartDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 12, 0, 0),
+            EndDate = new DateTime(dateOfEvent.Year, dateOfEvent.Month, dateOfEvent.Day, 13, 30, 0),
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
