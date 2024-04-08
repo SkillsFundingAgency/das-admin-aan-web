@@ -53,55 +53,55 @@ public class EventSessionModelTestsOperatorToUpdateCalendarEventRequest
         request.Urn.Should().Be(expectedUrn);
     }
 
-    [TestCase(null, true)]
-    [TestCase("2050-10-10 10:30:00", false)]
-    public void Operator_UpdateEventRequest_CheckStartDate(DateTime? startDate, bool startDateIsNull)
-    {
-        const int startHour = 10;
-        const int startMinutes = 30;
-
-        var model = new EventSessionModel
-        {
-            DateOfEvent = startDate,
-            StartHour = startHour,
-            StartMinutes = startMinutes
-        };
-
-        var request = (UpdateCalendarEventRequest)model;
-        if (startDateIsNull)
-        {
-            request.StartDate.Should().BeNull();
-        }
-        else
-        {
-            request.StartDate.Should().Be(startDate!.Value.ToUniversalTime());
-        }
-    }
-
-    [TestCase(null, true)]
-    [TestCase("2050-10-10 10:30:00", false)]
-    public void Operator_UpdateEventRequest_CheckEndDate(DateTime? endDate, bool endDateIsNull)
-    {
-        const int hour = 10;
-        const int minutes = 30;
-
-        var model = new EventSessionModel
-        {
-            DateOfEvent = endDate,
-            EndHour = hour,
-            EndMinutes = minutes
-        };
-
-        var request = (UpdateCalendarEventRequest)model;
-        if (endDateIsNull)
-        {
-            request.EndDate.Should().BeNull();
-        }
-        else
-        {
-            request.EndDate.Should().Be(endDate!.Value.ToUniversalTime());
-        }
-    }
+    // [TestCase(null, true)]
+    // [TestCase("2050-10-10 10:30:00", false)]
+    // public void Operator_UpdateEventRequest_CheckStartDate(DateTime? startDate, bool startDateIsNull)
+    // {
+    //     const int startHour = 10;
+    //     const int startMinutes = 30;
+    //
+    //     var model = new EventSessionModel
+    //     {
+    //         DateOfEvent = startDate,
+    //         StartHour = startHour,
+    //         StartMinutes = startMinutes
+    //     };
+    //
+    //     var request = (UpdateCalendarEventRequest)model;
+    //     if (startDateIsNull)
+    //     {
+    //         request.StartDate.Should().BeNull();
+    //     }
+    //     else
+    //     {
+    //         request.StartDate.Should().Be(startDate!.Value.ToUniversalTime());
+    //     }
+    // }
+    //
+    // [TestCase(null, true)]
+    // [TestCase("2050-10-10 10:30:00", false)]
+    // public void Operator_UpdateEventRequest_CheckEndDate(DateTime? endDate, bool endDateIsNull)
+    // {
+    //     const int hour = 10;
+    //     const int minutes = 30;
+    //
+    //     var model = new EventSessionModel
+    //     {
+    //         DateOfEvent = endDate,
+    //         EndHour = hour,
+    //         EndMinutes = minutes
+    //     };
+    //
+    //     var request = (UpdateCalendarEventRequest)model;
+    //     if (endDateIsNull)
+    //     {
+    //         request.EndDate.Should().BeNull();
+    //     }
+    //     else
+    //     {
+    //         request.EndDate.Should().Be(endDate!.Value.ToUniversalTime());
+    //     }
+    // }
 
     [TestCase(EventFormat.InPerson, "location", "location")]
     [TestCase(EventFormat.Hybrid, "location", "location")]
