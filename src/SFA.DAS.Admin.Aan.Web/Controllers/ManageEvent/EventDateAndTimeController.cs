@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
+using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
@@ -53,6 +54,8 @@ public class EventDateAndTimeController : Controller
         sessionModel.StartMinutes = submitModel.StartMinutes;
         sessionModel.EndHour = submitModel.EndHour;
         sessionModel.EndMinutes = submitModel.EndMinutes;
+        sessionModel.Start = DateTimeExtensions.LocalToUtcTime(submitModel.DateOfEvent!.Value.Year, submitModel.DateOfEvent!.Value.Month, submitModel.DateOfEvent!.Value.Day, submitModel.StartHour!.Value, submitModel.StartMinutes!.Value);
+        sessionModel.End = DateTimeExtensions.LocalToUtcTime(submitModel.DateOfEvent!.Value.Year, submitModel.DateOfEvent!.Value.Month, submitModel.DateOfEvent!.Value.Day, submitModel.EndHour!.Value, submitModel.EndMinutes!.Value);
 
         if (sessionModel.IsAlreadyPublished)
         {

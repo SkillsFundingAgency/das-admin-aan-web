@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Aan.SharedUi.Models;
+using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -39,7 +40,7 @@ public class CalendarEventController : Controller
 
         if (sessionModel == null! || sessionModel.CalendarEventId != calendarEventId)
         {
-            var calendarEvent =
+            GetCalendarEventQueryResult calendarEvent =
                 await _outerApiClient.GetCalendarEvent(_sessionService.GetMemberId(), calendarEventId,
                     cancellationToken);
 

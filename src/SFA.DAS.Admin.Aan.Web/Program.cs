@@ -1,5 +1,7 @@
+using System.Globalization;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SFA.DAS.Admin.Aan.Web.AppStart;
@@ -37,6 +39,12 @@ builder.Services.AddHealthChecks()
     .AddCheck<AdminAanOuterApiHealthCheck>(AdminAanOuterApiHealthCheck.HealthCheckResultDescription,
         failureStatus: HealthStatus.Unhealthy,
         tags: new[] { "ready" });
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture("en-GB");
+    options.SupportedCultures = new List<CultureInfo> { new CultureInfo("en-GB") };
+    options.SupportedUICultures = new List<CultureInfo> { new CultureInfo("en-GB") };
+});
 
 #if DEBUG
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();

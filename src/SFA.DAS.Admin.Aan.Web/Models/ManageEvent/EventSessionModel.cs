@@ -59,32 +59,9 @@ public class EventSessionModel
 
     public string PageTitle => IsAlreadyPublished ? UpdateEvent.PageTitle : CreateEvent.PageTitle;
 
-    public DateTime? Start
-    {
-        get
-        {
-            if (DateOfEvent == null || !StartHour.HasValue || !StartMinutes.HasValue) return null;
+    public DateTime? Start { get; set; }
 
-            var dateOfEventToUse = DateOfEvent.Value;
-
-            return DateTimeExtensions.LocalToUtcTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, StartHour.Value,
-                StartMinutes.Value);
-        }
-    }
-
-    public DateTime? End
-    {
-        get
-        {
-            if (DateOfEvent == null || !EndHour.HasValue || !EndMinutes.HasValue) return null;
-
-            var dateOfEventToUse = DateOfEvent.Value;
-
-            return DateTimeExtensions.LocalToUtcTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, EndHour.Value,
-                EndMinutes.Value);
-        }
-    }
-
+    public DateTime? End { get; set; }
 
     public static implicit operator CreateEventRequest(EventSessionModel source)
     {
@@ -305,6 +282,8 @@ public class EventSessionModel
             StartMinutes = source.StartDate.UtcToLocalTime().Minute,
             EndHour = source.EndDate.UtcToLocalTime().Hour,
             EndMinutes = source.EndDate.UtcToLocalTime().Minute,
+            Start = source.StartDate.UtcToLocalTime(),
+            End = source.EndDate.UtcToLocalTime(),
             Location = source.Location,
             EventLink = source.EventLink,
             Longitude = source.Longitude,
