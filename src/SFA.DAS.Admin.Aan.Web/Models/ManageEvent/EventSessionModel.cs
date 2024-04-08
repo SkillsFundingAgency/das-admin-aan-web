@@ -87,13 +87,13 @@ public class EventSessionModel
         DateTime? startDate = null;
         if (source.Start.HasValue)
         {
-            startDate = source.Start.Value.ToUniversalTime();
+            startDate = source.Start.Value;
         }
 
         DateTime? endDate = null;
         if (source.End.HasValue)
         {
-            endDate = source.End.Value.ToUniversalTime();
+            endDate = source.End.Value;
         }
 
         var location = source.Location;
@@ -162,13 +162,13 @@ public class EventSessionModel
         DateTime? startDate = null;
         if (source.Start.HasValue)
         {
-            startDate = source.Start.Value.ToUniversalTime();
+            startDate = source.Start.Value;
         }
 
         DateTime? endDate = null;
         if (source.End.HasValue)
         {
-            endDate = source.End.Value.ToUniversalTime();
+            endDate = source.End.Value;
         }
 
         var location = source.Location;
@@ -224,8 +224,8 @@ public class EventSessionModel
 
         var model = new NetworkEventDetailsViewModel(
             source!.CalendarName,
-            source.Start.GetValueOrDefault(),
-            source.End.GetValueOrDefault(),
+            source.Start.GetValueOrDefault().UtcToLocalTime(),
+            source.End.GetValueOrDefault().UtcToLocalTime(),
             source.EventTitle!,
             source.EventSummary!,
             source.ContactName!,
