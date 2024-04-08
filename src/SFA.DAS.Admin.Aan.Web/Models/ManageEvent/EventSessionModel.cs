@@ -4,6 +4,7 @@ using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
+using SFA.DAS.Admin.Aan.Web.Extensions;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
@@ -66,8 +67,8 @@ public class EventSessionModel
 
             var dateOfEventToUse = DateOfEvent.Value;
 
-            return new DateTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, StartHour.Value,
-                StartMinutes.Value, 0, DateTimeKind.Unspecified);
+            return DateTimeExtensions.LocalToUtcTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, StartHour.Value,
+                StartMinutes.Value);
         }
     }
 
@@ -79,8 +80,8 @@ public class EventSessionModel
 
             var dateOfEventToUse = DateOfEvent.Value;
 
-            return new DateTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, EndHour.Value,
-                EndMinutes.Value, 0, DateTimeKind.Unspecified);
+            return DateTimeExtensions.LocalToUtcTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, EndHour.Value,
+                EndMinutes.Value);
         }
     }
 
@@ -300,10 +301,10 @@ public class EventSessionModel
             HasGuestSpeakers = source.EventGuests.Any(),
             GuestSpeakers = guestSpeakers,
             DateOfEvent = source.StartDate.Date,
-            StartHour = source.StartDate.ToLocalTime().Hour,
-            StartMinutes = source.StartDate.ToLocalTime().Minute,
-            EndHour = source.EndDate.ToLocalTime().Hour,
-            EndMinutes = source.EndDate.ToLocalTime().Minute,
+            StartHour = source.StartDate.UtcToLocalTime().Hour,
+            StartMinutes = source.StartDate.UtcToLocalTime().Minute,
+            EndHour = source.EndDate.UtcToLocalTime().Hour,
+            EndMinutes = source.EndDate.UtcToLocalTime().Minute,
             Location = source.Location,
             EventLink = source.EventLink,
             Longitude = source.Longitude,
