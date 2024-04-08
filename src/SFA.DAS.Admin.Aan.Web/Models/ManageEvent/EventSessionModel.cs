@@ -4,7 +4,6 @@ using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
-using SFA.DAS.Admin.Aan.Web.Extensions;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
@@ -224,8 +223,8 @@ public class EventSessionModel
 
         var model = new NetworkEventDetailsViewModel(
             source!.CalendarName,
-            source.Start.GetValueOrDefault().UtcToLocalTime(),
-            source.End.GetValueOrDefault().UtcToLocalTime(),
+            source.Start.GetValueOrDefault(),
+            source.End.GetValueOrDefault(),
             source.EventTitle!,
             source.EventSummary!,
             source.ContactName!,
@@ -277,13 +276,13 @@ public class EventSessionModel
             EventSummary = source.Description,
             HasGuestSpeakers = source.EventGuests.Any(),
             GuestSpeakers = guestSpeakers,
-            DateOfEvent = source.StartDate.Date,
-            StartHour = source.StartDate.UtcToLocalTime().Hour,
-            StartMinutes = source.StartDate.UtcToLocalTime().Minute,
-            EndHour = source.EndDate.UtcToLocalTime().Hour,
-            EndMinutes = source.EndDate.UtcToLocalTime().Minute,
-            Start = source.StartDate.UtcToLocalTime(),
-            End = source.EndDate.UtcToLocalTime(),
+            //DateOfEvent = source.StartDate.Date,
+            //StartHour = source.StartDate.Hour,
+            //StartMinutes = source.StartDate.Minute,
+            //EndHour = source.EndDate.UtcToLocalTime().Hour,
+            //EndMinutes = source.EndDate.UtcToLocalTime().Minute,
+            Start = source.StartDate,
+            End = source.EndDate,
             Location = source.Location,
             EventLink = source.EventLink,
             Longitude = source.Longitude,
