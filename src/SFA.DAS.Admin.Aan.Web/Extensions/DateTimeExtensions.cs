@@ -12,7 +12,7 @@ public static class DateTimeExtensions
     public static DateTime LocalToUtcTime(int year, int month, int day, int hour, int minutes)
     {
         var dateToBuild = new DateTime(year, month, day, hour, minutes, 0, DateTimeKind.Unspecified);
-        var result = dateToBuild.ToUniversalTime();
+        var result = TimeZoneInfo.ConvertTimeToUtc(dateToBuild, LocalTimeZone);
         return result;
     }
 }
