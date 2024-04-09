@@ -7,6 +7,7 @@ using Moq;
 using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Controllers.ManageEvent;
+using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
@@ -20,6 +21,11 @@ public class EventDateAndTimeControllerTests
     private static readonly string CheckYourAnswersUrl = Guid.NewGuid().ToString();
     private static readonly string CalendarEventUrl = Guid.NewGuid().ToString();
     private static readonly string UpdateEventDateAndTimeUrl = Guid.NewGuid().ToString();
+
+    const int StartHour = 12;
+    const int StartMinutes = 0;
+    const int EndHour = 13;
+    const int EndMinutes = 30;
 
     [Test, MoqAutoData]
     public void Get_ReturnsCreateEventDateTimeViewModel(
@@ -111,10 +117,10 @@ public class EventDateAndTimeControllerTests
         var submitModel = new EventDateAndTimeViewModel
         {
             DateOfEvent = DateTime.Today.AddDays(1),
-            StartHour = 12,
-            StartMinutes = 0,
-            EndHour = 13,
-            EndMinutes = 30
+            StartHour = StartHour,
+            StartMinutes = StartMinutes,
+            EndHour = EndHour,
+            EndMinutes = EndMinutes
         };
 
         var validationResult = new ValidationResult();
@@ -145,10 +151,10 @@ public class EventDateAndTimeControllerTests
         var submitModel = new EventDateAndTimeViewModel
         {
             DateOfEvent = DateTime.Today.AddDays(1),
-            StartHour = 12,
-            StartMinutes = 0,
-            EndHour = 13,
-            EndMinutes = 30
+            StartHour = StartHour,
+            StartMinutes = StartMinutes,
+            EndHour = EndHour,
+            EndMinutes = EndMinutes
         };
 
         var validationResult = new ValidationResult();
@@ -184,7 +190,6 @@ public class EventDateAndTimeControllerTests
         vm!.PostLink.Should().Be(UpdateEventDateAndTimeUrl);
     }
 
-    [Ignore("Fix later")]
     [Test, MoqAutoData]
     public void Post_IsAlreadyPublishedTrue_RedirectsToCalendarEvent()
     {
@@ -192,20 +197,24 @@ public class EventDateAndTimeControllerTests
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
 
+        var eventDate = DateTime.Today.AddDays(1);
+
         var sessionModel = new EventSessionModel
         {
             CalendarEventId = calendarEventId,
-            IsAlreadyPublished = true,
-            DateOfEvent = DateTime.Today.AddDays(1),
-            StartHour = 12,
-            StartMinutes = 0,
-            EndHour = 13,
-            EndMinutes = 30
+            IsAlreadyPublished = true
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new EventDateAndTimeViewModel();
+        var submitModel = new EventDateAndTimeViewModel
+        {
+            DateOfEvent = eventDate,
+            StartHour = StartHour,
+            StartMinutes = StartMinutes,
+            EndHour = EndHour,
+            EndMinutes = EndMinutes
+        };
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -216,7 +225,6 @@ public class EventDateAndTimeControllerTests
         result.RouteName.Should().Be(RouteNames.CalendarEvent);
     }
 
-    [Ignore("Fix later")]
     [Test, MoqAutoData]
     public void Post_IsAlreadyPublishedTrue_SetsHasChangedEventToTrue()
     {
@@ -224,21 +232,26 @@ public class EventDateAndTimeControllerTests
         var sessionServiceMock = new Mock<ISessionService>();
         var validatorMock = new Mock<IValidator<EventDateAndTimeViewModel>>();
 
+        var eventDate = DateTime.Today.AddDays(1);
+
         var sessionModel = new EventSessionModel
         {
             CalendarEventId = calendarEventId,
             IsAlreadyPublished = true,
-            DateOfEvent = DateTime.Today.AddDays(1),
-            StartHour = 12,
-            StartMinutes = 0,
-            EndHour = 13,
-            EndMinutes = 30,
             HasChangedEvent = false
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
 
-        var submitModel = new EventDateAndTimeViewModel();
+        var submitModel = new EventDateAndTimeViewModel
+        {
+            DateOfEvent = eventDate,
+            StartHour = StartHour,
+            StartMinutes = StartMinutes,
+            EndHour = EndHour,
+            EndMinutes = EndMinutes
+        };
+
 
         var validationResult = new ValidationResult();
         validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
@@ -249,7 +262,6 @@ public class EventDateAndTimeControllerTests
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
     }
 
-    [Ignore("fix later")]
     [TestCase(12, 0, 13, 0)]
     public void Post_SetEventDateTimeOnSessionModel(int startHour, int startMinutes, int endHour, int endMinutes)
     {
@@ -280,13 +292,14 @@ public class EventDateAndTimeControllerTests
 
         var result = (RedirectToRouteResult)sut.Post(submitModel);
 
+        var startDateInSessionModel = DateTimeExtensions.LocalToUtcTime(submitModel.DateOfEvent!.Value.Year, submitModel.DateOfEvent!.Value.Month, submitModel.DateOfEvent!.Value.Day, submitModel.StartHour!.Value, submitModel.StartMinutes!.Value);
+        var endDateInSessionModel = DateTimeExtensions.LocalToUtcTime(submitModel.DateOfEvent!.Value.Year, submitModel.DateOfEvent!.Value.Month, submitModel.DateOfEvent!.Value.Day, submitModel.EndHour!.Value, submitModel.EndMinutes!.Value);
+
         sut.ModelState.IsValid.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m
-            => m.DateOfEvent == dateOfEvent &&
-               m.StartHour == startHour &&
-               m.StartMinutes == startMinutes &&
-               m.EndHour == endHour &&
-               m.EndMinutes == endMinutes)));
+            => m.Start == startDateInSessionModel &&
+               m.End == endDateInSessionModel)));
+
         result.RouteName.Should().Be(RouteNames.CreateEvent.Location);
     }
 

@@ -49,11 +49,7 @@ public class EventDateAndTimeController : Controller
         }
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
-        //sessionModel.DateOfEvent = submitModel.DateOfEvent;
-        //sessionModel.StartHour = submitModel.StartHour;
-        //sessionModel.StartMinutes = submitModel.StartMinutes;
-        //sessionModel.EndHour = submitModel.EndHour;
-        //sessionModel.EndMinutes = submitModel.EndMinutes;
+
         sessionModel.Start = DateTimeExtensions.LocalToUtcTime(submitModel.DateOfEvent!.Value.Year, submitModel.DateOfEvent!.Value.Month, submitModel.DateOfEvent!.Value.Day, submitModel.StartHour!.Value, submitModel.StartMinutes!.Value);
         sessionModel.End = DateTimeExtensions.LocalToUtcTime(submitModel.DateOfEvent!.Value.Year, submitModel.DateOfEvent!.Value.Month, submitModel.DateOfEvent!.Value.Day, submitModel.EndHour!.Value, submitModel.EndMinutes!.Value);
 

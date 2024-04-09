@@ -384,12 +384,7 @@ public class CalendarEventControllerTests
         var sessionModel = new EventSessionModel
         {
             CalendarId = calendars.First().Id,
-            RegionId = regionsResult.Regions.First().Id,
-            DateOfEvent = DateTime.Today,
-            StartHour = DateTime.Today.Hour,
-            StartMinutes = DateTime.Today.Minute,
-            EndHour = DateTime.Today.Hour,
-            EndMinutes = DateTime.Today.Minute,
+            RegionId = regionsResult.Regions.First().Id
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -448,11 +443,6 @@ public class CalendarEventControllerTests
         {
             CalendarId = calendars.First().Id,
             RegionId = regionsResult.Regions.First().Id,
-            DateOfEvent = DateTime.Today,
-            StartHour = DateTime.Today.Hour,
-            StartMinutes = DateTime.Today.Minute,
-            EndHour = DateTime.Today.Hour,
-            EndMinutes = DateTime.Today.Minute,
             EventFormat = EventFormat.InPerson,
             Location = null
         };

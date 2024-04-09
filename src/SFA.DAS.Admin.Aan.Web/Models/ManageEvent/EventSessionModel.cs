@@ -26,12 +26,6 @@ public class EventSessionModel
     public bool? HasGuestSpeakers { get; set; }
     public List<GuestSpeaker> GuestSpeakers { get; set; } = [];
 
-    public DateTime? DateOfEvent { get; set; }
-    public int? StartHour { get; set; }
-    public int? StartMinutes { get; set; }
-    public int? EndHour { get; set; }
-    public int? EndMinutes { get; set; }
-
     public string? Location { get; set; }
     public string? EventLink { get; set; }
 
@@ -83,18 +77,6 @@ public class EventSessionModel
                 source.GuestSpeakers.Select(guest => new Guest(guest.GuestName, guest.GuestJobTitle)));
         }
 
-        DateTime? startDate = null;
-        if (source.Start.HasValue)
-        {
-            startDate = source.Start.Value;
-        }
-
-        DateTime? endDate = null;
-        if (source.End.HasValue)
-        {
-            endDate = source.End.Value;
-        }
-
         var location = source.Location;
         var postcode = source.Postcode;
         var eventLink = source.EventLink;
@@ -123,8 +105,8 @@ public class EventSessionModel
             Description = source.EventSummary,
             RegionId = source.RegionId,
             Guests = guestSpeakers,
-            StartDate = startDate,
-            EndDate = endDate,
+            StartDate = source.Start,
+            EndDate = source.End,
             Location = location,
             EventLink = eventLink,
             Urn = urnToUse,
@@ -158,18 +140,6 @@ public class EventSessionModel
                 source.GuestSpeakers.Select(guest => new Guest(guest.GuestName, guest.GuestJobTitle)));
         }
 
-        DateTime? startDate = null;
-        if (source.Start.HasValue)
-        {
-            startDate = source.Start.Value;
-        }
-
-        DateTime? endDate = null;
-        if (source.End.HasValue)
-        {
-            endDate = source.End.Value;
-        }
-
         var location = source.Location;
         var postcode = source.Postcode;
         var eventLink = source.EventLink;
@@ -198,8 +168,8 @@ public class EventSessionModel
             Description = source.EventSummary,
             RegionId = source.RegionId,
             Guests = guestSpeakers,
-            StartDate = startDate,
-            EndDate = endDate,
+            StartDate = source.Start,
+            EndDate = source.End,
             Location = location,
             EventLink = eventLink,
             Urn = urnToUse,
@@ -276,11 +246,6 @@ public class EventSessionModel
             EventSummary = source.Description,
             HasGuestSpeakers = source.EventGuests.Any(),
             GuestSpeakers = guestSpeakers,
-            //DateOfEvent = source.StartDate.Date,
-            //StartHour = source.StartDate.Hour,
-            //StartMinutes = source.StartDate.Minute,
-            //EndHour = source.EndDate.UtcToLocalTime().Hour,
-            //EndMinutes = source.EndDate.UtcToLocalTime().Minute,
             Start = source.StartDate,
             End = source.EndDate,
             Location = source.Location,
