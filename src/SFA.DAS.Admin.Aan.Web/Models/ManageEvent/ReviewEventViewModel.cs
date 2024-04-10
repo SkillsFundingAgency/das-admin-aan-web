@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Aan.SharedUi.Constants;
+using SFA.DAS.Aan.SharedUi.Extensions;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
@@ -35,7 +36,7 @@ public class ReviewEventViewModel : ManageEventViewModelBase
     public string? IsAtSchoolLink { get; set; }
     public string? SchoolNameLink { get; set; }
     public string? NumberOfAttendeesLink { get; set; }
-    public DateTime LastUpdatedDate { get; set; }
+    public DateTime? LastUpdatedDate { get; set; }
     public bool ShowLocation =>
         EventFormat is DAS.Aan.SharedUi.Constants.EventFormat.InPerson or DAS.Aan.SharedUi.Constants.EventFormat.Hybrid;
 
@@ -63,8 +64,8 @@ public class ReviewEventViewModel : ManageEventViewModelBase
             EventSummary = source.EventSummary,
             HasGuestSpeakers = source.HasGuestSpeakers,
             GuestSpeakers = source.GuestSpeakers,
-            Start = source.Start,
-            End = source.End,
+            Start = source.Start?.UtcToLocalTime(),
+            End = source.End?.UtcToLocalTime(),
             EventLocation = source.Location + (!string.IsNullOrEmpty(source.Postcode) ? $", {source.Postcode}" : string.Empty),
             OnlineEventLink = source.EventLink,
             SchoolName = source.SchoolName,
@@ -72,7 +73,7 @@ public class ReviewEventViewModel : ManageEventViewModelBase
             OrganiserName = source.ContactName,
             OrganiserEmail = source.ContactEmail,
             NumberOfAttendees = source.PlannedAttendees,
-            LastUpdatedDate = source.LastUpdatedDate.GetValueOrDefault(),
+            LastUpdatedDate = source.LastUpdatedDate?.UtcToLocalTime(),
             PageTitle = source.PageTitle,
             HasChangedEvent = source.HasChangedEvent
         };

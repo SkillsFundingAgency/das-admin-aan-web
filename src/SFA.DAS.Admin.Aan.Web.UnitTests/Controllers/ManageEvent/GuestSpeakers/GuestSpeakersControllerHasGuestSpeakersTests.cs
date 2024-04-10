@@ -166,12 +166,7 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
         {
             CalendarEventId = calendarEventId,
             IsAlreadyPublished = true,
-            HasGuestSpeakers = false,
-            DateOfEvent = DateTime.Today.AddDays(1),
-            StartHour = 12,
-            StartMinutes = 0,
-            EndHour = 13,
-            EndMinutes = 30
+            HasGuestSpeakers = false
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -198,11 +193,6 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
         {
             CalendarEventId = calendarEventId,
             IsAlreadyPublished = true,
-            DateOfEvent = DateTime.Today.AddDays(1),
-            StartHour = 12,
-            StartMinutes = 0,
-            EndHour = 13,
-            EndMinutes = 30
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
@@ -228,12 +218,7 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
         var sessionModel = new EventSessionModel
         {
             CalendarEventId = calendarEventId,
-            IsAlreadyPublished = true,
-            DateOfEvent = DateTime.Today.AddDays(1),
-            StartHour = 12,
-            StartMinutes = 0,
-            EndHour = 13,
-            EndMinutes = 30
+            IsAlreadyPublished = true
         };
 
         sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);

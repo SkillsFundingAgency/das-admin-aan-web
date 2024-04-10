@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
+using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
@@ -48,11 +49,9 @@ public class EventDateAndTimeController : Controller
         }
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
-        sessionModel.DateOfEvent = submitModel.DateOfEvent;
-        sessionModel.StartHour = submitModel.StartHour;
-        sessionModel.StartMinutes = submitModel.StartMinutes;
-        sessionModel.EndHour = submitModel.EndHour;
-        sessionModel.EndMinutes = submitModel.EndMinutes;
+
+        sessionModel.Start = DateTimeExtensions.LocalToUtcTime(submitModel.DateOfEvent!.Value.Year, submitModel.DateOfEvent!.Value.Month, submitModel.DateOfEvent!.Value.Day, submitModel.StartHour!.Value, submitModel.StartMinutes!.Value);
+        sessionModel.End = DateTimeExtensions.LocalToUtcTime(submitModel.DateOfEvent!.Value.Year, submitModel.DateOfEvent!.Value.Month, submitModel.DateOfEvent!.Value.Day, submitModel.EndHour!.Value, submitModel.EndMinutes!.Value);
 
         if (sessionModel.IsAlreadyPublished)
         {
@@ -95,11 +94,11 @@ public class EventDateAndTimeController : Controller
 
         return new EventDateAndTimeViewModel
         {
-            DateOfEvent = sessionModel.DateOfEvent,
-            StartHour = sessionModel.StartHour,
-            StartMinutes = sessionModel.StartMinutes,
-            EndHour = sessionModel.EndHour,
-            EndMinutes = sessionModel.EndMinutes,
+            DateOfEvent = sessionModel.Start?.UtcToLocalTime().Date,
+            StartHour = sessionModel.Start?.UtcToLocalTime().Hour,
+            StartMinutes = sessionModel.Start?.UtcToLocalTime().Minute,
+            EndHour = sessionModel.End?.UtcToLocalTime().Hour,
+            EndMinutes = sessionModel.End?.UtcToLocalTime().Minute,
             CancelLink = cancelLink,
             PostLink = postLink,
             PageTitle = sessionModel.PageTitle

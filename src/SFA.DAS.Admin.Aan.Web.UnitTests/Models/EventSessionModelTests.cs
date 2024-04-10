@@ -23,55 +23,6 @@ public class EventSessionModelTests
         vm.HasSeenPreview.Should().Be(false);
     }
 
-
-    [TestCase("2035-12-01", 12, 1, false)]
-    [TestCase("2035-12-01", 12, 0, false)]
-    [TestCase(null, 12, 0, true)]
-    [TestCase("2035-12-01", null, 0, true)]
-    [TestCase("2035-12-01", 12, null, true)]
-    public void SessionModel_ContainsExpectedStartValues(string? datetimeDescriptor, int? hour, int? minutes,
-        bool isNullValue)
-    {
-        var dateTime = (DateTime?)null;
-
-        if (!string.IsNullOrEmpty(datetimeDescriptor)) dateTime = DateTime.Parse(datetimeDescriptor);
-
-        var vm = new EventSessionModel { DateOfEvent = dateTime, StartHour = hour, StartMinutes = minutes };
-
-        if (isNullValue)
-            vm.Start.Should().BeNull();
-        else
-        {
-            var expectedDate = new DateTime(dateTime!.Value.Year, dateTime.Value.Month, dateTime.Value.Day, hour!.Value,
-                minutes!.Value, 0);
-            vm.Start.Should().Be(expectedDate);
-        }
-    }
-
-    [TestCase("2035-12-01", 12, 1, false)]
-    [TestCase("2035-12-01", 12, 0, false)]
-    [TestCase(null, 12, 0, true)]
-    [TestCase("2035-12-01", null, 0, true)]
-    [TestCase("2035-12-01", 12, null, true)]
-    public void SessionModel_ContainsExpectedEndValues(string? datetimeDescriptor, int? hour, int? minutes,
-        bool isNullValue)
-    {
-        var dateTime = (DateTime?)null;
-
-        if (!string.IsNullOrEmpty(datetimeDescriptor)) dateTime = DateTime.Parse(datetimeDescriptor);
-
-        var vm = new EventSessionModel { DateOfEvent = dateTime, EndHour = hour, EndMinutes = minutes };
-
-        if (isNullValue)
-            vm.End.Should().BeNull();
-        else
-        {
-            var expectedDate = new DateTime(dateTime!.Value.Year, dateTime.Value.Month, dateTime.Value.Day, hour!.Value,
-                minutes!.Value, 0);
-            vm.End.Should().Be(expectedDate);
-        }
-    }
-
     [TestCase(false, CreateEvent.PageTitle)]
     [TestCase(true, UpdateEvent.PageTitle)]
     public void SessionModel_ContainsExpectedPageTitle(bool isAlreadyPublished, string pageTitle)
@@ -233,11 +184,6 @@ public class EventSessionModelTests
     [Test, AutoData]
     public void Operator_MapsToNetworkEventDetailsViewModel(EventSessionModel source)
     {
-        source.DateOfEvent = DateTime.Today.AddDays(1);
-        source.StartHour = 12;
-        source.StartMinutes = 40;
-        source.EndHour = 14;
-        source.EndMinutes = 10;
         var vm = (NetworkEventDetailsViewModel)source;
         vm.EventFormat.Should().Be(source.EventFormat);
         vm.LocationDetails.Should().BeEquivalentTo(new LocationDetails(source.Location, source.Postcode,
@@ -254,11 +200,6 @@ public class EventSessionModelTests
     [Test, AutoData]
     public void Operator_MapsToNetworkEventDetailsViewModel_NoAttendees(EventSessionModel source)
     {
-        source.DateOfEvent = DateTime.Today.AddDays(1);
-        source.StartHour = 12;
-        source.StartMinutes = 40;
-        source.EndHour = 14;
-        source.EndMinutes = 10;
         source.Attendees = new List<AttendeeModel>();
         var vm = (NetworkEventDetailsViewModel)source;
         vm.IsPreview.Should().BeTrue();

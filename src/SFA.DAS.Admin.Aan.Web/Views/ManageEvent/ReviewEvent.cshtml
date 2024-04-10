@@ -35,7 +35,7 @@
             <h1 class="govuk-heading-l">@Model.EventTitle</h1>
 
             <p class="govuk-">
-                Last updated on @Model.LastUpdatedDate.ToString("dd MMMM yyyy") at @Model.LastUpdatedDate.ToString("h:mmtt").ToLower()
+                Last updated on @Model.LastUpdatedDate?.ToString("dd MMMM yyyy") at @Model.LastUpdatedDate?.ToString("h:mmtt").ToLower()
             </p>
             <div id="previewlink" class="govuk-body">
                 You can <a href="@Model.PreviewLink">preview the event here</a>.

@@ -57,14 +57,9 @@ public class EventSessionModelTestsOperatorToUpdateCalendarEventRequest
     [TestCase("2050-10-10 10:30:00", false)]
     public void Operator_UpdateEventRequest_CheckStartDate(DateTime? startDate, bool startDateIsNull)
     {
-        const int startHour = 10;
-        const int startMinutes = 30;
-
         var model = new EventSessionModel
         {
-            DateOfEvent = startDate,
-            StartHour = startHour,
-            StartMinutes = startMinutes
+            Start = startDate
         };
 
         var request = (UpdateCalendarEventRequest)model;
@@ -74,7 +69,7 @@ public class EventSessionModelTestsOperatorToUpdateCalendarEventRequest
         }
         else
         {
-            request.StartDate.Should().Be(startDate!.Value.ToUniversalTime());
+            request.StartDate.Should().Be(startDate!.Value);
         }
     }
 
@@ -82,14 +77,9 @@ public class EventSessionModelTestsOperatorToUpdateCalendarEventRequest
     [TestCase("2050-10-10 10:30:00", false)]
     public void Operator_UpdateEventRequest_CheckEndDate(DateTime? endDate, bool endDateIsNull)
     {
-        const int hour = 10;
-        const int minutes = 30;
-
         var model = new EventSessionModel
         {
-            DateOfEvent = endDate,
-            EndHour = hour,
-            EndMinutes = minutes
+            End = endDate
         };
 
         var request = (UpdateCalendarEventRequest)model;
@@ -99,7 +89,7 @@ public class EventSessionModelTestsOperatorToUpdateCalendarEventRequest
         }
         else
         {
-            request.EndDate.Should().Be(endDate!.Value.ToUniversalTime());
+            request.EndDate.Should().Be(endDate!.Value);
         }
     }
 

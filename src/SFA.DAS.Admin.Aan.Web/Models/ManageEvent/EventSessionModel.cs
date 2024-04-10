@@ -26,12 +26,6 @@ public class EventSessionModel
     public bool? HasGuestSpeakers { get; set; }
     public List<GuestSpeaker> GuestSpeakers { get; set; } = [];
 
-    public DateTime? DateOfEvent { get; set; }
-    public int? StartHour { get; set; }
-    public int? StartMinutes { get; set; }
-    public int? EndHour { get; set; }
-    public int? EndMinutes { get; set; }
-
     public string? Location { get; set; }
     public string? EventLink { get; set; }
 
@@ -58,32 +52,9 @@ public class EventSessionModel
 
     public string PageTitle => IsAlreadyPublished ? UpdateEvent.PageTitle : CreateEvent.PageTitle;
 
-    public DateTime? Start
-    {
-        get
-        {
-            if (DateOfEvent == null || !StartHour.HasValue || !StartMinutes.HasValue) return null;
+    public DateTime? Start { get; set; }
 
-            var dateOfEventToUse = DateOfEvent.Value;
-
-            return new DateTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, StartHour.Value,
-                StartMinutes.Value, 0, DateTimeKind.Unspecified);
-        }
-    }
-
-    public DateTime? End
-    {
-        get
-        {
-            if (DateOfEvent == null || !EndHour.HasValue || !EndMinutes.HasValue) return null;
-
-            var dateOfEventToUse = DateOfEvent.Value;
-
-            return new DateTime(dateOfEventToUse.Year, dateOfEventToUse.Month, dateOfEventToUse.Day, EndHour.Value,
-                EndMinutes.Value, 0, DateTimeKind.Unspecified);
-        }
-    }
-
+    public DateTime? End { get; set; }
 
     public static implicit operator CreateEventRequest(EventSessionModel source)
     {
@@ -104,18 +75,6 @@ public class EventSessionModel
         {
             guestSpeakers.AddRange(
                 source.GuestSpeakers.Select(guest => new Guest(guest.GuestName, guest.GuestJobTitle)));
-        }
-
-        DateTime? startDate = null;
-        if (source.Start.HasValue)
-        {
-            startDate = source.Start.Value.ToUniversalTime();
-        }
-
-        DateTime? endDate = null;
-        if (source.End.HasValue)
-        {
-            endDate = source.End.Value.ToUniversalTime();
         }
 
         var location = source.Location;
@@ -146,8 +105,8 @@ public class EventSessionModel
             Description = source.EventSummary,
             RegionId = source.RegionId,
             Guests = guestSpeakers,
-            StartDate = startDate,
-            EndDate = endDate,
+            StartDate = source.Start,
+            EndDate = source.End,
             Location = location,
             EventLink = eventLink,
             Urn = urnToUse,
@@ -181,18 +140,6 @@ public class EventSessionModel
                 source.GuestSpeakers.Select(guest => new Guest(guest.GuestName, guest.GuestJobTitle)));
         }
 
-        DateTime? startDate = null;
-        if (source.Start.HasValue)
-        {
-            startDate = source.Start.Value.ToUniversalTime();
-        }
-
-        DateTime? endDate = null;
-        if (source.End.HasValue)
-        {
-            endDate = source.End.Value.ToUniversalTime();
-        }
-
         var location = source.Location;
         var postcode = source.Postcode;
         var eventLink = source.EventLink;
@@ -221,8 +168,8 @@ public class EventSessionModel
             Description = source.EventSummary,
             RegionId = source.RegionId,
             Guests = guestSpeakers,
-            StartDate = startDate,
-            EndDate = endDate,
+            StartDate = source.Start,
+            EndDate = source.End,
             Location = location,
             EventLink = eventLink,
             Urn = urnToUse,
@@ -299,11 +246,8 @@ public class EventSessionModel
             EventSummary = source.Description,
             HasGuestSpeakers = source.EventGuests.Any(),
             GuestSpeakers = guestSpeakers,
-            DateOfEvent = source.StartDate.Date,
-            StartHour = source.StartDate.ToLocalTime().Hour,
-            StartMinutes = source.StartDate.ToLocalTime().Minute,
-            EndHour = source.EndDate.ToLocalTime().Hour,
-            EndMinutes = source.EndDate.ToLocalTime().Minute,
+            Start = source.StartDate,
+            End = source.EndDate,
             Location = source.Location,
             EventLink = source.EventLink,
             Longitude = source.Longitude,

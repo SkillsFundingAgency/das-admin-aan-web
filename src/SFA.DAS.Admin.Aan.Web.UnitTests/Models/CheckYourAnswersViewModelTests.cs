@@ -2,6 +2,7 @@
 using FluentAssertions;
 using SFA.DAS.Aan.SharedUi.Constants;
 using SFA.DAS.Admin.Aan.Application.Constants;
+using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Models;
@@ -11,13 +12,18 @@ public class CheckYourAnswersViewModelTests
     [Test, AutoData]
     public void Operator_GivenEventSessionModel_ReturnsViewModel(EventSessionModel source)
     {
-        source.StartHour = 12;
-        source.StartMinutes = 25;
-        source.EndHour = 13;
-        source.EndMinutes = 30;
         source.IsAlreadyPublished = false;
         ReviewEventViewModel sut = source;
-        sut.Should().BeEquivalentTo(source, options => options.ExcludingMissingMembers());
+        sut.Should().BeEquivalentTo(source, options => options
+            .ExcludingMissingMembers()
+            .Excluding(o => o.Start)
+            .Excluding(o => o.End)
+            .Excluding(o => o.LastUpdatedDate));
+
+        sut.Start.Should().Be(source.Start?.UtcToLocalTime());
+        sut.End.Should().Be(source.End?.UtcToLocalTime());
+        sut.LastUpdatedDate.Should().Be(source.LastUpdatedDate?.UtcToLocalTime());
+
     }
 
     [TestCase("location 1", "AB1 CTX", "location 1, AB1 CTX")]
@@ -28,11 +34,7 @@ public class CheckYourAnswersViewModelTests
         var source = new EventSessionModel
         {
             Location = location,
-            Postcode = postcode,
-            StartHour = 12,
-            StartMinutes = 25,
-            EndHour = 13,
-            EndMinutes = 30
+            Postcode = postcode
         };
 
         var vm = (ReviewEventViewModel)source;
