@@ -9,6 +9,7 @@ public class ReviewEventViewModelValidator : AbstractValidator<ReviewEventViewMo
     public const string EventFormatHasLocationAndLocationEmpty = "You must include an in person event location";
     public const string EventSchoolNameEmpty = "You must include the name of the school";
     public const string EventLinkMustBeValid = "The event link must be a valid URL, for example https://www.test.com";
+    public const string EventLinkMustNotHaveHtmlTags = "The event link must be a valid URL without the characters <,>";
 
     public ReviewEventViewModelValidator()
     {
@@ -21,10 +22,14 @@ public class ReviewEventViewModelValidator : AbstractValidator<ReviewEventViewMo
             .WithMessage(EventSchoolNameEmpty);
 
         RuleFor(e => e.OnlineEventLink)
+            .Cascade(CascadeMode.Stop)
             .Matches(RegularExpressions.UrlRegex)
             .WithMessage(EventLinkMustBeValid)
+            .Must(LocationWithHtmlTags)
+            .WithMessage(EventLinkMustNotHaveHtmlTags)
             .When(l => !string.IsNullOrEmpty(l.OnlineEventLink) && l.ShowOnlineEventLink);
     }
+
 
     private static bool SchoolNameRequired(ReviewEventViewModel model, string? schoolName)
     {
@@ -37,4 +42,8 @@ public class ReviewEventViewModelValidator : AbstractValidator<ReviewEventViewMo
         return !(model.ShowLocation && string.IsNullOrEmpty(eventLocation?.Trim()));
     }
 
+    private static bool LocationWithHtmlTags(ReviewEventViewModel model, string? eventLink)
+    {
+        return !(model.OnlineEventLink != null && (model.OnlineEventLink.Contains('<') || model.OnlineEventLink.Contains('>')));
+    }
 }

@@ -51,6 +51,13 @@ In the web project, if not exist already, add `AppSettings.Development.json` fil
 } 
 ```
 
+Make sure you have DFESignin configuration set up from [das-employer-config repository]
+(https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-shared-config/SFA.DAS.Provider.DfeSignIn.json)
+using: 
+* PartitionKey: LOCAL
+* RowKey: SFA.DAS.Provider.DfeSignIn_1.0
+* Data: (config as above)
+
 ## Technologies
 * .NetCore 8.0
 * NUnit
