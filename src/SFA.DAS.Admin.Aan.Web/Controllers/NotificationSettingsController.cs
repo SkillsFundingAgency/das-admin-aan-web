@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Admin.Aan.Application.OuterApi.NotificationSettings;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NotificationSettings;
@@ -26,12 +27,15 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers
         [ValidateModelStateFilter]
         public async Task<IActionResult> Index(NotificationSettingsPostRequest request)
         {
-            if (!ModelState.IsValid)
+            var adminMemberId = sessionService.GetMemberId();
+            var postRequest = new PostNotificationSettings
             {
-                return Ok($"Invalid");
-            }
+                ReceiveNotifications = request.ReceiveNotifications!.Value
+            };
 
-            return Ok($"You have selected: {request.ReceiveNotifications}");
+            await outerApiClient.PostNotificationSettings(adminMemberId, postRequest, default);
+
+            return RedirectToRoute(RouteNames.AdministratorHub);
         }
     }
 }

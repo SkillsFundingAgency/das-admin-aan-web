@@ -66,6 +66,9 @@ public interface IOuterApiClient
     [Post("/members/{memberId}/leaving")]
     Task<string> PostMemberLeaving([Path] Guid memberId, [Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [Body] PostMemberStatusModel postMemberStatusModel, CancellationToken cancellationToken);
 
-    [Get("/notification-settings")]
+    [Get("notification-settings")]
     Task<GetNotificationSettingsResponse> GetNotificationSettings([Query] Guid memberId, CancellationToken cancellationToken);
+
+    [Post("notification-settings")]
+    Task PostNotificationSettings([Query] Guid memberId, [Body] PostNotificationSettings postRequest, CancellationToken cancellationToken);
 }
