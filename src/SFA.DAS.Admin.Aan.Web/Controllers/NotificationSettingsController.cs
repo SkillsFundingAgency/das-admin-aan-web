@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.OuterApi.NotificationSettings;
 using SFA.DAS.Admin.Aan.Application.Services;
+using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.NotificationSettings;
 using SFA.DAS.Validation.Mvc.Filters;
@@ -34,6 +35,8 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers
             };
 
             await outerApiClient.PostNotificationSettings(adminMemberId, postRequest, default);
+
+            TempData.AddFlashMessage("Notification settings saved.", TempDataDictionaryExtensions.FlashMessageLevel.Success);
 
             return RedirectToRoute(RouteNames.AdministratorHub);
         }

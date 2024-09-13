@@ -1,6 +1,8 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using SFA.DAS.Admin.Aan.Application.OuterApi.NotificationSettings;
 using SFA.DAS.Admin.Aan.Application.Services;
@@ -52,6 +54,7 @@ namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.NotificationSettings
         {
             var memberId = _fixture.Create<Guid>();
             var postModel = _fixture.Create<NotificationSettingsPostRequest>();
+            _controller.TempData = new TempDataDictionary(new DefaultHttpContext(), new Mock<ITempDataProvider>().Object);
 
             _mockSessionService.Setup(s => s.GetMemberId()).Returns(memberId);
 
