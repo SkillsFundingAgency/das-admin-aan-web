@@ -36,7 +36,7 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers
 
             await outerApiClient.PostNotificationSettings(adminMemberId, postRequest, default);
 
-            TempData.AddFlashMessage("Notification settings saved.", TempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempData.AddFlashMessage("Notification settings saved", TempDataDictionaryExtensions.FlashMessageLevel.Success);
 
             return RedirectToRoute(RouteNames.AdministratorHub);
         }
