@@ -14,6 +14,7 @@ public static class RouteNames
     public const string EventDetails = nameof(EventDetails);
     public const string MemberProfile = nameof(MemberProfile);
     public const string RemoveMember = nameof(RemoveMember);
+    public const string NotificationSettings = nameof(NotificationSettings);
 
     public static class CreateEvent
     {
