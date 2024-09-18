@@ -1,7 +1,4 @@
-﻿@using SFA.DAS.Admin.Aan.Web.Extensions
-@using SFA.DAS.Admin.Aan.Application.Extensions
-@using SFA.DAS.Admin.Aan.Web.Models.ManageEvent
-@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.ReviewEventViewModel
+﻿@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.CheckAnswersViewModel
 @{
     ViewData["Title"] = "Create Calendar Event";
 }
@@ -26,7 +23,7 @@
     <h2 class="govuk-heading-m">
         Details
     </h2>
-    <partial name="_CalendarEventReview" />
+    <partial name="_CheckAnswersCalendarEventReview" />
     <div class="govuk-button-group">
         <button
             data-prevent-double-click="true"
