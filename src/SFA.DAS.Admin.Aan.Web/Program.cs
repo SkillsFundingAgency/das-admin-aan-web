@@ -9,6 +9,7 @@ using SFA.DAS.Admin.Aan.Web.Configuration;
 using SFA.DAS.Admin.Aan.Web.Filters;
 using SFA.DAS.Admin.Aan.Web.HealthCheck;
 using SFA.DAS.Validation.Mvc.Extensions;
+using SFA.DAS.Validation.Mvc.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,7 @@ builder.Services
         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
         options.Filters.Add<RequiresEventSessionModelAttribute>();
         options.Filters.Add<RequiresMemberActionAttribute>();
+        options.Filters.Add<ValidateModelStateFilter>();
     })
     .AddSessionStateTempDataProvider();
 builder.Services.Configure<ApplicationConfiguration>(rootConfiguration.GetSection(nameof(applicationConfiguration)));
