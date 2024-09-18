@@ -29,7 +29,7 @@
                             Event organiser name 
                         </legend>
                         <div class="govuk-form-group">
-                                <input class="govuk-input" id="OrganiserName" name="OrganiserName" type="text" value="@Model.OrganiserName" maxlength="250">
+                                <input class="govuk-input" asp-for="OrganiserName" type="text" maxlength="250">
                         </div>
                     </fieldset>
                 </div>
@@ -42,7 +42,7 @@
                            Event organiser email address
                         </legend>
                         <div class="govuk-form-group">
-                                <input class="govuk-input" id="OrganiserEmail" name="OrganiserEmail" type="text" value="@Model.OrganiserEmail" maxlength="300">
+                                <input class="govuk-input" asp-for="OrganiserEmail" type="text" maxlength="300">
                         </div>
                     </fieldset>
                 </div>
