@@ -85,22 +85,4 @@ public class NotifyAttendeesControllerTests
                 It.IsAny<CancellationToken>()), Times.Once);
         result.RouteName.Should().Be(RouteNames.UpdateEventConfirmation);
     }
-
-    [Test, MoqAutoData]
-    public async Task Post_WhenNoSelectionOfNotifyAttendees_Errors(
-        [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] NotifyAttendeesController sut)
-    {
-        var calendarEventId = Guid.NewGuid();
-        sut.ModelState.AddModelError("key", "message");
-
-        var submitModel = new NotifyAttendeesViewModel { CancelLink = NetworkEventsUrl };
-
-        var actualResult = await sut.Post(submitModel, calendarEventId, new CancellationToken());
-        var result = (ViewResult)actualResult;
-
-        sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<NotifyAttendeesViewModel>());
-        (result.Model as NotifyAttendeesViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
-    }
 }

@@ -71,7 +71,7 @@ public class CalendarEventController : Controller
         if (!result.IsValid)
         {
             result.AddToModelState(ModelState);
-            return View(ViewPath, submitModel);
+            return RedirectToRoute(RouteNames.CalendarEvent, new { calendarEventId});
         }
 
         return RedirectToRoute(RouteNames.UpdateEvent.NotifyAttendees, new { calendarEventId });

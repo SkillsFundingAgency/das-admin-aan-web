@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Aan.SharedUi.OuterApi.Responses;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
@@ -42,15 +43,6 @@ public class EventTypeController : Controller
         sessionModel.EventTitle = submitModel.EventTitle;
         sessionModel.CalendarId = submitModel.EventTypeId;
         sessionModel.RegionId = submitModel.EventRegionId;
-
-        var result = await _validator.ValidateAsync(submitModel, cancellationToken);
-
-        if (!result.IsValid)
-        {
-            result.AddToModelState(ModelState);
-            return View(ViewPath, await GetViewModel(sessionModel, cancellationToken));
-        }
-
         sessionModel.EventTitle = submitModel.EventTitle;
 
         if (sessionModel.IsAlreadyPublished)
