@@ -15,7 +15,6 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers
     public class NotificationSettingsController(IOuterApiClient outerApiClient, ISessionService sessionService) : Controller
     {
         [HttpGet]
-        [ValidateModelStateFilter]
         public async Task<IActionResult> Index()
         {
             var adminMemberId = sessionService.GetMemberId();
@@ -25,7 +24,6 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateModelStateFilter]
         public async Task<IActionResult> Index(NotificationSettingsPostRequest request)
         {
             var adminMemberId = sessionService.GetMemberId();
