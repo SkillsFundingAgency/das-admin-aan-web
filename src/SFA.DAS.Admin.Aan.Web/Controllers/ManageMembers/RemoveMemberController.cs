@@ -41,23 +41,11 @@ public class RemoveMemberController : Controller
     [Route("remove-member/{id}", Name = RouteNames.RemoveMember)]
     public async Task<IActionResult> Index([FromRoute] Guid id, SubmitRemoveMemberModel submitRemoveMemberModel, CancellationToken cancellationToken)
     {
-        var result = await _validator.ValidateAsync(submitRemoveMemberModel, cancellationToken);
         var adminMemberId = _sessionService.GetMemberId();
-        if (!result.IsValid)
+        var postMemberStatusModel = new PostMemberStatusModel
         {
-            result.AddToModelState(ModelState);
-            RemoveMemberViewModel removeMemberViewModel = new RemoveMemberViewModel();
-
-            var memberProfiles = await _outerApiClient.GetMemberProfile(id, adminMemberId, cancellationToken);
-            removeMemberViewModel.FullName = memberProfiles.FullName;
-            removeMemberViewModel.CancelLink = Url.RouteUrl(SharedRouteNames.MemberProfile, new { id = id })!;
-            removeMemberViewModel.MemberId = id;
-            removeMemberViewModel.Status = submitRemoveMemberModel.Status;
-            removeMemberViewModel.HasRemoveConfirmed = submitRemoveMemberModel.HasRemoveConfirmed;
-            return View(removeMemberViewModel);
-        }
-        PostMemberStatusModel postMemberStatusModel = new PostMemberStatusModel();
-        postMemberStatusModel.Status = submitRemoveMemberModel.Status;
+            Status = submitRemoveMemberModel.Status
+        };
         await _outerApiClient.PostMemberLeaving(id, adminMemberId, postMemberStatusModel, cancellationToken);
 
         return RedirectToAction("RemoveMemberConfirmation");

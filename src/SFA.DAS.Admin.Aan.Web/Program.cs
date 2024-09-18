@@ -8,7 +8,6 @@ using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Configuration;
 using SFA.DAS.Admin.Aan.Web.Filters;
 using SFA.DAS.Admin.Aan.Web.HealthCheck;
-using SFA.DAS.Validation.Mvc.Extensions;
 using SFA.DAS.Validation.Mvc.Filters;
 
 var builder = WebApplication.CreateBuilder(args);

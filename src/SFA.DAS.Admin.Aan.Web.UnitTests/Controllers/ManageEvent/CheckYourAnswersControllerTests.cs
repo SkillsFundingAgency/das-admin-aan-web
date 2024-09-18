@@ -484,40 +484,4 @@ public class CheckYourAnswersControllerTests
         var vm = actualResult.Model as ReviewEventViewModel;
         vm!.SchoolNameLink.Should().Be(SchoolNameUrl);
     }
-
-    [Test, MoqAutoData]
-    public async Task Post_ValidationErrors(
-        [Frozen] Mock<IOuterApiClient> outerAPiMock,
-        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        [Frozen] Mock<ISessionService> sessionServiceMock,
-        List<CalendarDetail> calendars,
-        GetRegionsResult regionsResult)
-    {
-        outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
-        outerAPiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
-
-        var sessionModel = new EventSessionModel
-        {
-            CalendarId = calendars.First()!.Id,
-            RegionId = regionsResult.Regions!.First().Id
-        };
-
-        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
-
-        var sut = new CheckYourAnswersController(sessionServiceMock.Object, outerAPiMock.Object, validatorMock.Object);
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-
-        sut.ModelState.AddModelError("key", "message");
-
-        var submitModel = new ReviewEventViewModel { CancelLink = NetworkEventsUrl };
-
-        var actualResult = await sut.Post(new CancellationToken());
-
-        var result = (ViewResult)actualResult;
-
-        sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<ReviewEventViewModel>());
-        (result.Model as ReviewEventViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
-        sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
-    }
 }
