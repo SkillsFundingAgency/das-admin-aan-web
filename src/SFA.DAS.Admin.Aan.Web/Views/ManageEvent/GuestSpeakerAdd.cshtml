@@ -1,5 +1,4 @@
-﻿@using SFA.DAS.Admin.Aan.Web.Infrastructure
-@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.GuestSpeakerAddViewModel
+﻿@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.GuestSpeakerAddViewModel
 @{
     ViewData["Title"] = "Create Calendar Event";
 }
@@ -29,7 +28,7 @@
                             Guest speaker name 
                         </legend>
                         <div class="govuk-form-group">
-                            <input class="govuk-input" id="name" name="name" type="text" value="@Model.Name" maxlength="250">
+                            <input class="govuk-input" asp-for="Name" type="text" maxlength="250">
                         </div>
                     </fieldset>
                 </div>
@@ -42,7 +41,7 @@
                             Guest speaker job role and organisation
                         </legend>
                         <div class="govuk-form-group">
-                                <input class="govuk-input" id="jobRoleAndOrganisation" name="jobRoleAndOrganisation" type="text" value="@Model.JobRoleAndOrganisation" maxlength="250">
+                                <input class="govuk-input" asp-for="JobRoleAndOrganisation" type="text" maxlength="250">
                         </div>
                     </fieldset>
                 </div>
