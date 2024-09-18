@@ -43,14 +43,6 @@ public class NotifyAttendeesController : Controller
     [Route("events/{calendarEventId}/notify-attendees", Name = RouteNames.UpdateEvent.NotifyAttendees)]
     public async Task<IActionResult> Post(NotifyAttendeesViewModel submitModel, Guid calendarEventId, CancellationToken cancellationToken)
     {
-        var result = await _validator.ValidateAsync(submitModel, cancellationToken);
-
-        if (!result.IsValid)
-        {
-            result.AddToModelState(ModelState);
-            return View(ViewPath, submitModel);
-        }
-
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
         var request = (UpdateCalendarEventRequest)sessionModel;

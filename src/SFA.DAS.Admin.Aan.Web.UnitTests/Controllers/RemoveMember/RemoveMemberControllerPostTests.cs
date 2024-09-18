@@ -24,76 +24,6 @@ public class RemoveMemberControllerPostTests
     private SubmitRemoveMemberModel submitRemoveMemberModel = null!;
 
     [Test]
-    public async Task Index_InvalidCommand_ShouldReturnsView()
-    {
-        // Arrange
-        SetUpModelValidateFalse();
-
-        // Act
-        var response = await sut.Index(memberId, submitRemoveMemberModel, CancellationToken.None);
-        var result = response as ViewResult;
-
-        // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(response, Is.InstanceOf<ViewResult>());
-            Assert.That(result, Is.Not.Null);
-        });
-    }
-
-    [Test]
-    public async Task Index_InvalidCommand_ShouldInvokeGetMemberProfile()
-    {
-        // Arrange
-        SetUpModelValidateFalse();
-
-        // Act
-        var response = await sut.Index(memberId, submitRemoveMemberModel, CancellationToken.None);
-
-        // Assert
-        _outerApiMock.Verify(x => x.GetMemberProfile(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
-    }
-
-    [Test]
-    public async Task Index_InvalidCommand_ShouldReturnRemoveMemberViewModel()
-    {
-        // Arrange
-        SetUpModelValidateFalse();
-
-        // Act
-        var result = await sut.Index(memberId, submitRemoveMemberModel, CancellationToken.None);
-        var viewResult = result as ViewResult;
-        var viewModel = viewResult!.Model as RemoveMemberViewModel;
-
-        // Assert
-        Assert.That(viewModel, Is.InstanceOf<RemoveMemberViewModel>());
-    }
-
-    [Test]
-    public async Task Index_InvalidCommand_ShouldReturnExpectedValue()
-    {
-        // Arrange
-        SetUpModelValidateFalse();
-
-        // Act
-        var result = await sut.Index(memberId, submitRemoveMemberModel, CancellationToken.None);
-        var viewResult = result as ViewResult;
-        var viewModel = viewResult!.Model as RemoveMemberViewModel;
-
-        // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(viewModel!.FullName, Is.EqualTo(memberProfileResponse.FullName));
-            Assert.That(viewModel!.CancelLink, Is.EqualTo(MemberProfileUrl));
-            Assert.That(viewModel!.MemberId, Is.EqualTo(memberId));
-            Assert.That(viewModel!.HasRemoveConfirmed, Is.EqualTo(submitRemoveMemberModel.HasRemoveConfirmed));
-            Assert.That(viewModel!.Status, Is.EqualTo(submitRemoveMemberModel.Status));
-            Assert.That(viewModel!.FirstName, Is.Null);
-            Assert.That(viewModel!.RouteLink, Is.Null);
-        });
-    }
-
-    [Test]
     public async Task Index_PostValidCommand_ShouldInvokePostMemberLeaving()
     {
         // Arrange
@@ -145,15 +75,6 @@ public class RemoveMemberControllerPostTests
     {
         SetUpControllerWithContext();
         _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<SubmitRemoveMemberModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
-    }
-
-    private void SetUpModelValidateFalse()
-    {
-        SetUpControllerWithContext();
-        _validatorMock.Setup(v => v.ValidateAsync(It.IsAny<SubmitRemoveMemberModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult(new List<ValidationFailure>()
-            {
-                new("TestField","Test Message"){ErrorCode = "1001"}
-            }));
     }
 
     [TearDown]

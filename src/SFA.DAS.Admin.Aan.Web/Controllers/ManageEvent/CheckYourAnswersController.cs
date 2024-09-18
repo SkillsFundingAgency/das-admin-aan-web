@@ -56,7 +56,7 @@ public class CheckYourAnswersController : Controller
         if (!result.IsValid)
         {
             result.AddToModelState(ModelState);
-            return View(ViewPath, submitModel);
+            return RedirectToRoute(RouteNames.CreateEvent.CheckYourAnswers);
         }
 
         var request = (CreateEventRequest)sessionModel;
