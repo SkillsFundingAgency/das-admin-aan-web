@@ -1,9 +1,11 @@
-﻿@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.ReviewEventViewModel
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.Admin.Aan.Web.Infrastructure
+@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.ReviewEventViewModel
 @{
-    ViewData["Title"] = "Make changes to calendar event";
+    ViewData["Title"] = @Model.EventTitle;
 }
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-full">
         @if (@Model.HasChangedEvent)
         {
             <div class="govuk-notification-banner" role="region"
@@ -31,22 +33,143 @@
 
             <h1 class="govuk-heading-l">@Model.EventTitle</h1>
 
-            <p class="govuk-">
-                Last updated on @Model.LastUpdatedDate?.ToString("dd MMMM yyyy") at @Model.LastUpdatedDate?.ToString("h:mmtt").ToLower()
-            </p>
-            <div id="previewlink" class="govuk-body">
-                You can <a href="@Model.PreviewLink">preview the event here</a>.
-            </div>
+            <div class="govuk-tabs" data-module="govuk-tabs">
+                <h2 class="govuk-tabs__title">
+                    Contents
+                </h2>
+                <ul class="govuk-tabs__list">
+                    <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+                        <a class="govuk-tabs__tab" href="#event-details">
+                            Event details
+                        </a>
+                    </li>
+                    <li class="govuk-tabs__list-item">
+                        <a class="govuk-tabs__tab" href="#ambassadors">
+                            Ambassadors (@Model.Attendees.Count)
+                        </a>
+                    </li>
+                </ul>
+                <div class="govuk-tabs__panel" id="event-details">
+                    <h2 class="govuk-heading-l">Event details</h2>
+                    <p class="govuk-body-s das-!-color-dark-grey">
+                        Last updated on @Model.LastUpdatedDate?.ToString("dd MMMM yyyy") at @Model.LastUpdatedDate?.ToString("h:mmtt").ToLower()
+                    </p>
+                    <div id="previewlink" class="govuk-body-s das-!-color-dark-grey">
+                        <a class="govuk-link" href="@Model.PreviewLink">Preview this event</a>
+                    </div>
+                    <partial name="_CalendarEventReview" />
+        
+                </div>
+                <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="ambassadors">
+                    <h2 class="govuk-heading-m">Ambassadors (@Model.Attendees.Count)</h2>
+                    
+                    @if (Model.Attendees.Count == 0)
+                    {
+                        <p class="govuk-body">When ambassadors sign up to attend this event, they’ll appear here.</p>
+                    }
+                    else
+                    {
+                        <table class="govuk-table" aria-label="Ambassadors">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header das-table-cell-width-15">
+                                    Name
+                                </th>
+                                <th scope="col" class="govuk-table__header das-table-cell-width-25">
+                                    Email address
+                                </th>
+                                <th scope="col" class="govuk-table__header das-table-cell-width-15">
+                                    Sign-up date
+                                </th>
+                                <th scope="col" class="govuk-table__header das-table-cell-width-10">
+                                    Profile link
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                            @{
+                                foreach (var attendee in Model.Attendees)
+                                {
+                                    var @signupDate = @attendee.SignUpDate.HasValue ? @attendee.SignUpDate.Value.ToString("dd MMMM yyyy") : "-";
 
-            <h2 class="govuk-heading-m">
-                Details
-            </h2>
-            <partial name="_CalendarEventReview"/>
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell">
+                                            <strong>@attendee.Name</strong>
+                                        </td>
+                                        <td class="govuk-table__cell">
+                                            @attendee.Email
+                                        </td>
+                                        <td class="govuk-table__cell">
+                                            @signupDate
+                                        </td>
+                                        <td class="govuk-table__cell">
+                                                <a class="govuk-link" href="@Url.RouteUrl(RouteNames.MemberProfile, new { @attendee.Id })">View profile</a>
+
+                                        </td>
+                                            
+                                    </tr>
+                                }
+                            }
+                            </tbody>
+                        </table>
+                    }
+                    
+                    @if (Model.CancelledAttendees.Count > 0)
+                    {
+                        <h2 class="govuk-heading-m">Cancelled attendees (@Model.CancelledAttendees.Count)</h2>
+
+                        <table class="govuk-table" aria-label="Ambassadors">
+                            <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th scope="col" class="govuk-table__header das-table-cell-width-15">
+                                        Name
+                                    </th>
+                                    <th scope="col" class="govuk-table__header das-table-cell-width-25">
+                                        Email address
+                                    </th>
+                                    <th scope="col" class="govuk-table__header das-table-cell-width-15">
+                                        Cancellation date
+                                    </th>
+                                    <th scope="col" class="govuk-table__header das-table-cell-width-10">
+                                        Profile link
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                                @{
+                                    foreach (var attendee in Model.CancelledAttendees)
+                                    {
+                                        var @cancellationDate = @attendee.CancellationDate.HasValue ? @attendee.CancellationDate.Value.ToString("dd MMMM yyyy") : "-";
+
+                                        <tr class="govuk-table__row">
+                                            <td class="govuk-table__cell">
+                                                <strong>@attendee.Name</strong>
+                                            </td>
+                                            <td class="govuk-table__cell">
+                                                @attendee.Email
+                                            </td>
+                                            <td class="govuk-table__cell">
+                                                @cancellationDate
+                                            </td>
+                                            <td class="govuk-table__cell">
+                                                <a class="govuk-link" href="@Url.RouteUrl(RouteNames.MemberProfile, new { @attendee.Id })">View profile</a>
+                                            </td>
+
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    }
+
+                </div>
+            </div>
+            
             <div class="govuk-button-group">
                 <button
                     data-prevent-double-click="true"
                     type="submit" id="continue" class="govuk-button" data-module="govuk-button">
-                    Continue
+                    Save
                 </button>
                 <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
             </div>

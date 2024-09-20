@@ -16,6 +16,8 @@ public class ReviewEventViewModel : ManageEventViewModelBase
     public string? EventSummary { get; set; }
     public bool? HasGuestSpeakers { get; set; }
     public List<GuestSpeaker> GuestSpeakers { get; set; } = [];
+    public List<Attendee> Attendees { get; set; } = [];
+    public List<CancelledAttendee> CancelledAttendees { get; set; } = [];
     public DateTime? Start { get; set; }
     public DateTime? End { get; set; }
     public string? EventLocation { get; set; }
@@ -64,6 +66,8 @@ public class ReviewEventViewModel : ManageEventViewModelBase
             EventSummary = source.EventSummary,
             HasGuestSpeakers = source.HasGuestSpeakers,
             GuestSpeakers = source.GuestSpeakers,
+            Attendees = source?.Attendees?.Select(x => new Attendee(x.MemberId, x.MemberName, x.Email, x.AddedDate)).ToList() ?? [],
+            CancelledAttendees = source?.CancelledAttendees?.Select(x => new CancelledAttendee(x.MemberId, x.MemberName, x.Email, x.CancelledDate)).ToList() ?? [],
             Start = source.Start?.UtcToLocalTime(),
             End = source.End?.UtcToLocalTime(),
             EventLocation = source.Location + (!string.IsNullOrEmpty(source.Postcode) ? $", {source.Postcode}" : string.Empty),
@@ -77,4 +81,8 @@ public class ReviewEventViewModel : ManageEventViewModelBase
             PageTitle = source.PageTitle,
             HasChangedEvent = source.HasChangedEvent
         };
+
+    public record Attendee(Guid Id, string Name, string Email, DateTime? SignUpDate);
+
+    public record CancelledAttendee(Guid Id, string Name, string Email, DateTime? CancellationDate);
 }
