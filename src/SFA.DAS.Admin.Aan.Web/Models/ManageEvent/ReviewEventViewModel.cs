@@ -66,8 +66,12 @@ public class ReviewEventViewModel : ManageEventViewModelBase
             EventSummary = source.EventSummary,
             HasGuestSpeakers = source.HasGuestSpeakers,
             GuestSpeakers = source.GuestSpeakers,
-            Attendees = source?.Attendees?.Select(x => new Attendee(x.MemberId, x.MemberName, x.Email, x.AddedDate)).ToList() ?? [],
-            CancelledAttendees = source?.CancelledAttendees?.Select(x => new CancelledAttendee(x.MemberId, x.MemberName, x.Email, x.CancelledDate)).ToList() ?? [],
+            Attendees = source?.Attendees?.Select(x => new Attendee(x.MemberId, x.MemberName, x.Email, x.AddedDate))
+                .OrderByDescending(a => a.SignUpDate)
+                .ToList() ?? [],
+            CancelledAttendees = source?.CancelledAttendees?.Select(x => new CancelledAttendee(x.MemberId, x.MemberName, x.Email, x.CancelledDate))
+                .OrderByDescending(a => a.CancellationDate)
+                .ToList() ?? [],
             Start = source.Start?.UtcToLocalTime(),
             End = source.End?.UtcToLocalTime(),
             EventLocation = source.Location + (!string.IsNullOrEmpty(source.Postcode) ? $", {source.Postcode}" : string.Empty),
