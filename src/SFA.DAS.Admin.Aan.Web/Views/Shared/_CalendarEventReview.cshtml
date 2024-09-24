@@ -164,35 +164,55 @@
     </div>
 </dl>
 
-
-@if (Model.HasGuestSpeakers.HasValue && Model.HasGuestSpeakers.Value)
+@if (Model.GuestSpeakers.Any())
 {
-    <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                <h2 class="govuk-heading-m">
-                    Guest speakers
-                </h2>
-            </dt>
-            <dd class="govuk-summary-list__value">
-                <ol class="govuk-list govuk-list--number">
-                    @foreach (var speaker in Model.GuestSpeakers)
-                    {
-                        <li>
-                            @speaker.GuestName, @speaker.GuestJobTitle
+    var guestSpeakerCount = 0;
+    <h2 class="govuk-heading-m">Guest speakers</h2>
+
+    @foreach (var guestSpeaker in Model.GuestSpeakers)
+    {
+        guestSpeakerCount++;
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Guest speaker @guestSpeakerCount</h2>
+                <ul class="govuk-summary-card__actions">
+
+                        <li class="govuk-summary-card__action">
+                            <a class="govuk-link" href="@Model.GuestSpeakersListLink">
+                                Change<span class="govuk-visually-hidden"> guest speaker</span>
+                            </a>
                         </li>
-                    }
-                </ol>
-            </dd>
-            <dd class="govuk-summary-list__actions">
-                <a href="@Model.GuestSpeakersListLink" class="govuk-link govuk-link--no-visited-state">Change</a>
-            </dd>
+                </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+                <dl class="govuk-summary-list">
+
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Name
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @guestSpeaker.GuestName
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Role and Organisation
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @guestSpeaker.GuestJobTitle
+                        </dd>
+                    </div>
+                    
+                </dl>
+            </div>
         </div>
-    </dl>
+    }
 }
 
 <h2 class="govuk-heading-m">
-    For official use
+    Stats
 </h2>
 <dl class="govuk-summary-list">
     <div class="govuk-summary-list__row">

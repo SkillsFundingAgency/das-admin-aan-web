@@ -38,6 +38,7 @@ public class ReviewEventViewModel : ManageEventViewModelBase
     public string? IsAtSchoolLink { get; set; }
     public string? SchoolNameLink { get; set; }
     public string? NumberOfAttendeesLink { get; set; }
+    public string? DownloadAttendeesLink { get; set; }
     public DateTime? LastUpdatedDate { get; set; }
     public bool ShowLocation =>
         EventFormat is DAS.Aan.SharedUi.Constants.EventFormat.InPerson or DAS.Aan.SharedUi.Constants.EventFormat.Hybrid;
