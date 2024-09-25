@@ -10,6 +10,8 @@ using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 using SFA.DAS.Admin.Aan.Web.Services;
+using SFA.DAS.AdminService.Common.Extensions.TagHelpers;
+using static SFA.DAS.Admin.Aan.Web.Models.ManageEvent.ReviewEventViewModel;
 
 namespace SFA.DAS.Admin.Aan.Web.Controllers;
 
@@ -29,17 +31,18 @@ public class CalendarEventController(
     public const string DetailsBackLinkDescription = "back to manage events";
 
     [HttpGet]
+    [ResponseCache(NoStore = true)]
     [Route("/events/{calendarEventId}", Name = RouteNames.CalendarEvent)]
-    public async Task<IActionResult> Get(Guid calendarEventId, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(Guid calendarEventId, CancellationToken cancellationToken, ReviewEventViewModel.AttendeeSortOrderOption sortOrder = ReviewEventViewModel.AttendeeSortOrderOption.SignedUpDescending)
     {
         var sessionModel = sessionService.Get<EventSessionModel>();
 
         if (sessionModel == null! || sessionModel.CalendarEventId != calendarEventId)
         {
             var calendarEvent =
+
                 await outerApiClient.GetCalendarEvent(sessionService.GetMemberId(), calendarEventId,
                     cancellationToken);
-
             sessionModel = (EventSessionModel)calendarEvent;
         }
 
@@ -49,7 +52,7 @@ public class CalendarEventController(
 
         sessionService.Set(sessionModel);
 
-        var model = await GetViewModel(sessionModel, cancellationToken);
+        var model = await GetViewModel(sessionModel, sortOrder, cancellationToken);
 
         return View(ViewPath, model);
     }
@@ -72,7 +75,7 @@ public class CalendarEventController(
     {
         var sessionModel = sessionService.Get<EventSessionModel>();
         if (sessionModel == null) return RedirectToRoute(RouteNames.NetworkEvents);
-        var submitModel = await GetViewModel(sessionModel, cancellationToken);
+        var submitModel = await GetViewModel(sessionModel, ReviewEventViewModel.AttendeeSortOrderOption.SignedUpDescending, cancellationToken);
 
         var result = await validator.ValidateAsync(submitModel, cancellationToken);
 
@@ -105,7 +108,7 @@ public class CalendarEventController(
         return View(PreviewViewPath, model);
     }
 
-    private async Task<ReviewEventViewModel> GetViewModel(EventSessionModel sessionModel, CancellationToken cancellationToken)
+    private async Task<ReviewEventViewModel> GetViewModel(EventSessionModel sessionModel, ReviewEventViewModel.AttendeeSortOrderOption sortOrder, CancellationToken cancellationToken)
     {
         var calendarTask = outerApiClient.GetCalendars(cancellationToken);
         var regionTask = outerApiClient.GetRegions(cancellationToken);
@@ -139,7 +142,28 @@ public class CalendarEventController(
         model.SchoolNameLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateSchoolName, new { sessionModel.CalendarEventId })!;
         model.NumberOfAttendeesLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateNumberOfAttendees, new { sessionModel.CalendarEventId })!;
         model.DownloadAttendeesLink = Url.RouteUrl(RouteNames.CalendarEventAttendeesDownload, new { sessionModel.CalendarEventId })!;
+
+        model.SortOrder = sortOrder;
+        model.Attendees = Sort(model.Attendees, sortOrder).ToList();
+
         return model;
+    }
+
+    private IOrderedEnumerable<Attendee> Sort(List<Attendee> source, AttendeeSortOrderOption sortOrder)
+    {
+        switch (sortOrder)
+        {
+            case AttendeeSortOrderOption.SignedUpDescending:
+                return source.OrderByDescending(x => x.SignUpDate);
+            case AttendeeSortOrderOption.SignedUpAscending:
+                return source.OrderBy(x => x.SignUpDate);
+            case AttendeeSortOrderOption.SurnameAsc:
+                return source.OrderBy(x => x.Surname);
+            case AttendeeSortOrderOption.SurnameDesc:
+                return source.OrderByDescending(x => x.Surname);
+            default:
+                return source.OrderByDescending(x => x.SignUpDate);
+        }
     }
 
     private NetworkEventDetailsViewModel GetPreviewModel(EventSessionModel sessionModel, bool IsShowingDetails = false)

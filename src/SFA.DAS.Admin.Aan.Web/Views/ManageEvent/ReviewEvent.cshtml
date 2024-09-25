@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using SFA.DAS.Admin.Aan.Web.Infrastructure
+@using SFA.DAS.Admin.Aan.Web.Models.ManageEvent
 @model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.ReviewEventViewModel
 @{
     ViewData["Title"] = @Model.EventTitle;
@@ -68,6 +69,12 @@
                     else
                     {
                         <a class="govuk-button govuk-button--secondary" href="@Model.DownloadAttendeesLink">Download contact information (CSV)</a>
+
+                        <form method="get">
+                            <p class="govuk-text">Sort by</p>
+                        <select class="govuk-select" asp-for="SortOrder" asp-items="Html.GetEnumSelectList<ReviewEventViewModel.AttendeeSortOrderOption>()"></select>
+                            <button class="govuk-button govuk-button--secondary" type="submit">Sort</button>
+                        </form>
 
                         <table class="govuk-table" aria-label="Ambassadors">
                             <thead class="govuk-table__head">

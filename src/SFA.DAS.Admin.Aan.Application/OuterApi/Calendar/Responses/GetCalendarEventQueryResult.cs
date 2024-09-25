@@ -33,6 +33,6 @@ public class GetCalendarEventQueryResult
 
 public record EventGuestModel(string GuestName, string GuestJobTitle);
 
-public record AttendeeModel(Guid MemberId, string UserType, string MemberName, string Email, DateTime? AddedDate);
+public record AttendeeModel(Guid MemberId, string UserType, string MemberName, string Surname, string Email, DateTime? AddedDate);
 
 public record CancelledAttendeeModel(Guid MemberId, string UserType, string MemberName, string Email, DateTime? AddedDate, DateTime? CancelledDate);
