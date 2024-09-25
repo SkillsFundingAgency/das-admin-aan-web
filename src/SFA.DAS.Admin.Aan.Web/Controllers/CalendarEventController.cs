@@ -28,8 +28,6 @@ public class CalendarEventController(
     public const string EventDetailsHeader = "Event details";
     public const string DetailsBackLinkDescription = "back to manage events";
 
-    private readonly ICsvHelperService _csvHelperService = csvHelperService;
-
     [HttpGet]
     [Route("/events/{calendarEventId}", Name = RouteNames.CalendarEvent)]
     public async Task<IActionResult> Get(Guid calendarEventId, CancellationToken cancellationToken)
@@ -38,7 +36,7 @@ public class CalendarEventController(
 
         if (sessionModel == null! || sessionModel.CalendarEventId != calendarEventId)
         {
-            GetCalendarEventQueryResult calendarEvent =
+            var calendarEvent =
                 await outerApiClient.GetCalendarEvent(sessionService.GetMemberId(), calendarEventId,
                     cancellationToken);
 
@@ -63,7 +61,7 @@ public class CalendarEventController(
         var attendees =
             await outerApiClient.GetCalendarEventAttendees(sessionService.GetMemberId(), calendarEventId, cancellationToken);
 
-        var data = _csvHelperService.GenerateCsvFileFromModel(attendees);
+        var data = csvHelperService.GenerateCsvFileFromModel(attendees);
 
         return new FileContentResult(data, "text/csv");
     }
