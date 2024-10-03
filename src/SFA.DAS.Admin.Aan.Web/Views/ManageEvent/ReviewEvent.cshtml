@@ -60,21 +60,29 @@
         
                 </div>
                 <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="ambassadors">
-                    <h2 class="govuk-heading-m">Ambassadors (@Model.Attendees.Count)</h2>
                     
                     @if (Model.Attendees.Count == 0)
                     {
+                        <h2 class="govuk-heading-m">Ambassadors</h2>
                         <p class="govuk-body">When ambassadors sign up to attend this event, they’ll appear here.</p>
                     }
                     else
                     {
-                        <a class="govuk-button govuk-button--secondary" href="@Model.DownloadAttendeesLink">Download contact information (CSV)</a>
 
-                        <form method="get">
-                            <p class="govuk-text">Sort by</p>
-                        <select class="govuk-select" asp-for="SortOrder" asp-items="Html.GetEnumSelectList<ReviewEventViewModel.AttendeeSortOrderOption>()"></select>
-                            <button class="govuk-button govuk-button--secondary" type="submit">Sort</button>
-                        </form>
+                        <div class="govuk-grid-row">
+                            <div class="govuk-grid-column-one-half">
+                                <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Ambassadors (@Model.Attendees.Count)</h2>
+                                <a class="govuk-button govuk-button--secondary" href="@Model.DownloadAttendeesLink">Download contact
+                                    information (CSV)</a>
+                            </div>
+                            <div class="govuk-grid-column-one-half das-!-text-align-right--from-tablet">
+                                <form method="get">
+                                    <label class="govuk-label" asp-for="SortOrder">Sort by</label>
+                                    <select class="govuk-select" data-module="selectSubmit" asp-for="SortOrder"  asp-items="Html.GetEnumSelectList<ReviewEventViewModel.AttendeeSortOrderOption>()"></select>
+                                    <button class="govuk-button govuk-button--secondary das-js-hide" type="submit">Sort</button>
+                                </form>
+                            </div>
+                        </div>
 
                         <table class="govuk-table" aria-label="Ambassadors">
                             <thead class="govuk-table__head">
@@ -110,7 +118,7 @@
                                             @signupDate
                                         </td>
                                         <td class="govuk-table__cell">
-                                                <a class="govuk-link" href="@Url.RouteUrl(RouteNames.MemberProfile, new { @attendee.Id })">View profile</a>
+                                                <a class="govuk-link" href="@Url.RouteUrl(RouteNames.MemberProfile, new { @attendee.Id })">View profile<span class="govuk-visually-hidden"> of @attendee.Name</span></a>
 
                                         </td>
                                             
@@ -125,7 +133,7 @@
                     {
                         <h2 class="govuk-heading-m">Cancelled attendees (@Model.CancelledAttendees.Count)</h2>
 
-                        <table class="govuk-table" aria-label="Ambassadors">
+                        <table class="govuk-table" aria-label="Cancelled attendees">
                             <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
                                     <th scope="col" class="govuk-table__header das-table-cell-width-15">
@@ -159,7 +167,7 @@
                                                 @cancellationDate
                                             </td>
                                             <td class="govuk-table__cell">
-                                                <a class="govuk-link" href="@Url.RouteUrl(RouteNames.MemberProfile, new { @attendee.Id })">View profile</a>
+                                                <a class="govuk-link" href="@Url.RouteUrl(RouteNames.MemberProfile, new { @attendee.Id })">View profile<span class="govuk-visually-hidden"> of @attendee.Name</span></a>
                                             </td>
 
                                         </tr>
@@ -181,7 +189,7 @@
                     type="submit" id="continue" class="govuk-button" data-module="govuk-button">
                     Save
                 </button>
-                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+                <a href="@Model.CancelLink" class="govuk-link govuk-link--no-visited-state">Cancel</a>
             </div>
         </form>
     </div>
