@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.Admin.Aan.Web.Infrastructure
+@model SFA.DAS.Admin.Aan.Web.Models.NotificationSettings.NotificationSettingsViewModel
+@{
+    ViewData["Title"] = "Notification settings";
+}
+<partial name="_validationSummary" />
+
+@section BackLink
+{
+    <a href="@Url.RouteUrl(RouteNames.AdministratorHub)" class="govuk-back-link">Back to your network hub</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <h1 class="govuk-heading-l">
+            Notification settings
+        </h1>
+        <p class="govuk-body">
+            <strong>Get email updates about ambassadors signing up to your events</strong>
+        </p>
+        <p class="govuk-body">
+            We can send you email updates about how many ambassadors have signed up to attend your events.
+        </p>
+        <p class="govuk-body">
+            We'll also send you an email if an ambassador cancels.
+        </p>
+        
+        <form method="post">
+            <div class="govuk-form-group" esfa-validation-marker-for="ReceiveNotifications" error-class="govuk-form-group--error" id="ReceiveNotificationsGroup">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend">
+                        <h1 class="govuk-heading-m">Would you like email updates about ambassadors signing up to your events?</h1>
+                    </legend>
+                    <span asp-validation-for="ReceiveNotifications" class="govuk-error-message"></span>
+                    <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="ReceiveNotifications" asp-for="ReceiveNotifications" value="true" type="radio" data-aria-controls="ReceiveNotifications">
+                            <label class="govuk-label govuk-radios__label" for="ReceiveNotifications">Yes</label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="ReceiveNotifications-no" asp-for="ReceiveNotifications" value="false" type="radio">
+                            <label class="govuk-label govuk-radios__label" for="ReceiveNotifications-no">No</label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button" id="notification-settings-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -4,10 +4,12 @@ using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Admins;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
+using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEventAttendees;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Locations;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Members;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Members.Responses;
+using SFA.DAS.Admin.Aan.Application.OuterApi.NotificationSettings;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Profiles;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Regions;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Schools;
@@ -64,4 +66,13 @@ public interface IOuterApiClient
 
     [Post("/members/{memberId}/leaving")]
     Task<string> PostMemberLeaving([Path] Guid memberId, [Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [Body] PostMemberStatusModel postMemberStatusModel, CancellationToken cancellationToken);
+
+    [Get("notification-settings")]
+    Task<GetNotificationSettingsResponse> GetNotificationSettings([Query] Guid memberId, CancellationToken cancellationToken);
+
+    [Post("notification-settings")]
+    Task PostNotificationSettings([Query] Guid memberId, [Body] PostNotificationSettings postRequest, CancellationToken cancellationToken);
+
+    [Get("calendarEvents/{calendarEventId}/attendees")]
+    Task<GetCalendarEventAttendeesResponse> GetCalendarEventAttendees([Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [Path("calendarEventId")] Guid calendarEventId, CancellationToken cancellationToken);
 }
