@@ -13,6 +13,12 @@ public static class FilterBuilder
         var filters = new List<SelectedFilter>();
         var fullQueryParameters = BuildQueryParameters(request);
 
+        if (!string.IsNullOrWhiteSpace(request.Location))
+        {
+            var text = request.Radius == -1 ? "Across England" : $"Within {request.Radius} miles of {request.Location}";
+            filters.AddFilterItems(urlHelper, fullQueryParameters, new [] { text }, "Location", "location", Enumerable.Empty<ChecklistLookup>());
+        }
+
         if (request.FromDate.HasValue)
         {
             filters.AddFilterItems(urlHelper, fullQueryParameters, new[] { request.FromDate.Value.ToScreenString() }, "From date", "fromDate", Enumerable.Empty<ChecklistLookup>());
@@ -60,6 +66,12 @@ public static class FilterBuilder
     private static List<string> BuildQueryParameters(GetNetworkEventsRequest request)
     {
         var queryParameters = new List<string>();
+
+        if (!string.IsNullOrWhiteSpace(request.Location))
+        {
+            queryParameters.Add($"location={request.Location}");
+            queryParameters.Add($"radius={request.Radius}");
+        }
 
         if (request.FromDate != null)
         {

@@ -25,5 +25,11 @@ public class GetNetworkEventsRequest
     [FromQuery]
     public int? PageSize { get; set; }
 
-    [FromQuery] public List<bool> ShowUserEventsOnly { get; set; } = [];
+    [FromQuery]
+    public List<bool> ShowUserEventsOnly { get; set; } = [];
+
+    [FromQuery] public string? Location { get; set; } = "";
+
+    [FromQuery] public int? Radius { get; set; }
+
 }

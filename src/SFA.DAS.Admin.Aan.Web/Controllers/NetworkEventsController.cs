@@ -146,6 +146,8 @@ public class NetworkEventsController : Controller
     private static EventFilterChoices PopulateFilterChoices(GetNetworkEventsRequest request, IEnumerable<CalendarDetail> calendars, IEnumerable<Region> regions)
         => new()
         {
+            Location = request.Location ?? "",
+            Radius = request.Radius ?? 5,
             FromDate = request.FromDate,
             ToDate = request.ToDate,
             EventStatusChecklistDetails = new ChecklistDetails
