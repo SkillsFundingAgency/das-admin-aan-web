@@ -16,7 +16,7 @@ public static class FilterBuilder
         if (!string.IsNullOrWhiteSpace(request.Location))
         {
             var text = request.Radius == -1 ? "Across England" : $"Within {request.Radius} miles of {request.Location}";
-            filters.AddFilterItems(urlHelper, fullQueryParameters, new [] { text }, "Location", "location", Enumerable.Empty<ChecklistLookup>());
+            filters.AddFilterItemForLocation(urlHelper, fullQueryParameters, text, request.Location, request.Radius ?? 0);
         }
 
         if (request.FromDate.HasValue)
@@ -39,7 +39,7 @@ public static class FilterBuilder
     public static string BuildFullQueryString(GetNetworkEventsRequest request, IUrlHelper url)
     {
         var fullQueryParameters = BuildQueryParameters(request);
-        return BuildQueryString(url, fullQueryParameters, "none")!;
+        return BuildQueryString(url, fullQueryParameters, new List<string>())!;
     }
 
     private static void AddFilterItems(this List<SelectedFilter> filters, IUrlHelper url, List<string> fullQueryParameters, IEnumerable<string> selectedValues, string fieldName, string parameterName, IEnumerable<ChecklistLookup> lookups)
@@ -57,8 +57,31 @@ public static class FilterBuilder
         foreach (var value in selectedValues)
         {
             var v = lookups.Any() ? lookups.First(l => l.Value == value).Name : value;
-            filter.Filters.Add(BuildFilterItem(url, fullQueryParameters, BuildQueryParameter(parameterName, value), v, ++i));
+            filter.Filters.Add(BuildFilterItem(url, fullQueryParameters, [BuildQueryParameter(parameterName, value)], v, ++i));
         }
+
+        filters.Add(filter);
+    }
+
+    private static void AddFilterItemForLocation(this List<SelectedFilter> filters, IUrlHelper url, List<string> fullQueryParameters, string selectedValue, string location, int radius)
+    {
+        if (string.IsNullOrWhiteSpace(selectedValue)) return;
+
+        var filter = new SelectedFilter
+        {
+            FieldName = "Location",
+            FieldOrder = filters.Count + 1
+        };
+
+        var i = 0;
+
+        var filtersToRemove = new List<string>()
+        {
+            { BuildQueryParameter("location", location)},
+            { BuildQueryParameter("radius", radius.ToString())},
+        };
+
+        filter.Filters.Add(BuildFilterItem(url, fullQueryParameters, filtersToRemove, selectedValue, ++i));
 
         filters.Add(filter);
     }
@@ -91,11 +114,11 @@ public static class FilterBuilder
         return queryParameters;
     }
 
-    private static EventFilterItem BuildFilterItem(IUrlHelper url, List<string> queryParameters, string filterToRemove, string filterValue, int filterFieldOrder)
+    private static EventFilterItem BuildFilterItem(IUrlHelper url, List<string> queryParameters, List<string> filtersToRemove, string filterValue, int filterFieldOrder)
         =>
             new()
             {
-                ClearFilterLink = BuildQueryString(url, queryParameters, filterToRemove),
+                ClearFilterLink = BuildQueryString(url, queryParameters, filtersToRemove),
                 Order = filterFieldOrder,
                 Value = filterValue
             };
@@ -110,9 +133,9 @@ public static class FilterBuilder
             $"{name}={value}";
     }
 
-    private static string? BuildQueryString(IUrlHelper url, List<string> queryParameters, string filterToRemove)
+    private static string? BuildQueryString(IUrlHelper url, List<string> queryParameters, List<string> filtersToRemove)
     {
-        var queryParametersToBuild = queryParameters.Where(s => s != filterToRemove);
+        var queryParametersToBuild = queryParameters.Where(s =>  !filtersToRemove.Contains(s));
 
         return queryParametersToBuild.Any() ? $"{url.RouteUrl(RouteNames.NetworkEvents)}?{string.Join('&', queryParametersToBuild)}" : url.RouteUrl(RouteNames.NetworkEvents);
     }
