@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Aan.SharedUi.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using SFA.DAS.Aan.SharedUi.Models;
 
 namespace SFA.DAS.Admin.Aan.Web.Models.NetworkEvents;
 
@@ -13,4 +14,10 @@ public class NetworkEventsViewModel
     public string ClearSelectedFiltersLink { get; set; } = null!;
 
     public string CreateEventLink { get; set; } = null!;
+
+    public string OrderBy { get; set; }
+
+    public List<SelectListItem> OrderByOptions => new List<SelectListItem>
+        { new SelectListItem("Soonest", "soonest"), new SelectListItem("Closest", "closest") };
+
 }

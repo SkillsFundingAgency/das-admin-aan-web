@@ -45,12 +45,23 @@
          </div>
      </div>
      <div class="govuk-grid-column-two-thirds">
-         <h2 class="govuk-heading-m">@totalCountDescription</h2>
-         <p class="govuk-body govuk-!-margin-bottom-6  govuk-visually-hidden">
-             Sorted by:
-             <span class="govuk-!-font-weight-bold">Name</span>
-         </p>
-         <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-3 ">
+         <div class="govuk-grid-row">
+             <div class="govuk-grid-column-one-third">
+                 <h2 class="govuk-heading-m">@totalCountDescription</h2>
+             </div>
+             <div class="govuk-grid-column-two-thirds das-!-text-align-right--from-tablet">
+                 <p class="govuk-body govuk-!-margin-bottom-6  govuk-visually-hidden">
+                     Sorted by:
+                     <span class="govuk-!-font-weight-bold">Name</span>
+                 </p>
+                 <form method="get">
+                     <label class="govuk-label" asp-for="OrderBy">Sort by</label>
+                     <select class="govuk-select" data-module="selectSubmit" asp-for="OrderBy" asp-items="Model.OrderByOptions"></select>
+                 </form>
+             </div>
+        </div>
+
+        <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-3 ">
          <div class="das-search-results">
              <partial name="_CalendarEvents"/>
          </div>
