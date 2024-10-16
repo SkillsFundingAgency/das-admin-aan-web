@@ -19,39 +19,27 @@ namespace SFA.DAS.Admin.Aan.Web.Controllers;
 
 [Authorize(Roles = Roles.ManageEventsRole)]
 [Route("events", Name = RouteNames.NetworkEvents)]
-public class NetworkEventsController : Controller
+public class NetworkEventsController(
+    IOuterApiClient outerApiClient,
+    ISessionService sessionService,
+    IValidator<CancelEventViewModel> validator)
+    : Controller
 {
-    private readonly IOuterApiClient _outerApiClient;
-    private readonly ISessionService _sessionService;
-    private readonly IValidator<CancelEventViewModel> _validator;
-    public NetworkEventsController(IOuterApiClient outerApiClient, ISessionService sessionService, IValidator<CancelEventViewModel> validator)
-    {
-        _outerApiClient = outerApiClient;
-        _sessionService = sessionService;
-        _validator = validator;
-    }
-
     [HttpGet]
     public async Task<IActionResult> Index(GetNetworkEventsRequest request, CancellationToken cancellationToken)
     {
-        _sessionService.Delete(nameof(EventSessionModel));
+        sessionService.Delete(nameof(EventSessionModel));
 
         var filterUrl = FilterBuilder.BuildFullQueryString(request, Url);
-        var calendarEventsTask = _outerApiClient.GetCalendarEvents(_sessionService.GetMemberId(), QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
-        var calendarTask = _outerApiClient.GetCalendars(cancellationToken);
-        var regionTask = _outerApiClient.GetRegions(cancellationToken);
+        var calendarEvents = await outerApiClient.GetCalendarEvents(sessionService.GetMemberId(), QueryStringParameterBuilder.BuildQueryStringParameters(request), cancellationToken);
 
-        List<Task> tasks = [calendarEventsTask, calendarTask, regionTask];
-
-        await Task.WhenAll(tasks);
-
-        var calendars = calendarTask.Result;
-        var regions = regionTask.Result.Regions;
+        var calendars = calendarEvents.Calendars;
+        var regions = calendarEvents.Regions;
 
         regions.Add(new Region(0, Application.Constants.Region.National, 100));
-        var model = InitialiseViewModel(calendarEventsTask.Result);
+        var model = InitialiseViewModel(calendarEvents);
 
-        model.PaginationViewModel = SetupPagination(calendarEventsTask.Result, filterUrl!);
+        model.PaginationViewModel = SetupPagination(calendarEvents, filterUrl!);
         var filterChoices = PopulateFilterChoices(request, calendars, regions);
         model.FilterChoices = filterChoices;
         model.SelectedFilters = FilterBuilder.Build(request, Url, filterChoices.EventStatusChecklistDetails.Lookups, filterChoices.EventTypeChecklistDetails.Lookups, filterChoices.RegionChecklistDetails.Lookups, filterChoices.ShowUserEventsOnlyChecklistDetails.Lookups);
@@ -65,7 +53,7 @@ public class NetworkEventsController : Controller
     public IActionResult CreateEvent()
     {
         var sessionModel = new EventSessionModel();
-        _sessionService.Set(sessionModel);
+        sessionService.Set(sessionModel);
         return RedirectToRoute(RouteNames.CreateEvent.EventFormat);
     }
 
@@ -74,7 +62,7 @@ public class NetworkEventsController : Controller
     public async Task<IActionResult> CancelEvent(Guid calendarEventId, CancellationToken cancellationToken)
     {
         var calendarEvent =
-            await _outerApiClient.GetCalendarEvent(_sessionService.GetMemberId(), calendarEventId, cancellationToken);
+            await outerApiClient.GetCalendarEvent(sessionService.GetMemberId(), calendarEventId, cancellationToken);
 
         var model = new CancelEventViewModel
         {
@@ -92,7 +80,7 @@ public class NetworkEventsController : Controller
     public async Task<IActionResult> PostCancelEvent(CancelEventViewModel submitModel, CancellationToken cancellationToken)
     {
         const string viewPath = "~/Views/NetworkEvents/CancelEvent.cshtml";
-        var result = _validator.Validate(submitModel);
+        var result = validator.Validate(submitModel);
 
         if (!result.IsValid)
         {
@@ -101,7 +89,7 @@ public class NetworkEventsController : Controller
             return View(viewPath, submitModel);
         }
 
-        await _outerApiClient.DeleteCalendarEvent(_sessionService.GetMemberId(), submitModel.CalendarEventId, cancellationToken);
+        await outerApiClient.DeleteCalendarEvent(sessionService.GetMemberId(), submitModel.CalendarEventId, cancellationToken);
 
         return RedirectToRoute(RouteNames.DeleteEventConfirmation, new { calendarEventId = submitModel.CalendarEventId });
     }

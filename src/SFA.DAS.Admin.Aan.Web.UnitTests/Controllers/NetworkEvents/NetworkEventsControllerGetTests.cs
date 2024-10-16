@@ -129,10 +129,6 @@ public class NetworkEventsControllerGetTests
         _outerApiMock.Verify(
             o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
                 It.IsAny<CancellationToken>()), Times.Once);
-        _outerApiMock.Verify(
-            o => o.GetCalendars(It.IsAny<CancellationToken>()), Times.Once);
-        _outerApiMock.Verify(
-            o => o.GetRegions(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Test, MoqAutoData]
