@@ -1,6 +1,11 @@
 ﻿@using SFA.DAS.Admin.Aan.Web.Extensions
 @model SFA.DAS.Admin.Aan.Web.Models.NetworkEvents.NetworkEventsViewModel
 
+@Html.Hidden("location", Model.FilterChoices.Location, new { id = "hidden-location"})
+@Html.Hidden("radius", Model.FilterChoices.Radius, new { id = "hidden-radius" })
+@Html.Hidden("fromDate", Model.FilterChoices.FromDate?.ToApiString(), new { id = "hidden-fromDate" })
+@Html.Hidden("toDate", Model.FilterChoices.ToDate?.ToApiString(), new { id = "hidden-toDate" })
+
 @foreach (var lookup in Model.FilterChoices.ShowUserEventsOnlyChecklistDetails.Lookups.Where(x => x.Checked == "checked"))
 {
     <input type="hidden"
@@ -8,10 +13,6 @@
            name="@Model.FilterChoices.ShowUserEventsOnlyChecklistDetails.QueryStringParameterName"
            value="@lookup.Value" />
 }
-@Html.Hidden("Location", Model.FilterChoices.Location, new { name = "Location" })
-@Html.Hidden("Radius", Model.FilterChoices.Radius)
-@Html.Hidden("fromDate", Model.FilterChoices.FromDate?.ToApiString())
-@Html.Hidden("toDate", Model.FilterChoices.ToDate?.ToApiString())
 
 @foreach (var lookup in Model.FilterChoices.EventStatusChecklistDetails.Lookups.Where(x => x.Checked == "checked"))
 {

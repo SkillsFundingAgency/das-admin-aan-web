@@ -47,21 +47,18 @@
      </div>
      <div class="govuk-grid-column-two-thirds">
          <div class="govuk-grid-row">
-             <div class="govuk-grid-column-one-third">
-                 <h2 class="govuk-heading-m">@totalCountDescription</h2>
+             <div class="app-search-results-header">
+                 <h2 class="govuk-heading-m">@totalCountDescription <span class="govuk-visually-hidden">sorted by name</span></h2>
+                 @if (Model.ShowSortOptions)
+                 {
+                     <form method="get" class="app-search-results-sort">
+                         <label class="govuk-label" asp-for="OrderBy">Sort by</label>
+                         <select class="govuk-select" asp-for="OrderBy" data-module="selectSubmit" asp-items="Model.OrderByOptions"></select>
+                         <button class="govuk-button govuk-button--secondary das-js-hide" type="submit">Sort</button>
+                         <partial name="_HiddenFilters" for="@Model" />
+                     </form>
+                 }
              </div>
-             <div class="govuk-grid-column-two-thirds das-!-text-align-right--from-tablet">
-                 <p class="govuk-body govuk-!-margin-bottom-6  govuk-visually-hidden">
-                     Sorted by:
-                     <span class="govuk-!-font-weight-bold">Name</span>
-                 </p>
-                 <form method="get">
-                    <partial name="_HiddenFilters" for="@Model"/>
-                     <label class="govuk-label" asp-for="OrderBy">Sort by</label>
-                     <select class="govuk-select" data-module="selectSubmit" asp-for="OrderBy" asp-items="Model.OrderByOptions"></select>
-                 </form>
-             </div>
-        </div>
 
         <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-3 ">
          <div class="das-search-results">

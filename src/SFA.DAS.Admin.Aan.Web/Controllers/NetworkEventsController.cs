@@ -42,6 +42,7 @@ public class NetworkEventsController(
         model.PaginationViewModel = SetupPagination(calendarEvents, filterUrl!);
         var filterChoices = PopulateFilterChoices(request, calendars, regions);
         model.FilterChoices = filterChoices;
+        model.OrderBy = request.OrderBy;
         model.SelectedFilters = FilterBuilder.Build(request, Url, filterChoices.EventStatusChecklistDetails.Lookups, filterChoices.EventTypeChecklistDetails.Lookups, filterChoices.RegionChecklistDetails.Lookups, filterChoices.ShowUserEventsOnlyChecklistDetails.Lookups);
         model.ClearSelectedFiltersLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
 

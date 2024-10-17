@@ -32,4 +32,6 @@ public class GetNetworkEventsRequest
 
     [FromQuery] public int? Radius { get; set; }
 
+    [FromQuery] public string OrderBy { get; set; } = "";
+
 }

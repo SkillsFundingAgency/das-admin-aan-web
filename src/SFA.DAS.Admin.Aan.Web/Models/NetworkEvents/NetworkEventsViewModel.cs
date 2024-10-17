@@ -20,4 +20,5 @@ public class NetworkEventsViewModel
     public List<SelectListItem> OrderByOptions => new List<SelectListItem>
         { new SelectListItem("Soonest", "soonest"), new SelectListItem("Closest", "closest") };
 
+    public bool ShowSortOptions => !string.IsNullOrWhiteSpace(FilterChoices.Location);
 }
