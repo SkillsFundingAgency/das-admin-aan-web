@@ -1,0 +1,40 @@
+﻿@using SFA.DAS.Admin.Aan.Web.Extensions
+@model SFA.DAS.Admin.Aan.Web.Models.NetworkEvents.NetworkEventsViewModel
+
+@foreach (var lookup in Model.FilterChoices.ShowUserEventsOnlyChecklistDetails.Lookups.Where(x => x.Checked == "checked"))
+{
+    <input type="hidden"
+           id="hidden-@Model.FilterChoices.ShowUserEventsOnlyChecklistDetails.QueryStringParameterName-@lookup.Value"
+           name="@Model.FilterChoices.ShowUserEventsOnlyChecklistDetails.QueryStringParameterName"
+           value="@lookup.Value" />
+}
+@Html.Hidden("Location", Model.FilterChoices.Location, new { name = "Location" })
+@Html.Hidden("Radius", Model.FilterChoices.Radius)
+@Html.Hidden("fromDate", Model.FilterChoices.FromDate?.ToApiString())
+@Html.Hidden("toDate", Model.FilterChoices.ToDate?.ToApiString())
+
+@foreach (var lookup in Model.FilterChoices.EventStatusChecklistDetails.Lookups.Where(x => x.Checked == "checked"))
+{
+    <input type="hidden"
+           id="hidden-@Model.FilterChoices.EventStatusChecklistDetails.QueryStringParameterName-@lookup.Value"
+           name="@Model.FilterChoices.EventStatusChecklistDetails.QueryStringParameterName"
+           value="@lookup.Value" />
+}
+
+@foreach (var lookup in Model.FilterChoices.EventTypeChecklistDetails.Lookups.Where(x => x.Checked == "checked"))
+{
+    <input type="hidden"
+           id="hidden-@Model.FilterChoices.EventTypeChecklistDetails.QueryStringParameterName-@lookup.Value"
+           name="@Model.FilterChoices.EventTypeChecklistDetails.QueryStringParameterName"
+           value="@lookup.Value" />
+}
+
+
+@foreach (var lookup in Model.FilterChoices.RegionChecklistDetails.Lookups.Where(x => x.Checked == "checked"))
+{
+    <input type="hidden"
+           id="hidden-@Model.FilterChoices.RegionChecklistDetails.QueryStringParameterName-@lookup.Value"
+           name="@Model.FilterChoices.RegionChecklistDetails.QueryStringParameterName"
+           value="@lookup.Value" />
+}
+

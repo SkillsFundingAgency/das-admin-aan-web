@@ -1,5 +1,6 @@
 ﻿ @using SFA.DAS.Admin.Aan.Web.Infrastructure 
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.Admin.Aan.Web.Extensions
 @model SFA.DAS.Admin.Aan.Web.Models.NetworkEvents.NetworkEventsViewModel 
 @{
     ViewData["Title"] = "Search Network Events";
@@ -55,6 +56,7 @@
                      <span class="govuk-!-font-weight-bold">Name</span>
                  </p>
                  <form method="get">
+                    <partial name="_HiddenFilters" for="@Model"/>
                      <label class="govuk-label" asp-for="OrderBy">Sort by</label>
                      <select class="govuk-select" data-module="selectSubmit" asp-for="OrderBy" asp-items="Model.OrderByOptions"></select>
                  </form>
