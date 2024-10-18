@@ -8,10 +8,18 @@ public static class QueryStringParameterBuilder
     public static Dictionary<string, string[]> BuildQueryStringParameters(GetNetworkEventsRequest request)
     {
         var parameters = new Dictionary<string, string[]>();
+
+        var orderBy = "";
         if (!string.IsNullOrWhiteSpace(request.Location))
         {
             parameters.Add("location", [request.Location]);
             parameters.Add("radius", [request.Radius.ToString() ?? string.Empty]);
+            orderBy = string.IsNullOrWhiteSpace(request.OrderBy) ? "soonest" : request.OrderBy;
+        }
+
+        if (!string.IsNullOrWhiteSpace(orderBy))
+        {
+            parameters.Add("orderBy", [orderBy]);
         }
         if (request.FromDate != null) parameters.Add("fromDate", [request.FromDate.Value.ToApiString()]);
         if (request.ToDate != null) parameters.Add("toDate", [request.ToDate.Value.ToApiString()]);

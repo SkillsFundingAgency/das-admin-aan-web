@@ -21,7 +21,7 @@ public class EventFilterChoices
         new SelectListItem("30 miles", "30"),
         new SelectListItem("50 miles", "50"),
         new SelectListItem("100 miles", "100"),
-        new SelectListItem("Across England", "-1")
+        new SelectListItem("Across England", "0")
     ];
 }
 
