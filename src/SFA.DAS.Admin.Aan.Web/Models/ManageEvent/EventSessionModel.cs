@@ -49,6 +49,7 @@ public class EventSessionModel
     public bool IsAlreadyPublished { get; set; }
     public bool IsActive { get; set; }
     public IEnumerable<AttendeeModel> Attendees { get; set; } = new List<AttendeeModel>();
+    public IEnumerable<CancelledAttendeeModel> CancelledAttendees { get; set; } = new List<CancelledAttendeeModel>();
 
     public string PageTitle => IsAlreadyPublished ? UpdateEvent.PageTitle : CreateEvent.PageTitle;
 
@@ -265,6 +266,7 @@ public class EventSessionModel
             CalendarEventId = source.CalendarEventId,
             IsDirectCallFromCheckYourAnswers = true,
             Attendees = source.Attendees,
+            CancelledAttendees = source.CancelledAttendees,
             IsActive = source.IsActive
         };
 

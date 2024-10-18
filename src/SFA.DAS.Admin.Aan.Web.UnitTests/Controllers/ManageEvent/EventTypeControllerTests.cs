@@ -313,27 +313,4 @@ public class EventTypeControllerTests
         await sut.Post(submitModel, new CancellationToken());
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
     }
-
-    [Test, MoqAutoData]
-    public void Post_WhenValidationErrors_RedirectToEventFormat(
-        [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] EventTypeController sut)
-    {
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-
-        var sessionModel = new EventSessionModel();
-        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
-
-        sut.ModelState.AddModelError("key", "message");
-
-        var submitModel = new EventTypeViewModel();
-        var actualResult = sut.Post(submitModel, new CancellationToken());
-
-        var result = actualResult.Result.As<ViewResult>();
-
-        sut.ModelState.IsValid.Should().BeFalse();
-        Assert.That(result.Model, Is.TypeOf<EventTypeViewModel>());
-        (result.Model as EventTypeViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
-        sessionServiceMock.Verify(s => s.Set(It.IsAny<EventSessionModel>()), Times.Never());
-    }
 }

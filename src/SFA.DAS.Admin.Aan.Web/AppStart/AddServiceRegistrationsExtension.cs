@@ -2,6 +2,7 @@
 using RestEase.HttpClientFactory;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Configuration;
+using SFA.DAS.Admin.Aan.Web.Services;
 using SFA.DAS.Http.Configuration;
 
 namespace SFA.DAS.Admin.Aan.Web.AppStart;
@@ -15,6 +16,7 @@ public static class AddServiceRegistrationsExtension
         AddOuterApi(services, outerApiConfiguration);
 
         services.AddTransient<ISessionService, SessionService>();
+        services.AddTransient<ICsvHelperService, CsvHelperService>();
         return services;
     }
 

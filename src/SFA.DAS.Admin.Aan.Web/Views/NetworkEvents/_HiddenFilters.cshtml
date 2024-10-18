@@ -1,0 +1,41 @@
+﻿@using SFA.DAS.Admin.Aan.Web.Extensions
+@model SFA.DAS.Admin.Aan.Web.Models.NetworkEvents.NetworkEventsViewModel
+
+@Html.Hidden("location", Model.FilterChoices.Location, new { id = "hidden-location"})
+@Html.Hidden("radius", Model.FilterChoices.Radius, new { id = "hidden-radius" })
+@Html.Hidden("fromDate", Model.FilterChoices.FromDate?.ToApiString(), new { id = "hidden-fromDate" })
+@Html.Hidden("toDate", Model.FilterChoices.ToDate?.ToApiString(), new { id = "hidden-toDate" })
+
+@foreach (var lookup in Model.FilterChoices.ShowUserEventsOnlyChecklistDetails.Lookups.Where(x => x.Checked == "checked"))
+{
+    <input type="hidden"
+           id="hidden-@Model.FilterChoices.ShowUserEventsOnlyChecklistDetails.QueryStringParameterName-@lookup.Value"
+           name="@Model.FilterChoices.ShowUserEventsOnlyChecklistDetails.QueryStringParameterName"
+           value="@lookup.Value" />
+}
+
+@foreach (var lookup in Model.FilterChoices.EventStatusChecklistDetails.Lookups.Where(x => x.Checked == "checked"))
+{
+    <input type="hidden"
+           id="hidden-@Model.FilterChoices.EventStatusChecklistDetails.QueryStringParameterName-@lookup.Value"
+           name="@Model.FilterChoices.EventStatusChecklistDetails.QueryStringParameterName"
+           value="@lookup.Value" />
+}
+
+@foreach (var lookup in Model.FilterChoices.EventTypeChecklistDetails.Lookups.Where(x => x.Checked == "checked"))
+{
+    <input type="hidden"
+           id="hidden-@Model.FilterChoices.EventTypeChecklistDetails.QueryStringParameterName-@lookup.Value"
+           name="@Model.FilterChoices.EventTypeChecklistDetails.QueryStringParameterName"
+           value="@lookup.Value" />
+}
+
+
+@foreach (var lookup in Model.FilterChoices.RegionChecklistDetails.Lookups.Where(x => x.Checked == "checked"))
+{
+    <input type="hidden"
+           id="hidden-@Model.FilterChoices.RegionChecklistDetails.QueryStringParameterName-@lookup.Value"
+           name="@Model.FilterChoices.RegionChecklistDetails.QueryStringParameterName"
+           value="@lookup.Value" />
+}
+

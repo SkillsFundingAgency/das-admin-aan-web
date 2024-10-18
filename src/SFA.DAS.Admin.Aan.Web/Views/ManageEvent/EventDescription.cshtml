@@ -1,5 +1,4 @@
-﻿@using SFA.DAS.Admin.Aan.Web.Infrastructure
-@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.EventDescriptionViewModel
+﻿@model SFA.DAS.Admin.Aan.Web.Models.ManageEvent.EventDescriptionViewModel
 @{
     ViewData["Title"] = "Create Calendar Event";
 }
@@ -30,8 +29,8 @@
                         <div id="eventOutline-hint" class="govuk-hint">
                             A short description that outlines the event listing
                         </div>
-                        <textarea class="govuk-textarea govuk-js-character-count" id="eventOutline" name="eventOutline" rows="4" aria-describedby="eventOutline-info eventOutline-hint"
-                                      sfa-validationerror-class="form-control-error" maxlength="500">@Model.EventOutline</textarea>
+                        <textarea class="govuk-textarea govuk-js-character-count" asp-for="EventOutline" rows="4" aria-describedby="eventOutline-info eventOutline-hint"
+                                      sfa-validationerror-class="form-control-error" maxlength="500"></textarea>
                     </div>
                     <div id="eventOutline-info" class="govuk-hint govuk-character-count__message">
                         You can enter up to @Model.EventOutlineMaxCount characters
@@ -53,8 +52,8 @@
                             Include any practical information such as how to enter the venue, parking and nearest bus/tram/tube/train stop to the venue.
                         </div>
                         <div class="app-editor">
-                            <textarea class="govuk-textarea govuk-js-character-count" id="eventSummary" name="eventSummary" rows="5" aria-describedby="eventSummary-info eventSummary-hint"
-                                      sfa-validationerror-class="form-control-error" maxlength="2500">@Model.EventSummary</textarea>
+                            <textarea class="govuk-textarea govuk-js-character-count" asp-for="EventSummary" rows="5" aria-describedby="eventSummary-info eventSummary-hint"
+                                      sfa-validationerror-class="form-control-error" maxlength="2500"></textarea>
                         </div>
                     </div>
                     <div id="eventSummary-guide" class="govuk-hint">
