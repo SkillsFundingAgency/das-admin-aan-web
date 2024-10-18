@@ -15,7 +15,7 @@ public static class FilterBuilder
 
         if (!string.IsNullOrWhiteSpace(request.Location))
         {
-            var text = request.Radius == -1 ? "Across England" : $"Within {request.Radius} miles of {request.Location}";
+            var text = request.Radius == 0 ? "Across England" : $"Within {request.Radius} miles of {request.Location}";
             filters.AddFilterItemForLocation(urlHelper, fullQueryParameters, text, request.Location, request.Radius ?? 0);
         }
 
