@@ -43,6 +43,8 @@ public class NetworkEventsController(
         var filterChoices = PopulateFilterChoices(request, calendars, regions);
         model.FilterChoices = filterChoices;
         model.OrderBy = request.OrderBy;
+        model.IsInvalidLocation = calendarEvents.IsInvalidLocation;
+        model.SearchedLocation = (request.Location != null) ? request.Location : string.Empty;
         model.SelectedFilters = FilterBuilder.Build(request, Url, filterChoices.EventStatusChecklistDetails.Lookups, filterChoices.EventTypeChecklistDetails.Lookups, filterChoices.RegionChecklistDetails.Lookups, filterChoices.ShowUserEventsOnlyChecklistDetails.Lookups);
         model.ClearSelectedFiltersLink = Url.RouteUrl(RouteNames.NetworkEvents)!;
 
