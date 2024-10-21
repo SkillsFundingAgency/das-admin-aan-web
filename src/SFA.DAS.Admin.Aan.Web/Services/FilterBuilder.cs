@@ -96,6 +96,11 @@ public static class FilterBuilder
             queryParameters.Add($"radius={request.Radius}");
         }
 
+        if (!string.IsNullOrWhiteSpace(request.OrderBy))
+        {
+            queryParameters.Add($"orderBy={request.OrderBy}");
+        }
+
         if (request.FromDate != null)
         {
             queryParameters.Add(BuildDateQueryParameter("fromDate", request.FromDate.GetValueOrDefault()));
