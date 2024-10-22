@@ -27,9 +27,12 @@ public class GetCalendarEventQueryResult
     public bool IsActive { get; set; }
     public DateTime? LastUpdatedDate { get; set; }
     public IEnumerable<AttendeeModel> Attendees { get; set; } = null!;
+    public IEnumerable<CancelledAttendeeModel> CancelledAttendees { get; set; } = null!;
     public IEnumerable<EventGuestModel> EventGuests { get; set; } = null!;
 }
 
 public record EventGuestModel(string GuestName, string GuestJobTitle);
 
-public record AttendeeModel(Guid MemberId, string UserType, string MemberName, DateTime? AddedDate);
+public record AttendeeModel(Guid MemberId, string UserType, string MemberName, string Surname, string Email, DateTime? AddedDate);
+
+public record CancelledAttendeeModel(Guid MemberId, string UserType, string MemberName, string Email, DateTime? AddedDate, DateTime? CancelledDate);

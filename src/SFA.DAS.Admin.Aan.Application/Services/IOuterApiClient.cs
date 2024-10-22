@@ -4,6 +4,7 @@ using SFA.DAS.Admin.Aan.Application.Constants;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Admins;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
+using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEventAttendees;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Locations;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Members;
@@ -71,4 +72,7 @@ public interface IOuterApiClient
 
     [Post("notification-settings")]
     Task PostNotificationSettings([Query] Guid memberId, [Body] PostNotificationSettings postRequest, CancellationToken cancellationToken);
+
+    [Get("calendarEvents/{calendarEventId}/attendees")]
+    Task<GetCalendarEventAttendeesResponse> GetCalendarEventAttendees([Header(RequestHeaders.RequestedByMemberIdHeader)] Guid requestedByMemberId, [Path("calendarEventId")] Guid calendarEventId, CancellationToken cancellationToken);
 }
