@@ -131,6 +131,40 @@ public class NetworkEventsControllerGetTests
                 It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Test]
+    public void GetCalendarEventsWithInvalidLocation_ReturnsViewModelWithInvalidLocation()
+    {
+        var request = new GetNetworkEventsRequest
+        {
+            CalendarId = [CalendarId],
+            IsActive = [true]
+        };
+
+        var apiResult = new GetCalendarEventsQueryResult
+        {
+            TotalCount = 0,
+            IsInvalidLocation = true
+        };
+
+        _outerApiMock
+            .Setup(o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
+                It.IsAny<CancellationToken>())).ReturnsAsync(apiResult);
+
+        var sut = new NetworkEventsController(_outerApiMock.Object, _sessionServiceMock.Object, _validatorMock.Object);
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+
+        var actualResult = sut.Index(request, new CancellationToken());
+
+        var viewResult = actualResult.Result.As<ViewResult>();
+        var model = viewResult.Model as NetworkEventsViewModel;
+        model!.IsInvalidLocation.Should().BeTrue();
+        model!.TotalCount.Should().Be(0);
+
+        _outerApiMock.Verify(
+            o => o.GetCalendarEvents(It.IsAny<Guid>(), It.IsAny<Dictionary<string, string[]>>(),
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
     [Test, MoqAutoData]
     public void GetCalendarEvents_ReturnsApiResponse_CheckDateFilterChoices()
     {
