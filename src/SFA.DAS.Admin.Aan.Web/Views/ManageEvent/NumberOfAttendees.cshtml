@@ -23,9 +23,8 @@
                     <label class="govuk-label govuk-date-input__label" for="numberOfAttendees">
                         This is an estimated number of attendees, guest speakers, volunteers and staff working at the event.
                     </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="NumberOfAttendees"
-                           name="NumberOfAttendees" type="number" min="1" max="1000000" maxlength="7"
-                           value="@Model.NumberOfAttendees">
+                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" asp-for="NumberOfAttendees"
+                           type="number" min="1" max="1000000" maxlength="7">
                 </div>
             </div>
             

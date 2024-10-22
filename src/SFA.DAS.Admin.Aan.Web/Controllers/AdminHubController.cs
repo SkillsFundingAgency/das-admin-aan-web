@@ -13,6 +13,10 @@ public class AdminHubController : Controller
 {
     public IActionResult Index()
     {
-        return View(new AdminHubViewModel(User.IsInRole(Roles.ManageEventsRole), User.IsInRole(Roles.ManageMembersRole), Url.RouteUrl(RouteNames.NetworkEvents)!, Url.RouteUrl(SharedRouteNames.NetworkDirectory)!));
+        return View(new AdminHubViewModel(User.IsInRole(Roles.ManageEventsRole),
+            User.IsInRole(Roles.ManageMembersRole),
+            Url.RouteUrl(RouteNames.NetworkEvents)!,
+            Url.RouteUrl(SharedRouteNames.NetworkDirectory)!,
+            Url.RouteUrl(RouteNames.NotificationSettings)!));
     }
 }

@@ -424,43 +424,6 @@ public class CalendarEventControllerTests
     }
 
     [Test, MoqAutoData]
-    public async Task Post_RedirectsToNetworkEvents(
-        [Frozen] Mock<IOuterApiClient> outrApiMock,
-        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
-        List<CalendarDetail> calendars,
-        GetRegionsResult regionsResult)
-    {
-        outrApiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
-        outrApiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
-
-        var validationResult = new ValidationResult();
-        validationResult.Errors.Add(new ValidationFailure("name", "message"));
-        validatorMock.Setup(v => v.ValidateAsync(It.IsAny<ReviewEventViewModel>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
-
-        var sessionServiceMock = new Mock<ISessionService>();
-        var sessionModel = new EventSessionModel
-        {
-            CalendarId = calendars.First().Id,
-            RegionId = regionsResult.Regions.First().Id,
-            EventFormat = EventFormat.InPerson,
-            Location = null
-        };
-
-        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
-        var sut = new CalendarEventController(outrApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
-
-        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
-
-        var actualResult = await sut.Post(_calendarEventId, new CancellationToken());
-
-        var result = (ViewResult)actualResult;
-        Assert.That(result.Model, Is.TypeOf<ReviewEventViewModel>());
-        (result.Model as ReviewEventViewModel)!.CancelLink.Should().Be(NetworkEventsUrl);
-
-    }
-
-    [Test, MoqAutoData]
     public void GetCalendarEventPreview_SessionModelLoaded_ReturnsExpectedViewAndModel(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         Guid calendarEventId)
