@@ -186,7 +186,7 @@ nodeListForEach(selectSubmits, function (selectSubmit) {
 
 
 const locationInputs = document.querySelectorAll(".location-search-autocomplete");
-const apiUrl = "/locations";
+const apiUrl = "/locations/search";
 
 if (locationInputs.length > 0) {
     for (let i = 0; i < locationInputs.length; i++) {
