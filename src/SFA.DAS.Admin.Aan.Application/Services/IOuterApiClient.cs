@@ -49,6 +49,9 @@ public interface IOuterApiClient
     [Get("/locations")]
     Task<GetAddressesResult> GetAddresses([Query] string query, CancellationToken cancellationToken);
 
+    [Get("/locations/search")]
+    Task<GetLocationsBySearchApiResponse> GetLocationsBySearch([Query] string query, CancellationToken cancellationToken);
+
     [Post("admins")]
     Task<LookupAdminMemberResult> GetAdminMember([Body] LookupAdminMemberRequest request, CancellationToken cancellationToken);
 

@@ -20,4 +20,12 @@ public class LocationsController : Controller
         var result = await _outerApiClient.GetAddresses(query, cancellationToken);
         return Ok(result.Addresses);
     }
+
+    [HttpGet]
+    [Route("/locations/search")]
+    public async Task<IActionResult> GetLocationsBySearch([FromQuery] string query, CancellationToken cancellationToken)
+    {
+        var result = await _outerApiClient.GetLocationsBySearch(query, cancellationToken);
+        return Ok(result.Locations);
+    }
 }
