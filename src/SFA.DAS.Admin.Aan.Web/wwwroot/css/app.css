@@ -658,4 +658,7 @@ a.das-show-hide__button[aria-expanded="false"]:after {
     align-items: center;
     gap: 10px;
   }
+ .nonjs-sort-button {
+    margin-bottom: 5px;
+ }
 }
