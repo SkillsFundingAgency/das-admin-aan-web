@@ -181,10 +181,7 @@ nodeListForEach(selectSubmits, function (selectSubmit) {
   new SelectSubmit(selectSubmit).init();
 });
 
-
-
-
-
+//Location search autocomplete
 const locationInputs = document.querySelectorAll(".location-search-autocomplete");
 const apiUrl = "/locations/search";
 
