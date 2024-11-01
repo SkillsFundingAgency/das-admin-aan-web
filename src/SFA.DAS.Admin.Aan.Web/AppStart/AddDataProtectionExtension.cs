@@ -8,7 +8,7 @@ namespace SFA.DAS.Admin.Aan.Web.AppStart
     [ExcludeFromCodeCoverage]
     public static class AddDataProtectionExtension
     {
-        public static void AddDataProtection(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddDataProtection(this IServiceCollection services, IConfiguration configuration)
         {
             var config = configuration.GetSection(nameof(ApplicationConfiguration))
                 .Get<ApplicationConfiguration>();
@@ -28,6 +28,8 @@ namespace SFA.DAS.Admin.Aan.Web.AppStart
                     .SetApplicationName("das-admin-service-web")
                     .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
             }
+
+            return services;
         }
     }
 }

@@ -23,6 +23,7 @@ builder.Services
     .AddApplicationInsightsTelemetry()
     .AddAuthenticationServices(rootConfiguration)
     .AddHttpContextAccessor()
+    .AddDataProtection(rootConfiguration)
     .AddSession(rootConfiguration)
     .AddServiceRegistrations(rootConfiguration)
     .AddValidatorsFromAssembly(typeof(Program).Assembly)
