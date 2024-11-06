@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SFA.DAS.Admin.Aan.Web.AppStart;
 using SFA.DAS.Admin.Aan.Web.Authentication;
@@ -42,6 +43,10 @@ builder.Services.AddHealthChecks()
         failureStatus: HealthStatus.Unhealthy,
         tags: new[] { "ready" });
 
+if (!string.IsNullOrWhiteSpace(applicationConfiguration.RedisConnectionString))
+{
+    builder.Services.AddHealthChecks().AddRedis(applicationConfiguration.RedisConnectionString);
+}
 builder.Services.AddFluentValidationAutoValidation();
 
 #if DEBUG
