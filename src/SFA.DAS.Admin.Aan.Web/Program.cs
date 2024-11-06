@@ -91,7 +91,7 @@ app
     .UseAuthentication()
     .UseAuthorization()
     .UseSession()
-    .UseHealthChecks("/health")
+    .UseDasHealthChecks()
     .UseHealthChecks("/ping", new HealthCheckOptions
     {
         Predicate = (_) => false,
