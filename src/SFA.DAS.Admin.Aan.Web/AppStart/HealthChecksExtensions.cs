@@ -3,12 +3,24 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
+using SFA.DAS.Admin.Aan.Web.Configuration;
+using SFA.DAS.Admin.Aan.Web.HealthCheck;
 
 namespace SFA.DAS.Admin.Aan.Web.AppStart
 {
     [ExcludeFromCodeCoverage]
     public static class HealthChecksExtensions
     {
+        public static IServiceCollection AddDasHealthChecks(this IServiceCollection services,
+            ApplicationConfiguration config)
+        {
+            services.AddHealthChecks()
+                .AddCheck<AdminAanOuterApiHealthCheck>("Outer Api health check")
+                .AddRedis(config.RedisConnectionString, "Redis health check");
+            
+            return services;
+        }
+
         public static IApplicationBuilder UseDasHealthChecks(this IApplicationBuilder app)
         {
             return app.UseHealthChecks("/health", new HealthCheckOptions
