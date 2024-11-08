@@ -21,12 +21,14 @@
 		<PackageReference Include="SFA.DAS.Aan.SharedUi" Version="0.1.95-prerelease-16" />
 		<PackageReference Include="SFA.DAS.AdminService.Common" Version="0.1.134" />
 		<PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84" />
-		<PackageReference Include="SFA.DAS.DfESignIn.Auth" Version="17.1.76" />
+		<PackageReference Include="SFA.DAS.DfESignIn.Auth" Version="17.1.89" />
 		<PackageReference Include="SFA.DAS.Http" Version="3.2.69" />
 		<PackageReference Include="RestEase" Version="1.6.4" />
 		<PackageReference Include="RestEase.HttpClientFactory" Version="1.6.4" />
 		<PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.30" />
+		<PackageReference Include="System.Formats.Asn1" Version="8.0.1" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
+		<PackageReference Include="System.Text.Json" Version="8.0.5" />
 		<PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.21" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="8.0.2" />
