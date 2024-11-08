@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using SFA.DAS.Admin.Aan.Web.AppStart;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Configuration;
@@ -18,7 +19,12 @@ var applicationConfiguration = rootConfiguration.GetSection(nameof(ApplicationCo
 builder.Services.Configure<ApplicationConfiguration>(rootConfiguration.GetSection(nameof(applicationConfiguration)));
 
 builder.Services
-    .AddLogging()
+    .AddLogging(options =>
+    {
+        options.AddApplicationInsights();
+        options.AddFilter<ApplicationInsightsLoggerProvider>("SFA.DAS", LogLevel.Information);
+        options.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Warning);
+    })
     .AddApplicationInsightsTelemetry()
     .AddAuthenticationServices(rootConfiguration)
     .AddHttpContextAccessor()
