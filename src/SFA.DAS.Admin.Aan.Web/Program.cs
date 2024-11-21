@@ -67,9 +67,21 @@ app.UseContentSecurityPolicy();
 
 app.Use(async (context, next) =>
 {
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+
     if (context.Response.Headers.ContainsKey("X-Frame-Options"))
     {
         context.Response.Headers.Remove("X-Frame-Options");
+    }
+
+    if (context.Response.Headers.ContainsKey("Server"))
+    {
+        context.Response.Headers.Remove("Server");
+    }
+
+    if (context.Response.Headers.ContainsKey("X-Powered-By"))
+    {
+        context.Response.Headers.Remove("X-Powered-By");
     }
 
     context.Response.Headers!.Append("X-Frame-Options", "SAMEORIGIN");

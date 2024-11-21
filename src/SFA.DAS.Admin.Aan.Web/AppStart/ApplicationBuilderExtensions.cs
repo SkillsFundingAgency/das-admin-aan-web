@@ -1,5 +1,4 @@
-﻿using Polly;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Admin.Aan.Web.AppStart;
 
