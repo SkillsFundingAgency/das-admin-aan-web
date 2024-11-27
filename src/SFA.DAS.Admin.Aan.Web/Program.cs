@@ -2,24 +2,29 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using SFA.DAS.Admin.Aan.Web.AppStart;
 using SFA.DAS.Admin.Aan.Web.Authentication;
 using SFA.DAS.Admin.Aan.Web.Configuration;
 using SFA.DAS.Admin.Aan.Web.Filters;
-using SFA.DAS.Admin.Aan.Web.HealthCheck;
 using SFA.DAS.Validation.Mvc.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var rootConfiguration = builder.Configuration.LoadConfiguration();
 
-var applicationConfiguration = rootConfiguration.Get<ApplicationConfiguration>()!;
-builder.Services.AddSingleton(applicationConfiguration);
+builder.Services.AddOptions();
+
+var applicationConfiguration = rootConfiguration.GetSection(nameof(ApplicationConfiguration)).Get<ApplicationConfiguration>()!;
+builder.Services.Configure<ApplicationConfiguration>(rootConfiguration.GetSection(nameof(applicationConfiguration)));
 
 builder.Services
-    .AddOptions()
-    .AddLogging()
+    .AddLogging(options =>
+    {
+        options.AddApplicationInsights();
+        options.AddFilter<ApplicationInsightsLoggerProvider>("SFA.DAS", LogLevel.Information);
+        options.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Warning);
+    })
     .AddApplicationInsightsTelemetry()
     .AddAuthenticationServices(rootConfiguration)
     .AddHttpContextAccessor()
@@ -36,11 +41,7 @@ builder.Services
         options.Filters.Add<ValidateModelStateFilter>();
     })
     .AddSessionStateTempDataProvider();
-builder.Services.Configure<ApplicationConfiguration>(rootConfiguration.GetSection(nameof(applicationConfiguration)));
-builder.Services.AddHealthChecks()
-    .AddCheck<AdminAanOuterApiHealthCheck>(AdminAanOuterApiHealthCheck.HealthCheckResultDescription,
-        failureStatus: HealthStatus.Unhealthy,
-        tags: new[] { "ready" });
+builder.Services.AddDasHealthChecks(applicationConfiguration);
 
 builder.Services.AddFluentValidationAutoValidation();
 
@@ -61,6 +62,8 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseContentSecurityPolicy();
 
 app.Use(async (context, next) =>
 {
@@ -91,7 +94,7 @@ app
     .UseAuthentication()
     .UseAuthorization()
     .UseSession()
-    .UseHealthChecks("/health")
+    .UseDasHealthChecks()
     .UseHealthChecks("/ping", new HealthCheckOptions
     {
         Predicate = (_) => false,
