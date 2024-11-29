@@ -2,7 +2,9 @@
 @{
     ViewData["Title"] = "Create Calendar Event";
 }
-
+@{
+    var cspNonce = Context.Items["CspNonce"] as string;
+}
 <partial name="_validationSummary" />
 
 <div class="govuk-grid-row">
@@ -73,7 +75,7 @@
 
 @section PageSpecificJS {
     <script src="/js/ckeditor/ckeditor.js" no-cdn></script>
-    <script>
+    <script nonce="@cspNonce">
         ClassicEditor
             .create( document.querySelector( '.app-editor textarea' ))
             .then( editor => {
