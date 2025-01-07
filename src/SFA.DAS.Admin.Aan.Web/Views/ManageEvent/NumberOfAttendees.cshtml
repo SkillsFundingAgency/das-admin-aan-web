@@ -14,15 +14,15 @@
             <input type="hidden" asp-for="@Model.PageTitle" />
             <input type="hidden" asp-for="@Model.PostLink"/> 
             <input type="hidden" asp-for="@Model.CancelLink"/>
-            <div esfa-validation-marker-for="@Model.NumberOfAttendees" class="govuk-form-group" id="NumberOfAttendees">
-                <label class="govuk-label govuk-label--m" for="numberOfAttendees">
+            <div esfa-validation-marker-for="@Model.NumberOfAttendees" class="govuk-form-group" id="NumberOfAttendeesValidationMarker">
+                <label class="govuk-label govuk-label--m" for="NumberOfAttendees">
                     How many attendees do you expect at this event?
                 </label>
                 <span asp-validation-for="NumberOfAttendees" class="govuk-error-message"></span>
                 <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="numberOfAttendees">
+                    <p class="govuk-label">
                         This is an estimated number of attendees, guest speakers, volunteers and staff working at the event.
-                    </label>
+                    </p>
                     <input class="govuk-input govuk-date-input__input govuk-input--width-2" asp-for="NumberOfAttendees"
                            type="number" min="1" max="1000000" maxlength="7">
                 </div>
