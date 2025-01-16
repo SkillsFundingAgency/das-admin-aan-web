@@ -24,7 +24,9 @@
                 <div id="EventTitle">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                            Event title
+                            <label for="EventTitle">
+                                Event title
+                            </label>
                         </legend>
                         <div class="govuk-form-group">
                             <input class="govuk-input" asp-for="EventTitle" type="text" maxlength="200">
@@ -38,7 +40,9 @@
                 <div id="EventTypeId">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                            Event type
+                            <label for="EventTypeId">
+                                Event type
+                            </label>
                         </legend>
                         <div class="govuk-form-group">
                             @Html.DropDownListFor(m => m.EventTypeId,new SelectList(Model.EventTypes, "EventTypeId", "Name"),"Select an event type",new { @class = "govuk-select" })
@@ -51,7 +55,9 @@
                 <div id="EventRegionId">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                            Event region
+                            <label for="EventRegionId">
+                                Event region
+                            </label>
                         </legend>
                         <div class="govuk-form-group">
                             @Html.DropDownListFor(m => m.EventRegionId,new SelectList(Model.EventRegions, "RegionId", "Name"),"Select a region",new { @class = "govuk-select" })

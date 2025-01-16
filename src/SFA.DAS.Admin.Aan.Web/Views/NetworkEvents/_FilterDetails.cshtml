@@ -11,6 +11,12 @@
                 @Model.Title
             </legend>
         }
+        else
+        {
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                Options
+            </legend>
+        }
         <div class="govuk-checkboxes govuk-checkboxes--small">
             @foreach (var lookup in Model.Lookups)
             {
