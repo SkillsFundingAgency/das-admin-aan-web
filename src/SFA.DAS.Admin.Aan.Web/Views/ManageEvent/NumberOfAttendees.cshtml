@@ -9,25 +9,19 @@
         <form asp-route="@Model.PostLink" method="POST">
             <h1 class="govuk-heading-l">
                 <span class="govuk-caption-l">@Model.PageTitle</span>
-                Provide an estimate of the number of attendees
+                How many audience members do you expect at this event?
             </h1>
             <input type="hidden" asp-for="@Model.PageTitle" />
-            <input type="hidden" asp-for="@Model.PostLink"/> 
-            <input type="hidden" asp-for="@Model.CancelLink"/>
-            <div esfa-validation-marker-for="@Model.NumberOfAttendees" class="govuk-form-group" id="NumberOfAttendeesValidationMarker">
-                <label class="govuk-label govuk-label--m" for="NumberOfAttendees">
-                    How many attendees do you expect at this event?
-                </label>
+            <input type="hidden" asp-for="@Model.PostLink" />
+            <input type="hidden" asp-for="@Model.CancelLink" />
+            <div esfa-validation-marker-for="@Model.NumberOfAttendees" class="govuk-form-group" id="NumberOfAttendees">
                 <span asp-validation-for="NumberOfAttendees" class="govuk-error-message"></span>
                 <div class="govuk-form-group">
-                    <p class="govuk-label">
-                        This is an estimated number of attendees, guest speakers, volunteers and staff working at the event.
-                    </p>
                     <input class="govuk-input govuk-date-input__input govuk-input--width-2" asp-for="NumberOfAttendees"
                            type="number" min="1" max="1000000" maxlength="7">
                 </div>
             </div>
-            
+
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
             <div class="govuk-button-group">
                 <button type="submit" id="continue" class="govuk-button" data-disable-on-submit="true">Continue</button>
