@@ -64,11 +64,14 @@
             "type": "string"
         },
         "utcValue": {
-          "type": "string",
-          "defaultValue": "[utcNow()]"
+            "type": "string",
+            "defaultValue": "[utcNow()]"
         },
         "cdnUrl": {
-          "type": "string"
+            "type": "string"
+        },
+        "deployPrivateLinkedScopedResource": {
+            "type": "bool"
         }
     },
     "variables": {
@@ -76,7 +79,8 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
-        "configNames": "SFA.DAS.AdminAan.Web,SFA.DAS.Provider.DfeSignIn"
+        "configNames": "SFA.DAS.AdminAan.Web,SFA.DAS.Provider.DfeSignIn",
+        "privateLinkScopeName": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-shared-ampls'))]"
     },
     "resources": [
         {
@@ -239,6 +243,31 @@
                     },
                     "subscriptionScope": {
                         "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/products/AdminAanOuterApi')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[parameters('deployPrivateLinkedScopedResource')]",
+            "apiVersion": "2021-04-01",
+            "name": "[concat(variables('appServiceName'), '-private-link-scoped-', parameters('utcValue'))]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'private-linked-scoped-resource.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "privateLinkScopeName": {
+                        "value": "[variables('privateLinkScopeName')]"
+                    },
+                    "scopedResourceName": {
+                        "value": "[variables('appServiceName')]"
+                    },
+                    "scopedResourceId": {
+                        "value": "[reference(concat(variables('appServiceName'), '-application-insights-', parameters('utcValue'))).outputs.AppInsightsResourceId.value]"
                     }
                 }
             }
