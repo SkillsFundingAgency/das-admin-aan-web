@@ -22,6 +22,9 @@
                 <input type="hidden" asp-for="@Model.CancelLink"/>
                 <div esfa-validation-marker-for="@Model.EventFormat" class="govuk-form-group">
                     <span asp-validation-for="EventFormat" class="govuk-error-message"></span>
+                    <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                    </legend>
                     <div id="EventFormat" class="govuk-radios" data-module="govuk-radios">
                         @foreach (var ef in Model.EventFormats)
                         {
@@ -34,6 +37,7 @@
                             </div>
                         }
                     </div>
+                    </fieldset>
                 </div>
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
                 <div class="govuk-button-group">
