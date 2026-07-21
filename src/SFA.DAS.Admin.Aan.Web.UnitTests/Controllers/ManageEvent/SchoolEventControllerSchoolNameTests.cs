@@ -264,11 +264,15 @@ public class SchoolEventControllerSchoolNameTests
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventLocation_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<SchoolNameViewModel>> validatorMock,
         [Greedy] SchoolEventController sut)
     {
-        sut.ModelState.AddModelError("key", "message");
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
         var submitModel = new SchoolNameViewModel { CancelLink = NetworkEventsUrl };
+
+        validatorMock.Setup(x => x.Validate(submitModel)).Returns(new ValidationResult
+        { Errors = new List<ValidationFailure> { new ValidationFailure("TestProperty", "TestMessage") } });
 
         var result = (ViewResult)sut.PostSchoolName(submitModel);
 

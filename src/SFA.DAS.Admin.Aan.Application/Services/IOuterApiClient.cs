@@ -52,7 +52,7 @@ public interface IOuterApiClient
     [Get("/locations/search")]
     Task<GetLocationsBySearchApiResponse> GetLocationsBySearch([Query] string query, CancellationToken cancellationToken);
 
-    [Post("admins")]
+    [Post("/admins")]
     Task<LookupAdminMemberResult> GetAdminMember([Body] LookupAdminMemberRequest request, CancellationToken cancellationToken);
 
     [Get("/Schools/find/{searchTerm}")]

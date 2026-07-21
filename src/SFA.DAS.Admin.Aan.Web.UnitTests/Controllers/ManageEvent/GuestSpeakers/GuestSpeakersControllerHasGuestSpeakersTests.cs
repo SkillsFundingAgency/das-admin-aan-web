@@ -238,11 +238,15 @@ public class GuestSpeakersControllerHasGuestSpeakersTests
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfHasGuestSpeakers_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<HasGuestSpeakersViewModel>> validatorMock,
         [Greedy] GuestSpeakersController sut)
     {
-        sut.ModelState.AddModelError("key", "message");
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
         var submitModel = new HasGuestSpeakersViewModel { CancelLink = NetworkEventsUrl };
+
+        validatorMock.Setup(x => x.Validate(submitModel)).Returns(new ValidationResult
+        { Errors = new List<ValidationFailure> { new ValidationFailure("TestProperty", "TestMessage") } });
 
         var result = (ViewResult)sut.PostHasGuestSpeakers(submitModel);
 

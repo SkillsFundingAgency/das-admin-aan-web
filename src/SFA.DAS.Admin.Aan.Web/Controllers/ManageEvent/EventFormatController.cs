@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
+using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
@@ -41,11 +41,17 @@ public class EventFormatController : Controller
 
         if (!result.IsValid)
         {
-            result.AddToModelState(ModelState);
-            return View(ViewPath, submitModel);
+            ModelState.AddValidationErrors(result.Errors);
         }
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
+
+        if (!ModelState.IsValid)
+        {
+            var model = GetViewModel(sessionModel);
+            return View(ViewPath, model);
+        }
+
         sessionModel.EventFormat = submitModel.EventFormat;
 
         if (sessionModel.IsAlreadyPublished)

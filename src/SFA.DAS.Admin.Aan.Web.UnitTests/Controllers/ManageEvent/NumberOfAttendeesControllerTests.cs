@@ -202,6 +202,8 @@ public class NumberOfAttendeesControllerTests
     {
         sut.ModelState.AddModelError("key", "message");
 
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
+
         var submitModel = new NumberOfAttendeesViewModel { CancelLink = NetworkEventsUrl };
 
         var result = (ViewResult)sut.Post(submitModel);

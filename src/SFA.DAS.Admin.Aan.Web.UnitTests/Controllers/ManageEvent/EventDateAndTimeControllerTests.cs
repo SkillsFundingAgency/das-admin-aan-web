@@ -307,11 +307,15 @@ public class EventDateAndTimeControllerTests
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventDateTime_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<EventDateAndTimeViewModel>> validatorMock,
         [Greedy] EventDateAndTimeController sut)
     {
-        sut.ModelState.AddModelError("key", "message");
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
         var submitModel = new EventDateAndTimeViewModel { CancelLink = NetworkEventsUrl };
+
+        validatorMock.Setup(x => x.Validate(submitModel)).Returns(new ValidationResult
+        { Errors = new List<ValidationFailure> { new ValidationFailure("FailureProperty", "FailureMessage") } });
 
         var result = (ViewResult)sut.Post(submitModel);
 

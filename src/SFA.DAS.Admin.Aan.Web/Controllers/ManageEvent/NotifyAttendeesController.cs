@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.OuterApi.CalendarEvents;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
+using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
@@ -42,6 +43,15 @@ public class NotifyAttendeesController : Controller
     [Route("events/{calendarEventId}/notify-attendees", Name = RouteNames.UpdateEvent.NotifyAttendees)]
     public async Task<IActionResult> Post(NotifyAttendeesViewModel submitModel, Guid calendarEventId, CancellationToken cancellationToken)
     {
+        var result = _validator.Validate(submitModel);
+
+        if (!result.IsValid)
+        {
+
+            ModelState.AddValidationErrors(result.Errors);
+            return View(ViewPath, submitModel);
+        }
+
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
         var request = (UpdateCalendarEventRequest)sessionModel;

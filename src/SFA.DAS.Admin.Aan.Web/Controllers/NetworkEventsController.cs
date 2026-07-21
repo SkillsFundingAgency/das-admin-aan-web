@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Aan.SharedUi.Models;
@@ -8,6 +7,7 @@ using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar;
 using SFA.DAS.Admin.Aan.Application.OuterApi.Calendar.Responses;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
+using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.DeleteEvent;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
@@ -64,16 +64,7 @@ public class NetworkEventsController(
     [Route("{calendarEventId}/cancel", Name = RouteNames.DeleteEvent)]
     public async Task<IActionResult> CancelEvent(Guid calendarEventId, CancellationToken cancellationToken)
     {
-        var calendarEvent =
-            await outerApiClient.GetCalendarEvent(sessionService.GetMemberId(), calendarEventId, cancellationToken);
-
-        var model = new CancelEventViewModel
-        {
-            CalendarEventId = calendarEventId,
-            Title = calendarEvent.Title,
-            PostLink = Url.RouteUrl(RouteNames.DeleteEvent)!,
-            ManageEventsLink = Url.RouteUrl(RouteNames.NetworkEvents)!
-        };
+        var model = await BuildCancelEventViewModel(calendarEventId, cancellationToken);
 
         return View(model);
     }
@@ -87,9 +78,13 @@ public class NetworkEventsController(
 
         if (!result.IsValid)
         {
+            ModelState.AddValidationErrors(result.Errors);
+        }
 
-            result.AddToModelState(ModelState);
-            return View(viewPath, submitModel);
+        if (!ModelState.IsValid)
+        {
+            var newModel = await BuildCancelEventViewModel(submitModel.CalendarEventId, cancellationToken);
+            return View(viewPath, newModel);
         }
 
         await outerApiClient.DeleteCalendarEvent(sessionService.GetMemberId(), submitModel.CalendarEventId, cancellationToken);
@@ -173,5 +168,19 @@ public class NetworkEventsController(
                 }
             }
         };
+
+    private async Task<CancelEventViewModel> BuildCancelEventViewModel(Guid calendarEventId, CancellationToken cancellationToken)
+    {
+        var calendarEvent =
+            await outerApiClient.GetCalendarEvent(sessionService.GetMemberId(), calendarEventId, cancellationToken);
+
+        return new CancelEventViewModel
+        {
+            CalendarEventId = calendarEventId,
+            Title = calendarEvent.Title,
+            PostLink = Url.RouteUrl(RouteNames.DeleteEvent)!,
+            ManageEventsLink = Url.RouteUrl(RouteNames.NetworkEvents)!
+        };
+    }
 }
 

@@ -64,8 +64,7 @@ public class NotifyAttendeesControllerTests
         var submitModel = new NotifyAttendeesViewModel { IsNotifyAttendees = isNotifyAttendees };
 
         var validationResult = new ValidationResult();
-        validatorMock.Setup(v => v.ValidateAsync(submitModel, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
+        validatorMock.Setup(v => v.Validate(submitModel)).Returns(validationResult);
 
         var outerApiMock = new Mock<IOuterApiClient>();
 
@@ -84,5 +83,22 @@ public class NotifyAttendeesControllerTests
                 It.Is<UpdateCalendarEventRequest>(r => r.SendUpdateEventNotification == isNotifyAttendees),
                 It.IsAny<CancellationToken>()), Times.Once);
         result.RouteName.Should().Be(RouteNames.UpdateEventConfirmation);
+    }
+
+    [Test]
+    public async Task Post_ModelIsInvalid_ReturnsToNotifyAtendeesPage()
+    {
+        var failedValidationResult = new ValidationResult
+        { Errors = new List<ValidationFailure> { new("testProperty", "testMessage") } };
+
+        var validatorMock = new Mock<IValidator<NotifyAttendeesViewModel>>();
+
+        validatorMock.Setup(x => x.Validate(It.IsAny<NotifyAttendeesViewModel>())).Returns(failedValidationResult);
+
+        var sut = new NotifyAttendeesController(Mock.Of<IOuterApiClient>(), Mock.Of<ISessionService>(), validatorMock.Object);
+
+        var result = await sut.Post(new NotifyAttendeesViewModel(), Guid.NewGuid(), CancellationToken.None) as ViewResult;
+
+        result!.ViewName.Should().Be(NotifyAttendeesController.ViewPath);
     }
 }

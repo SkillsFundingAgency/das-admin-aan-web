@@ -240,7 +240,9 @@ public class OrganiserDetailsControllerTests
     {
         sut.ModelState.AddModelError("key", "message");
 
-        var submitModel = new OrganiserDetailsViewModel { CancelLink = AllNetworksUrl };
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
+
+        var submitModel = new OrganiserDetailsViewModel { CancelLink = AllNetworksUrl, PostLink = "testLink" };
 
         var result = (ViewResult)sut.Post(submitModel);
 

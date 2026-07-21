@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
+using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
@@ -45,11 +45,17 @@ public class GuestSpeakersController : Controller
 
         if (!result.IsValid)
         {
-            result.AddToModelState(ModelState);
-            return View(HasGuestSpeakersViewPath, submitModel);
+            ModelState.AddValidationErrors(result.Errors);
         }
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
+
+        if (!ModelState.IsValid)
+        {
+            var model = GetViewModelHasGuestSpeakers(sessionModel);
+            return View(HasGuestSpeakersViewPath, model);
+        }
+
         sessionModel.HasGuestSpeakers = submitModel.HasGuestSpeakers;
         if (sessionModel.HasGuestSpeakers == false)
         {
@@ -93,21 +99,7 @@ public class GuestSpeakersController : Controller
     {
         var sessionModel = _sessionService.Get<EventSessionModel>();
 
-        var cancelLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerList)!;
-        var postLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerAdd)!;
-
-        if (sessionModel.IsAlreadyPublished)
-        {
-            cancelLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateGuestSpeakerList, new { sessionModel.CalendarEventId })!;
-            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateGuestSpeakerAdd, new { sessionModel.CalendarEventId })!;
-        }
-
-        var augmentedModel = new GuestSpeakerAddViewModel
-        {
-            CancelLink = cancelLink,
-            PostLink = postLink,
-            PageTitle = sessionModel.PageTitle
-        };
+        var augmentedModel = GetViewModelGuestSpeakersAdd(sessionModel);
 
         return View(GuestSpeakerAddViewPath, augmentedModel);
     }
@@ -121,12 +113,17 @@ public class GuestSpeakersController : Controller
 
         if (!result.IsValid)
         {
-
-            result.AddToModelState(ModelState);
-            return View(GuestSpeakerAddViewPath, submitModel);
+            ModelState.AddValidationErrors(result.Errors);
         }
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
+
+        if (!ModelState.IsValid)
+        {
+            var model = GetViewModelGuestSpeakersAdd(sessionModel);
+            return View(GuestSpeakerAddViewPath, model);
+        }
+
         var currentGuestList = sessionModel.GuestSpeakers;
 
         var id = currentGuestList.Any() ? currentGuestList.Max(x => x.Id) + 1 : 1;
@@ -260,6 +257,25 @@ public class GuestSpeakersController : Controller
             DeleteSpeakerLink = deleteSpeakerLink!,
             PageTitle = sessionModel.PageTitle,
             DirectCallFromCheckYourAnswers = sessionModel.IsDirectCallFromCheckYourAnswers
+        };
+    }
+
+    private GuestSpeakerAddViewModel GetViewModelGuestSpeakersAdd(EventSessionModel sessionModel)
+    {
+        var cancelLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerList)!;
+        var postLink = Url.RouteUrl(RouteNames.CreateEvent.GuestSpeakerAdd)!;
+
+        if (sessionModel.IsAlreadyPublished)
+        {
+            cancelLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateGuestSpeakerList, new { sessionModel.CalendarEventId })!;
+            postLink = Url.RouteUrl(RouteNames.UpdateEvent.UpdateGuestSpeakerAdd, new { sessionModel.CalendarEventId })!;
+        }
+
+        return new GuestSpeakerAddViewModel
+        {
+            CancelLink = cancelLink,
+            PostLink = postLink,
+            PageTitle = sessionModel.PageTitle
         };
     }
 }

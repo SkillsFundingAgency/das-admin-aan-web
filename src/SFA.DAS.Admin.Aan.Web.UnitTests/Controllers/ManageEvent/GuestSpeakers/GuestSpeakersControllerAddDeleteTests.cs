@@ -239,11 +239,16 @@ public class GuestSpeakersControllerAddDeleteTests
     [Test, MoqAutoData]
     public void Post_WhenValidationErrors_RedirectBackToPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<GuestSpeakerAddViewModel>> validatorMock,
         [Greedy] GuestSpeakersController sut)
     {
-        sut.ModelState.AddModelError("key", "message");
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CreateEvent.GuestSpeakerList, GuestSpeakerListUrl);
 
         var submitModel = new GuestSpeakerAddViewModel { CancelLink = GuestSpeakerListUrl };
+
+        validatorMock.Setup(x => x.Validate(submitModel)).Returns(new ValidationResult
+        { Errors = new List<ValidationFailure> { new ValidationFailure("TestProperty", "TestName") } });
+
         var actualResult = sut.PostAddGuestSpeaker(submitModel);
 
         var result = actualResult.As<ViewResult>();

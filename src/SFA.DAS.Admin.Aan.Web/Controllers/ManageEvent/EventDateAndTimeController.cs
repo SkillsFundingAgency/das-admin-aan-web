@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.Services;
@@ -44,11 +43,16 @@ public class EventDateAndTimeController : Controller
 
         if (!result.IsValid)
         {
-            result.AddToModelState(ModelState);
-            return View(ViewPath, submitModel);
+            ModelState.AddValidationErrors(result.Errors);
         }
 
         var sessionModel = _sessionService.Get<EventSessionModel>();
+
+        if (!ModelState.IsValid)
+        {
+            var model = GetViewModel(sessionModel);
+            return View(ViewPath, model);
+        }
 
         sessionModel.Start = DateTimeExtensions.LocalToUtcTime(submitModel.DateOfEvent!.Value.Year, submitModel.DateOfEvent!.Value.Month, submitModel.DateOfEvent!.Value.Day, submitModel.StartHour!.Value, submitModel.StartMinutes!.Value);
         sessionModel.End = DateTimeExtensions.LocalToUtcTime(submitModel.DateOfEvent!.Value.Year, submitModel.DateOfEvent!.Value.Month, submitModel.DateOfEvent!.Value.Day, submitModel.EndHour!.Value, submitModel.EndMinutes!.Value);

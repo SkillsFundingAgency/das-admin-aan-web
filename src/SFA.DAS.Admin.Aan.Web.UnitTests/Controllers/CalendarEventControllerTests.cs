@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit4;
+﻿using System.Globalization;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentValidation;
@@ -426,6 +427,39 @@ public class CalendarEventControllerTests
     }
 
     [Test, MoqAutoData]
+    public async Task Post_AndModelFailsValidation_RedirectsToCalendarEvent(
+        [Frozen] Mock<IOuterApiClient> outerAPiMock,
+        [Frozen] Mock<IValidator<ReviewEventViewModel>> validatorMock,
+        List<CalendarDetail> calendars,
+        GetRegionsResult regionsResult)
+    {
+        outerAPiMock.Setup(o => o.GetCalendars(It.IsAny<CancellationToken>())).ReturnsAsync(calendars);
+        outerAPiMock.Setup(o => o.GetRegions(It.IsAny<CancellationToken>())).ReturnsAsync(regionsResult);
+
+        validatorMock.Setup(x => x.Validate(It.IsAny<ReviewEventViewModel>())).Returns(new ValidationResult
+        { Errors = new List<ValidationFailure> { new ValidationFailure("TestProperty", "TestMessage") } });
+
+        var sessionServiceMock = new Mock<ISessionService>();
+        var sessionModel = new EventSessionModel
+        {
+            CalendarId = calendars.First().Id,
+            RegionId = regionsResult.Regions.First().Id
+        };
+
+        sessionServiceMock.Setup(s => s.Get<EventSessionModel>()).Returns(sessionModel);
+
+        var sut = new CalendarEventController(outerAPiMock.Object, sessionServiceMock.Object, validatorMock.Object, Mock.Of<CsvHelperService>());
+
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.CalendarEvent, CalendarEventUrl);
+
+        var actualResult = await sut.Post(_calendarEventId, new CancellationToken());
+
+        var result = (RedirectToRouteResult)actualResult;
+        sut.ModelState.IsValid.Should().BeFalse();
+        result.RouteName.Should().Be(RouteNames.CalendarEvent);
+    }
+
+    [Test, MoqAutoData]
     public void GetCalendarEventPreview_SessionModelLoaded_ReturnsExpectedViewAndModel(
         [Frozen] Mock<IOuterApiClient> outerAPiMock,
         Guid calendarEventId)
@@ -507,7 +541,7 @@ public class CalendarEventControllerTests
         var sut = new CalendarEventController(_outerApiMock.Object, sessionServiceMock.Object, Mock.Of<IValidator<ReviewEventViewModel>>(), csvHelperServiceMock.Object);
 
         var result = await sut.GetAttendees(calendarEventId, new CancellationToken());
-        
+
         var actualResult = result as FileContentResult;
         actualResult.Should().NotBeNull();
 

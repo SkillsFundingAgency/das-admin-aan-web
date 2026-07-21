@@ -13,6 +13,7 @@ using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.ManageEvent;
+
 public class EventDescriptionControllerTests
 {
     private static readonly string AllNetworksUrl = Guid.NewGuid().ToString();
@@ -246,13 +247,15 @@ public class EventDescriptionControllerTests
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventDescription_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<EventDescriptionViewModel>> validatorMock,
         [Greedy] EventDescriptionController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
 
-        sut.ModelState.AddModelError("key", "message");
-
         var submitModel = new EventDescriptionViewModel { CancelLink = AllNetworksUrl };
+
+        validatorMock.Setup(x => x.Validate(submitModel)).Returns(new ValidationResult
+        { Errors = new List<ValidationFailure> { new ValidationFailure("TestProperty", "TestMessage") } });
 
         submitModel.EventOutlineMaxCount.Should().Be(ManageEventValidation.EventOutlineMaxLength);
         submitModel.EventSummaryMaxCount.Should().Be(ManageEventValidation.EventSummaryMaxLength);

@@ -13,6 +13,7 @@ using SFA.DAS.Admin.Aan.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Admin.Aan.Web.UnitTests.Controllers.NetworkEvents;
+
 public class NetworkEventsControllerCancelEventTests
 {
     private static readonly string NetworkEventsUrl = Guid.NewGuid().ToString();
@@ -121,10 +122,16 @@ public class NetworkEventsControllerCancelEventTests
             IsCancelConfirmed = false
         };
 
+        validatorMock.Setup(x => x.Validate(submitModel)).Returns(new ValidationResult
+        { Errors = new List<ValidationFailure> { new ValidationFailure("TestProperty", "TestMessage") } });
+
         var sut = new NetworkEventsController(outerApiMock.Object, sessionServiceMock.Object, validatorMock.Object);
-        sut.ModelState.AddModelError("key", "message");
-        sut.ModelState.IsValid.Should().BeFalse();
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
+
         var actualResult = sut.PostCancelEvent(submitModel, new CancellationToken());
+
+        sut.ModelState.IsValid.Should().BeFalse();
+
         var viewResult = actualResult.Result.As<ViewResult>();
 
         Assert.That(viewResult.Model, Is.TypeOf<CancelEventViewModel>());

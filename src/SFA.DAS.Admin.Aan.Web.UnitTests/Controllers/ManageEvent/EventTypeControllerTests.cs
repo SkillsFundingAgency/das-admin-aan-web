@@ -314,4 +314,21 @@ public class EventTypeControllerTests
         await sut.Post(submitModel, new CancellationToken());
         sessionServiceMock.Verify(s => s.Set(It.Is<EventSessionModel>(m => m.HasChangedEvent == true)), Times.Once);
     }
+
+    [Test]
+    public async Task Post_ModelIsInvalid_ReturnsToEventTypePage()
+    {
+        var failedValidationResult = new ValidationResult
+        { Errors = new List<ValidationFailure> { new("testProperty", "testMessage") } };
+
+        var validatorMock = new Mock<IValidator<EventTypeViewModel>>();
+
+        validatorMock.Setup(x => x.Validate(It.IsAny<EventTypeViewModel>())).Returns(failedValidationResult);
+
+        var sut = new EventTypeController(Mock.Of<IOuterApiClient>(), Mock.Of<ISessionService>(), validatorMock.Object);
+
+        var result = await sut.Post(new EventTypeViewModel(), CancellationToken.None) as ViewResult;
+
+        result!.ViewName.Should().Be(EventTypeController.ViewPath);
+    }
 }

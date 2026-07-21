@@ -272,11 +272,15 @@ public class EventFormatControllerTests
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventFormat_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<EventFormatViewModel>> validatorMock,
         [Greedy] EventFormatController sut)
     {
-        sut.ModelState.AddModelError("key", "message");
+        sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, NetworkEventsUrl);
 
         var submitModel = new EventFormatViewModel { CancelLink = NetworkEventsUrl };
+
+        validatorMock.Setup(x => x.Validate(submitModel)).Returns(new ValidationResult
+        { Errors = new List<ValidationFailure> { new ValidationFailure("TestProperty", "TestMessage") } });
 
         var result = (ViewResult)sut.Post(submitModel);
 

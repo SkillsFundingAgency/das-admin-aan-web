@@ -251,12 +251,15 @@ public class LocationControllerTests
     [Test, MoqAutoData]
     public void Post_WhenNoSelectionOfEventLocation_Errors(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<LocationViewModel>> validatorMock,
         [Greedy] LocationController sut)
     {
         sut.AddUrlHelperMock().AddUrlForRoute(RouteNames.NetworkEvents, AllNetworksUrl);
-        sut.ModelState.AddModelError("key", "message");
 
         var submitModel = new LocationViewModel { CancelLink = AllNetworksUrl };
+
+        validatorMock.Setup(x => x.Validate(submitModel)).Returns(new ValidationResult
+        { Errors = new List<ValidationFailure> { new ValidationFailure("TestProperty", "TestMessage") } });
 
         submitModel.EventOnlineLinkMaxLength.Should().Be(ManageEventValidation.EventOnlineLinkMaxLength);
 

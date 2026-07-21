@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Admin.Aan.Application.Services;
 using SFA.DAS.Admin.Aan.Web.Authentication;
+using SFA.DAS.Admin.Aan.Web.Extensions;
 using SFA.DAS.Admin.Aan.Web.Infrastructure;
 using SFA.DAS.Admin.Aan.Web.Models.ManageEvent;
 
@@ -37,6 +38,14 @@ public class EventTypeController : Controller
     [Route("events/{calendarEventId}/type", Name = RouteNames.UpdateEvent.UpdateEventType)]
     public async Task<IActionResult> Post(EventTypeViewModel submitModel, CancellationToken cancellationToken)
     {
+        var result = _validator.Validate(submitModel);
+
+        if (!result.IsValid)
+        {
+            ModelState.AddValidationErrors(result.Errors);
+            return View(ViewPath, submitModel);
+        }
+
         var sessionModel = _sessionService.Get<EventSessionModel>();
         sessionModel.EventTitle = submitModel.EventTitle;
         sessionModel.CalendarId = submitModel.EventTypeId;
